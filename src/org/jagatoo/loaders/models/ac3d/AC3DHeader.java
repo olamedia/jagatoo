@@ -53,7 +53,7 @@ public class AC3DHeader
      * @param filetype The filetype (should always be "AC3D")
      * @param version The version id of the file
      */
-    public AC3DHeader(String filetype, int version)
+    public AC3DHeader( String filetype, int version )
     {
         this.filetype = new String( filetype );
         this.version = version;

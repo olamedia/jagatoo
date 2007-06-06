@@ -46,21 +46,21 @@ import org.openmali.vecmath.Color3f;
 public class AC3DMaterial
 {
     /** The index of this material */
-    private int index;
+    private int      index;
     /** The name of the material */
-    private String name;
+    private String   name;
     /** The color of the material */
-    private Color3f color;
+    private Color3f  color;
     /** The color of ambient light reflected */
-    private Color3f amb;
+    private Color3f  amb;
     /** The emited color of this material */
-    private Color3f emis;
+    private Color3f  emis;
     /** The speculative color of the material */
-    private Color3f spec;
+    private Color3f  spec;
     /** The shinyness */
-    private float shininess;
+    private float    shininess;
     /** The translucancy of the material */
-    private float translucency;
+    private float    translucency;
     
     /**
      * @return The index
@@ -137,16 +137,17 @@ public class AC3DMaterial
      * @param shininess The shininess
      * @param translucency The transluncancy
      */
-    public AC3DMaterial(int index, String name, Color3f color, Color3f ambient,
-                        Color3f emissive, Color3f specular, float shininess, float translucency) {
-        this.index = index;
-        this.name = new String( name );
+    public AC3DMaterial( int index, String name, Color3f color, Color3f ambient,
+                         Color3f emissive, Color3f specular, float shininess, float translucency )
+    {
+        this.index        = index;
+        this.name         = new String( name );
         // take copies of the color objects
-        this.color = new Color3f( color );
-        this.amb = new Color3f( ambient );
-        this.emis = new Color3f( emissive );
-        this.spec = new Color3f( specular );
-        this.shininess = shininess;
+        this.color        = new Color3f( color );
+        this.amb          = new Color3f( ambient );
+        this.emis         = new Color3f( emissive );
+        this.spec         = new Color3f( specular );
+        this.shininess    = shininess;
         this.translucency = translucency;
         
         /*

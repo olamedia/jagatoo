@@ -58,10 +58,10 @@ public abstract class ResourcePool
      * 
      * @throws ResourceLoadFailedException Thrown if the resource is not loaded and fails to load.
      */    
-    public Object getResource(String key) throws ResourceLoadFailedException
+    public Object getResource( String key ) throws ResourceLoadFailedException
     {
         Object resource = resources.get( key );
-        if (resource == null)
+        if ( resource == null )
         {
             resource = loadResource( key );
             resources.put( key, resource );
@@ -80,5 +80,5 @@ public abstract class ResourcePool
      * 
      * @throws ResourceLoadFailedException Thrown if the resouce fails to load
      */    
-    public abstract Object loadResource(String key) throws ResourceLoadFailedException;
+    public abstract Object loadResource( String key ) throws ResourceLoadFailedException;
 }

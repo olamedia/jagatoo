@@ -47,51 +47,53 @@ import java.util.ArrayList;
 public class AC3DObject
 {
     /** The 'world' tpye */
-    public static final int TYPE_WORLD = 0;
+    public static final int         TYPE_WORLD = 0;
     /** The 'poly' tpye */    
-    public static final int TYPE_POLY = 1;
+    public static final int         TYPE_POLY = 1;
     /** The 'group' type */
-    public static final int TYPE_GROUP = 2;
+    public static final int         TYPE_GROUP = 2;
     
     /** The type of the object */
-    private int type;
+    private int                     type;
     /** The object name */
-    private String name;
+    private String                  name;
     /** The texture URL */
-    private String textureName;
+    private String                  textureName;
     /** The rotatino matrix of this object*/
-    private float[] rotation;
+    private float[]                 rotation;
     /** The location vector of this object*/
-    private float[] location;
+    private float[]                 location;
     /** The objects verticies */
-    private float[][] verts;
+    private float[][]               verts;
     /** Texture repeat values*/
-    private float textureRepeatX = 1f, textureRepeatY = 1f;
+    private float                   textureRepeatX = 1f,
+                                    textureRepeatY = 1f;
     /** Texture offset values*/
-    private float textureOffsetx = 0f, textureOffsety = 0f;
+    private float                   textureOffsetx = 0f,
+                                    textureOffsety = 0f;
     /** The surfaces of this object*/
-    private ArrayList<AC3DSurface> surfaces = new ArrayList<AC3DSurface>();
+    private ArrayList<AC3DSurface>  surfaces = new ArrayList<AC3DSurface>();
     /** This objects sub objects*/
-    private ArrayList<AC3DObject> kids = new ArrayList<AC3DObject>();
+    private ArrayList<AC3DObject>   kids = new ArrayList<AC3DObject>();
     
-    private Object userObject = null;
+    private Object                  userObject = null;
     
     /**
      * Add a surface
-     *
+     * 
      * @param surface The surface to add
      */
-    public void addSurface(AC3DSurface surface)
+    public void addSurface( AC3DSurface surface )
     {
         surfaces.add( surface );
     }
     
     /**
      * Add a kidd.
-     *
+     * 
      * @param object The object to add
      */
-    public void addObject(AC3DObject object)
+    public void addObject( AC3DObject object )
     {
         kids.add( object );
     }
@@ -109,7 +111,7 @@ public class AC3DObject
      */
     public String getTextureName()
     {
-        if (textureName != null)
+        if ( textureName != null )
         {
             return( new String( textureName ) );
         }
@@ -140,7 +142,7 @@ public class AC3DObject
      */
     public String getName()
     {
-        if (name == null)
+        if ( name == null )
         {
             return( null );
         }
@@ -225,17 +227,17 @@ public class AC3DObject
      * @param textureOffsetx The texture offset in the X axis
      * @param textureOffsety The texture off set in the Y axis
      */
-    public AC3DObject(int type, String name, String textureName, 
-                      float[] rotation, float[] location, float[][] verts, 
-                      float textureRepeatX, float textureRepeatY, 
-                      float textureOffsetx, float textureOffsety)
+    public AC3DObject( int type, String name, String textureName, 
+                       float[] rotation, float[] location, float[][] verts, 
+                       float textureRepeatX, float textureRepeatY, 
+                       float textureOffsetx, float textureOffsety )
     {
-        this.type = type;
-        this.name = name;
-        this.textureName = textureName;
-        this.rotation = rotation;
-        this.location = location;
-        this.verts = verts;
+        this.type           = type;
+        this.name           = name;
+        this.textureName    = textureName;
+        this.rotation       = rotation;
+        this.location       = location;
+        this.verts          = verts;
         this.textureRepeatX = textureRepeatX;
         this.textureRepeatY = textureRepeatY;
         this.textureOffsetx = textureOffsetx;

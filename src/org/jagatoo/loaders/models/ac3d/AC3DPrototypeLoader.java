@@ -54,19 +54,19 @@ import java.util.StringTokenizer;
  * 
  * @version 1.1
  */
-public class AC3DLoader
+public class AC3DPrototypeLoader
 {
     /**
      * Reads the header block.
      */
-    private static AC3DHeader loadHeader(BufferedReader reader) throws IOException
+    private static AC3DHeader loadHeader( BufferedReader reader ) throws IOException
     {
         String header = reader.readLine();
         String filetype = header.substring( 0, 4 );
         String versionText = header.substring( 4 );
         //int formatVersion = header.charAt( 4 ) - 87;
         int formatVersion = Integer.parseInt( versionText, 16 );
-        if (!(header.substring( 0, 4 ).equals( "AC3D" )))
+        if ( !( header.substring( 0, 4 ).equals( "AC3D" ) ) )
         {
             System.out.println( "File is not an AC3D file" );
             System.out.println( "Header read: " + header );
@@ -76,7 +76,7 @@ public class AC3DLoader
         
         //System.out.println( "Found AC3D file of format version " + formatVersion );
         
-        return( new AC3DHeader(filetype, formatVersion) );
+        return( new AC3DHeader( filetype, formatVersion ) );
     }
     
     /**
@@ -87,7 +87,7 @@ public class AC3DLoader
      * 
      * @return The <CODE>AC3DMaterial</CODE>
      */
-    private static AC3DMaterial loadMaterial(String data, int materialIndex)
+    private static AC3DMaterial loadMaterial( String data, int materialIndex )
     {
         // The name of the material
         String name;
@@ -156,7 +156,7 @@ public class AC3DLoader
      * @throws IOException Thrown if an IO error happens
      * @throws FileFormatException Thrown if the file does not match the AC3D specification
      */
-    private static AC3DSurface loadSurface(BufferedReader reader) throws IOException
+    private static AC3DSurface loadSurface( BufferedReader reader ) throws IOException
     {
         // The type of this surface
         int type;
@@ -173,24 +173,24 @@ public class AC3DLoader
         
         String token;
         String line = reader.readLine();
-        StringTokenizer tokenizer = new StringTokenizer(line, " ");
+        StringTokenizer tokenizer = new StringTokenizer( line, " " );
         
         //System.out.println( "Surface: " + line );
         
         tokenizer.nextToken();
         int flags = Integer.parseInt( tokenizer.nextToken().substring( 2 ), 16 );
-        type = (flags & 0x0f);
+        type = ( flags & 0x0f );
         //System.out.println( "Type is: " + type );
-        shaded = ((flags >> 4) & 1) == 1;
+        shaded = ( ( flags >> 4 ) & 1 ) == 1;
         // System.out.println( "Shaded: " + shaded );
-        twoSided = ((flags >> 5) & 1) == 1;
+        twoSided = ( ( flags >> 5 ) & 1 ) == 1;
         //System.out.println( "Two sided: " + twoSided );
         
         // read next token
         line = reader.readLine();
         tokenizer = new StringTokenizer( line, " " );
         token = tokenizer.nextToken();
-        if (token.equals( "mat" ))
+        if ( token.equals( "mat" ) )
         {
             material = Integer.parseInt( tokenizer.nextToken() );
             // read next token
@@ -202,7 +202,7 @@ public class AC3DLoader
         
         surfVerts = new int[ numRefs ];
         textCoords = new float[ numRefs ][ 2 ];
-        for (int i = 0; i < numRefs; i++)
+        for ( int i = 0; i < numRefs; i++ )
         {
             int vertRef;
             line = reader.readLine();
@@ -228,7 +228,7 @@ public class AC3DLoader
      * @throws IOException Thrown if there is an IO Error
      * @throws FileFormatException Thrown if the file does not match the AC3D specification
      */
-    private static AC3DObject loadObject(String line, BufferedReader reader) throws IOException
+    private static AC3DObject loadObject( String line, BufferedReader reader ) throws IOException
     {
         // The type of the object
         int type;
@@ -256,15 +256,15 @@ public class AC3DLoader
         
         tokenizer.nextToken();
         stringType = token = tokenizer.nextToken();
-        if (stringType.equals( "world" ))
+        if ( stringType.equals( "world" ) )
         {
             type = AC3DObject.TYPE_WORLD;
         }
-        else if (stringType.equals( "poly" ))
+        else if ( stringType.equals( "poly" ) )
         {
             type = AC3DObject.TYPE_POLY;
         }
-        else if (stringType.equals( "group" ))
+        else if ( stringType.equals( "group" ) )
         {
             type = AC3DObject.TYPE_GROUP;
         }
@@ -274,66 +274,66 @@ public class AC3DLoader
         }
         //System.out.println( "Object type: " + type );
         
-        while (!(token.equals( "kids" )))
+        while ( !( token.equals( "kids" ) ) )
         {
             line = reader.readLine();
             tokenizer = new StringTokenizer( line );
             token = tokenizer.nextToken();
-            if (token.equals("name"))
+            if ( token.equals( "name" ) )
             {
                 name = tokenizer.nextToken();
                 //System.out.println( "name: " + name );
             }
-            else if (token.equals( "data" ))
+            else if ( token.equals( "data" ) )
             {
                 // I think this is just one line, the data block is a single line (maybe)
                 line = reader.readLine();
                 //System.out.println( "data tags unsupported" );
             }
-            else if (token.equals( "texture" ))
+            else if ( token.equals( "texture" ) )
             {
                 // Read the first quote
                 tokenizer.nextToken( "\"" );
                 // read up to the second quote
                 textureName = tokenizer.nextToken( "\"" );
             }
-            else if (token.equals( "texoff" ))
+            else if ( token.equals( "texoff" ) )
             {
                 textureOffsetx = Float.parseFloat( tokenizer.nextToken() );
                 textureOffsety = Float.parseFloat( tokenizer.nextToken() );
             }
-            else if (token.equals( "texrep" ))
+            else if ( token.equals( "texrep" ) )
             {
                 textureRepeatX = Float.parseFloat( tokenizer.nextToken() );
                 textureRepeatY = Float.parseFloat( tokenizer.nextToken() );
                 //System.out.println( "repy: " + repy + " repx: " + repx );
             }
-            else if (token.equals( "rot" ))
+            else if ( token.equals( "rot" ) )
             {
                 //System.out.println( "rot tag" );
-                for (int i = 0; i < 9; i++)
+                for ( int i = 0; i < 9; i++ )
                 {
                     rotation[ i ] = Float.parseFloat( tokenizer.nextToken() );
                 }
             }
-            else if (token.equals( "loc" ))
+            else if ( token.equals( "loc" ) )
             {
                 // System.out.println( "loc tag" );
-                for (int i = 0; i < 3; i++)
+                for ( int i = 0; i < 3; i++ )
                 {
                     location[ i ] = Float.parseFloat( tokenizer.nextToken() );
                 }
             }
-            else if (token.equals( "url" ))
+            else if ( token.equals( "url" ) )
             {
                 System.out.println( "url tag unsuported" );
             }
-            else if (token.equals( "numvert" ))
+            else if ( token.equals( "numvert" ) )
             {
                 int numvert = Integer.parseInt( tokenizer.nextToken() );
                 verts = new float[ numvert ][ 3 ];
                 
-                for (int i = 0; i < numvert; i++)
+                for ( int i = 0; i < numvert; i++ )
                 {
                     line = reader.readLine();
                     tokenizer = new StringTokenizer( line, " " );
@@ -342,18 +342,18 @@ public class AC3DLoader
                     verts[ i ][ 2 ] = Float.parseFloat( tokenizer.nextToken() );
                 }
             }
-            else if (token.equals( "numsurf" ))
+            else if ( token.equals( "numsurf" ) )
             {
                 int numsurf = Integer.parseInt( tokenizer.nextToken() );
                 //System.out.println( "Reading " + numsurf + " surfaces" );
-                for (int i = 0; i < numsurf; i++)
+                for ( int i = 0; i < numsurf; i++ )
                 {
                     //System.out.println( "Reading surface " + i );
                     AC3DSurface surface = loadSurface( reader );
                     
                     // check we are a line, or that we have at least 3 vertecies
                     // as a poly with 3 vertecies is broked
-                    if ((surface.isLine()) || (surface.getVertexReferenceCount() >= 3))
+                    if ( ( surface.isLine() ) || ( surface.getVertexReferenceCount() >= 3 ) )
                     {
                         tempSurfaces.add( surface );
                     }
@@ -373,7 +373,7 @@ public class AC3DLoader
         object = new AC3DObject( type, name, textureName, rotation, location,
                                  verts, textureRepeatX, textureRepeatY, textureOffsetx,
                                  textureOffsety );
-        for (AC3DSurface surf: tempSurfaces)
+        for ( AC3DSurface surf: tempSurfaces )
         {
             object.addSurface( surf );
         }
@@ -381,12 +381,12 @@ public class AC3DLoader
         //System.out.println( "token is " + token );
         
         // there is always one, and only onw kids token
-        if (token.equals( "kids" ))
+        if ( token.equals( "kids" ) )
         {
             int numKids = Integer.parseInt( tokenizer.nextToken() );
             
             //System.out.println( "Adding " + numKids + " to " + object.getName() + object );
-            for (int i = 0; i < numKids; i++)
+            for ( int i = 0; i < numKids; i++ )
             {
                 object.addObject( loadObject( reader ) );
             }
@@ -424,7 +424,7 @@ public class AC3DLoader
      * 
      * @return The model containing the fully textured and materialed object
      */
-    public static AC3DModelPrototype load(InputStream in, URL baseURL) throws IOException
+    public static AC3DModelPrototype load( InputStream in, URL baseURL ) throws IOException
     {
         //long startTime = System.currentTimeMillis();
         
@@ -433,16 +433,16 @@ public class AC3DLoader
         int materialCount = 0;
         
         String line;
-        while ((line = reader.readLine()) != null)
+        while ( ( line = reader.readLine() ) != null )
         {
             //System.out.println( "Read: " + line );
             String token = new StringTokenizer( line, " " ).nextToken();
             //System.out.println( "Token is: " + token );
-            if (token.equals( "MATERIAL" ))
+            if ( token.equals( "MATERIAL" ) )
             {
                 model.addMaterial( loadMaterial( line, materialCount++ ) );
             }
-            else if (token.equals( "OBJECT" ))
+            else if ( token.equals( "OBJECT" ) )
             {
                 model.addObject( loadObject( line, reader ) );
             }
@@ -461,7 +461,7 @@ public class AC3DLoader
         
         try
         {
-            if (args[ 0 ].equals( "URL" ))
+            if ( args[ 0 ].equals( "URL" ) )
             {
                 load( new URL( args[ 1 ] ) );
             }
@@ -470,7 +470,7 @@ public class AC3DLoader
                 load( args[ 0 ] );
             }
         }
-        catch (Throwable e)
+        catch ( Throwable e )
         {
             e.printStackTrace();
         }

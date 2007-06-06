@@ -50,7 +50,7 @@ public class ResourceLoadFailedException extends Exception
      * Constructs a <code>ResourceLoadFailedException</code> with the specified detail message.
      * @param msg the detail message.
      */
-    public ResourceLoadFailedException(String msg)
+    public ResourceLoadFailedException( String msg )
     {
         super( msg );
     }

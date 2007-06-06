@@ -48,26 +48,26 @@ package org.jagatoo.loaders.models.ac3d;
 public class AC3DSurface
 {
     /** polygon type*/
-    public static final int POLYGON = 0;
+    public static final int  POLYGON = 0;
     /** closed line type*/
-    public static final int CLOSED_LINE = 1;
+    public static final int  CLOSED_LINE = 1;
     /** open line type*/
-    public static final int LINE = 2;
+    public static final int  LINE = 2;
     
     /** The type of this surface */
-    private int type;
+    private int             type;
     /** is two sided?*/
-    private boolean twoSided;
+    private boolean         twoSided;
     /** is shaded */
-    private boolean shaded;
+    private boolean         shaded;
     /** materials index */
-    private int material;
+    private int             material;
     /** The vertecies on this surface */
-    private int[] surfVerts;
+    private int[]           surfVerts;
     /** The texture coordiantes for each vertex */
-    private float[][] textCoords;
+    private float[][]       textCoords;
     
-    private Object userObject = null;
+    private Object          userObject = null;
     
     /**
      * @return The type of this surface
@@ -110,7 +110,7 @@ public class AC3DSurface
      */
     public boolean isLine()
     {
-        if (type!=POLYGON)
+        if ( type != POLYGON )
         {
             return( true );
         }
@@ -166,14 +166,14 @@ public class AC3DSurface
      * @param surfVerts The index of the vertex
      * @param textCoords The texture coordinates (unmodified)
      */
-    public AC3DSurface(int type, boolean twoSided, boolean shaded, int material, int[] surfVerts, float[][] textCoords)
+    public AC3DSurface( int type, boolean twoSided, boolean shaded, int material, int[] surfVerts, float[][] textCoords )
     {
-        this.type = type;
-        this.twoSided = twoSided;
-        this.shaded = shaded;
-        this.material = material;
-        this.surfVerts = surfVerts;
-        this.textCoords = textCoords;
+        this.type        = type;
+        this.twoSided    = twoSided;
+        this.shaded      = shaded;
+        this.material    = material;
+        this.surfVerts   = surfVerts;
+        this.textCoords  = textCoords;
         
         //System.out.println( "Created surface, type: " + type + " twosided: " + twoSided + " shaded: " + shaded + " with " + surfVerts.length + " vertecies" );
     }
