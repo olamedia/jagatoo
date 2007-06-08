@@ -35,9 +35,8 @@ package org.jagatoo.loaders.models.obj;
 
 import java.util.List;
 
+import org.jagatoo.util.arrays.ArrayVector;
 import org.jagatoo.util.geometry.Polygon;
-import org.openmali.vecmath.TexCoord2f;
-import org.openmali.vecmath.Vector3f;
 
 /**
  * An OBJFace.
@@ -64,7 +63,7 @@ public class OBJFace
         return( ( vData.length - 2 ) * 3 );
     }
     
-    private int findIndex( Vector3f vt )
+    private int findIndex( float[] vt )
     {
         for ( int i = 0; i < vData.length; i++ )
         {
@@ -77,17 +76,17 @@ public class OBJFace
         return( -1 );
     }
     
-    public void configure( Vector3f[] dataVerts, Vector3f[] dataNormals, TexCoord2f[] dataTexs, int index )
+    public void configure( float[][] dataVerts, float[][] dataNormals, float[][] dataTexs, int index )
     {
-        Vector3f v1 = new Vector3f();
-        Vector3f v2 = new Vector3f();
-        Vector3f faceNormal = new Vector3f();
+        float[] v1 = new float[ 3 ];
+        float[] v2 = new float[ 3 ];
+        float[] faceNormal = new float[ 3 ];
         
-        v1.sub( faceList.getVertexList().get( vData[ 1 ] ), faceList.getVertexList().get( vData[ 0 ] ) );
-        v2.sub( faceList.getVertexList().get( vData[ 2 ] ), faceList.getVertexList().get( vData[ 0 ] ) );
-        faceNormal.cross( v1, v2 );
-        faceNormal.normalize();
-        faceNormal.scale( -1 );
+        ArrayVector.sub( faceList.getVertexList().get( vData[ 1 ] ), faceList.getVertexList().get( vData[ 0 ] ), v1 );
+        ArrayVector.sub( faceList.getVertexList().get( vData[ 2 ] ), faceList.getVertexList().get( vData[ 0 ] ), v2 );
+        ArrayVector.cross( v1, v2, faceNormal );
+        ArrayVector.normalize( faceNormal );
+        ArrayVector.negate( faceNormal );
         
         for ( int i = 0; i < vData.length; i++ )
         {
@@ -101,7 +100,7 @@ public class OBJFace
             for ( int v = 0; v < 3; v++ )
             {
                 int ptIndex = index + ( i * 3 ) + v;
-                int vIndex = findIndex( (Vector3f)tri.getVertices().get( v ) );
+                int vIndex = findIndex( (float[])tri.getVertices().get( v ) );
                 
                 //array.setCoordinate( index + i, verts.get( vData[ i ] ) );
                 dataVerts[ ptIndex ] = faceList.getVertexList().get( vData[ vIndex ] );

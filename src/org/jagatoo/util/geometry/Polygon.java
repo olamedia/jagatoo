@@ -36,8 +36,7 @@ package org.jagatoo.util.geometry;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openmali.vecmath.Point3f;
-import org.openmali.vecmath.Tuple3f;
+import org.jagatoo.util.arrays.ArrayUtils;
 
 /**
  * Simple class encapsulating a set of points which define the outline of a coplanar
@@ -48,30 +47,30 @@ import org.openmali.vecmath.Tuple3f;
  */
 public class Polygon
 {
-    private List<Tuple3f> vertices;
+    private List<float[]> vertices;
     
-    public List<Tuple3f> getVertices()
+    public List<float[]> getVertices()
     {
         return( vertices );
     }
     
-    public void add(Tuple3f v)
+    public void add( float[] v )
     {
         vertices.add( v );
     }
     
     public void add( float x, float y, float z )
     {
-        add( new Point3f( x,y,z ) );
+        add( new float[] { x, y, z } );
     }
     
-    public boolean contains( Tuple3f point )
+    public boolean contains( float[] point )
     {
         for ( int i = 0; i < vertices.size(); i++ )
         {
-            final Tuple3f vert = vertices.get( i );
+            final float[] vert = vertices.get( i );
             
-            if ( vert.equals( point ) )
+            if ( ArrayUtils.equals( vert, point ) )
             {
                 return( true );
             }
@@ -95,12 +94,12 @@ public class Polygon
         }
         else if ( vertices.size() > 3 )
         {
-            Tuple3f origin = (Tuple3f)vertices.get( 0 );
+            float[] origin = vertices.get( 0 );
             for ( int i = 1; i < vertices.size() - 1; i++ )
             {
                 Polygon tri = new Polygon();
-                Tuple3f v2 = vertices.get( i );
-                Tuple3f v3 = vertices.get( i + 1 );
+                float[] v2 = vertices.get( i );
+                float[] v3 = vertices.get( i + 1 );
                 tri.add( origin );
                 tri.add( v2 );
                 tri.add( v3 );
@@ -119,17 +118,17 @@ public class Polygon
         
         for ( int i = 0; i < vertices.size(); i++ )
         {
-            System.out.println( "  P" + i + ": " + (Tuple3f)vertices.get( i ) );
+            System.out.println( "  P" + i + ": " + (float[])vertices.get( i ) );
         }
     }
     
-    public Polygon( List<Tuple3f> vertices )
+    public Polygon( List<float[]> vertices )
     {
         this.vertices = vertices;
     }
     
     public Polygon()
     {
-        vertices = new ArrayList<Tuple3f>();
+        this( new ArrayList<float[]>() );
     }
 }

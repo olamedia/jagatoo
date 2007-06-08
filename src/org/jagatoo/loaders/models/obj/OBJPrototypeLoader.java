@@ -45,10 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.openmali.vecmath.Color3f;
-import org.openmali.vecmath.TexCoord2f;
-import org.openmali.vecmath.Vector3f;
-
 /**
  * A loader to create abstract java data from a Wavefront OBJ file.
  * 
@@ -61,40 +57,46 @@ public final class OBJPrototypeLoader
 {
     protected static Boolean debug = false;
     
-    private static Vector3f parseVector( String line )
+    private static float[] parseVector( String line )
     {
         StringTokenizer tokens = new StringTokenizer( line );
         
         tokens.nextToken();
         
-        final float x = Float.parseFloat( tokens.nextToken() );
-        final float y = Float.parseFloat( tokens.nextToken() );
-        final float z = Float.parseFloat( tokens.nextToken() );
+        float[] vector = new float[ 3 ];
         
-        return( new Vector3f( x, y, z ) );
+        vector[ 0 ] = Float.parseFloat( tokens.nextToken() );
+        vector[ 1 ] = Float.parseFloat( tokens.nextToken() );
+        vector[ 2 ] = Float.parseFloat( tokens.nextToken() );
+        
+        return( vector );
     }
     
-    private static TexCoord2f parseTexCoord( String line )
+    private static float[] parseTexCoord( String line )
     {
         StringTokenizer tokens = new StringTokenizer( line );
         
         tokens.nextToken();
         
-        final float u = Float.parseFloat( tokens.nextToken() );
-        final float v = Float.parseFloat( tokens.nextToken() );
+        float[] texCoord = new float[ 2 ];
         
-        return( new TexCoord2f( u, v ) );
+        texCoord[ 0 ] = Float.parseFloat( tokens.nextToken() );
+        texCoord[ 1 ] = Float.parseFloat( tokens.nextToken() );
+        
+        return( texCoord );
     }
     
-    private static Color3f parseColor( String token )
+    private static float[] parseColor( String token )
     {
         StringTokenizer tokens = new StringTokenizer( token );
         
-        final float r = Float.parseFloat( tokens.nextToken() );
-        final float g = Float.parseFloat( tokens.nextToken() );
-        final float b = Float.parseFloat( tokens.nextToken() );
+        float[] color = new float[ 3 ];
         
-        return( new Color3f ( r, g, b ) );
+        color[ 0 ] = Float.parseFloat( tokens.nextToken() );
+        color[ 1 ] = Float.parseFloat( tokens.nextToken() );
+        color[ 2 ] = Float.parseFloat( tokens.nextToken() );
+        
+        return( color );
     }
     
     private static List<OBJMaterial> parseMatLib( URL baseURL, String name ) throws IOException
@@ -157,29 +159,29 @@ public final class OBJPrototypeLoader
                 }
                 else if ( line.startsWith( "Tf" ) )
                 {
-                    Color3f col = parseColor( line.substring( line.indexOf( " " ) + 1 ) );
+                    float[] color = parseColor( line.substring( line.indexOf( " " ) + 1 ) );
                     
-                    mat.setDiffuseColor( col );
-                    mat.setAmbientColor( col );
+                    mat.setDiffuseColor( color );
+                    mat.setAmbientColor( color );
                 }
                 else if ( line.startsWith( "Ka" ) )
                 {
-                    Color3f col = parseColor( line.substring( line.indexOf( " " ) + 1 ) );
+                    float[] color = parseColor( line.substring( line.indexOf( " " ) + 1 ) );
                     
-                    mat.setAmbientColor( col );
+                    mat.setAmbientColor( color );
                 }
                 else if ( line.startsWith( "Kd" ) )
                 {
-                    Color3f col = parseColor( line.substring( line.indexOf( " " ) + 1 ) );
+                    float[] color = parseColor( line.substring( line.indexOf( " " ) + 1 ) );
                     
-                    mat.setColor( col );
-                    mat.setDiffuseColor( col );
+                    mat.setColor( color );
+                    mat.setDiffuseColor( color );
                 }
                 else if ( line.startsWith( "Ks" ) )
                 {
-                    Color3f col = parseColor( line.substring( line.indexOf( " " ) + 1 ) );
+                    float[] color = parseColor( line.substring( line.indexOf( " " ) + 1 ) );
                     
-                    mat.setSpecularColor( col );
+                    mat.setSpecularColor( color );
                 }
                 else if ( line.startsWith( "Ns" ) )
                 {
@@ -212,15 +214,20 @@ public final class OBJPrototypeLoader
         return( matList );
     }
     
-    public static OBJModelPrototype load( InputStream in, URL baseURL, Vector3f geomOffset ) throws IOException
+    public static OBJModelPrototype load( InputStream in, URL baseURL, float[] geomOffset ) throws IOException
     {
+        if ( ( geomOffset != null ) && ( geomOffset.length != 3 ) )
+        {
+            throw( new IllegalArgumentException( "geomOffset must be either null or length 3." ) );
+        }
+        
         BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
         
         Map<String, OBJMaterial> matMap = new HashMap<String, OBJMaterial>();
         
-        List<Vector3f> verts = new ArrayList<Vector3f>();
-        List<Vector3f> normals = new ArrayList<Vector3f>();
-        List<TexCoord2f> texs = new ArrayList<TexCoord2f>();
+        List<float[]> verts = new ArrayList<float[]>();
+        List<float[]> normals = new ArrayList<float[]>();
+        List<float[]> texs = new ArrayList<float[]>();
         
         OBJGroup topGroup = OBJGroup.createTopGroup( verts, normals, texs );
         
@@ -252,8 +259,13 @@ public final class OBJPrototypeLoader
                 }
                 else if (line.startsWith( "v" ))
                 {
-                    Vector3f vert = parseVector( line );
-                    vert.add( geomOffset );
+                    float[] vert = parseVector( line );
+                    if (geomOffset != null)
+                    {
+                        vert[ 0 ] += geomOffset[ 0 ];
+                        vert[ 1 ] += geomOffset[ 1 ];
+                        vert[ 2 ] += geomOffset[ 2 ];
+                    }
                     verts.add( vert );
                 }
                 else if (line.startsWith( "f" ))
@@ -317,7 +329,7 @@ public final class OBJPrototypeLoader
     
     public static OBJModelPrototype load( InputStream in, URL baseURL ) throws IOException
     {
-        return( load( in, baseURL, new Vector3f( 0.0f, 0.0f, 0.0f ) ) );
+        return( load( in, baseURL, null ) );
     }
     
     private OBJPrototypeLoader()

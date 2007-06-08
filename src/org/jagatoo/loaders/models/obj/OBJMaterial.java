@@ -33,8 +33,6 @@
  */
 package org.jagatoo.loaders.models.obj;
 
-import org.openmali.vecmath.Color3f;
-
 /**
  * Abstractly stores an OBJ loaded material.
  * 
@@ -44,10 +42,10 @@ public class OBJMaterial
 {
     private String   name = null;
     
-    private Color3f  color = null;
-    private Color3f  ambientColor = null;
-    private Color3f  diffuseColor = null;
-    private Color3f  specularColor = null;
+    private float[]  color = null;
+    private float[]  ambientColor = null;
+    private float[]  diffuseColor = null;
+    private float[]  specularColor = null;
     private float    shininess = 64.0f;
     
     private String   textureName = null;
@@ -65,18 +63,28 @@ public class OBJMaterial
      * 
      * @param color
      */
-    public void setColor( Color3f color )
+    public void setColor( float[] color )
     {
+        if ( color == null )
+        {
+            this.color = null;
+        }
         if (this.color != null)
-            this.color.set( color );
+        {
+            this.color[ 0 ] = color[ 0 ];
+            this.color[ 1 ] = color[ 1 ];
+            this.color[ 2 ] = color[ 2 ];
+        }
         else
-            this.color = new Color3f( color );
+        {
+            this.color = new float[] { color[ 0 ], color[ 1 ], color[ 2 ] };
+        }
     }
     
     /**
      * @return this material's color.
      */
-    public Color3f getColor()
+    public float[] getColor()
     {
         return( color );
     }
@@ -86,18 +94,28 @@ public class OBJMaterial
      * 
      * @param color
      */
-    public void setAmbientColor( Color3f color )
+    public void setAmbientColor( float[] color )
     {
+        if ( color == null )
+        {
+            this.ambientColor = null;
+        }
         if (this.ambientColor != null)
-            this.ambientColor.set( color );
+        {
+            this.ambientColor[ 0 ] = color[ 0 ];
+            this.ambientColor[ 1 ] = color[ 1 ];
+            this.ambientColor[ 2 ] = color[ 2 ];
+        }
         else
-            this.ambientColor = new Color3f( color );
+        {
+            this.ambientColor = new float[] { color[ 0 ], color[ 1 ], color[ 2 ] };
+        }
     }
     
     /**
      * @return this material's color.
      */
-    public Color3f getAmbientColor()
+    public float[] getAmbientColor()
     {
         return( ambientColor );
     }
@@ -107,18 +125,28 @@ public class OBJMaterial
      * 
      * @param color
      */
-    public void setDiffuseColor( Color3f color )
+    public void setDiffuseColor( float[] color )
     {
+        if ( color == null )
+        {
+            this.diffuseColor = null;
+        }
         if (this.diffuseColor != null)
-            this.diffuseColor.set( color );
+        {
+            this.diffuseColor[ 0 ] = color[ 0 ];
+            this.diffuseColor[ 1 ] = color[ 1 ];
+            this.diffuseColor[ 2 ] = color[ 2 ];
+        }
         else
-            this.diffuseColor = new Color3f( color );
+        {
+            this.diffuseColor = new float[] { color[ 0 ], color[ 1 ], color[ 2 ] };
+        }
     }
     
     /**
      * @return this material's diffuse color.
      */
-    public Color3f getDiffuseColor()
+    public float[] getDiffuseColor()
     {
         return( diffuseColor );
     }
@@ -128,18 +156,28 @@ public class OBJMaterial
      * 
      * @param color
      */
-    public void setSpecularColor( Color3f color )
+    public void setSpecularColor( float[] color )
     {
+        if ( color == null )
+        {
+            this.specularColor = null;
+        }
         if (this.specularColor != null)
-            this.specularColor.set( color );
+        {
+            this.specularColor[ 0 ] = color[ 0 ];
+            this.specularColor[ 1 ] = color[ 1 ];
+            this.specularColor[ 2 ] = color[ 2 ];
+        }
         else
-            this.specularColor = new Color3f( color );
+        {
+            this.specularColor = new float[] { color[ 0 ], color[ 1 ], color[ 2 ] };
+        }
     }
     
     /**
      * @return this material's specular color.
      */
-    public Color3f getSpecularColor()
+    public float[] getSpecularColor()
     {
         return( specularColor );
     }

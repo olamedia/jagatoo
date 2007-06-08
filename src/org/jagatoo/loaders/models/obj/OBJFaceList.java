@@ -37,9 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import org.openmali.vecmath.TexCoord2f;
-import org.openmali.vecmath.Vector3f;
-
 /**
  * A list of the faces that build up the obj file
  * 
@@ -49,9 +46,9 @@ import org.openmali.vecmath.Vector3f;
 public class OBJFaceList
 {
     private List<OBJFace> faces = new ArrayList<OBJFace>();
-    private List<Vector3f> verts;
-    private List<Vector3f> normals;
-    private List<TexCoord2f> texs;
+    private List<float[]> verts;
+    private List<float[]> normals;
+    private List<float[]> texs;
     
     private boolean texturesUsed = false;
     private boolean normalsUsed = false;
@@ -76,31 +73,31 @@ public class OBJFaceList
     }
     */
     
-    public List<Vector3f> getVertexList()
+    public List<float[]> getVertexList()
     {
         return( verts );
     }
     
     /*
-    public void setNormalList( List<Vector3f> normals )
+    public void setNormalList( List<float[]> normals )
     {
         this.normals = normals;
     }
     */
     
-    public List<Vector3f> getNormalList()
+    public List<float[]> getNormalList()
     {
         return( normals );
     }
     
     /*
-    public void setTexList( List<TexCoord2f> texs )
+    public void setTexList( List<float[]> texs )
     {
         this.texs = texs;
     }
     */
     
-    public List<TexCoord2f> getTexList()
+    public List<float[]> getTexList()
     {
         return( texs );
     }
@@ -245,7 +242,7 @@ public class OBJFaceList
         faces.add( face );
     }
     
-    public OBJFaceList( List<Vector3f> verts, List<Vector3f> normals, List<TexCoord2f> texs )
+    public OBJFaceList( List<float[]> verts, List<float[]> normals, List<float[]> texs )
     {
         this.verts = verts;
         this.normals = normals;

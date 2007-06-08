@@ -36,9 +36,6 @@ package org.jagatoo.loaders.models.obj;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openmali.vecmath.TexCoord2f;
-import org.openmali.vecmath.Vector3f;
-
 /**
  * A single group within the model
  * 
@@ -81,7 +78,7 @@ public class OBJGroup extends OBJFaceList
         return( children );
     }
     
-    private OBJGroup( String name, boolean isTopGroup, List<Vector3f> verts, List<Vector3f> normals, List<TexCoord2f> texs )
+    private OBJGroup( String name, boolean isTopGroup, List<float[]> verts, List<float[]> normals, List<float[]> texs )
     {
         super( verts, normals, texs );
         
@@ -89,12 +86,12 @@ public class OBJGroup extends OBJFaceList
         this.isTopGroup = isTopGroup;
     }
     
-    public OBJGroup( String name, List<Vector3f> verts, List<Vector3f> normals, List<TexCoord2f> texs )
+    public OBJGroup( String name, List<float[]> verts, List<float[]> normals, List<float[]> texs )
     {
         this( name, false, verts, normals, texs );
     }
     
-    public static OBJGroup createTopGroup( List<Vector3f> verts, List<Vector3f> normals, List<TexCoord2f> texs )
+    public static OBJGroup createTopGroup( List<float[]> verts, List<float[]> normals, List<float[]> texs )
     {
         return( new OBJGroup( "top", true, verts, normals, texs ) );
     }
