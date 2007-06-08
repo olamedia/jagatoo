@@ -239,7 +239,7 @@ public class OBJFaceList
             int ti = parseTextureIndex( pt );
             int ni = parseNormalIndex( pt );
             
-            face.add( vi - 1, ni - 1, ti - 1 );
+            face.add( ( vi > 0 ) ? vi - 1 : -1, ( ni > 0 ) ? ni - 1 : -1, ( ti > 0 ) ? ti - 1 : -1 );
         }
         
         faces.add( face );
