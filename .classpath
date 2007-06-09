@@ -6,8 +6,8 @@
 	<classpathentry kind="lib" path="third-party/math/vecmath-kh.jar"/>
 	<classpathentry kind="lib" path="third-party/xml/xbean.jar"/>
 	<classpathentry exported="true" kind="lib" path="third-party/groovy/groovy-all-1.1-BETA-1.jar"/>
-	<classpathentry kind="lib" path="src/org/jagatoo/loaders/models/collada/colladaschema.jar"/>
 	<classpathentry kind="lib" path="third-party/commons-io-1.2.jar"/>
 	<classpathentry kind="lib" path="third-party/commons-lang-2.1.jar"/>
+	<classpathentry kind="lib" path="third-party/colladaschema.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
