@@ -13,7 +13,6 @@ import javax.vecmath.Point3f;
 import org.apache.xmlbeans.XmlObject;
 import org.collada.x2005.x11.colladaSchema.COLLADADocument;
 import org.collada.x2005.x11.colladaSchema.CommonNewparamType;
-import org.collada.x2005.x11.colladaSchema.FxNewparamCommon;
 import org.collada.x2005.x11.colladaSchema.FxSampler2DCommon;
 import org.collada.x2005.x11.colladaSchema.FxSurfaceCommon;
 import org.collada.x2005.x11.colladaSchema.FxSurfaceInitFromCommon;
@@ -173,10 +172,15 @@ public class COLLADALoader {
             
             List<LibraryAnimations> libraryAnimationsList = collada
             .getLibraryAnimationsList();
+            if (!libraryAnimationsList.isEmpty()) {
+                logger.print("SS] Found LibraryAnimations ! Hmm we gotta implement animations soon !");
+            }
+            /*
             for (LibraryAnimations libraryAnimations : libraryAnimationsList) {
                 logger
                 .print("SS] Found LibraryAnimations ! Hmm we gotta implement animations soon !");
             }
+            */
             
             List<LibraryControllers> libraryControllersList = collada
             .getLibraryControllersList();
