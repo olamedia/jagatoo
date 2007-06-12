@@ -145,7 +145,7 @@ public final class OBJPrototypeLoader
                 {
                     // ignore comments
                 }
-                else if ( line.trim().isEmpty() )
+                else if ( line.trim().length() == 0 )
                 {
                     // ignore blank lines
                 }
@@ -245,7 +245,7 @@ public final class OBJPrototypeLoader
                 {
                     // comment: ignore
                 }
-                else if (line.isEmpty())
+                else if (line.length() == 0)
                 {
                     // empty line: ignore
                 }

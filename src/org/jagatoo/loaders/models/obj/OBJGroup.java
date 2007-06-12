@@ -60,7 +60,7 @@ public class OBJGroup extends OBJFaceList
     
     public boolean hasName()
     {
-        return( ( name != null ) && ( !name.isEmpty() ) );
+        return( ( name != null ) && ( name.length() > 0 ) );
     }
     
     public boolean isTopGroup()

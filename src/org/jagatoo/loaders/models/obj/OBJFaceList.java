@@ -135,7 +135,7 @@ public class OBJFaceList
     
     private int parseInt( String token )
     {
-        if ( token.isEmpty() )
+        if ( token.length() == 0 )
         {
             return( -1 );
         }
