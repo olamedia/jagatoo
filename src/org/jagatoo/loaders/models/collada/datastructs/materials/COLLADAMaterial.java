@@ -1,29 +1,36 @@
 package org.jagatoo.loaders.models.collada.datastructs.materials;
 
+import org.jagatoo.loaders.models.collada.datastructs.COLLADAFile;
+
 
 /**
  * A COLLADA Material
- * 
+ *
  * @author Amos Wenger (aka BlueSky)
  */
 public class COLLADAMaterial {
-    
+
     /** The ID */
     private final String id;
-    
+
     /** All effects used in this material */
     private final String effect;
-    
+
+    /** The file this COLLADAMaterial belongs to */
+    private final COLLADAFile file;
+
     /**
      * Creates a new COLLADAMaterial
+     * @param file the file this COLLADAMaterial belongs to
      * @param id The ID of this Material
      * @param effect The effect associated to this Material
      */
-    public COLLADAMaterial(String id, String effect) {
-        
+    public COLLADAMaterial(COLLADAFile file, String id, String effect) {
+
+        this.file = file;
         this.id = id;
         this.effect = effect;
-        
+
     }
 
     /**
@@ -39,5 +46,12 @@ public class COLLADAMaterial {
     public String getId() {
         return id;
     }
-    
+
+    /**
+     * @return the file
+     */
+    public COLLADAFile getFile() {
+        return file;
+    }
+
 }

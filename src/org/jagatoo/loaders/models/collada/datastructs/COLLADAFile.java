@@ -18,41 +18,50 @@ import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADALibrar
  * org.jagatoo.loaders.models.collada.schema.org.collada.x2005.x11.colladaSchema
  * package) is converted to a COLLADAFile. Then it can be used in a scenegraph,
  * e.g. Xith3D.
- * 
+ *
  * @author Amos Wenger (aka BlueSky)
  */
 public class COLLADAFile {
-    
+
     /** LibraryControllers : contains all controllers */
     private COLLADALibraryControllers libraryControllers;
-    
+
     /** LibraryEffects : contains all effects */
     private COLLADALibraryEffects libraryEffects;
-    
+
     /** LibraryImages : contains all images */
     private COLLADALibraryImages libraryImages;
-    
+
     /** LibraryMaterials : contains all materials */
     private COLLADALibraryMaterials libraryMaterials;
-    
+
     /** LibraryGeometries : contains all geometries */
     private COLLADALibraryGeometries libraryGeometries;
-    
+
     /** LibraryVisualScenes : contains all visual scenes */
     private COLLADALibraryVisualScenes libraryVisualsScenes;
-    
+
+    /**
+     * The base path, used e.g. when loading textures.
+     * Basically it's where this file has been loaded from.
+     */
+    private final String basePath;
+
     /**
      * Creates a new COLLADAFile
+     * @param basePath The base path, used e.g. when loading textures
      */
-    public COLLADAFile() {
-        
+    public COLLADAFile(String basePath) {
+
+        this.basePath = basePath;
+
         libraryControllers = new COLLADALibraryControllers();
         libraryEffects = new COLLADALibraryEffects();
         libraryImages = new COLLADALibraryImages();
         libraryMaterials = new COLLADALibraryMaterials();
         libraryGeometries = new COLLADALibraryGeometries();
         libraryVisualsScenes = new COLLADALibraryVisualScenes();
-        
+
     }
 
     /**
@@ -68,7 +77,7 @@ public class COLLADAFile {
     public COLLADALibraryEffects getLibraryEffects() {
         return libraryEffects;
     }
-    
+
     /**
      * @return the libraryImages
      */
@@ -82,7 +91,7 @@ public class COLLADAFile {
     public COLLADALibraryMaterials getLibraryMaterials() {
         return libraryMaterials;
     }
-    
+
     /**
      * @return the libraryGeometries
      */
@@ -95,6 +104,13 @@ public class COLLADAFile {
      */
     public COLLADALibraryVisualScenes getLibraryVisualsScenes() {
         return libraryVisualsScenes;
+    }
+
+    /**
+     * @return the basePath
+     */
+    public String getBasePath() {
+        return basePath;
     }
 
 }

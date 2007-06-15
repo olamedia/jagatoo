@@ -1,34 +1,48 @@
 package org.jagatoo.loaders.models.collada.datastructs.visualscenes;
 
+import org.jagatoo.loaders.models.collada.datastructs.COLLADAFile;
+
 /**
  * A COLLADA Node
- * 
+ *
  * @author Amos Wenger (aka BlueSky)
  */
-public class COLLADANode {
-    
+public abstract class COLLADANode {
+
+    /** The COLLADA file this node belongs to */
+    protected final COLLADAFile file;
+
     /** The id of this node */
-    private final String id;
-    
+    protected final String id;
+
     /** The name of this node */
-    private final String name;
-    
+    protected final String name;
+
     /** The transform of this node */
-    private final COLLADATransform transform;
-    
+    protected final COLLADATransform transform;
+
     /**
      * Creates a new COLLADANode
+     * @param file the COLLADA file this node belongs to
      * @param id The id of this Node
      * @param name The name of this Node
      * @param transform The transform of this Node
      *
      */
-    public COLLADANode(String id, String name, COLLADATransform transform) {
-        
+    public COLLADANode(COLLADAFile file, String id, String name, COLLADATransform transform) {
+
+        this.file = file;
         this.id = id;
         this.name = name;
         this.transform = transform;
-        
+
+    }
+
+    /**
+     * @return the file
+     */
+    public COLLADAFile getFile() {
+        return file;
     }
 
     /**
@@ -44,12 +58,12 @@ public class COLLADANode {
     public String getName() {
         return name;
     }
-    
+
     /**
      * @return the transform
      */
     public COLLADATransform getTransform() {
         return transform;
     }
-    
+
 }

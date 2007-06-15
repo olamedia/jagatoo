@@ -1,28 +1,31 @@
 package org.jagatoo.loaders.models.collada.datastructs.geometries;
 
+import org.jagatoo.loaders.models.collada.datastructs.COLLADAFile;
+
 /**
  * COLLADA Polygons Geometry contains geometry loaded from a COLLADA
  * file which has the "polygon" format
- * 
+ *
  * @author Amos Wenger (aka BlueSky)
  */
 public class COLLADAPolygonsGeometry extends COLLADAGeometry {
-    
+
     /** The Polygons in this geometry */
     private COLLADAMesh[] polygons = null;
-    
+
     /**
      * Create a new COLLADA Polygons Geometry
+     * @param file TODO
      * @param id {@inheritDoc}
      * @param name {@inheritDoc}
      * @param polygonCount The number of polygons that should be
      * in that PolygonsGeometry
      */
-    public COLLADAPolygonsGeometry(String id, String name, int polygonCount) {
-        
-        super(id, name);
+    public COLLADAPolygonsGeometry(COLLADAFile file, String id, String name, int polygonCount) {
+
+        super(file, id, name);
         polygons = new COLLADAMesh[polygonCount];
-        
+
     }
 
     /**
@@ -31,5 +34,5 @@ public class COLLADAPolygonsGeometry extends COLLADAGeometry {
     public COLLADAMesh[] getPolygons() {
         return polygons;
     }
-    
+
 }
