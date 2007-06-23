@@ -155,9 +155,9 @@ public abstract class PlaceableImpl implements Placeable {
     public void setPositionY(float v) {this.position.y = v; onPositionChanged();}
     public void setPositionZ(float v) {this.position.z = v; onPositionChanged();}
 
-    public void setRotationX(float v) {Tuple3f rot = getRotation(); MatrixUtils.eulerToMatrix3f(v, rot.y, rot.z, this.rotation);}
-    public void setRotationY(float v) {Tuple3f rot = getRotation(); MatrixUtils.eulerToMatrix3f(rot.x, v, rot.z, this.rotation);}
-    public void setRotationZ(float v) {Tuple3f rot = getRotation(); MatrixUtils.eulerToMatrix3f(rot.x, rot.y, v, this.rotation);}
+    public void setRotationX(float v) {Tuple3f rot = getRotation(); MatrixUtils.eulerToMatrix3f(v, rot.y, rot.z, this.rotation); onRotationChanged();}
+    public void setRotationY(float v) {Tuple3f rot = getRotation(); MatrixUtils.eulerToMatrix3f(rot.x, v, rot.z, this.rotation); onRotationChanged();}
+    public void setRotationZ(float v) {Tuple3f rot = getRotation(); MatrixUtils.eulerToMatrix3f(rot.x, rot.y, v, this.rotation); onRotationChanged();}
 
     public abstract void onPositionChanged();
     public abstract void onRotationChanged();
