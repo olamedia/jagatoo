@@ -64,11 +64,9 @@
  */
 package org.jagatoo.spatial.bodies;
 
-import org.jagatoo.util.heaps.VectorHeap;
 import org.openmali.FastMath;
 import org.openmali.vecmath.Point3f;
 import org.openmali.vecmath.Tuple3f;
-import org.openmali.vecmath.Vector3f;
 
 /**
  * An efficient Sphere.
@@ -268,23 +266,16 @@ public class Sphere implements java.io.Serializable, Body
             return;
         }
         
-        Vector3f trans = VectorHeap.alloc();
+        final float dl = FastMath.sqrt( (dx * dx) + (dy * dy) + (dz * dz) );
+        final float d2 = ( ( d + getRadius() + rr ) / 2.0f ) - getRadius();
+        final float dx2 = dx / dl * d2;
+        final float dy2 = dy / dl * d2;
+        final float dz2 = dz / dl * d2;
         
-        trans.set( dx, dy, dz );
-        trans.normalize();
-        trans.scale( ( d - getRadius() ) / 2.0f );
-        
-        setCenter( getCenterX() + trans.x,
-                   getCenterY() + trans.y,
-                   getCenterZ() + trans.z
+        setCenter( getCenterX() + dx2,
+                   getCenterY() + dy2,
+                   getCenterZ() + dz2
                  );
-        
-        /*
-        setCenter( getCenterX() + (dx / 2.0f),
-                   getCenterY() + (dy / 2.0f),
-                   getCenterZ() + (dz / 2.0f)
-                 );
-        */
         
         final float dia = getRadius() + d + rr;
         
