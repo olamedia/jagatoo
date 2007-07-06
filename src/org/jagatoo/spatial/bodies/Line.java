@@ -31,24 +31,28 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.datatypes;
+package org.jagatoo.spatial.bodies;
 
 import org.openmali.vecmath.Point3f;
 import org.openmali.vecmath.Tuple3f;
 import org.openmali.vecmath.Vector3f;
 
 /**
- * Simple ray implementation.
- * 
+ * Line is L(t) = P+t*D for any real-valued t.<br>
+ * D is not necessarily unit length.<br>
+ * <br>
+ * <i>Thanks to magic software for this one.</i>
+ *
+ * @author cas
  * @author Marvin Froehlich (aka Qudus)
  */
-public class Ray3f
+public class Line
 {
     private Point3f origin;
     private Vector3f direction;
     
     /**
-     * @return the ray's origin
+     * @return the line's origin
      */
     public Point3f getOrigin()
     {
@@ -56,7 +60,7 @@ public class Ray3f
     }
     
     /**
-     * Sets the ray's origin.
+     * Sets the line's origin.
      * 
      * @param x
      * @param y
@@ -70,7 +74,7 @@ public class Ray3f
     }
     
     /**
-     * Sets the ray's origin.
+     * Sets the line's origin.
      * 
      * @param origin new origin
      */
@@ -80,7 +84,7 @@ public class Ray3f
     }
     
     /**
-     * @return the ray's direction
+     * @return the line's direction
      */
     public Vector3f getDirection()
     {
@@ -88,7 +92,7 @@ public class Ray3f
     }
     
     /**
-     * Sets the ray's direction.
+     * Sets the line's direction.
      * 
      * @param x
      * @param y
@@ -102,7 +106,7 @@ public class Ray3f
     }
     
     /**
-     * Sets the ray's direction.
+     * Sets the line's direction.
      * 
      * @param direction new direction
      */
@@ -112,7 +116,7 @@ public class Ray3f
     }
     
     /**
-     * @return the ray's length
+     * @return the line's length
      * <i>same as length()</i>
      */
     public float getLength()
@@ -121,7 +125,7 @@ public class Ray3f
     }
     
     /**
-     * @return the ray's length
+     * @return the line's length
      * <i>same as getLength()</i>
      */
     public float length()
@@ -133,13 +137,13 @@ public class Ray3f
      * Creates a clone.
      */
     @Override
-    public Ray3f clone()
+    public Line clone()
     {
-        return( new Ray3f( this ) );
+        return( new Line( this ) );
     }
     
     /**
-     * Sets this ray to the passed parameters.
+     * Sets this line to the passed parameters.
      * 
      * @param origin the new origin point
      * @param direction the new direction vector
@@ -151,21 +155,21 @@ public class Ray3f
     }
     
     /**
-     * Sets this ray to be equal to the passed one.
+     * Sets this line to be equal to the passed one.
      */
-    public void set( Ray3f ray )
+    public void set( Line line )
     {
-        set( ray.getOrigin(), ray.getDirection() );
+        set( line.getOrigin(), line.getDirection() );
     }
     
     /**
-     * Checks if the given ray equals this one.
+     * Checks if the given line equals this one.
      * 
-     * @param ray the ray to test for equality
+     * @param line the ray to test for equality
      */
-    public boolean equals( Ray3f ray )
+    public boolean equals( Line line )
     {
-        return( this.origin.equals( ray.origin ) && this.direction.equals( ray.direction ) );
+        return( this.origin.equals( line.origin ) && this.direction.equals( line.direction ) );
     }
     
     /**
@@ -174,8 +178,8 @@ public class Ray3f
     @Override
     public boolean equals( Object o )
     {
-        if (o instanceof Ray3f )
-            return( equals( (Ray3f)o ) );
+        if (o instanceof Line )
+            return( equals( (Line)o ) );
         else
             return( false );
     }
@@ -192,7 +196,7 @@ public class Ray3f
     }
     
     /**
-     * Creates a new Ray3f.
+     * Creates a new Line.
      * 
      * @param origX
      * @param origY
@@ -201,7 +205,7 @@ public class Ray3f
      * @param direcY
      * @param direcZ
      */
-    public Ray3f( float origX, float origY, float origZ, float direcX, float direcY, float direcZ )
+    public Line( float origX, float origY, float origZ, float direcX, float direcY, float direcZ )
     {
         super();
         
@@ -210,20 +214,20 @@ public class Ray3f
     }
     
     /**
-     * Creates a new Ray3f.
+     * Creates a new Line.
      * 
      * @param origin the new origin point
      * @param direction the new direction vector
      */
-    public Ray3f( Point3f origin, Vector3f direction )
+    public Line( Point3f origin, Vector3f direction )
     {
         this( origin.x, origin.y, origin.z, direction.x, direction.y, direction.z );
     }
     
     /**
-     * Creates a new Ray3f.
+     * Creates a new Line.
      */
-    public Ray3f()
+    public Line()
     {
         this( 0f, 0f, 0f, 0f, 0f, 0f );
     }
@@ -231,7 +235,7 @@ public class Ray3f
     /**
      * Clone constructor.
      */
-    public Ray3f( Ray3f template )
+    public Line( Line template )
     {
         this();
         
