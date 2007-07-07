@@ -2,8 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="third-party/math/openmali.jar"/>
-	<classpathentry kind="lib" path="third-party/math/vecmath-kh.jar"/>
+	<classpathentry kind="lib" path="third-party/math/openmali.jar" sourcepath="/openmali/src"/>
 	<classpathentry kind="lib" path="third-party/xml/xbean.jar"/>
 	<classpathentry exported="true" kind="lib" path="third-party/groovy/groovy-all-1.1-BETA-1.jar"/>
 	<classpathentry kind="lib" path="third-party/commons-io-1.2.jar"/>

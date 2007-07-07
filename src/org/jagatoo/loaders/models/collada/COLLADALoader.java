@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.vecmath.Point3f;
-
 import org.apache.xmlbeans.XmlObject;
 import org.collada.x2005.x11.colladaSchema.COLLADADocument;
 import org.collada.x2005.x11.colladaSchema.CommonNewparamType;
@@ -72,6 +70,7 @@ import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADANode;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADAScene;
 import org.jagatoo.loaders.models.collada.logging.HierarchicalOutputter;
 import org.openmali.vecmath.Matrix4f;
+import org.openmali.vecmath.Point3f;
 
 /**
  * This is a really simple COLLADA file loader. Its features are limited for now
