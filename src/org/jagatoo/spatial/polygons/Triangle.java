@@ -113,6 +113,21 @@ public class Triangle extends Polygon
     }
     
     
+    public void setVertexCoords( Tuple3f coordA, Tuple3f coordB, Tuple3f coordC )
+    {
+        setVertexCoordA( coordA );
+        setVertexCoordB( coordB );
+        setVertexCoordC( coordC );
+    }
+    
+    public void getVertexCoords( Tuple3f coordA, Tuple3f coordB, Tuple3f coordC )
+    {
+        getVertexCoordA( coordA );
+        getVertexCoordB( coordB );
+        getVertexCoordC( coordC );
+    }
+    
+    
     public void setVertexNormalA( Vector3f normal )
     {
         if ( this.normalA == null )
@@ -171,6 +186,21 @@ public class Triangle extends Polygon
     public Vector3f getVertexNormalC()
     {
         return( this.normalC );
+    }
+    
+    
+    public void setVertexNormals( Vector3f normalA, Vector3f normalB, Vector3f normalC )
+    {
+        setVertexNormalA( normalA );
+        setVertexNormalB( normalB );
+        setVertexNormalC( normalC );
+    }
+    
+    public void getVertexNormals( Vector3f normalA, Vector3f normalB, Vector3f normalC )
+    {
+        getVertexNormalA( normalA );
+        getVertexNormalB( normalB );
+        getVertexNormalC( normalC );
     }
     
     
@@ -235,6 +265,21 @@ public class Triangle extends Polygon
     }
     
     
+    public void setVertexColors( Color3f colorA, Color3f colorB, Color3f colorC )
+    {
+        setVertexColorA( colorA );
+        setVertexColorB( colorB );
+        setVertexColorC( colorC );
+    }
+    
+    public void getVertexColors( Color3f colorA, Color3f colorB, Color3f colorC )
+    {
+        getVertexColorA( colorA );
+        getVertexColorB( colorB );
+        getVertexColorC( colorC );
+    }
+    
+    
     public void setVertexTexCoordA( TexCoord2f texCoord )
     {
         if ( this.texCoordA == null )
@@ -293,6 +338,21 @@ public class Triangle extends Polygon
     public TexCoord2f getVertexTexCoordC()
     {
         return( this.texCoordC );
+    }
+    
+    
+    public void setVertexTexCoords( TexCoord2f texCoordA, TexCoord2f texCoordB, TexCoord2f texCoordC )
+    {
+        setVertexTexCoordA( texCoordA );
+        setVertexTexCoordB( texCoordB );
+        setVertexTexCoordC( texCoordC );
+    }
+    
+    public void getVertexTexCoords( TexCoord2f texCoordA, TexCoord2f texCoordB, TexCoord2f texCoordC )
+    {
+        getVertexTexCoordA( texCoordA );
+        getVertexTexCoordB( texCoordB );
+        getVertexTexCoordC( texCoordC );
     }
     
     
@@ -413,21 +473,6 @@ public class Triangle extends Polygon
             getVertexColorC( color );
         if ( hasFeature( TEXTURE_COORDINATES_2 ) )
             getVertexTexCoordC( texCoord );
-    }
-    
-    
-    public void setVertexCoords( Tuple3f coordA, Tuple3f coordB, Tuple3f coordC )
-    {
-        setVertexCoordA( coordA );
-        setVertexCoordB( coordB );
-        setVertexCoordC( coordC );
-    }
-    
-    public void getVertexCoords( Tuple3f coordA, Tuple3f coordB, Tuple3f coordC )
-    {
-        getVertexCoordA( coordA );
-        getVertexCoordB( coordB );
-        getVertexCoordC( coordC );
     }
     
     
