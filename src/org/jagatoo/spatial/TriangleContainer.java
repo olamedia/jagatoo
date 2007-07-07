@@ -33,7 +33,7 @@
  */
 package org.jagatoo.spatial;
 
-import org.openmali.vecmath.Tuple3f;
+import org.jagatoo.spatial.polygons.Triangle;
 
 /**
  * Provides access to the triangles in an object.
@@ -56,5 +56,5 @@ public interface TriangleContainer
      * @param i
      * @param triangle
      */
-    public boolean getTriangle( int i, Tuple3f triangle );
+    public boolean getTriangle( int i, Triangle triangle );
 }

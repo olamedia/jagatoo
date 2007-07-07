@@ -423,6 +423,13 @@ public class Triangle extends Polygon
         setVertexCoordC( coordC );
     }
     
+    public void getVertexCoords( Tuple3f coordA, Tuple3f coordB, Tuple3f coordC )
+    {
+        getVertexCoordA( coordA );
+        getVertexCoordB( coordB );
+        getVertexCoordC( coordC );
+    }
+    
     
     /**
      * Calculates the face normal from the cross product of edge AC and AB.
