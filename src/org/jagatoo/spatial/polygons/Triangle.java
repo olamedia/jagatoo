@@ -1,6 +1,7 @@
 package org.jagatoo.spatial.polygons;
 
 import org.jagatoo.datatypes.Ray3f;
+import org.jagatoo.datatypes.Vertex3f;
 import org.openmali.FastMath;
 import org.openmali.vecmath.Color3f;
 import org.openmali.vecmath.Matrix3f;
@@ -59,7 +60,7 @@ public class Triangle extends Polygon
         else
             this.coordA.set( coord );
         
-        addFeature( COORDINATES );
+        addFeature( Vertex3f.COORDINATES );
     }
     
     public void setVertexCoordB( Tuple3f coord )
@@ -69,7 +70,7 @@ public class Triangle extends Polygon
         else
             this.coordB.set( coord );
         
-        addFeature( COORDINATES );
+        addFeature( Vertex3f.COORDINATES );
     }
     
     public void setVertexCoordC( Tuple3f coord )
@@ -79,7 +80,7 @@ public class Triangle extends Polygon
         else
             this.coordC.set( coord );
         
-        addFeature( COORDINATES );
+        addFeature( Vertex3f.COORDINATES );
     }
     
     public void getVertexCoordA( Tuple3f coord )
@@ -135,7 +136,7 @@ public class Triangle extends Polygon
         else
             this.normalA.set( normal );
         
-        addFeature( NORMALS );
+        addFeature( Vertex3f.NORMALS );
     }
     
     public void setVertexNormalB( Vector3f normal )
@@ -145,7 +146,7 @@ public class Triangle extends Polygon
         else
             this.normalB.set( normal );
         
-        addFeature( NORMALS );
+        addFeature( Vertex3f.NORMALS );
     }
     
     public void setVertexNormalC( Vector3f normal )
@@ -155,7 +156,7 @@ public class Triangle extends Polygon
         else
             this.normalC.set( normal );
         
-        addFeature( NORMALS );
+        addFeature( Vertex3f.NORMALS );
     }
     
     public void getVertexNormalA( Vector3f normal )
@@ -211,7 +212,7 @@ public class Triangle extends Polygon
         else
             this.colorA.set( color );
         
-        addFeature( COLORS_3 );
+        addFeature( Vertex3f.COLORS_3 );
     }
     
     public void setVertexColorB( Color3f color )
@@ -221,7 +222,7 @@ public class Triangle extends Polygon
         else
             this.colorB.set( color );
         
-        addFeature( COLORS_3 );
+        addFeature( Vertex3f.COLORS_3 );
     }
     
     public void setVertexColorC( Color3f color )
@@ -231,7 +232,7 @@ public class Triangle extends Polygon
         else
             this.colorC.set( color );
         
-        addFeature( COLORS_3 );
+        addFeature( Vertex3f.COLORS_3 );
     }
     
     public void getVertexColorA( Color3f color )
@@ -287,7 +288,7 @@ public class Triangle extends Polygon
         else
             this.texCoordA.set( texCoord );
         
-        addFeature( TEXTURE_COORDINATES_2 );
+        addFeature( Vertex3f.TEXTURE_COORDINATES_2 );
     }
     
     public void setVertexTexCoordB( TexCoord2f texCoord )
@@ -297,7 +298,7 @@ public class Triangle extends Polygon
         else
             this.texCoordB.set( texCoord );
         
-        addFeature( TEXTURE_COORDINATES_2 );
+        addFeature( Vertex3f.TEXTURE_COORDINATES_2 );
     }
     
     public void setVertexTexCoordC( TexCoord2f texCoord )
@@ -307,7 +308,7 @@ public class Triangle extends Polygon
         else
             this.texCoordC.set( texCoord );
         
-        addFeature( TEXTURE_COORDINATES_2 );
+        addFeature( Vertex3f.TEXTURE_COORDINATES_2 );
     }
     
     public void getVertexTexCoordA( TexCoord2f texCoord )
@@ -360,38 +361,38 @@ public class Triangle extends Polygon
     {
         if ( coord != null )
         {
-            addFeature( COORDINATES );
+            addFeature( Vertex3f.COORDINATES );
             setVertexCoordA( coord );
         }
         
         if ( normal != null )
         {
-            addFeature( NORMALS );
+            addFeature( Vertex3f.NORMALS );
             setVertexNormalA( normal );
         }
         
-        if ( hasFeature( COLORS_3 ) )
+        if ( color != null )
         {
-            addFeature( COLORS_3 );
+            addFeature( Vertex3f.COLORS_3 );
             setVertexColorA( color );
         }
         
-        if ( hasFeature( TEXTURE_COORDINATES_2 ) )
+        if ( texCoord != null )
         {
-            addFeature( TEXTURE_COORDINATES_2 );
+            addFeature( Vertex3f.TEXTURE_COORDINATES_2 );
             setVertexTexCoordA( texCoord );
         }
     }
     
     public void getVertexA( Tuple3f coord, Vector3f normal, Color3f color, TexCoord2f texCoord )
     {
-        if ( hasFeature( COORDINATES ) )
+        if ( ( coord != null ) && ( hasFeature( Vertex3f.COORDINATES ) ) )
             getVertexCoordA( coord );
-        if ( hasFeature( NORMALS ) )
+        if ( ( normal != null ) && ( hasFeature( Vertex3f.NORMALS ) ) )
             getVertexNormalA( normal );
-        if ( hasFeature( COLORS_3 ) )
+        if ( ( color != null ) && ( hasFeature( Vertex3f.COLORS_3 ) ) )
             getVertexColorA( color );
-        if ( hasFeature( TEXTURE_COORDINATES_2 ) )
+        if ( ( texCoord != null ) && ( hasFeature( Vertex3f.TEXTURE_COORDINATES_2 ) ) )
             getVertexTexCoordA( texCoord );
     }
     
@@ -400,38 +401,38 @@ public class Triangle extends Polygon
     {
         if ( coord != null )
         {
-            addFeature( COORDINATES );
+            addFeature( Vertex3f.COORDINATES );
             setVertexCoordB( coord );
         }
         
         if ( normal != null )
         {
-            addFeature( NORMALS );
+            addFeature( Vertex3f.NORMALS );
             setVertexNormalB( normal );
         }
         
-        if ( hasFeature( COLORS_3 ) )
+        if ( color != null )
         {
-            addFeature( COLORS_3 );
+            addFeature( Vertex3f.COLORS_3 );
             setVertexColorB( color );
         }
         
-        if ( hasFeature( TEXTURE_COORDINATES_2 ) )
+        if ( texCoord != null )
         {
-            addFeature( TEXTURE_COORDINATES_2 );
+            addFeature( Vertex3f.TEXTURE_COORDINATES_2 );
             setVertexTexCoordB( texCoord );
         }
     }
     
     public void getVertexB( Tuple3f coord, Vector3f normal, Color3f color, TexCoord2f texCoord )
     {
-        if ( hasFeature( COORDINATES ) )
+        if ( ( coord != null ) && ( hasFeature( Vertex3f.COORDINATES ) ) )
             getVertexCoordB( coord );
-        if ( hasFeature( NORMALS ) )
+        if ( ( normal != null ) && ( hasFeature( Vertex3f.NORMALS ) ) )
             getVertexNormalB( normal );
-        if ( hasFeature( COLORS_3 ) )
+        if ( ( color != null ) && ( hasFeature( Vertex3f.COLORS_3 ) ) )
             getVertexColorB( color );
-        if ( hasFeature( TEXTURE_COORDINATES_2 ) )
+        if ( ( texCoord != null ) && ( hasFeature( Vertex3f.TEXTURE_COORDINATES_2 ) ) )
             getVertexTexCoordB( texCoord );
     }
     
@@ -440,38 +441,38 @@ public class Triangle extends Polygon
     {
         if ( coord != null )
         {
-            addFeature( COORDINATES );
+            addFeature( Vertex3f.COORDINATES );
             setVertexCoordC( coord );
         }
         
         if ( normal != null )
         {
-            addFeature( NORMALS );
+            addFeature( Vertex3f.NORMALS );
             setVertexNormalC( normal );
         }
         
-        if ( hasFeature( COLORS_3 ) )
+        if ( color != null )
         {
-            addFeature( COLORS_3 );
+            addFeature( Vertex3f.COLORS_3 );
             setVertexColorC( color );
         }
         
-        if ( hasFeature( TEXTURE_COORDINATES_2 ) )
+        if ( texCoord != null )
         {
-            addFeature( TEXTURE_COORDINATES_2 );
+            addFeature( Vertex3f.TEXTURE_COORDINATES_2 );
             setVertexTexCoordC( texCoord );
         }
     }
     
     public void getVertexC( Tuple3f coord, Vector3f normal, Color3f color, TexCoord2f texCoord )
     {
-        if ( hasFeature( COORDINATES ) )
+        if ( ( coord != null ) && ( hasFeature( Vertex3f.COORDINATES ) ) )
             getVertexCoordC( coord );
-        if ( hasFeature( NORMALS ) )
+        if ( ( normal != null ) && ( hasFeature( Vertex3f.NORMALS ) ) )
             getVertexNormalC( normal );
-        if ( hasFeature( COLORS_3 ) )
+        if ( ( color != null ) && ( hasFeature( Vertex3f.COLORS_3 ) ) )
             getVertexColorC( color );
-        if ( hasFeature( TEXTURE_COORDINATES_2 ) )
+        if ( ( texCoord != null ) && ( hasFeature( Vertex3f.TEXTURE_COORDINATES_2 ) ) )
             getVertexTexCoordC( texCoord );
     }
     
@@ -554,7 +555,7 @@ public class Triangle extends Polygon
      */
     public void getFaceNormal( Vector3f faceNormal )
     {
-        if ( !hasFeature( NORMALS ) )
+        if ( !hasFeature( Vertex3f.NORMALS ) )
             throw( new NullPointerException( "You need vertex normals to calculate the face normal" ) );
         
         getFaceNormalACAB( tmpVec4 );
@@ -748,7 +749,7 @@ public class Triangle extends Polygon
     
     public Triangle()
     {
-        this( COORDINATES | NORMALS | COLORS_3 | TEXTURE_COORDINATES_2 );
+        this( Vertex3f.COORDINATES | Vertex3f.NORMALS | Vertex3f.COLORS_3 | Vertex3f.TEXTURE_COORDINATES_2 );
     }
     
     /*

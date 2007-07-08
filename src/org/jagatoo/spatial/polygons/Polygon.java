@@ -1,5 +1,7 @@
 package org.jagatoo.spatial.polygons;
 
+import org.jagatoo.datatypes.Vertex3f;
+
 /**
  * A Polygon is a shape in 3D-space.
  * 
@@ -7,11 +9,6 @@ package org.jagatoo.spatial.polygons;
  */
 public abstract class Polygon
 {
-    public static final int COORDINATES            = 1;
-    public static final int NORMALS                = 2;
-    public static final int COLORS_3               = 4;
-    public static final int TEXTURE_COORDINATES_2  = 8;
-    
     private int features;
     
     public void setFeatures( int features )
@@ -36,6 +33,6 @@ public abstract class Polygon
     
     public Polygon( int features )
     {
-        this.features = features | COORDINATES;
+        this.features = features | Vertex3f.COORDINATES;
     }
 }

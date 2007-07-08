@@ -48,9 +48,9 @@ public interface TriangleContainer
     public int getTriangleCount();
     
     /**
-     * This allows the spatial container to have access to all the vertices
+     * This allows the spatial container to have access to all the triangles
      * in the object. This allows for the computation of bounding boxes which
-     * completely enclose the bounding box. The vertices need to be returned in
+     * completely enclose geometry. The triangles need to be returned in
      * world coordinates, not local coordinates.
      *
      * @param i
