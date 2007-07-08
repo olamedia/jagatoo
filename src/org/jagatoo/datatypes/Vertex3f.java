@@ -20,9 +20,10 @@ public class Vertex3f
     public static final int NORMALS                = 2;
     public static final int COLORS_3               = 4;
     public static final int COLORS_4               = 8;
-    public static final int TEXTURE_COORDINATES_2  = 16;
-    public static final int TEXTURE_COORDINATES_3  = 32;
-    public static final int TEXTURE_COORDINATES_4  = 64;
+    public static final int TEXTURE_COORDINATES_1  = 16;
+    public static final int TEXTURE_COORDINATES_2  = 32;
+    public static final int TEXTURE_COORDINATES_3  = 64;
+    public static final int TEXTURE_COORDINATES_4  = 128;
     
     private int features;
     
