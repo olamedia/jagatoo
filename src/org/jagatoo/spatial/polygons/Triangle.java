@@ -38,6 +38,10 @@ public class Triangle extends Polygon
     
     private Vector3f faceNormal = null;
     
+    private int vertexIndexA = -1;
+    private int vertexIndexB = -1;
+    private int vertexIndexC = -1;
+    
     
     /*
      * static final fields that are reused for computations, so the
@@ -608,6 +612,75 @@ public class Triangle extends Polygon
         getFaceNormal( faceNormal );
         
         return( faceNormal );
+    }
+    
+    
+    /**
+     * Sets the index of the vertexA (just meta info).
+     * 
+     * @param index
+     */
+    public void setVertexIndexA( int index )
+    {
+        this.vertexIndexA = index;
+    }
+    
+    /**
+     * @return the index of the vertexA (just meta info).
+     */
+    public int getVertexIndexA()
+    {
+        return( vertexIndexA );
+    }
+    
+    /**
+     * Sets the index of the vertexB (just meta info).
+     * 
+     * @param index
+     */
+    public void setVertexIndexB( int index )
+    {
+        this.vertexIndexB = index;
+    }
+    
+    /**
+     * @return the index of the vertexB (just meta info).
+     */
+    public int getVertexIndexB()
+    {
+        return( vertexIndexB );
+    }
+    
+    /**
+     * Sets the index of the vertexC (just meta info).
+     * 
+     * @param index
+     */
+    public void setVertexIndexC( int index )
+    {
+        this.vertexIndexC = index;
+    }
+    
+    /**
+     * @return the index of the vertexC (just meta info).
+     */
+    public int getVertexIndexC()
+    {
+        return( vertexIndexC );
+    }
+    
+    /**
+     * Sets the indices of the vertices A, B, C (just meta info).
+     * 
+     * @param indexA
+     * @param indexB
+     * @param indexC
+     */
+    public void setVertexIndices( int indexA, int indexB, int indexC )
+    {
+        setVertexIndexA( indexA );
+        setVertexIndexB( indexB );
+        setVertexIndexC( indexC );
     }
     
     
