@@ -187,8 +187,9 @@ public class BoundingBox extends Box implements Bounds
     {
         if ( bo instanceof Box )
         {
-            setLower( ((BoundingBox)bo).getLower() );
-            setUpper( ((BoundingBox)bo).getUpper() );
+            BoundingBox b = (BoundingBox)bo;
+            setLower( b.getLower() );
+            setUpper( b.getUpper() );
         }
         else if ( bo instanceof Sphere )
         {
@@ -242,19 +243,20 @@ public class BoundingBox extends Box implements Bounds
             */
             
             source.getVertex( i, coord );
+            
             if ( coord.x < getLowerX() )
                 setLowerX( coord.x );
-            if ( coord.x > getUpperX() )
+            else if ( coord.x > getUpperX() )
                 setUpperX( coord.x );
             
             if ( coord.y < getLowerY() )
                 setLowerY( coord.y );
-            if ( coord.y > getUpperY() )
+            else if ( coord.y > getUpperY() )
                 setUpperY( coord.y );
             
             if ( coord.z < getLowerZ() )
                 setLowerZ( coord.z );
-            if ( coord.z > getUpperZ() )
+            else if ( coord.z > getUpperZ() )
                 setUpperZ( coord.z );
         }
         
@@ -293,6 +295,15 @@ public class BoundingBox extends Box implements Bounds
         vertexList.set( coords );
         
         compute( vertexList );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return( "Bounding" + super.toString() );
     }
     
     /**

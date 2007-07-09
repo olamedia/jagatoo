@@ -222,6 +222,15 @@ public class BoundingPolytope extends ConvexHull implements Bounds
     }
     
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return( "Bounding" + super.toString() );
+    }
+    
+    /**
      * Constructs a new BoundingPolytope object.
      */
     public BoundingPolytope()

@@ -478,19 +478,25 @@ public class Box implements java.io.Serializable, Body
     @Override
     public String toString()
     {
-        StringBuffer sb = new StringBuffer( 96 );
-        sb.append( "Box[ lower: (" );
+        StringBuffer sb = new StringBuffer( 128 );
+        sb.append( "Box [ lower: (" );
         sb.append( lower.x );
         sb.append( ", " );
         sb.append( lower.y );
         sb.append( ", " );
         sb.append( lower.z );
         sb.append( "), upper: (" );
-        sb.append( upper.x - lower.x );
+        sb.append( upper.x );
         sb.append( ", " );
-        sb.append( upper.y - lower.y );
+        sb.append( upper.y );
         sb.append( ", " );
-        sb.append( upper.z - lower.z );
+        sb.append( upper.z );
+        sb.append( "), span: (" );
+        sb.append( getXSpan() );
+        sb.append( ", " );
+        sb.append( getYSpan() );
+        sb.append( ", " );
+        sb.append( getZSpan() );
         sb.append( ") ]" );
         
         return( sb.toString() );
