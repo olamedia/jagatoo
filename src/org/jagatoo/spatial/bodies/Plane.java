@@ -429,6 +429,18 @@ public final class Plane implements Externalizable
     }
     
     /**
+     * Insert the method's description here.
+     * Creation date: (04/02/2001 21:59:03)
+     */
+    public void set( Plane plane )
+    {
+        this.normal.set( plane.normal );
+        this.d = plane.d;
+        
+        //normalize();
+    }
+    
+    /**
      * Plane constructor comment.
      * 
      * @param a
@@ -458,6 +470,16 @@ public final class Plane implements Externalizable
     public Plane( Vector3f normal, float d )
     {
         this( normal.x, normal.y, normal.z, d );
+    }
+    
+    /**
+     * Plane constructor comment.
+     * 
+     * @param plane
+     */
+    public Plane( Plane plane )
+    {
+        this( plane.normal.x, plane.normal.y, plane.normal.z, plane.d );
     }
     
     /**
