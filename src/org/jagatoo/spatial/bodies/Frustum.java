@@ -190,7 +190,8 @@ public class Frustum
         matrix.m32 = ( planes[ 5 ].getD() - planes[ 4 ].getD() ) / 2.0f;
         matrix.m33 = planes[ 0 ].getD() + matrix.m30;
         
-        proj.set( matrix );
+        if ( proj != null )
+            proj.set( matrix );
         
         return( matrix );
     }
