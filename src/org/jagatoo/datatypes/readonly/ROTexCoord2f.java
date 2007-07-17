@@ -8,7 +8,7 @@ import org.jagatoo.datatypes.TexCoordf;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class ROTexCoord2f extends TexCoord2f
+public final class ROTexCoord2f extends TexCoord2f
 {
     private static final long serialVersionUID = 35304108961766665L;
     
