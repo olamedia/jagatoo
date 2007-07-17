@@ -65,7 +65,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public final void addS( float v )
+    public void addS( float v )
     {
         this.values[ 0 ] += v;
     }
@@ -75,7 +75,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public final void addT( float v )
+    public void addT( float v )
     {
         this.values[ 1 ] += v;
     }
@@ -85,7 +85,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public final void subS( float v )
+    public void subS( float v )
     {
         this.values[ 0 ] -= v;
     }
@@ -95,7 +95,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public final void subT( float v )
+    public void subT( float v )
     {
         this.values[ 1 ] -= v;
     }
@@ -105,7 +105,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public final void mulS( float v )
+    public void mulS( float v )
     {
         this.values[ 0 ] *= v;
     }
@@ -115,7 +115,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public final void mulT( float v )
+    public void mulT( float v )
     {
         this.values[ 1 ] *= v;
     }
@@ -126,7 +126,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * @param vs
      * @param vt
      */
-    public final void mul( float vs, float vt )
+    public void mul( float vs, float vt )
     {
         this.values[ 0 ] *= vs;
         this.values[ 1 ] *= vt;
@@ -137,7 +137,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param factor the scalar value
      */
-    public final void mul( float factor )
+    public void mul( float factor )
     {
         for ( int i = 0; i < N; i++ )
         {
@@ -150,7 +150,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public final void divS( float v )
+    public void divS( float v )
     {
         this.values[ 0 ] /= v;
     }
@@ -160,7 +160,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public final void divT( float v )
+    public void divT( float v )
     {
         this.values[ 1 ] /= v;
     }
@@ -171,7 +171,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * @param vs
      * @param vt
      */
-    public final void div( float vs, float vt )
+    public void div( float vs, float vt )
     {
         this.values[ 0 ] /= vs;
         this.values[ 1 ] /= vt;
@@ -183,7 +183,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * @param s
      * @param t
      */
-    public final void add( float s, float t )
+    public void add( float s, float t )
     {
         this.values[ 0 ] += s;
         this.values[ 1 ] += t;
@@ -195,7 +195,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * @param s
      * @param t
      */
-    public final void sub( float s, float t )
+    public void sub( float s, float t )
     {
         this.values[ 0 ] -= s;
         this.values[ 1 ] -= t;
@@ -280,7 +280,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
     /**
      * Allocates an TexCoord2f instance from the pool.
      */
-    public static final TexCoord2f fromPool()
+    public static TexCoord2f fromPool()
     {
         return( POOL.alloc() );
     }
@@ -288,7 +288,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
     /**
      * Allocates an TexCoord2f instance from the pool.
      */
-    public static final TexCoord2f fromPool( float s, float t )
+    public static TexCoord2f fromPool( float s, float t )
     {
         return( POOL.alloc( s, t ) );
     }
@@ -298,7 +298,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param o
      */
-    public static final void toPool( TexCoord2f o )
+    public static void toPool( TexCoord2f o )
     {
         POOL.free( o );
     }

@@ -1,9 +1,9 @@
 package org.jagatoo.datatypes;
 
-import java.awt.Color;
 import java.io.Serializable;
 
 import org.jagatoo.datatypes.pools.ColorPool;
+import org.jagatoo.datatypes.readonly.ROColorf;
 
 /**
  * A simple float-based color implementation with or without alpha channel.
@@ -31,7 +31,7 @@ public class Colorf implements Serializable
      * 
      * @return the new gray color
      */
-    public static final Colorf createGray( float intensity )
+    public static Colorf createGray( float intensity )
     {
         return( new Colorf( intensity, intensity, intensity ) );
     }
@@ -39,117 +39,117 @@ public class Colorf implements Serializable
     /**
      * The color white. In the default sRGB space.
      */
-    public static final Colorf WHITE = new Colorf( Color.WHITE );
+    public static final ROColorf WHITE = new ROColorf( java.awt.Color.WHITE );
     
     /**
      * The color light gray. In the default sRGB space.
      */
-    public static final Colorf LIGHT_GRAY = new Colorf( Color.GRAY );
+    public static final ROColorf LIGHT_GRAY = new ROColorf( java.awt.Color.GRAY );
     
     /**
      * A 10% gray. In the default sRGB space.
      */
-    public static final Colorf GRAY10 = createGray( 0.9f );
+    public static final ROColorf GRAY10 = new ROColorf( 0.9f );
     
     /**
      * A 20% gray. In the default sRGB space.
      */
-    public static final Colorf GRAY20 = createGray( 0.8f );
+    public static final ROColorf GRAY20 = new ROColorf( 0.8f );
     
     /**
      * A 30% gray. In the default sRGB space.
      */
-    public static final Colorf GRAY30 = createGray( 0.7f );
+    public static final ROColorf GRAY30 = new ROColorf( 0.7f );
     
     /**
      * A 40% gray. In the default sRGB space.
      */
-    public static final Colorf GRAY40 = createGray( 0.6f );
+    public static final ROColorf GRAY40 = new ROColorf( 0.6f );
     
     /**
      * A 50% gray. In the default sRGB space.
      */
-    public static final Colorf GRAY50 = createGray( 0.5f );
+    public static final ROColorf GRAY50 = new ROColorf( 0.5f );
     
     /**
      * A 60% gray. In the default sRGB space.
      */
-    public static final Colorf GRAY60 = createGray( 0.4f );
+    public static final ROColorf GRAY60 = new ROColorf( 0.4f );
     
     /**
      * A 70% gray. In the default sRGB space.
      */
-    public static final Colorf GRAY70 = createGray( 0.3f );
+    public static final ROColorf GRAY70 = new ROColorf( 0.3f );
     
     /**
      * A 80% gray. In the default sRGB space.
      */
-    public static final Colorf GRAY80 = createGray( 0.2f );
+    public static final ROColorf GRAY80 = new ROColorf( 0.2f );
     
     /**
      * A 90% gray. In the default sRGB space.
      */
-    public static final Colorf GRAY90 = createGray( 0.1f );
+    public static final ROColorf GRAY90 = new ROColorf( 0.1f );
     
     /**
      * The color gray. In the default sRGB space.
      */
-    public static final Colorf GRAY = new Colorf( Color.GRAY );
+    public static final ROColorf GRAY = new ROColorf( java.awt.Color.GRAY );
     
     /**
      * The color dark gray. In the default sRGB space.
      */
-    public static final Colorf DARK_GRAY = new Colorf( Color.DARK_GRAY );
+    public static final ROColorf DARK_GRAY = new ROColorf( java.awt.Color.DARK_GRAY );
     
     /**
      * The color black. In the default sRGB space.
      */
-    public static final Colorf BLACK = new Colorf( Color.BLACK );
+    public static final ROColorf BLACK = new ROColorf( java.awt.Color.BLACK );
     
     /**
      * The color red. In the default sRGB space.
      */
-    public static final Colorf RED = new Colorf( Color.RED );
+    public static final ROColorf RED = new ROColorf( java.awt.Color.RED );
     
     /**
      * The color pink. In the default sRGB space.
      */
-    public static final Colorf PINK = new Colorf( Color.PINK );
+    public static final ROColorf PINK = new ROColorf( java.awt.Color.PINK );
     
     /**
      * The color orange. In the default sRGB space.
      */
-    public static final Colorf ORANGE = new Colorf( Color.ORANGE );
+    public static final ROColorf ORANGE = new ROColorf( java.awt.Color.ORANGE );
     
     /**
      * The color yellow. In the default sRGB space.
      */
-    public static final Colorf YELLOW = new Colorf( Color.YELLOW );
+    public static final ROColorf YELLOW = new ROColorf( java.awt.Color.YELLOW );
     
     /**
      * The color green. In the default sRGB space.
      */
-    public static final Colorf GREEN = new Colorf( Color.GREEN );
+    public static final ROColorf GREEN = new ROColorf( java.awt.Color.GREEN );
     
     /**
      * The color magenta. In the default sRGB space.
      */
-    public static final Colorf MAGENTA = new Colorf( Color.MAGENTA );
+    public static final ROColorf MAGENTA = new ROColorf( java.awt.Color.MAGENTA );
     
     /**
      * The color cyan. In the default sRGB space.
      */
-    public static final Colorf CYAN = new Colorf( Color.CYAN );
+    public static final ROColorf CYAN = new ROColorf( java.awt.Color.CYAN );
     
     /**
      * The color blue. In the default sRGB space.
      */
-    public static final Colorf BLUE = new Colorf( Color.BLUE );
+    public static final ROColorf BLUE = new ROColorf( java.awt.Color.BLUE );
     
     /**
      * @return this Vector's size().
      */
-    public final int getSize()
+    public int getSize()
     {
         return( N );
     }
@@ -157,7 +157,7 @@ public class Colorf implements Serializable
     /**
      * @return if this Colorf has an alpha channel.
      */
-    public final boolean hasAlpha()
+    public boolean hasAlpha()
     {
         return( hasAlpha );
     }
@@ -167,7 +167,7 @@ public class Colorf implements Serializable
      * 
      * @param color awt color
      */
-    public final void set( java.awt.Color color )
+    public void set( java.awt.Color color )
     {
         setRed( ((float)color.getRed()) / 255.0f );
         setGreen( ((float)color.getGreen()) / 255.0f );
@@ -247,7 +247,7 @@ public class Colorf implements Serializable
      * 
      * @return AWT color
      */
-    public final java.awt.Color get()
+    public java.awt.Color get()
     {
         if ( hasAlpha() )
             return( new java.awt.Color( getRed(), getGreen(), getBlue(), getAlpha() ) );
@@ -330,7 +330,7 @@ public class Colorf implements Serializable
      * 
      * @param alpha
      */
-    public final void setAlpha( float alpha )
+    public void setAlpha( float alpha )
     {
         this.values[ 3 ] = alpha;
         
@@ -342,7 +342,7 @@ public class Colorf implements Serializable
      * 
      * @see #getTransparency()
      */
-    public final float getAlpha()
+    public float getAlpha()
     {
         if ( hasAlpha() )
             return( values[ 3 ] );
@@ -370,7 +370,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void addRed( float v )
+    public void addRed( float v )
     {
         this.values[ 0 ] += v;
     }
@@ -380,7 +380,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void addGreen( float v )
+    public void addGreen( float v )
     {
         this.values[ 1 ] += v;
     }
@@ -390,7 +390,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void addBlue( float v )
+    public void addBlue( float v )
     {
         this.values[ 2 ] += v;
     }
@@ -400,7 +400,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void addAlpha( float v )
+    public void addAlpha( float v )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
@@ -413,7 +413,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void subRed( float v )
+    public void subRed( float v )
     {
         this.values[ 0 ] -= v;
     }
@@ -423,7 +423,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void subGreen( float v )
+    public void subGreen( float v )
     {
         this.values[ 1 ] -= v;
     }
@@ -433,7 +433,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void subBlue( float v )
+    public void subBlue( float v )
     {
         this.values[ 2 ] -= v;
     }
@@ -443,7 +443,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void subAlpha( float v )
+    public void subAlpha( float v )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
@@ -456,7 +456,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void mulRed( float v )
+    public void mulRed( float v )
     {
         this.values[ 0 ] *= v;
     }
@@ -466,7 +466,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void mulGreen( float v )
+    public void mulGreen( float v )
     {
         this.values[ 1 ] *= v;
     }
@@ -476,7 +476,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void mulBlue( float v )
+    public void mulBlue( float v )
     {
         this.values[ 2 ] *= v;
     }
@@ -486,7 +486,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void mulAlpha( float v )
+    public void mulAlpha( float v )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
@@ -502,7 +502,7 @@ public class Colorf implements Serializable
      * @param vb
      * @param va
      */
-    public final void mul( float vr, float vg, float vb, float va )
+    public void mul( float vr, float vg, float vb, float va )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
@@ -520,7 +520,7 @@ public class Colorf implements Serializable
      * @param vg
      * @param vb
      */
-    public final void mul( float vr, float vg, float vb )
+    public void mul( float vr, float vg, float vb )
     {
         this.values[ 0 ] *= vr;
         this.values[ 1 ] *= vg;
@@ -532,7 +532,7 @@ public class Colorf implements Serializable
      * 
      * @param factor the scalar value
      */
-    public final void mul( float factor )
+    public void mul( float factor )
     {
         final int n = hasAlpha() ? 4 : 3;
         
@@ -547,7 +547,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void divRed( float v )
+    public void divRed( float v )
     {
         this.values[ 0 ] /= v;
     }
@@ -557,7 +557,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void divGreen( float v )
+    public void divGreen( float v )
     {
         this.values[ 1 ] /= v;
     }
@@ -567,7 +567,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void divBlue( float v )
+    public void divBlue( float v )
     {
         this.values[ 2 ] /= v;
     }
@@ -577,7 +577,7 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public final void divAlpha( float v )
+    public void divAlpha( float v )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
@@ -593,7 +593,7 @@ public class Colorf implements Serializable
      * @param vb
      * @param va
      */
-    public final void div( float vr, float vg, float vb, float va )
+    public void div( float vr, float vg, float vb, float va )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
@@ -611,7 +611,7 @@ public class Colorf implements Serializable
      * @param vg
      * @param vb
      */
-    public final void div( float vr, float vg, float vb )
+    public void div( float vr, float vg, float vb )
     {
         this.values[ 0 ] /= vr;
         this.values[ 1 ] /= vg;
@@ -624,7 +624,7 @@ public class Colorf implements Serializable
      * @param color1 the first color
      * @param color2 the second color
      */
-    public final void add( Colorf color1, Colorf color2 )
+    public void add( Colorf color1, Colorf color2 )
     {
         final int n = hasAlpha() ? 4 : 3;
         
@@ -639,7 +639,7 @@ public class Colorf implements Serializable
      * 
      * @param color2 the other tuple
      */
-    public final void add( Colorf color2 )
+    public void add( Colorf color2 )
     {
         final int n = hasAlpha() ? 4 : 3;
         
@@ -657,7 +657,7 @@ public class Colorf implements Serializable
      * @param b
      * @param a
      */
-    public final void add( float r, float g, float b, float a )
+    public void add( float r, float g, float b, float a )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
@@ -675,7 +675,7 @@ public class Colorf implements Serializable
      * @param g
      * @param b
      */
-    public final void add( float r, float g, float b )
+    public void add( float r, float g, float b )
     {
         this.values[ 0 ] += r;
         this.values[ 1 ] += g;
@@ -689,7 +689,7 @@ public class Colorf implements Serializable
      * @param color1 the first color
      * @param color2 the second color
      */
-    public final void sub( Colorf color1, Colorf color2 )
+    public void sub( Colorf color1, Colorf color2 )
     {
         final int n = hasAlpha() ? 4 : 3;
         
@@ -706,7 +706,7 @@ public class Colorf implements Serializable
      * @param color2 the other color
      * 
      */
-    public final void sub( Colorf color2 )
+    public void sub( Colorf color2 )
     {
         final int n = hasAlpha() ? 4 : 3;
         
@@ -714,7 +714,6 @@ public class Colorf implements Serializable
         {
             this.values[ i ] -= color2.values[ i ];
         }
-        
     }
     
     /**
@@ -725,7 +724,7 @@ public class Colorf implements Serializable
      * @param b
      * @param a
      */
-    public final void sub( float r, float g, float b, float a )
+    public void sub( float r, float g, float b, float a )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
@@ -743,7 +742,7 @@ public class Colorf implements Serializable
      * @param g
      * @param b
      */
-    public final void sub( float r, float g, float b )
+    public void sub( float r, float g, float b )
     {
         this.values[ 0 ] -= r;
         this.values[ 1 ] -= g;
@@ -755,7 +754,7 @@ public class Colorf implements Serializable
      * 
      * @param min the lowest value in this tuple after clamping
      */
-    public final void clampMin( float min )
+    public void clampMin( float min )
     {
         final int n = hasAlpha() ? 4 : 3;
         
@@ -771,7 +770,7 @@ public class Colorf implements Serializable
      * 
      * @param max the highest value in the tuple after clamping
      */
-    public final void clampMax( float max )
+    public void clampMax( float max )
     {
         final int n = hasAlpha() ? 4 : 3;
         
@@ -788,7 +787,7 @@ public class Colorf implements Serializable
      * @param min the lowest value in this tuple after clamping
      * @param max the highest value in this tuple after clamping
      */
-    public final void clamp( float min, float max )
+    public void clamp( float min, float max )
     {
         clampMin( min );
         clampMax( max );
@@ -802,7 +801,7 @@ public class Colorf implements Serializable
      * @param max the highest value in the tuple after clamping
      * @param vec the source tuple, which will not be modified
      */
-    public final void clamp( float min, float max, Colorf vec )
+    public void clamp( float min, float max, Colorf vec )
     {
         set( vec );
         
@@ -816,7 +815,7 @@ public class Colorf implements Serializable
      * @param min the lowest value in the tuple after clamping
      * @parm that the source tuple, which will not be modified
      */
-    public final void clampMin( float min, Colorf vec )
+    public void clampMin( float min, Colorf vec )
     {
         set( vec );
         clampMin( min );
@@ -829,7 +828,7 @@ public class Colorf implements Serializable
      * @param max the highest value in the tuple after clamping
      * @param vec the source tuple, which will not be modified
      */
-    public final void clampMax( float max, Colorf vec )
+    public void clampMax( float max, Colorf vec )
     {
         set( vec );
         clampMax( max );
@@ -842,7 +841,7 @@ public class Colorf implements Serializable
      * @param t2 the first tuple
      * @param val the alpha interpolation parameter
      */
-    public final void interpolate( Colorf color2, float val )
+    public void interpolate( Colorf color2, float val )
     {
         final float beta = 1.0f - val;
         
@@ -862,7 +861,7 @@ public class Colorf implements Serializable
      * @param color2 the second tuple
      * @param val the interpolation parameter
      */
-    public final void interpolate( Colorf color1, Colorf color2, float val )
+    public void interpolate( Colorf color1, Colorf color2, float val )
     {
         final float beta = 1.0f - val;
         
@@ -1025,6 +1024,16 @@ public class Colorf implements Serializable
     /**
      * Creates a new Colorf instance.
      * 
+     * @param intensity the gray intensity (used for all three r,g,b values
+     */
+    public Colorf( float intensity )
+    {
+        this( intensity, intensity, intensity );
+    }
+    
+    /**
+     * Creates a new Colorf instance.
+     * 
      * @param values the values array (must be at least size 3)
      */
     public Colorf( float[] values )
@@ -1066,7 +1075,7 @@ public class Colorf implements Serializable
     /**
      * Allocates an Colorf instance from the pool.
      */
-    public static final Colorf fromPool()
+    public static Colorf fromPool()
     {
         return( POOL.alloc() );
     }
@@ -1074,7 +1083,7 @@ public class Colorf implements Serializable
     /**
      * Allocates an Colorf instance from the pool.
      */
-    public static final Colorf fromPool( float r, float g, float b, float a )
+    public static Colorf fromPool( float r, float g, float b, float a )
     {
         return( POOL.alloc( r, g, b, a ) );
     }
@@ -1082,7 +1091,7 @@ public class Colorf implements Serializable
     /**
      * Allocates an Colorf instance from the pool.
      */
-    public static final Colorf fromPool( float r, float g, float b )
+    public static Colorf fromPool( float r, float g, float b )
     {
         return( POOL.alloc( r, g, b ) );
     }
@@ -1092,7 +1101,7 @@ public class Colorf implements Serializable
      * 
      * @param o
      */
-    public static final void toPool( Colorf o )
+    public static void toPool( Colorf o )
     {
         POOL.free( o );
     }

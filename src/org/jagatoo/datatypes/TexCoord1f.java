@@ -47,7 +47,7 @@ public class TexCoord1f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public final void addS( float v )
+    public void addS( float v )
     {
         this.values[ 0 ] += v;
     }
@@ -57,7 +57,7 @@ public class TexCoord1f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public final void subS( float v )
+    public void subS( float v )
     {
         this.values[ 0 ] -= v;
     }
@@ -67,7 +67,7 @@ public class TexCoord1f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public final void mulS( float v )
+    public void mulS( float v )
     {
         this.values[ 0 ] *= v;
     }
@@ -77,7 +77,7 @@ public class TexCoord1f extends TexCoordf implements Serializable
      * 
      * @param vs
      */
-    public final void mul( float vs )
+    public void mul( float vs )
     {
         this.values[ 0 ] *= vs;
     }
@@ -87,7 +87,7 @@ public class TexCoord1f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public final void divS( float v )
+    public void divS( float v )
     {
         this.values[ 0 ] /= v;
     }
@@ -97,7 +97,7 @@ public class TexCoord1f extends TexCoordf implements Serializable
      * 
      * @param vs
      */
-    public final void div( float vs )
+    public void div( float vs )
     {
         this.values[ 0 ] /= vs;
     }
@@ -107,7 +107,7 @@ public class TexCoord1f extends TexCoordf implements Serializable
      * 
      * @param s
      */
-    public final void add( float s )
+    public void add( float s )
     {
         this.values[ 0 ] += s;
     }
@@ -117,7 +117,7 @@ public class TexCoord1f extends TexCoordf implements Serializable
      * 
      * @param s
      */
-    public final void sub( float s )
+    public void sub( float s )
     {
         this.values[ 0 ] -= s;
     }
@@ -200,7 +200,7 @@ public class TexCoord1f extends TexCoordf implements Serializable
     /**
      * Allocates an TexCoord1f instance from the pool.
      */
-    public static final TexCoord1f fromPool()
+    public static TexCoord1f fromPool()
     {
         return( POOL.alloc() );
     }
@@ -208,7 +208,7 @@ public class TexCoord1f extends TexCoordf implements Serializable
     /**
      * Allocates an TexCoord1f instance from the pool.
      */
-    public static final TexCoord1f fromPool( float s )
+    public static TexCoord1f fromPool( float s )
     {
         return( POOL.alloc( s ) );
     }
@@ -218,7 +218,7 @@ public class TexCoord1f extends TexCoordf implements Serializable
      * 
      * @param o
      */
-    public static final void toPool( TexCoord1f o )
+    public static void toPool( TexCoord1f o )
     {
         POOL.free( o );
     }

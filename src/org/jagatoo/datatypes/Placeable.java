@@ -5,80 +5,88 @@ import org.openmali.vecmath.Tuple3f;
 
 /**
  * Placeable object : you can get/set Position and Rotation
- *
+ * 
  * @author Marvin Froehlich (aka Qudus)
  * @author Amos Wenger (aka BlueSky)
  */
-public interface Placeable {
-
+public interface Placeable
+{
     /**
      * @return The position of this Placeable object
      */
     public Tuple3f getPosition();
-
+    
     /**
-     * Write the position of this Placeable object to the
-     * given Tuple3f
+     * Writes the position of this Placeable object to the
+     * given Tuple3f.
+     * 
      * @param pos The Tuple3f to put the pos into
      */
-    public void getPosition(Tuple3f pos);
-
+    public void getPosition( Tuple3f pos );
+    
     /**
-     * Set the position of this Placeable object
+     * Sets the position of this Placeable object.
+     * 
      * @param pos
      */
-    public void setPosition(Tuple3f pos);
-
+    public void setPosition( Tuple3f pos );
+    
     /**
-     * Set the position of this Placeable object.
+     * Sets the position of this Placeable object.
      */
-    public void setPosition(float posX, float posY, float posZ);
-
+    public void setPosition( float posX, float posY, float posZ );
+    
     /**
      * @return The rotation, in Euler angles (degrees) of
-     * this Placeable object
+     * this Placeable object.
      */
     public Tuple3f getRotation();
-
+    
     /**
-     * Write the rotation, in Euler angles (degrees) of
-     * this Placeable object in the given Tuple3f
+     * Writes the rotation, in Euler angles (degrees) of
+     * this Placeable object in the given Tuple3f.
+     * 
+     * @param rot
      */
-    public void getRotation(Tuple3f rot);
-
+    public void getRotation( Tuple3f rot );
+    
     /**
      * @return The rotation, as a 3x3 rotation Matrix,
-     * of this Placeable object
+     * of this Placeable object.
      */
     public Matrix3f getRotationMatrix();
-
+    
     /**
-     * Write the rotation, as a 3x3 rotation Matrix,
-     * of this Placeable object in the given Matrix3f
+     * Writes the rotation, as a 3x3 rotation Matrix,
+     * of this Placeable object in the given Matrix3f.
+     * 
+     * @param rot
      */
-    public void getRotationMatrix(Matrix3f rot);
-
+    public void getRotationMatrix( Matrix3f rot );
+    
     /**
-     * Set the rotation of this object, in Euler angles
+     * Sets the rotation of this object, in Euler angles
      * (degrees)
+     * 
      * @param rot The rotation, in Euler angles (degrees) of
      * this Placeable object
      */
-    public void setRotation(Tuple3f rot);
-
+    public void setRotation( Tuple3f rot );
+    
     /**
-     * Set the rotation Matrix of this object
+     * Sets the rotation Matrix of this object.
+     * 
      * @param rot The rotation, as a 3x3 rotation Matrix,
      * of this Placeable object
      */
-    public void setRotationMatrix(Matrix3f rot);
-
+    public void setRotationMatrix( Matrix3f rot );
+    
     /**
-     * Set the rotation of this object, in Euler angles
+     * Sets the rotation of this object, in Euler angles.
+     * 
      * @param rotX The x-rotation of this object
      * @param rotY The y-rotation of this object
      * @param rotZ The z-rotation of this object
      */
-    public void setRotation(float rotX, float rotY, float rotZ);
-
+    public void setRotation( float rotX, float rotY, float rotZ );
 }

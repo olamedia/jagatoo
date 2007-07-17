@@ -17,7 +17,7 @@ public abstract class TexCoordf
     /**
      * @return this Vector's size().
      */
-    public final int getSize()
+    public int getSize()
     {
         return( N );
     }
@@ -66,7 +66,7 @@ public abstract class TexCoordf
      * Sets all components to zero.
      *
      */
-    public final void setZero()
+    public void setZero()
     {
         for ( int i = 0; i < N; i++ )
         {
@@ -80,7 +80,7 @@ public abstract class TexCoordf
      * @param texCoord1 the first texCoord
      * @param texCoord2 the second texCoord
      */
-    public final void add( TexCoordf texCoord1, TexCoordf texCoord2 )
+    public void add( TexCoordf texCoord1, TexCoordf texCoord2 )
     {
         for ( int i = 0; i < N; i++ )
         {
@@ -93,7 +93,7 @@ public abstract class TexCoordf
      * 
      * @param texCoord2 the other tuple
      */
-    public final void add( TexCoordf texCoord2 )
+    public void add( TexCoordf texCoord2 )
     {
         for ( int i = 0; i < N; i++ )
         {
@@ -108,7 +108,7 @@ public abstract class TexCoordf
      * @param texCoord1 the first texCoord
      * @param texCoord2 the second texCoord
      */
-    public final void sub( TexCoordf texCoord1, TexCoordf texCoord2 )
+    public void sub( TexCoordf texCoord1, TexCoordf texCoord2 )
     {
         for ( int i = 0; i < N; i++ )
         {
@@ -123,13 +123,12 @@ public abstract class TexCoordf
      * @param texCoord2 the other texCoord
      * 
      */
-    public final void sub( TexCoordf texCoord2 )
+    public void sub( TexCoordf texCoord2 )
     {
         for ( int i = 0; i < N; i++ )
         {
             this.values[ i ] -= texCoord2.values[ i ];
         }
-        
     }
     
     /**
@@ -140,7 +139,7 @@ public abstract class TexCoordf
      * @param texCoord1 the tuple to be multipled
      * @param texCoord2 the tuple to be added
      */
-    public final void scaleAdd( float factor, TexCoordf texCoord1, TexCoordf texCoord2 )
+    public void scaleAdd( float factor, TexCoordf texCoord1, TexCoordf texCoord2 )
     {
         for ( int i = 0; i < N; i++ )
         {
@@ -155,7 +154,7 @@ public abstract class TexCoordf
      * @param factor the scalar value
      * @param texCoord2 the tuple to be added
      */
-    public final void scaleAdd( float factor, TexCoordf texCoord2 )
+    public void scaleAdd( float factor, TexCoordf texCoord2 )
     {
         for ( int i = 0; i < N; i++ )
         {
@@ -168,7 +167,7 @@ public abstract class TexCoordf
      * 
      * @param min the lowest value in this tuple after clamping
      */
-    public final void clampMin( float min )
+    public void clampMin( float min )
     {
         for ( int i = 0; i < N; i++ )
         {
@@ -182,7 +181,7 @@ public abstract class TexCoordf
      * 
      * @param max the highest value in the tuple after clamping
      */
-    public final void clampMax( float max )
+    public void clampMax( float max )
     {
         for ( int i = 0; i < N; i++ )
         {
@@ -197,7 +196,7 @@ public abstract class TexCoordf
      * @param min the lowest value in this tuple after clamping
      * @param max the highest value in this tuple after clamping
      */
-    public final void clamp( float min, float max )
+    public void clamp( float min, float max )
     {
         clampMin( min );
         clampMax( max );
@@ -211,7 +210,7 @@ public abstract class TexCoordf
      * @param max the highest value in the tuple after clamping
      * @param vec the source tuple, which will not be modified
      */
-    public final void clamp( float min, float max, TexCoordf vec )
+    public void clamp( float min, float max, TexCoordf vec )
     {
         set( vec );
         
@@ -225,7 +224,7 @@ public abstract class TexCoordf
      * @param min the lowest value in the tuple after clamping
      * @parm that the source tuple, which will not be modified
      */
-    public final void clampMin( float min, TexCoordf vec )
+    public void clampMin( float min, TexCoordf vec )
     {
         set( vec );
         clampMin( min );
@@ -238,7 +237,7 @@ public abstract class TexCoordf
      * @param max the highest value in the tuple after clamping
      * @param vec the source tuple, which will not be modified
      */
-    public final void clampMax( float max, TexCoordf vec )
+    public void clampMax( float max, TexCoordf vec )
     {
         set( vec );
         clampMax( max );
@@ -251,7 +250,7 @@ public abstract class TexCoordf
      * @param t2 the first tuple
      * @param alpha the alpha interpolation parameter
      */
-    public final void interpolate( TexCoordf texCoord2, float alpha )
+    public void interpolate( TexCoordf texCoord2, float alpha )
     {
         final float beta = 1.0f - alpha;
         
@@ -269,7 +268,7 @@ public abstract class TexCoordf
      * @param texCoord2 the second tuple
      * @param alpha the interpolation parameter
      */
-    public final void interpolate( TexCoordf texCoord1, TexCoordf texCoord2, float alpha )
+    public void interpolate( TexCoordf texCoord1, TexCoordf texCoord2, float alpha )
     {
         final float beta = 1.0f - alpha;
         
