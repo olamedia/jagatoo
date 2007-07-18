@@ -1,6 +1,7 @@
 package org.jagatoo.loaders.models.collada.datastructs.geometries;
 
 import org.jagatoo.loaders.models.collada.datastructs.COLLADAFile;
+import org.jagatoo.loaders.models.collada.jibx.Geometry;
 
 /**
  * A COLLADA Geometry. For now, only polygons with a constant number of
@@ -22,6 +23,9 @@ public abstract class COLLADAGeometry {
     /** The file this COLLADAGeometry belongs to */
     private final COLLADAFile file;
 
+    /** The geometry */
+    private final Geometry geometry;
+
     /**
      * Create a new COLLADAGeometry
      * @param file the file this COLLADAGeometry belongs to
@@ -30,11 +34,12 @@ public abstract class COLLADAGeometry {
      * @param name
      *            the name of the geometry
      */
-    public COLLADAGeometry(COLLADAFile file, String id, String name) {
+    public COLLADAGeometry(COLLADAFile file, String id, String name, Geometry geometry) {
 
         this.file = file;
         this.id = id;
         this.name = name;
+        this.geometry = geometry;
 
     }
 
@@ -57,6 +62,13 @@ public abstract class COLLADAGeometry {
      */
     public COLLADAFile getFile() {
         return file;
+    }
+
+    /**
+     * @return the geometry
+     */
+    public Geometry getGeometry() {
+        return geometry;
     }
 
 }

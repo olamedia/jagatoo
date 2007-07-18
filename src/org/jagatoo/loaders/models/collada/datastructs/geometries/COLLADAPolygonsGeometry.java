@@ -1,6 +1,7 @@
 package org.jagatoo.loaders.models.collada.datastructs.geometries;
 
 import org.jagatoo.loaders.models.collada.datastructs.COLLADAFile;
+import org.jagatoo.loaders.models.collada.jibx.Geometry;
 
 /**
  * COLLADA Polygons Geometry contains geometry loaded from a COLLADA
@@ -21,9 +22,9 @@ public class COLLADAPolygonsGeometry extends COLLADAGeometry {
      * @param polygonCount The number of polygons that should be
      * in that PolygonsGeometry
      */
-    public COLLADAPolygonsGeometry(COLLADAFile file, String id, String name, int polygonCount) {
+    public COLLADAPolygonsGeometry(COLLADAFile file, String id, String name, int polygonCount, Geometry geometry) {
 
-        super(file, id, name);
+        super(file, id, name, geometry);
         polygons = new COLLADAMesh[polygonCount];
 
     }

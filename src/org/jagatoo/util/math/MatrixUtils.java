@@ -1,24 +1,24 @@
 /**
  * Copyright (c) 2003-2007, Xith3D Project Group all rights reserved.
- * 
+ *
  * Portions based on the Java3D interface, Copyright by Sun Microsystems.
  * Many thanks to the developers of Java3D and Sun Microsystems for their
  * innovation and design.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the 'Xith3D Project Group' nor the names of its
  * contributors may be used to endorse or promote products derived from this
  * software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -41,7 +41,7 @@ import org.openmali.vecmath.Vector3f;
 
 /**
  * Util class for Maths.
- * 
+ *
  * @author Marvin Froehlich (aka Qudus)
  * @author Amos Wenger (aka BlueSky)
  */
@@ -49,7 +49,7 @@ public class MatrixUtils
 {
     /**
      * Converts a Matrix3f to a Tuple3f with Euler angles.
-     * 
+     *
      * @param matrix the Matrix3f to be converted
      */
     public static void matrixToEuler( Matrix3f matrix, Tuple3f euler )
@@ -73,26 +73,26 @@ public class MatrixUtils
             euler.z = FastMath.asin( -matrix.m10 );
         }
     }
-    
+
     /**
      * Converts a Matrix3f to a Vector3f with Euler angles.
-     * 
+     *
      * @param matrix the Matrix3f to be converted
-     * 
+     *
      * @return the Vector3f containing the euler angles
      */
     public static Vector3f matrixToEuler( Matrix3f matrix )
     {
         Vector3f euler = new Vector3f();
-        
+
         matrixToEuler( matrix, euler );
-        
+
         return( euler );
     }
-    
+
     /**
      * Converts a Matrix4f to a Tuple3f with Euler angles.
-     * 
+     *
      * @param matrix the Matrix4f to be converted
      */
     public static void matrixToEuler( Matrix4f matrix, Tuple3f euler )
@@ -116,30 +116,30 @@ public class MatrixUtils
             euler.z = FastMath.asin( -matrix.m10 );
         }
     }
-    
+
     /**
      * Converts a Matrix4f to a Vector3f with Euler angles.
-     * 
+     *
      * @param matrix the Matrix4f to be converted
-     * 
+     *
      * @return the Vector3f containing the euler angles
      */
     public static Vector3f matrixToEuler( Matrix4f matrix )
     {
         Vector3f euler = new Vector3f();
-        
+
         matrixToEuler( matrix, euler );
-        
+
         return( euler );
     }
-    
+
     /**
      * Converts Euler angles to a Matrix3f.
-     * 
+     *
      * @param eulerX the x-Euler-angle
      * @param eulerY the y-Euler-angle
      * @param eulerZ the z-Euler-angle
-     * @param matrix the Matrix3f instance to write rotational values to 
+     * @param matrix the Matrix3f instance to write rotational values to
      */
     public static void eulerToMatrix3f( float eulerX, float eulerY, float eulerZ, Matrix3f matrix )
     {
@@ -149,7 +149,7 @@ public class MatrixUtils
         final float cx = FastMath.cos( eulerX );
         final float cy = FastMath.cos( eulerY );
         final float cz = FastMath.cos( eulerZ );
-        
+
         matrix.setElement( 0, 0, cy * cz );
         matrix.setElement( 0, 1, -( cx * sz ) + ( sx * sy * cz ) );
         matrix.setElement( 0, 2, ( sx * sz ) + ( cx * sy * cz ) );
@@ -160,59 +160,59 @@ public class MatrixUtils
         matrix.setElement( 2, 1, sx * cy );
         matrix.setElement( 2, 2, cx * cy );
     }
-    
+
     /**
      * Converts Euler angles to a Matrix3f.
-     * 
+     *
      * @param euler the Tuple3f containing all three Euler angles
-     * @param matrix the Matrix3f instance to write rotational values to 
+     * @param matrix the Matrix3f instance to write rotational values to
      */
     public static void eulerToMatrix3f( Tuple3f euler, Matrix3f matrix )
     {
         eulerToMatrix3f( euler.x, euler.y, euler.z, matrix );
     }
-    
+
     /**
      * Converts Euler angles to a Matrix3f.
-     * 
+     *
      * @param eulerX the x-Euler-angle
      * @param eulerY the y-Euler-angle
      * @param eulerZ the z-Euler-angle
-     * 
+     *
      * @return the new Matrix3f instance reflecting the rotation
      */
     public static Matrix3f eulerToMatrix3f( float eulerX, float eulerY, float eulerZ )
     {
         Matrix3f matrix = new Matrix3f();
-        
+
         eulerToMatrix3f( eulerX, eulerY, eulerZ, matrix );
-        
+
         return( matrix );
     }
-    
+
     /**
      * Converts Euler angles to a Matrix3f.
-     * 
+     *
      * @param euler the Tuple3f containing all three Euler angles
-     * 
+     *
      * @return the new Matrix3f instance reflecting the rotation
      */
     public static Matrix3f eulerToMatrix3f( Tuple3f euler )
     {
         Matrix3f matrix = new Matrix3f();
-        
+
         eulerToMatrix3f( euler.x, euler.y, euler.z, matrix );
-        
+
         return( matrix );
     }
-    
+
     /**
      * Converts Euler angles to a Matrix4f.
-     * 
+     *
      * @param eulerX the x-Euler-angle
      * @param eulerY the y-Euler-angle
      * @param eulerZ the z-Euler-angle
-     * @param matrix the Matrix4f instance to write rotational values to 
+     * @param matrix the Matrix4f instance to write rotational values to
      */
     public static void eulerToMatrix4f( float eulerX, float eulerY, float eulerZ, Matrix4f matrix )
     {
@@ -222,7 +222,7 @@ public class MatrixUtils
         final float cx = FastMath.cos( eulerX );
         final float cy = FastMath.cos( eulerY );
         final float cz = FastMath.cos( eulerZ );
-        
+
         matrix.setElement( 0, 0, cy * cz );
         matrix.setElement( 0, 1, -( cx * sz ) + ( sx * sy * cz ) );
         matrix.setElement( 0, 2, ( sx * sz) + (cx * sy * cz ) );
@@ -232,50 +232,51 @@ public class MatrixUtils
         matrix.setElement( 2, 0, -sy );
         matrix.setElement( 2, 1, sx * cy );
         matrix.setElement( 2, 2, cx * cy );
+        matrix.setElement( 3, 3, 1 );
     }
-    
+
     /**
      * Converts Euler angles to a Matrix4f.
-     * 
+     *
      * @param euler the Tuple3f containing all three Euler angles
-     * @param matrix the Matrix4f instance to write rotational values to 
+     * @param matrix the Matrix4f instance to write rotational values to
      */
     public static void eulerToMatrix4f( Tuple3f euler, Matrix4f matrix )
     {
         eulerToMatrix4f( euler.x, euler.y, euler.z, matrix );
     }
-    
+
     /**
      * Converts Euler angles to a Matrix4f.
-     * 
+     *
      * @param euler the Tuple3f containing all three Euler angles
-     * 
+     *
      * @return the new Matrix4f instance reflecting the rotation
      */
     public static Matrix4f eulerToMatrix4f( Tuple3f euler )
     {
         Matrix4f matrix = new Matrix4f();
-        
+
         eulerToMatrix4f( euler.x, euler.y, euler.z, matrix );
-        
+
         return( matrix );
     }
-    
+
     /**
      * Converts Euler angles to a Matrix4f.
-     * 
+     *
      * @param eulerX the x-Euler-angle
      * @param eulerY the y-Euler-angle
      * @param eulerZ the z-Euler-angle
-     * 
+     *
      * @return the new Matrix4f instance reflecting the rotation
      */
     public static Matrix4f eulerToMatrix4f( float eulerX, float eulerY, float eulerZ )
     {
         Matrix4f matrix = new Matrix4f();
-        
+
         eulerToMatrix4f( eulerX, eulerY, eulerZ, matrix );
-        
+
         return( matrix );
     }
 }

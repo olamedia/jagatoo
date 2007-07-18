@@ -1,5 +1,7 @@
 package org.jagatoo.loaders.models.collada.datastructs;
 
+import java.net.URL;
+
 import org.jagatoo.loaders.models.collada.datastructs.controllers.COLLADALibraryControllers;
 import org.jagatoo.loaders.models.collada.datastructs.effects.COLLADALibraryEffects;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADALibraryGeometries;
@@ -45,13 +47,13 @@ public class COLLADAFile {
      * The base path, used e.g. when loading textures.
      * Basically it's where this file has been loaded from.
      */
-    private final String basePath;
+    private final URL basePath;
 
     /**
      * Creates a new COLLADAFile
      * @param basePath The base path, used e.g. when loading textures
      */
-    public COLLADAFile(String basePath) {
+    public COLLADAFile(URL basePath) {
 
         this.basePath = basePath;
 
@@ -109,7 +111,7 @@ public class COLLADAFile {
     /**
      * @return the basePath
      */
-    public String getBasePath() {
+    public URL getBasePath() {
         return basePath;
     }
 

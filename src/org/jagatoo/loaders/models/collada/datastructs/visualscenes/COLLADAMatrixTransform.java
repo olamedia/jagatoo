@@ -27,11 +27,21 @@ public class COLLADAMatrixTransform extends COLLADATransform {
     /**
      * Creates a new COLLADAMatrixTransform
      * @param floats Floats in the Matrix
-     *
      */
     public COLLADAMatrixTransform(float[] floats) {
 
         this.matrix = new Matrix4f(floats);
+
+    }
+
+
+    /**
+     * Creates a new COLLADAMatrixTransform
+     * @param matrix The Matrix to instanciate from
+     */
+    public COLLADAMatrixTransform(Matrix4f matrix) {
+
+        this.matrix = new Matrix4f(matrix);
 
     }
 

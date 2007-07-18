@@ -1,6 +1,7 @@
 package org.jagatoo.loaders.models.collada.datastructs.geometries;
 
 import org.jagatoo.loaders.models.collada.datastructs.COLLADAFile;
+import org.jagatoo.loaders.models.collada.jibx.Geometry;
 
 /**
  * COLLADA Geometry which has been loaded from a COLLADA file with
@@ -23,9 +24,9 @@ public class COLLADATrianglesGeometry extends COLLADAGeometry {
      * @param id {@inheritDoc}
      * @param name {@inheritDoc}
      */
-    public COLLADATrianglesGeometry(COLLADAFile file, String id, String name) {
+    public COLLADATrianglesGeometry(COLLADAFile file, String id, String name, Geometry geometry) {
 
-        super(file, id, name);
+        super(file, id, name, geometry);
 
     }
 

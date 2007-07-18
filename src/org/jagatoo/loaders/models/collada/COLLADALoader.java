@@ -3,61 +3,24 @@ package org.jagatoo.loaders.models.collada;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.math.BigInteger;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.xmlbeans.XmlObject;
-import org.collada.x2005.x11.colladaSchema.COLLADADocument;
-import org.collada.x2005.x11.colladaSchema.CommonNewparamType;
-import org.collada.x2005.x11.colladaSchema.FxSampler2DCommon;
-import org.collada.x2005.x11.colladaSchema.FxSurfaceCommon;
-import org.collada.x2005.x11.colladaSchema.FxSurfaceInitFromCommon;
-import org.collada.x2005.x11.colladaSchema.InputLocalOffset;
-import org.collada.x2005.x11.colladaSchema.NodeType;
-import org.collada.x2005.x11.colladaSchema.TargetableFloat3;
-import org.collada.x2005.x11.colladaSchema.BindMaterialDocument.BindMaterial.TechniqueCommon;
-import org.collada.x2005.x11.colladaSchema.COLLADADocument.COLLADA;
-import org.collada.x2005.x11.colladaSchema.ControllerDocument.Controller;
-import org.collada.x2005.x11.colladaSchema.EffectDocument.Effect;
-import org.collada.x2005.x11.colladaSchema.GeometryDocument.Geometry;
-import org.collada.x2005.x11.colladaSchema.ImageDocument.Image;
-import org.collada.x2005.x11.colladaSchema.InstanceGeometryDocument.InstanceGeometry;
-import org.collada.x2005.x11.colladaSchema.InstanceMaterialDocument.InstanceMaterial;
-import org.collada.x2005.x11.colladaSchema.LibraryAnimationsDocument.LibraryAnimations;
-import org.collada.x2005.x11.colladaSchema.LibraryControllersDocument.LibraryControllers;
-import org.collada.x2005.x11.colladaSchema.LibraryEffectsDocument.LibraryEffects;
-import org.collada.x2005.x11.colladaSchema.LibraryGeometriesDocument.LibraryGeometries;
-import org.collada.x2005.x11.colladaSchema.LibraryImagesDocument.LibraryImages;
-import org.collada.x2005.x11.colladaSchema.LibraryMaterialsDocument.LibraryMaterials;
-import org.collada.x2005.x11.colladaSchema.LibraryVisualScenesDocument.LibraryVisualScenes;
-import org.collada.x2005.x11.colladaSchema.MaterialDocument.Material;
-import org.collada.x2005.x11.colladaSchema.MatrixDocument.Matrix;
-import org.collada.x2005.x11.colladaSchema.MeshDocument.Mesh;
-import org.collada.x2005.x11.colladaSchema.NodeDocument.Node;
-import org.collada.x2005.x11.colladaSchema.PolygonsDocument.Polygons;
-import org.collada.x2005.x11.colladaSchema.ProfileCGDocument.ProfileCG;
-import org.collada.x2005.x11.colladaSchema.ProfileCOMMONDocument.ProfileCOMMON;
-import org.collada.x2005.x11.colladaSchema.ProfileGLESDocument.ProfileGLES;
-import org.collada.x2005.x11.colladaSchema.ProfileGLSLDocument.ProfileGLSL;
-import org.collada.x2005.x11.colladaSchema.RotateDocument.Rotate;
-import org.collada.x2005.x11.colladaSchema.SourceDocument.Source;
-import org.collada.x2005.x11.colladaSchema.TrianglesDocument.Triangles;
-import org.collada.x2005.x11.colladaSchema.VisualSceneDocument.VisualScene;
 import org.jagatoo.loaders.models.collada.datastructs.COLLADAFile;
+import org.jagatoo.loaders.models.collada.datastructs.controllers.COLLADAController;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.COLLADASkeletalController;
 import org.jagatoo.loaders.models.collada.datastructs.effects.COLLADAEffect;
 import org.jagatoo.loaders.models.collada.datastructs.effects.COLLADALibraryEffects;
 import org.jagatoo.loaders.models.collada.datastructs.effects.COLLADAProfile;
 import org.jagatoo.loaders.models.collada.datastructs.effects.COLLADAProfileCommon;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAGeometry;
-import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAGeometryProvider;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADALibraryGeometries;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAMesh;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAMeshDataInfo;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAMeshSources;
-import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAPolygonsGeometry;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADATrianglesGeometry;
 import org.jagatoo.loaders.models.collada.datastructs.images.COLLADALibraryImages;
 import org.jagatoo.loaders.models.collada.datastructs.images.COLLADASurface;
@@ -68,9 +31,37 @@ import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADALibrar
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADAMatrixTransform;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADANode;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADAScene;
+import org.jagatoo.loaders.models.collada.jibx.BindMaterial;
+import org.jagatoo.loaders.models.collada.jibx.COLLADA;
+import org.jagatoo.loaders.models.collada.jibx.Controller;
+import org.jagatoo.loaders.models.collada.jibx.Effect;
+import org.jagatoo.loaders.models.collada.jibx.Geometry;
+import org.jagatoo.loaders.models.collada.jibx.Image;
+import org.jagatoo.loaders.models.collada.jibx.Input;
+import org.jagatoo.loaders.models.collada.jibx.InstanceController;
+import org.jagatoo.loaders.models.collada.jibx.InstanceGeometry;
+import org.jagatoo.loaders.models.collada.jibx.InstanceMaterial;
+import org.jagatoo.loaders.models.collada.jibx.LibraryControllers;
+import org.jagatoo.loaders.models.collada.jibx.LibraryEffects;
+import org.jagatoo.loaders.models.collada.jibx.LibraryGeometries;
+import org.jagatoo.loaders.models.collada.jibx.LibraryImages;
+import org.jagatoo.loaders.models.collada.jibx.LibraryMaterials;
+import org.jagatoo.loaders.models.collada.jibx.LibraryVisualScenes;
+import org.jagatoo.loaders.models.collada.jibx.Material;
+import org.jagatoo.loaders.models.collada.jibx.Mesh;
+import org.jagatoo.loaders.models.collada.jibx.Node;
+import org.jagatoo.loaders.models.collada.jibx.ProfileCOMMON;
+import org.jagatoo.loaders.models.collada.jibx.ProfileCOMMON_NewParam;
+import org.jagatoo.loaders.models.collada.jibx.Sampler2D;
+import org.jagatoo.loaders.models.collada.jibx.Source;
+import org.jagatoo.loaders.models.collada.jibx.Surface;
+import org.jagatoo.loaders.models.collada.jibx.Triangles;
+import org.jagatoo.loaders.models.collada.jibx.VisualScene;
 import org.jagatoo.loaders.models.collada.logging.HierarchicalOutputter;
-import org.openmali.vecmath.Matrix4f;
-import org.openmali.vecmath.Point3f;
+import org.jibx.runtime.BindingDirectory;
+import org.jibx.runtime.IBindingFactory;
+import org.jibx.runtime.IUnmarshallingContext;
+import org.jibx.runtime.JiBXException;
 
 /**
  * This is a really simple COLLADA file loader. Its features are limited for now
@@ -83,22 +74,43 @@ public class COLLADALoader {
     /** Are debug messages printed ? */
     private static HierarchicalOutputter logger = new HierarchicalOutputter();
 
+    /** The unmarshalling context used to read COLLADA files */
+    private IUnmarshallingContext unmarshallingContext;
+
     /**
      * Create a new COLLADA Loader.
      */
     public COLLADALoader() {
 
-        // Nothing to do... XMLBeans doesn't require initialisation (as opposed
-        // to JAXB2)
+        IBindingFactory factory;
+
+        try {
+
+            factory = BindingDirectory.getFactory(COLLADA.class);
+
+            long t1 = System.nanoTime();
+
+            this.unmarshallingContext = factory.createUnmarshallingContext();
+
+            long t2 = System.nanoTime();
+
+            System.out.println("Unmarshalling context creation time = "+((t2 - t1) / 1000000)+" ms");
+
+        } catch (JiBXException e) {
+            // We throw an Error created from this Exception, because we don't want
+            // to annoy users with try/catch clauses. If Xith3D has been compiled correctly,
+            // no JiBXException is thrown.
+            throw new Error(e);
+        }
 
     }
 
     /**
-     * Loads a COLLADA scene from a file
+     * Loads a COLLADA file from a file
      *
      * @param path
      *            The file to load the scene from
-     * @return the loaded *thing*
+     * @return the loaded file
      */
     public COLLADAFile load(String path) {
 
@@ -115,20 +127,25 @@ public class COLLADALoader {
     }
 
     /**
-     * Loads a COLLADA scene from a file
+     * Loads a COLLADA file from an URL
      *
-     * @param file
+     * @param path
      *            The file to load the scene from
-     * @return the loaded *thing*
+     * @return the loaded file
      */
-    public COLLADAFile load(File file) {
+    public COLLADAFile load(URL url) {
 
-        logger.print("Loading the file : " + file.getPath());
+        logger.print("Loading the URL : " + url);
 
         COLLADAFile collada = null;
 
         try {
-            collada = load(file.getParent(), new FileInputStream(file));
+            // Find out the parent URL
+            String parentURLString = url.toURI().toString();
+            parentURLString = parentURLString.substring(0, parentURLString.lastIndexOf("/") + 1);
+            URL parentURL = new URL(parentURLString);
+            logger.print("Found parent URL : "+parentURL);
+            collada = load(parentURL, url.openStream());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -138,14 +155,37 @@ public class COLLADALoader {
     }
 
     /**
-     * Loads a COLLADA scene from a stream
+     * Loads a COLLADA file from a file
+     *
+     * @param file
+     *            The file to load the scene from
+     * @return the loaded file
+     */
+    public COLLADAFile load(File file) {
+
+        logger.print("Loading the file : " + file.getPath());
+
+        COLLADAFile collada = null;
+
+        try {
+            collada = load(file.getParentFile().toURI().toURL(), new FileInputStream(file));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return collada;
+
+    }
+
+    /**
+     * Loads a COLLADA file from a stream
      * @param basePath The base path, used e.g. when there are textures to load
      *
      * @param stream
      *            The stream to load the scene from
-     * @return the loaded *thing*
+     * @return the loaded file
      */
-    public COLLADAFile load(String basePath, InputStream stream) {
+    public COLLADAFile load(URL basePath, InputStream stream) {
 
         long t1 = System.nanoTime();
 
@@ -156,14 +196,15 @@ public class COLLADALoader {
             logger.print("TT] Parsing...");
             logger.increaseTabbing();
             long l1 = System.nanoTime();
-            COLLADA collada = COLLADADocument.Factory.parse(stream)
-            .getCOLLADA();
+            // The second argument of unmarshalDocument is null, cause it's up to the unmarshaller
+            // to figure out the encoding of the file.
+            COLLADA collada = (COLLADA) unmarshallingContext.unmarshalDocument(stream, null);
             long l2 = System.nanoTime();
-            logger.print("TT] Took " + ((l2 - l1) / 1000 / 1000)
+            logger.print("TT] Took " + ((l2 - l1) / 1000000)
                     + " milliseconds to parse");
             logger.decreaseTabbing();
 
-            logger.print("--] This is a COLLADA " + collada.getVersion()
+            logger.print("--] This is a COLLADA " + collada.version
                     + " file");
             logger
             .print("--] Note that the loader don't care whether it's 1.4.0 or 1.4.1, though"
@@ -174,11 +215,10 @@ public class COLLADALoader {
 
             logger.increaseTabbing();
 
-            List<LibraryAnimations> libraryAnimationsList = collada
-            .getLibraryAnimationsList();
+            /*List<LibraryAnimations> libraryAnimationsList = collada.libraryAnimations;
             if (!libraryAnimationsList.isEmpty()) {
                 logger.print("SS] Found LibraryAnimations ! Hmm we gotta implement animations soon !");
-            }
+            }*/
             /*
             for (LibraryAnimations libraryAnimations : libraryAnimationsList) {
                 logger
@@ -186,60 +226,66 @@ public class COLLADALoader {
             }
              */
 
-            List<LibraryControllers> libraryControllersList = collada
-            .getLibraryControllersList();
-            for (LibraryControllers libraryControllers : libraryControllersList) {
-                logger
-                .print("CC] Found LibraryControllers ! Investigating... !");
-                logger.increaseTabbing();
-                loadLibraryControllers(colladaFile, libraryControllers);
-                logger.decreaseTabbing();
+            List<LibraryControllers> libraryControllersList = collada.libraryControllers;
+            if(libraryControllersList != null) {
+                for (LibraryControllers libraryControllers : libraryControllersList) {
+                    logger
+                    .print("CC] Found LibraryControllers ! Investigating... !");
+                    logger.increaseTabbing();
+                    loadLibraryControllers(colladaFile, libraryControllers);
+                    logger.decreaseTabbing();
+                }
             }
 
-            List<LibraryEffects> libraryEffectsList = collada
-            .getLibraryEffectsList();
-            for (LibraryEffects libraryEffects : libraryEffectsList) {
-                logger.print("CC] Found LibraryEffects ! Investigating... !");
-                logger.increaseTabbing();
-                loadLibraryEffects(colladaFile, libraryEffects);
-                logger.decreaseTabbing();
+            List<LibraryEffects> libraryEffectsList = collada.libraryEffects;
+            if(libraryEffectsList != null) {
+                for (LibraryEffects libraryEffects : libraryEffectsList) {
+                    logger.print("CC] Found LibraryEffects ! Investigating... !");
+                    logger.increaseTabbing();
+                    loadLibraryEffects(colladaFile, libraryEffects);
+                    logger.decreaseTabbing();
+                }
             }
 
-            List<LibraryImages> libraryImagesList = collada
-            .getLibraryImagesList();
-            for (LibraryImages libraryImages : libraryImagesList) {
-                logger.print("CC] Found LibraryImages ! We know that !");
-                logger.increaseTabbing();
-                loadLibraryImages(colladaFile, libraryImages);
-                logger.decreaseTabbing();
+            List<LibraryImages> libraryImagesList = collada.libraryImages;
+            if(libraryImagesList != null) {
+                for (LibraryImages libraryImages : libraryImagesList) {
+                    logger.print("CC] Found LibraryImages ! We know that !");
+                    logger.increaseTabbing();
+                    loadLibraryImages(colladaFile, libraryImages);
+                    logger.decreaseTabbing();
+                }
             }
 
-            List<LibraryMaterials> libraryMaterialsList = collada
-            .getLibraryMaterialsList();
-            for (LibraryMaterials libraryMaterials : libraryMaterialsList) {
-                logger.print("CC] Found LibraryMaterials ! We know that !");
-                logger.increaseTabbing();
-                loadLibraryMaterials(colladaFile, libraryMaterials);
-                logger.decreaseTabbing();
+            List<LibraryMaterials> libraryMaterialsList = collada.libraryMaterials;
+            if(libraryMaterialsList != null) {
+                for (LibraryMaterials libraryMaterials : libraryMaterialsList) {
+                    logger.print("CC] Found LibraryMaterials ! We know that !");
+                    logger.increaseTabbing();
+                    loadLibraryMaterials(colladaFile, libraryMaterials);
+                    logger.decreaseTabbing();
+                }
             }
 
-            List<LibraryGeometries> libraryGeometriesList = collada
-            .getLibraryGeometriesList();
-            for (LibraryGeometries libraryGeometries : libraryGeometriesList) {
-                logger.print("CC] Found LibraryGeometries ! We know that !");
-                logger.increaseTabbing();
-                loadLibraryGeometries(colladaFile, libraryGeometries);
-                logger.decreaseTabbing();
+            List<LibraryGeometries> libraryGeometriesList = collada.libraryGeometries;
+            if(libraryGeometriesList != null) {
+                for (LibraryGeometries libraryGeometries : libraryGeometriesList) {
+                    logger.print("CC] Found LibraryGeometries ! We know that !");
+                    logger.increaseTabbing();
+                    loadLibraryGeometries(colladaFile, libraryGeometries);
+                    logger.decreaseTabbing();
+                }
             }
 
-            List<LibraryVisualScenes> libraryVisualScenesList = collada
-            .getLibraryVisualScenesList();
-            for (LibraryVisualScenes libraryVisualScenes : libraryVisualScenesList) {
-                logger
-                .print("CC] Found LibraryVisualScenes ! Investigating... !");
-                logger.increaseTabbing();
-                loadLibraryVisualScenes(colladaFile, libraryVisualScenes);
-                logger.decreaseTabbing();
+            List<LibraryVisualScenes> libraryVisualScenesList = collada.libraryVisualScenes;
+            if(libraryVisualScenesList != null) {
+                for (LibraryVisualScenes libraryVisualScenes : libraryVisualScenesList) {
+                    logger
+                    .print("CC] Found LibraryVisualScenes ! Investigating... !");
+                    logger.increaseTabbing();
+                    loadLibraryVisualScenes(colladaFile, libraryVisualScenes);
+                    logger.decreaseTabbing();
+                }
             }
 
             logger.decreaseTabbing();
@@ -274,158 +320,54 @@ public class COLLADALoader {
         .getLibraryVisualsScenes();
         HashMap<String, COLLADAScene> scenes = colLibVisualScenes.getScenes();
 
-        List<VisualScene> visualScenes = libScenes.getVisualSceneList();
+        Collection<VisualScene> visualScenes = libScenes.scenes.values();
 
         logger.increaseTabbing();
         for (VisualScene visualScene : visualScenes) {
 
-            COLLADAScene colScene = new COLLADAScene(visualScene.getId(),
-                    visualScene.getName());
+            COLLADAScene colScene = new COLLADAScene(visualScene.id,
+                    visualScene.name);
             scenes.put(colScene.getId(), colScene);
 
             logger.print("TT] Found scene [" + colScene.getId() + ":"
                     + colScene.getName() + "]");
             logger.increaseTabbing();
-            for (Node node : visualScene.getNodeList()) {
+            for (Node node : visualScene.nodes.values()) {
 
-                logger.print("TT] Found node [" + node.getId() + ":"
-                        + node.getName() + "]");
+                logger.print("TT] Found node [" + node.id + ":"
+                        + node.name + "]");
                 logger.increaseTabbing();
 
                 COLLADANode colNode = null;
 
-                if (node.getType() == NodeType.NODE) {
+                if (node.type == Node.Type.NODE) {
 
                     logger.print("TT] Alright, it's a basic node");
 
-                    COLLADAMatrixTransform transform = new COLLADAMatrixTransform();
-
-                    List<Matrix> matrixList = node.getMatrixList();
-                    if(!matrixList.isEmpty()) {
-                        // We have some matrices (usually one)
-                        // That means the node transform has been baked to
-                        // a matrix by Blender (I take Blender as a reference)
-                        if(matrixList.size() != 1) {
-                            logger.print("EE] Error ! We have several matrices.. Taking only the first one");
-                        }
-                        Matrix matrix = matrixList.get(0);
-                        Matrix4f mat = new Matrix4f(toFloats(matrix.getListValue()));
-
-                        transform.getMatrix().mul(mat);
-                        logger.print("TT] Transform by a matrix : \n"
-                                + ((COLLADAMatrixTransform) transform)
-                                .getMatrix());
-                    } else {
-
-                        // No matrices ? ok we have transform splitted into
-                        // translate, rotateX/Y/Z and scale elements
-
-                        // Let's first do translate
-                        List<TargetableFloat3> translateList = node.getTranslateList();
-
-                        for (TargetableFloat3 float3 : translateList) {
-                            float[] floats = toFloats(float3.getListValue());
-                            Point3f translation = new Point3f(floats[0],
-                                    floats[1], floats[2]);
-                            transform.getMatrix().setTranslation(
-                                    translation);
-                            logger.print("TT] Transform by a translation : " + translation);
-
-                            logger.print("TT] Matrix is now : "
-                                    + transform.getMatrix());
-                        }
-
-                        // Then rotate
-                        List<Rotate> rotateList = node.getRotateList();
-
-                        for (Rotate rotate : rotateList) {
-
-                            float angle = ((Double)rotate.getListValue().get(3)).floatValue();
-                            String axis = "";
-                            Matrix4f rotation = new Matrix4f();
-                            rotation.setIdentity();
-                            if (rotate.getSid().endsWith("Z")) {
-                                axis = "Z";
-                                rotation.rotZ((float) Math.toRadians(angle));
-                            } else if (rotate.getSid().endsWith("Y")) {
-                                axis = "Y";
-                                rotation.rotY((float) Math.toRadians(angle));
-                            } else if (rotate.getSid().endsWith("X")) {
-                                axis = "X";
-                                rotation.rotX((float) Math.toRadians(angle));
-                            } else {
-                                logger
-                                .print("EE] ERROR ! Cannot recognize the sid of a rotate : "
-                                        + rotate.getSid());
-                            }
-                            transform.getMatrix().mul(rotation);
-                            logger
-                            .print("TT] Transform by a rotation around the "
-                                    + axis
-                                    + " axis of "
-                                    + angle
-                                    + " degrees");
-
-                            logger.print("TT] Matrix is now : "
-                                    + transform.getMatrix());
-
-                        }
-
-                        // And finally, scale
-                        List<TargetableFloat3> scaleList = node.getScaleList();
-
-                        for (TargetableFloat3 float3 : scaleList) {
-
-                            float[] floats = toFloats(float3.getListValue());
-                            Matrix4f scaling = new Matrix4f();
-                            scaling.setIdentity();
-                            scaling.m30 = floats[0];
-                            scaling.m31 = floats[1];
-                            scaling.m32 = floats[2];
-                            transform.getMatrix().mul(scaling);
-                            logger.print("TT] Transform by a scaling of ["
-                                    + floats[0] + ", " + floats[1] + ", "
-                                    + floats[2] + "]");
-
-                            logger.print("TT] Matrix is now : "
-                                    + transform.getMatrix());
-
-                        }
-
-                    }
+                    COLLADAMatrixTransform transform = new COLLADAMatrixTransform(node.matrix.matrix4f);
 
                     // FIXME : applying YAGNI here : we don't need to know whether these nodes are grouped or separate
-                    for (InstanceGeometry instanceGeometry : node.getInstanceGeometryList()) {
-
-                        String target = null;
-                        TechniqueCommon techniqueCommon = instanceGeometry.getBindMaterial().getTechniqueCommon();
-                        List<InstanceMaterial> instanceMaterialList = techniqueCommon.getInstanceMaterialList();
-                        for (InstanceMaterial instanceMaterial : instanceMaterialList) {
-                            if(target == null) {
-                                target = instanceMaterial.getTarget();
-                            } else {
-                                logger.print("TT] Several materials for the same geometry instance ! Skipping....");
-                            }
+                    if(node.instanceGeometries != null) {
+                        for (InstanceGeometry instanceGeometry : node.instanceGeometries) {
+                            colNode = newCOLLADANode(colladaFile, node, transform, instanceGeometry.url, instanceGeometry.bindMaterial);
                         }
-
-                        colNode = new COLLADAGeometryInstanceNode(
-                                colladaFile,
-                                node.getId(),
-                                node.getName(),
-                                transform,
-                                removeSharp(instanceGeometry.getUrl()),
-                                removeSharp(target)
-                        );
+                    } else if(node.instanceControllers != null) {
+                        for (InstanceController instanceController : node.instanceControllers) {
+                            COLLADAController controller = colladaFile.getLibraryControllers().getControllers().get(instanceController.url);
+                            controller.updateDestinationGeometry();
+                            colNode = newCOLLADANode(colladaFile, node, transform, controller.getDestinationGeometry().getGeometry().id, instanceController.bindMaterial);
+                        }
                     }
 
-                } else if (node.getType() == NodeType.JOINT) {
+
+                } else if (node.type == Node.Type.JOINT) {
 
                     logger
-                    .print("TT] Joint nodes unsupported yet !! (but to come soon...)");
+                    .print("TT] Joint nodes unsupported in the main loader yet (but successfully read in another program)");
 
                 } else {
 
-                    logger.print("TT] Node is of type : " + node.getType()
+                    logger.print("TT] Node is of type : " + node.type
                             + " we don't support specific nodes yet...");
 
                 }
@@ -443,6 +385,31 @@ public class COLLADALoader {
         }
         logger.decreaseTabbing();
 
+    }
+
+    private COLLADANode newCOLLADANode(COLLADAFile colladaFile, Node node,
+            COLLADAMatrixTransform transform, String geometryUrl, BindMaterial bindMaterial) {
+        COLLADANode colNode;
+        String materialUrl = null;
+        BindMaterial.TechniqueCommon techniqueCommon = bindMaterial.techniqueCommon;
+        List<InstanceMaterial> instanceMaterialList = techniqueCommon.instanceMaterials;
+        for (InstanceMaterial instanceMaterial : instanceMaterialList) {
+            if(materialUrl == null) {
+                materialUrl = instanceMaterial.target;
+            } else {
+                logger.print("TT] Several materials for the same geometry instance ! Skipping....");
+            }
+        }
+
+        colNode = new COLLADAGeometryInstanceNode(
+                colladaFile,
+                node.id,
+                node.name,
+                transform,
+                geometryUrl,
+                materialUrl
+        );
+        return colNode;
     }
 
     /**
@@ -474,14 +441,14 @@ public class COLLADALoader {
         COLLADALibraryImages colLibImages = colladaFile.getLibraryImages();
         HashMap<String, String> colImages = colLibImages.getImages();
 
-        List<Image> images = libImages.getImageList();
+        Collection<Image> images = libImages.images.values();
 
         logger.increaseTabbing();
         for (Image image : images) {
 
-            logger.print("TT] Found image [" + image.getId() + ":"
-                    + image.getInitFrom() + "]");
-            colImages.put(image.getId(), image.getInitFrom());
+            logger.print("TT] Found image [" + image.id + ":"
+                    + image.initFrom + "]");
+            colImages.put(image.id, image.initFrom);
 
         }
         logger.decreaseTabbing();
@@ -504,13 +471,13 @@ public class COLLADALoader {
         HashMap<String, COLLADAMaterial> colMaterials = colLibMaterials
         .getMaterials();
 
-        List<Material> materials = libMaterials.getMaterialList();
+        Collection<Material> materials = libMaterials.materials.values();
 
         logger.increaseTabbing();
         for (Material material : materials) {
 
             COLLADAMaterial colMaterial = new COLLADAMaterial(colladaFile,
-                    material.getId(), removeSharp(material.getInstanceEffect().getUrl()));
+                    material.id, material.instanceEffect.url);
             logger.print("TT] Found material [" + colMaterial.getId() + ":"
                     + colMaterial.getEffect() + "]");
             colMaterials.put(colMaterial.getId(), colMaterial);
@@ -531,18 +498,17 @@ public class COLLADALoader {
     private void loadLibraryControllers(COLLADAFile colladaFile,
             LibraryControllers controllers) {
 
-        HashMap<String, COLLADAGeometryProvider> controllersMap = colladaFile
+        HashMap<String, COLLADAController> controllersMap = colladaFile
         .getLibraryControllers().getControllers();
-        List<Controller> controllersList = controllers.getControllerList();
+        Collection<Controller> controllersList = controllers.controllers.values();
 
         for (Controller controller : controllersList) {
-            String source = removeSharp(controller.getSkin().getSource2())
-            .replaceAll(" ", "_");
-            String id = controller.getId();
+            // FIXME : this is strange... a bug in Blender's exporter ?
+            String source = controller.skin.source.replaceAll(" ", "_");
+            String id = controller.id;
             logger.print("TT] Found controller with Id : \"" + id
                     + "\" and source : \"" + source + "\"");
-            controllersMap.put(id, new COLLADASkeletalController(colladaFile
-                    .getLibraryGeometries(), source));
+            controllersMap.put(id, new COLLADASkeletalController(colladaFile.getLibraryGeometries(), source, controller));
         }
 
     }
@@ -559,41 +525,29 @@ public class COLLADALoader {
             LibraryEffects libEffects) {
 
         COLLADALibraryEffects colLibEffects = colladaFile.getLibraryEffects();
-        List<Effect> effects = libEffects.getEffectList();
+        Collection<Effect> effects = libEffects.effects;
 
         for (Effect effect : effects) {
 
-            logger.print("TT] Effect \"" + effect.getId() + "\"");
+            logger.print("TT] Effect \"" + effect.id + "\"");
             logger.increaseTabbing();
-            COLLADAEffect colladaEffect = new COLLADAEffect(effect.getId());
-            colLibEffects.getEffects()
-            .put(colladaEffect.getId(), colladaEffect);
+            COLLADAEffect colladaEffect = new COLLADAEffect(effect.id);
+            colLibEffects.getEffects().put(colladaEffect.getId(), colladaEffect);
             colladaEffect.profiles = new ArrayList<COLLADAProfile>();
 
-            List<XmlObject> fxProfileAbstract = effect.getFxProfileAbstractList();
-
-            for (XmlObject element : fxProfileAbstract) {
-
-                Object profileType = element;
-
-                if (profileType instanceof ProfileCOMMON) {
-                    logger.print("TT] Profile COMMON : loading...");
-                    logger.increaseTabbing();
-                    colladaEffect.profiles.add(loadCommonProfile(effect, (ProfileCOMMON) profileType));
-                    logger.decreaseTabbing();
-                } else if (profileType instanceof ProfileCG) {
-                    logger
-                    .print("EE] CG shaders profile isn't implemented yet !");
-                } else if (profileType instanceof ProfileGLSL) {
-                    logger
-                    .print("EE] GLSL shaders profile isn't implemented yet !");
-                } else if (profileType instanceof ProfileGLES) {
-                    logger
-                    .print("EE] GLES shaders profile isn't implemented yet !");
-                } else {
-                    logger.print("EE] Unknown profile type : "
-                            + profileType.getClass().getName());
-                }
+            if (effect.profileCOMMON != null) {
+                logger.print("TT] Profile COMMON : loading...");
+                logger.increaseTabbing();
+                colladaEffect.profiles.add(loadCommonProfile(effect, effect.profileCOMMON));
+                logger.decreaseTabbing();
+            }
+            if (effect.profileCG != null) {
+                logger
+                .print("EE] CG shaders profile isn't implemented yet !");
+            }
+            if (effect.profileGLSL != null) {
+                logger
+                .print("EE] GLSL shaders profile isn't implemented yet !");
             }
             logger.decreaseTabbing();
 
@@ -613,40 +567,35 @@ public class COLLADALoader {
         COLLADAProfileCommon colladaProfile = new COLLADAProfileCommon();
         colladaProfile.surfaces = new HashMap<String, COLLADASurface>();
 
-        List<CommonNewparamType> newParams = profile.getNewparamList();
+        List<ProfileCOMMON_NewParam> newParams = profile.newParams;
 
-        for (CommonNewparamType newParam : newParams) {
+        if(newParams != null) {
 
-            if (newParam.getSurface() != null) {
+            for (ProfileCOMMON_NewParam newParam : newParams) {
 
-                FxSurfaceCommon surface = newParam.getSurface();
-                COLLADASurface colladaSurface = new COLLADASurface(newParam
-                        .getSid());
-                colladaSurface.imageIds = new ArrayList<String>();
-                logger.print("TT] Found surface ! (id = "
-                        + newParam.getSid() + ")");
-                logger.increaseTabbing();
+                if (newParam.surface != null) {
 
-                List<FxSurfaceInitFromCommon> initFroms = surface.getInitFromList();
-                for (FxSurfaceInitFromCommon initFrom : initFroms) {
-                    logger.print("TT] Alright : found an image");
-                    String imageId = initFrom.getStringValue();
+                    Surface surface = newParam.surface;
+                    COLLADASurface colladaSurface = new COLLADASurface(newParam.sid);
+                    colladaSurface.imageIds = new ArrayList<String>();
+                    logger.print("TT] Found surface ! (id = " + newParam.sid + ")");
+                    logger.increaseTabbing();
+
+                    String imageId = surface.initFrom;
                     logger.print("TT] Image id : " + imageId);
                     colladaSurface.imageIds.add(imageId);
+                    colladaProfile.surfaces.put(colladaSurface.getId(), colladaSurface);
+                    logger.decreaseTabbing();
+
+                } else if (newParam.sampler2D != null) {
+
+                    logger.print("TT] Found sampler ! (id = "+ newParam.sid + ")");
+                    logger.increaseTabbing();
+                    Sampler2D sampler2D = newParam.sampler2D;
+                    logger.print("TT] Sampler using source : " + sampler2D.source);
+                    logger.decreaseTabbing();
+
                 }
-                colladaProfile.surfaces.put(colladaSurface.getId(),
-                        colladaSurface);
-                logger.decreaseTabbing();
-
-            } else if (newParam.getSampler2D() != null) {
-
-                logger.print("TT] Found sampler ! (id = "
-                        + newParam.getSid() + ")");
-                logger.increaseTabbing();
-                FxSampler2DCommon sampler2D = newParam.getSampler2D();
-                logger.print("TT] Sampler using source : "
-                        + sampler2D.getSource());
-                logger.decreaseTabbing();
 
             }
 
@@ -671,15 +620,15 @@ public class COLLADALoader {
         COLLADALibraryGeometries colladaLibGeoms = colladaFile
         .getLibraryGeometries();
 
-        List<Geometry> geoms = libGeoms.getGeometryList();
+        Collection<Geometry> geoms = libGeoms.geometries.values();
         logger.print("There " + (geoms.size() > 1 ? "are" : "is") + " "
                 + geoms.size() + " geometr" + (geoms.size() > 1 ? "ies" : "y")
                 + " in this file.");
 
-        for (int i = 0; i < geoms.size(); i++) {
+        int i = 0;
+        for (Geometry geom : geoms) {
 
-            logger.print("Handling geometry " + i);
-            Geometry geom = (Geometry) geoms.get(i);
+            logger.print("Handling geometry " + i++);
 
             COLLADAGeometry loadedGeom = loadGeom(geom);
             if(loadedGeom != null) {
@@ -702,47 +651,38 @@ public class COLLADALoader {
 
         COLLADAGeometry colGeom = null;
 
-        Mesh mesh = geom.getMesh();
+        Mesh mesh = geom.mesh;
 
-        String verticesSource = removeSharp(mesh.getVertices().getInputList()
-                .get(0).getSource());
+        String verticesSource = mesh.vertices.inputs.get(0).source;
 
         // First we get all the vertices/normal data we need
-        List<Source> sources = mesh.getSourceList();
+        List<Source> sources = mesh.sources;
+        HashMap<String, Source> sourcesMap = getSourcesMap(mesh,verticesSource, sources);
 
-        HashMap<String, Source> sourcesMap = getSourcesMap(mesh,
-                verticesSource, sources);
+        // Supported types :
+        Triangles tris = mesh.triangles;
 
-        // Supported types
-        List<Triangles> trianglesList = mesh.getTrianglesList();
-        List<Polygons> polygonsList = mesh.getPolygonsList(); // Well, more or less... only if polys are all triangles
+        // Unsupported types :
+        //Polygons polys = mesh.polygons;
 
         // Try triangles
-        if(!trianglesList.isEmpty()) {
-            if(trianglesList.size() != 1) {
-                logger.print("EE] There are more than one triangles element.. taking the first one");
-            }
-            Triangles tris = trianglesList.get(0);
+        if(tris != null) {
             logger.print("TT] Primitives of type triangles");
-            logger.print("TT] Polygon count = " + tris.getCount());
+            logger.print("TT] Polygon count = " + tris.count);
 
             colGeom = loadTriangles(geom, tris, sourcesMap);
         }
         // Try polys
-        else if(!polygonsList.isEmpty()) {
-            if(trianglesList.size() != 1) {
-                logger.print("EE] There are more than one triangles element.. taking the first one");
-            }
-            Polygons polys = polygonsList.get(0);
+        /*else if(!polys.isEmpty()) {
             logger.print("TT] Primitives of type polygons");
-            logger.print("TT] Polygon count = " + polys.getCount());
+            logger.print("TT] Polygon count = " + polys.count);
 
             colGeom = loadPolygons(geom, polys, sourcesMap);
-        }
+        }*/
         // Well, no luck
         else {
 
-            logger.print("EE] Can't load object : " + geom.getName()
+            logger.print("EE] Can't load object : " + geom.name
                     + " because couldn't find a supported element type..." +
                     "\n (note that the only well supported type is triangles, so e.g." +
             "\n in Blender, activate the appropriate option in the export script");
@@ -770,14 +710,14 @@ public class COLLADALoader {
             Source source = sources.get(i);
 
             // FIXME There may be more
-            if (verticesSource.equals(source.getId())) {
-                sourcesMap.put(mesh.getVertices().getId(), source);
+            if (verticesSource.equals(source.id)) {
+                sourcesMap.put(mesh.vertices.id, source);
                 logger.print("TT] Source " + i + " ID = "
-                        + mesh.getVertices().getId());
+                        + mesh.vertices.id);
             } else {
                 // FIXME Are there other special cases ?
-                sourcesMap.put(source.getId(), source);
-                logger.print("TT] Source " + i + " ID = " + source.getId());
+                sourcesMap.put(source.id, source);
+                logger.print("TT] Source " + i + " ID = " + source.id);
             }
 
         }
@@ -795,18 +735,17 @@ public class COLLADALoader {
             Triangles tris, HashMap<String, Source> sourcesMap) {
 
         COLLADATrianglesGeometry trianglesGeometry = new COLLADATrianglesGeometry(
-                null, geom.getId(), geom.getName());
+                null, geom.id, geom.name, geom);
 
         COLLADAMeshSources sources = new COLLADAMeshSources();
-        COLLADAMeshDataInfo meshDataInfo = getMeshDataInfo(tris.getInputList(),
-                sourcesMap, sources);
+        COLLADAMeshDataInfo meshDataInfo = getMeshDataInfo(tris.inputs, sourcesMap, sources);
 
         COLLADAMesh mesh = new COLLADAMesh(sources);
         trianglesGeometry.mesh = mesh;
 
-        List<BigInteger> indices = tris.getP();
+        int[] indices = tris.p;
         int count = 0;
-        int indexCount = indices.size() / meshDataInfo.maxOffset;
+        int indexCount = indices.length / meshDataInfo.maxOffset;
 
         if (meshDataInfo.vertexOffset != -1) {
             mesh.vertexIndices = new int[indexCount];
@@ -827,23 +766,19 @@ public class COLLADALoader {
         /**
          * FILLING
          */
-        for (int k = 0; k < indices.size(); k += meshDataInfo.maxOffset) {
+        for (int k = 0; k < indices.length; k += meshDataInfo.maxOffset) {
             if (meshDataInfo.vertexOffset != -1) {
-                mesh.vertexIndices[count] = indices.get(
-                        k + meshDataInfo.vertexOffset).intValue();
+                mesh.vertexIndices[count] = indices[k + meshDataInfo.vertexOffset];
             }
             if (meshDataInfo.normalOffset != -1) {
-                mesh.normalIndices[count] = indices.get(
-                        k + meshDataInfo.normalOffset).intValue();
+                mesh.normalIndices[count] = indices[k + meshDataInfo.normalOffset];
             }
             if (meshDataInfo.colorOffset != -1) {
-                mesh.colorIndices[count] = indices.get(
-                        k + meshDataInfo.colorOffset).intValue();
+                mesh.colorIndices[count] = indices[k + meshDataInfo.colorOffset];
             }
             if (meshDataInfo.uvOffsets != null) {
                 for (int i = 0; i < meshDataInfo.uvOffsets.size(); i++) {
-                    mesh.uvIndices.get(i)[count] = indices.get(
-                            k + meshDataInfo.uvOffsets.get(i)).intValue();
+                    mesh.uvIndices.get(i)[count] = indices[k + meshDataInfo.uvOffsets.get(i)];
                 }
             }
             count++;
@@ -857,18 +792,18 @@ public class COLLADALoader {
     }
 
     /**
-     * @param geometry
+     * @param geom
      * @param poly
      * @param sourcesMap
      * @return the loaded geometry
      */
-    @SuppressWarnings("unchecked")
-    private static COLLADAPolygonsGeometry loadPolygons(Geometry geometry,
+    /*@SuppressWarnings("unchecked")
+    private static COLLADAPolygonsGeometry loadPolygons(Geometry geom,
             Polygons poly, HashMap<String, Source> sourcesMap) {
 
         COLLADAPolygonsGeometry polygonsGeometry = new COLLADAPolygonsGeometry(
-                null, geometry.getId(), geometry.getName(), poly.getCount()
-                .intValue());
+                null, geom.id, geom.name, poly.getCount()
+                , geom);
 
         COLLADAMeshSources sources = new COLLADAMeshSources();
         COLLADAMeshDataInfo meshDataInfo = getMeshDataInfo(poly.getInputList(),
@@ -908,23 +843,23 @@ public class COLLADALoader {
             /**
              * FILLING
              */
-            for (int k = 0; k < indices.size(); k += meshDataInfo.maxOffset) {
+            /*for (int k = 0; k < indices.size(); k += meshDataInfo.maxOffset) {
                 if (meshDataInfo.vertexOffset != -1) {
                     colMesh.vertexIndices[count] = indices.get(
-                            k + meshDataInfo.vertexOffset).intValue();
+                            k + meshDataInfo.vertexOffset);
                 }
                 if (meshDataInfo.normalOffset != -1) {
                     colMesh.normalIndices[count] = indices.get(
-                            k + meshDataInfo.normalOffset).intValue();
+                            k + meshDataInfo.normalOffset);
                 }
                 if (meshDataInfo.colorOffset != -1) {
                     colMesh.normalIndices[count] = indices.get(
-                            k + meshDataInfo.colorOffset).intValue();
+                            k + meshDataInfo.colorOffset);
                 }
                 if (meshDataInfo.uvOffsets != null) {
                     for (int i = 0; i < meshDataInfo.uvOffsets.size(); i++) {
                         colMesh.uvIndices.get(i)[count] = indices.get(
-                                k + meshDataInfo.uvOffsets.get(i)).intValue();
+                                k + meshDataInfo.uvOffsets.get(i));
                     }
                 }
                 count++;
@@ -933,11 +868,11 @@ public class COLLADALoader {
              * FILLING
              */
 
-        }
+        /*}
 
         return polygonsGeometry;
 
-    }
+    }*/
 
     /**
      * Get the mesh data info and fill the sources
@@ -950,8 +885,7 @@ public class COLLADALoader {
      * @return The mesh data info
      */
     @SuppressWarnings("unchecked")
-    private static COLLADAMeshDataInfo getMeshDataInfo(
-            List<InputLocalOffset> inputs, HashMap<String, Source> sourcesMap,
+    private static COLLADAMeshDataInfo getMeshDataInfo(List<Input> inputs, HashMap<String, Source> sourcesMap,
             COLLADAMeshSources sources) {
 
         COLLADAMeshDataInfo meshDataInfo = new COLLADAMeshDataInfo();
@@ -962,61 +896,44 @@ public class COLLADALoader {
         logger.print("TT] Parsing semantics....");
 
         for (int j = 0; j < inputs.size(); j++) {
-            InputLocalOffset input = inputs.get(j);
-            logger.print("TT] Input semantic " + input.getSemantic()
-                    + ", offset " + input.getOffset() + ", from source = "
-                    + input.getSource());
+            Input input = inputs.get(j);
+            logger.print("TT] Input semantic " + input.semantic
+                    + ", offset " + input.offset + ", from source = "
+                    + input.source);
 
-            if (input.getOffset().intValue() > meshDataInfo.maxOffset) {
-                meshDataInfo.maxOffset = input.getOffset().intValue();
+            if (input.offset > meshDataInfo.maxOffset) {
+                meshDataInfo.maxOffset = input.offset;
             }
 
-            if (input.getSemantic().equals("VERTEX")) {
+            if (input.semantic.equals("VERTEX")) {
 
-                meshDataInfo.vertexOffset = input.getOffset().intValue();
+                meshDataInfo.vertexOffset = input.offset;
+                Source source = sourcesMap.get(input.source);
+                sources.vertices = source.floatArray.floats;
 
-                Source source = sourcesMap.get(removeSharp(input.getSource()));
-                List<Double> verticesList = source.getFloatArray1().getListValue();
-                sources.vertices = new float[verticesList.size()];
-                for (int k = 0; k < sources.vertices.length; k++) {
-                    sources.vertices[k] = verticesList.get(k).floatValue();
-                }
 
-            } else if (input.getSemantic().equals("NORMAL")) {
+            } else if (input.semantic.equals("NORMAL")) {
 
-                meshDataInfo.normalOffset = input.getOffset().intValue();
-                Source source = sourcesMap.get(removeSharp(input.getSource()));
-                List<Double> normalsList = source.getFloatArray1().getListValue();
-                sources.normals = new float[normalsList.size()];
-                for (int k = 0; k < sources.normals.length; k++) {
-                    sources.normals[k] = normalsList.get(k).floatValue();
-                }
+                meshDataInfo.normalOffset = input.offset;
+                Source source = sourcesMap.get(input.source);
+                sources.normals = source.floatArray.floats;
 
-            } else if (input.getSemantic().equals("TEXCOORD")) {
+            } else if (input.semantic.equals("TEXCOORD")) {
 
-                meshDataInfo.uvOffsets.add(input.getOffset().intValue());
-                Source source = sourcesMap.get(removeSharp(input.getSource()));
-                List<Double> uvList = source.getFloatArray1().getListValue();
-                float[] uvs = new float[uvList.size()];
-                for (int k = 0; k < uvs.length; k++) {
-                    uvs[k] = uvList.get(k).floatValue();
-                }
-                sources.uvs.add(uvs);
+                meshDataInfo.uvOffsets.add(input.offset);
+                Source source = sourcesMap.get(input.source);
+                sources.uvs.add(source.floatArray.floats);
 
-            } else if (input.getSemantic().equals("COLOR")) {
+            } else if (input.semantic.equals("COLOR")) {
 
-                meshDataInfo.colorOffset = input.getOffset().intValue();
-                Source source = sourcesMap.get(removeSharp(input.getSource()));
-                List<Double> colorsList = source.getFloatArray1().getListValue();
-                sources.colors = new float[colorsList.size()];
-                for (int k = 0; k < sources.colors.length; k++) {
-                    sources.colors[k] = colorsList.get(k).floatValue();
-                }
+                meshDataInfo.colorOffset = input.offset;
+                Source source = sourcesMap.get(input.source);
+                sources.colors = source.floatArray.floats;
 
             } else {
 
                 logger.print("EE] We don't know that semantic :"
-                        + input.getSemantic() + " ! Ignoring..");
+                        + input.semantic + " ! Ignoring..");
 
             }
         }
@@ -1028,48 +945,15 @@ public class COLLADALoader {
 
     }
 
-    /**
-     * Removes the trailing "#" in a source name if there's one.
-     *
-     * @param source
-     *            The name of the source to operate on.
-     * @return A copy of the name, without the trailing "#"
-     */
-    private static String removeSharp(String source) {
+    public boolean isPrintEnabled() {
 
-        if(source == null) {
-
-            return null;
-
-        } else {
-
-            String result = new String(source);
-
-            // Remove the "#" FIXME : this is not nearly optimal !
-            // Maybe there are other URLs hacks to do...
-            // Anyway, for now it work with Blender-Illusoft COLLADA files
-            if (result.startsWith("#")) {
-                result = result.substring(1);
-            }
-
-            return result;
-
-        }
+        return logger.isPrintEnabled();
 
     }
 
-    /**
-     * This is the main method of the program. It reads a file from my (Amos
-     * Wenger) local file system in order to increase my knowledge of the
-     * COLLADA file format.
-     *
-     * @param argv
-     */
-    public static void main(String argv[]) {
+    public void setPrintEnabled(boolean printEnabled) {
 
-        final String file = "/home/bluesky/Desktop/Bureau/Armatured.dae";
-        COLLADALoader loader = new COLLADALoader();
-        loader.load(file);
+        logger.setPrintEnabled(printEnabled);
 
     }
 

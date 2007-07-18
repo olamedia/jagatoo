@@ -1,0 +1,372 @@
+<binding direction="input">
+
+	<namespace uri="http://www.collada.org/2005/11/COLLADASchema" default="elements"/>
+
+	<mapping class="org.jagatoo.loaders.models.collada.jibx.BoolArray" abstract="true">
+		<value name="count" field="count" style="attribute" usage="optional"/>
+		<value name="id" field="id" style="attribute" usage="optional"/>
+		<value field="bools" style="text" deserializer="org.jagatoo.loaders.models.collada.jibx.BoolArray.toArray"/>
+	</mapping> <!-- bool_array -->
+
+	<mapping class="org.jagatoo.loaders.models.collada.jibx.FloatArray" abstract="true">
+		<value name="count" field="count" style="attribute" usage="optional"/>
+		<value name="id" field="id" style="attribute" usage="optional"/>
+		<value field="floats" style="text" deserializer="org.jagatoo.loaders.models.collada.jibx.FloatArray.toArray"/>
+	</mapping> <!-- float_array -->
+
+	<mapping class="org.jagatoo.loaders.models.collada.jibx.IntArray" abstract="true">
+		<value name="count" field="count" style="attribute" usage="optional"/>
+		<value name="id" field="id" style="attribute" usage="optional"/>
+		<value field="ints" style="text" deserializer="org.jagatoo.loaders.models.collada.jibx.IntArray.toArray"/>
+	</mapping> <!-- int_array -->
+
+	<mapping class="org.jagatoo.loaders.models.collada.jibx.NameArray" abstract="true">
+		<value name="count" field="count" style="attribute" usage="optional"/>
+		<value name="id" field="id" style="attribute" usage="optional"/>
+		<value field="names" style="text" deserializer="org.jagatoo.loaders.models.collada.jibx.NameArray.toArray"/>
+	</mapping> <!-- Name_array -->
+
+	<mapping class="org.jagatoo.loaders.models.collada.jibx.IDREFArray" abstract="true">
+		<value name="count" field="count" style="attribute" usage="optional"/>
+		<value name="id" field="id" style="attribute" usage="optional"/>
+		<value field="idrefs" style="text" deserializer="org.jagatoo.loaders.models.collada.jibx.IDREFArray.toArray"/>
+	</mapping> <!-- IDREF_array -->
+
+	<mapping name="input" class="org.jagatoo.loaders.models.collada.jibx.Input">
+		<value name="offset" field="offset" style="attribute" usage="optional"/>
+		<value name="semantic" field="semantic" style="attribute"/>
+		<value name="source" field="source" style="attribute" deserializer="org.jagatoo.loaders.models.collada.jibx.IDREFUtils.parse"/>
+	</mapping> <!-- input -->
+
+	<mapping name="asset" class="org.jagatoo.loaders.models.collada.jibx.Asset" ordered="false">
+		<structure name="contributor" field="contributor">
+			<value name="author" field="author" usage="optional"/>
+			<value name="authoring_tool" field="authoringTool" usage="optional"/>
+			<value name="comments" field="comments" usage="optional"/>
+			<value name="copyright" field="copyright" usage="optional"/>
+			<value name="source_data" field="sourceData" usage="optional"/>
+		</structure> <!-- contributor -->
+		<value name="created" field="created" usage="required"/>
+		<value name="modified" field="modified" usage="required"/>
+		<structure name="unit" field="unit" usage="optional">
+			<value name="meter" field="meter" style="attribute" usage="optional"/>
+			<value name="name" field="name" style="attribute" usage="optional"/>
+		</structure> <!-- unit -->
+		<value name="up_axis" field="upAxis" usage="optional"/>
+	</mapping> <!--  asset-->
+
+	<mapping name="source" class="org.jagatoo.loaders.models.collada.jibx.Source">
+		<value name="id" field="id" style="attribute"/>
+		<structure field="asset" usage="optional"/>
+		<!-- From the COLLADA doc : No more than one of the array elements (<bool_array>, <float_array>, <int_array>,
+		<Name_array>, or <IDREF_array>) may occur. They are mutually exclusive. -->
+		<structure name="bool_array" field="boolArray" type="org.jagatoo.loaders.models.collada.jibx.BoolArray" usage="optional"/>
+		<structure name="float_array" field="floatArray" type="org.jagatoo.loaders.models.collada.jibx.FloatArray" usage="optional"/>
+		<structure name="int_array" field="intArray" type="org.jagatoo.loaders.models.collada.jibx.IntArray" usage="optional"/>
+		<structure name="Name_array" field="nameArray" type="org.jagatoo.loaders.models.collada.jibx.NameArray" usage="optional"/>
+		<structure name="IDREF_array" field="idrefArray" type="org.jagatoo.loaders.models.collada.jibx.IDREFArray" usage="optional"/>
+		<structure name="technique_common" field="techniqueCommon">
+			<structure name="accessor" field="accessor">
+				<value name="count" field="count" style="attribute"/>
+				<value name="source" field="source" style="attribute" deserializer="org.jagatoo.loaders.models.collada.jibx.IDREFUtils.parse"/>
+				<collection field="params">
+					<structure name="param" type="org.jagatoo.loaders.models.collada.jibx.Param">
+						<value name="type" field="type" style="attribute" deserializer="org.jagatoo.loaders.models.collada.jibx.Param.readTypeString"/>
+						<value name="name" field="name" style="attribute" usage="optional"/>
+					</structure> <!-- param -->
+				</collection> <!-- param collection -->
+			</structure> <!-- accessor -->
+		</structure> <!-- technique_common -->
+	</mapping> <!-- source -->
+
+	<mapping name="instance_geometry" class="org.jagatoo.loaders.models.collada.jibx.InstanceGeometry" ordered="false">
+		<value name="name" field="name" usage="optional"/>
+		<value name="sid" field="sid" usage="optional"/>
+		<value name="url" field="url" style="attribute" deserializer="org.jagatoo.loaders.models.collada.jibx.IDREFUtils.parse"/>
+		<structure field="bindMaterial" type="org.jagatoo.loaders.models.collada.jibx.BindMaterial" usage="optional"/>
+	</mapping> <!-- instance_geometry -->
+
+	<mapping name="instance_controller" class="org.jagatoo.loaders.models.collada.jibx.InstanceController" ordered="false">
+		<value name="name" field="name" usage="optional"/>
+		<value name="sid" field="sid" usage="optional"/>
+		<value name="url" field="url" style="attribute" deserializer="org.jagatoo.loaders.models.collada.jibx.IDREFUtils.parse"/>
+		<value name="skeleton" field="skeleton" deserializer="org.jagatoo.loaders.models.collada.jibx.IDREFUtils.parse"/>
+		<structure field="bindMaterial" type="org.jagatoo.loaders.models.collada.jibx.BindMaterial" usage="optional"/>
+	</mapping> <!-- instance_controller -->
+
+	<mapping name="node" class="org.jagatoo.loaders.models.collada.jibx.Node" ordered="false">
+		<value name="layer" field="layers" style="attribute" usage="optional" deserializer="org.jagatoo.loaders.models.collada.jibx.Node.parseLayerList"/>
+		<value name="sid" field="sid" style="attribute" usage="optional"/>
+		<value name="type" field="type" style="attribute" usage="optional"/>
+		<value name="id" field="id" style="attribute" usage="optional"/>
+		<value name="name" field="name" style="attribute" usage="optional"/>
+		<structure ordered="false" choice="true">
+			<value name="matrix" field="matrix" usage="optional" deserializer="org.jagatoo.loaders.models.collada.jibx.MatrixUtils.readRowMajor"/>
+			<structure ordered="false" allow-repeats="true">
+				<value name="translate" usage="optional" set-method="applyTranslate"/>
+				<value name="rotate" usage="optional" set-method="applyRotate"/>
+				<value name="scale" usage="optional" set-method="applyScale"/>
+			</structure>
+		</structure>
+		<collection field="childrenList" item-type="org.jagatoo.loaders.models.collada.jibx.Node" usage="optional"/>
+		<collection field="instanceGeometries" item-type="org.jagatoo.loaders.models.collada.jibx.InstanceGeometry" usage="optional"/>
+		<collection field="instanceControllers" item-type="org.jagatoo.loaders.models.collada.jibx.InstanceController" usage="optional"/>
+	</mapping> <!-- node -->
+
+	<mapping name="bind_material" class="org.jagatoo.loaders.models.collada.jibx.BindMaterial" ordered="false">
+		<structure name="technique_common" field="techniqueCommon">
+			<collection field="instanceMaterials">
+				<structure name="instance_material" type="org.jagatoo.loaders.models.collada.jibx.InstanceMaterial">
+					<value name="symbol" style="attribute" field="symbol"/>
+					<value name="target" style="attribute" field="target" deserializer="org.jagatoo.loaders.models.collada.jibx.IDREFUtils.parse"/>
+					<collection field="bindVertexInputs">
+						<structure name="bind_vertex_input" type="org.jagatoo.loaders.models.collada.jibx.BindVertexInput">
+							<value name="input_semantic" field="inputSemantic" style="attribute"/>
+							<value name="input_set" field="inputSet" style="attribute"/>
+							<value name="semantic" field="semantic" style="attribute"/>
+						</structure> <!-- bind_vertex_input -->
+					</collection> <!-- bindVertexInputs -->
+				</structure> <!-- instance_material -->
+			</collection> <!-- instanceMaterials -->
+		</structure> <!-- technique_common -->
+	</mapping> <!-- bind_material -->
+
+	<mapping name="surface" class="org.jagatoo.loaders.models.collada.jibx.Surface" ordered="false">
+		<value name="type" field="type" style="attribute" deserializer="org.jagatoo.loaders.models.collada.jibx.Surface.readTypeString"/>
+		<value name="init_from" field="initFrom"/>
+		<value name="format" field="format"/>
+	</mapping>
+
+	<mapping name="sampler2D" class="org.jagatoo.loaders.models.collada.jibx.Sampler2D" ordered="false">
+		<value name="source" field="source"/>
+		<value name="minfilter" field="minFilter" usage="optional"/>
+		<value name="maxfilter" field="maxFilter" usage="optional"/>
+	</mapping>
+
+	<mapping class="org.jagatoo.loaders.models.collada.jibx.ColorOrTexture" ordered="false" abstract="true">
+		<structure ordered="false" choice="true">
+			<value name="color" field="color4" usage="optional"/>
+			<structure name="texture" field="texture" ordered="false" usage="optional">
+				<value name="texcoord" field="texcoord" usage="optional"/>
+				<value name="texture" field="texture" usage="optional"/>
+			</structure>
+		</structure>
+	</mapping>
+
+	<mapping class="org.jagatoo.loaders.models.collada.jibx._Float" ordered="false" abstract="true">
+		<value name="float" field="_float"/>
+	</mapping>
+
+	<mapping class="org.jagatoo.loaders.models.collada.jibx.ShadingParameters" ordered="false" abstract="true">
+		<structure name="emission" field="emission" type="org.jagatoo.loaders.models.collada.jibx.ColorOrTexture" usage="optional"/>
+		<structure name="ambient" field="ambient" type="org.jagatoo.loaders.models.collada.jibx.ColorOrTexture" usage="optional"/>
+		<structure name="diffuse" field="diffuse" type="org.jagatoo.loaders.models.collada.jibx.ColorOrTexture" usage="optional"/>
+		<structure name="specular" field="specular" type="org.jagatoo.loaders.models.collada.jibx.ColorOrTexture" usage="optional"/>
+		<structure name="shininess" field="shininess" type="org.jagatoo.loaders.models.collada.jibx._Float" usage="optional"/>
+		<structure name="reflective" field="reflective" type="org.jagatoo.loaders.models.collada.jibx.ColorOrTexture" usage="optional"/>
+		<structure name="reflectivity" field="reflectivity" type="org.jagatoo.loaders.models.collada.jibx._Float" usage="optional"/>
+		<structure name="transparent" field="transparent" type="org.jagatoo.loaders.models.collada.jibx.ColorOrTexture" usage="optional"/>
+		<structure name="transparency" field="transparency" type="org.jagatoo.loaders.models.collada.jibx._Float" usage="optional"/>
+	</mapping>
+
+	<mapping name="COLLADA" class="org.jagatoo.loaders.models.collada.jibx.COLLADA" ordered="false">
+
+		<value name="version" field="version" style="attribute"/>
+
+		<structure field="asset" usage="required"/>
+
+		<structure name="library_animations" ordered="false" allow-repeats="true" usage="optional"/>
+
+		<structure name="library_animations_clips" ordered="false" allow-repeats="true" usage="optional"/>
+
+		<structure name="library_cameras" ordered="false" allow-repeats="true" usage="optional"/>
+
+		<collection field="libraryControllers" usage="optional">
+			<structure name="library_controllers" type="org.jagatoo.loaders.models.collada.jibx.LibraryControllers" post-set="readControllers">
+				<collection field="controllersList">
+					<structure name="controller" type="org.jagatoo.loaders.models.collada.jibx.Controller" ordered="false">
+
+						<value name="id" field="id" style="attribute" usage="optional"/>
+						<value name="name" field="name" style="attribute" usage="optional"/>
+						<structure field="asset" usage="optional"/>
+
+						<structure ordered ="false" choice="true">
+
+							<structure name="skin" field="skin" usage="optional">
+
+								<value name="source" field="source" style="attribute" deserializer="org.jagatoo.loaders.models.collada.jibx.IDREFUtils.parse"/>
+								<value name="bind_shape_matrix" field="bindShapeMatrix" deserializer="org.jagatoo.loaders.models.collada.jibx.MatrixUtils.readColumnMajor"/>
+
+								<collection field="sources">
+									<structure type="org.jagatoo.loaders.models.collada.jibx.Source"/>
+								</collection> <!-- sources -->
+
+								<structure name="joints">
+									<collection field="jointsInputs">
+										<structure type="org.jagatoo.loaders.models.collada.jibx.Input"/>
+									</collection> <!-- jointsInputs -->
+								</structure> <!-- joints -->
+
+								<structure name="vertex_weights" field="vertexWeights">
+									<collection field="inputs">
+										<structure type="org.jagatoo.loaders.models.collada.jibx.Input"/>
+									</collection> <!-- inputs -->
+									<structure name="vcount" field="vcount" type="org.jagatoo.loaders.models.collada.jibx.IntArray"/>
+									<structure name="v" field="v" type="org.jagatoo.loaders.models.collada.jibx.IntArray"/> <!-- TODO : make it more convenient -->
+								</structure> <!-- vertex_weights -->
+
+							</structure> <!-- skin -->
+
+							<structure name="morph" usage="optional"/> <!-- not implemented yet -->
+
+						</structure>
+
+					</structure> <!-- controller -->
+				</collection> <!-- controllersList -->
+			</structure> <!-- library_controllers -->
+		</collection> <!-- libraryControllers -->
+
+		<collection field="libraryEffects" usage="optional">
+			<structure name="library_effects" type="org.jagatoo.loaders.models.collada.jibx.LibraryEffects">
+				<collection field="effects">
+					<structure name="effect" type="org.jagatoo.loaders.models.collada.jibx.Effect" ordered="false">
+
+						<value name="id" field="id" style="attribute" usage="optional"/>
+						<value name="name" field="name" style="attribute" usage="optional"/>
+						<structure field="asset" usage="optional"/>
+
+						<structure ordered="false">
+							<value name="profile_CG" field="profileCG" usage="optional"/> <!-- Not supported yet -->
+							<value name="profile_GLSL" field="profileGLSL" usage="optional"/> <!-- Not supported yet -->
+							<structure name="profile_COMMON" field="profileCOMMON"  usage="optional" ordered="false">
+
+								<collection field="newParams" usage="optional">
+									<structure name="newparam" type="org.jagatoo.loaders.models.collada.jibx.ProfileCOMMON_NewParam">
+
+										<value name="sid" field="sid" style="attribute"/>
+
+										<structure ordered="false" choice="true">
+											<structure field="surface" usage="optional"/>
+											<structure field="sampler2D" usage="optional"/>
+										</structure>
+
+									</structure> <!-- newparam -->
+								</collection> <!-- newParams -->
+
+								<structure name="technique" field="technique">
+
+									<value name="id" field="id" style="attribute" usage="optional"/>
+									<value name="sid" field="sid" style="attribute" usage="required"/>
+
+									<structure ordered="false" choice="true">
+										<structure name="constant" field="constant" usage="optional" type="org.jagatoo.loaders.models.collada.jibx.ShadingParameters"/>
+										<structure name="lambert" field="lambert" usage="optional" type="org.jagatoo.loaders.models.collada.jibx.ShadingParameters"/>
+										<structure name="phong" field="phong" usage="optional" type="org.jagatoo.loaders.models.collada.jibx.ShadingParameters"/>
+										<structure name="blinn" field="blinn" usage="optional" type="org.jagatoo.loaders.models.collada.jibx.ShadingParameters"/>
+									</structure>
+
+								</structure>
+
+							</structure> <!-- profile_COMMON -->
+						</structure> <!--  -->
+
+					</structure> <!-- effect -->
+				</collection> <!-- effectsList -->
+			</structure> <!-- library_effects -->
+		</collection> <!-- libraryEffects -->
+
+		<structure name="library_force_fields" ordered="false" allow-repeats="true" usage="optional"/>
+
+		<collection field="libraryGeometries" usage="optional">
+			<structure name="library_geometries" type="org.jagatoo.loaders.models.collada.jibx.LibraryGeometries" post-set="readGeometries">
+				<collection field="geometriesList">
+					<structure name="geometry" type="org.jagatoo.loaders.models.collada.jibx.Geometry">
+
+						<value name="id" field="id" style="attribute" usage="optional"/>
+						<value name="name" field="name" style="attribute" usage="optional"/>
+						<structure field="asset" usage="optional"/>
+
+						<structure name="mesh" field="mesh" usage="optional">
+
+							<collection field="sources">
+								<structure type="org.jagatoo.loaders.models.collada.jibx.Source"/>
+							</collection> <!-- sources -->
+
+							<structure name="vertices" field="vertices">
+								<value name="id" field="id" style="attribute"/>
+								<collection field="inputs">
+									<structure type="org.jagatoo.loaders.models.collada.jibx.Input"/>
+								</collection> <!-- inputs -->
+							</structure> <!-- vertices -->
+
+							<structure name="triangles" field="triangles">
+								<value name="count" field="count" style="attribute"/>
+								<collection field="inputs">
+									<structure type="org.jagatoo.loaders.models.collada.jibx.Input"/>
+								</collection> <!-- inputs -->
+								<value name="p" field="p" deserializer="org.jagatoo.loaders.models.collada.jibx.IntArray.toArray"/>
+							</structure> <!-- triangles -->
+
+						</structure> <!-- mesh -->
+
+						<structure name="convex_mesh" field="convexMesh" usage="optional"/> <!-- Unsupported, ignored -->
+
+					</structure> <!-- geometry -->
+				</collection>  <!-- geometries -->
+			</structure> <!-- library_geometries -->
+		</collection> <!-- libraryGeometries -->
+
+		<collection field="libraryImages" usage="optional">
+			<structure name="library_images" type="org.jagatoo.loaders.models.collada.jibx.LibraryImages" post-set="readImages">
+				<collection field="imagesList">
+					<structure name="image" type="org.jagatoo.loaders.models.collada.jibx.Image" ordered="false">
+						<value name="id" field="id" style="attribute" usage="optional"/>
+						<value name="init_from" field="initFrom"/>
+					</structure> <!-- image -->
+				</collection> <!-- imagesList -->
+			</structure> <!-- library_images -->
+		</collection> <!-- libraryImages -->
+
+		<structure name="library_lights" ordered="false" allow-repeats="true" usage="optional"/>
+
+		<collection field="libraryMaterials" usage="optional">
+			<structure name="library_materials" type="org.jagatoo.loaders.models.collada.jibx.LibraryMaterials" post-set="readMaterials">
+				<collection field="materialsList">
+					<structure name="material" type="org.jagatoo.loaders.models.collada.jibx.Material" ordered="false">
+						<value name="id" field="id" style="attribute" usage="optional"/>
+						<structure name="instance_effect" field="instanceEffect" ordered="false">
+							<value name="sid" field="sid" usage="optional" style="attribute"/>
+							<value name="name" field="name" usage="optional" style="attribute"/>
+							<value name="url" field="url" style="attribute" deserializer="org.jagatoo.loaders.models.collada.jibx.IDREFUtils.parse"/>
+						</structure> <!-- instance_effect -->
+					</structure> <!-- material -->
+				</collection> <!-- materialsList -->
+			</structure> <!-- library_materials -->
+		</collection> <!-- libraryMaterials -->
+
+		<structure name="library_nodes" ordered="false" allow-repeats="true" usage="optional"/>
+
+		<structure name="library_physics_materials" ordered="false" allow-repeats="true" usage="optional"/>
+
+		<structure name="library_physics_models" ordered="false" allow-repeats="true" usage="optional"/>
+
+		<structure name="library_physics_scenes" ordered="false" allow-repeats="true" usage="optional"/>
+
+		<collection field="libraryVisualScenes" usage="optional">
+			<structure name="library_visual_scenes" type="org.jagatoo.loaders.models.collada.jibx.LibraryVisualScenes" post-set="readVisualScenes">
+				<collection field="scenesList">
+					<structure name="visual_scene" type="org.jagatoo.loaders.models.collada.jibx.VisualScene" post-set="readNodes">
+						<value name="id" field="id" style="attribute" usage="optional"/>
+						<value name="name" field="name" style="attribute" usage="optional"/>
+						<collection field="nodesList">
+							<structure type="org.jagatoo.loaders.models.collada.jibx.Node"/>
+						</collection> <!-- nodesList -->
+					</structure> <!-- visual_scene -->
+				</collection> <!-- scenesList -->
+			</structure> <!-- library_visual_scenes -->
+		</collection> <!-- libraryVisualScenes -->
+
+		<structure name="scene" ordered="false" allow-repeats="true" usage="optional"/>
+
+	</mapping> <!-- COLLADA -->
+</binding>
