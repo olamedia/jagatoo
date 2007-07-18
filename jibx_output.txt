@@ -1,7 +1,0 @@
-Buildfile: /doc/dev/workspace/jagatoo/build-jibx-binding.xml
-check-runtime:
-check-binding:
-bind:
-     [echo] Running JiBX binding compiler
-BUILD SUCCESSFUL
-Total time: 3 seconds
