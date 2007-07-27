@@ -2,8 +2,6 @@ package org.jagatoo.loaders.models.collada.datastructs.controllers;
 
 import java.util.HashMap;
 
-import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAGeometryProvider;
-
 /**
  * This class is the equivalent of LibraryControllers in a
  * COLLADA file. It contains every Controller and relevant information

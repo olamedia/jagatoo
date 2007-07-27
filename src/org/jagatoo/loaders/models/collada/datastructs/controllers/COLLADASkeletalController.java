@@ -18,12 +18,14 @@ public class COLLADASkeletalController extends COLLADAController {
     private String sourceMeshId = null;
 
     /** COLLADA Geometry */
+    @SuppressWarnings("unused")
     private COLLADAGeometry sourceMesh;
 
     /**
      * Creates a new COLLADASkeletalController
      * @param libGeoms The {@link COLLADALibraryGeometries} we need
      * @param sourceMeshId The source mesh ID
+     * @param controller
      */
     public COLLADASkeletalController(COLLADALibraryGeometries libGeoms, String sourceMeshId, Controller controller) {
 

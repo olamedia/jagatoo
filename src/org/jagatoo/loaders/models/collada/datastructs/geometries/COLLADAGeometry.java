@@ -33,6 +33,7 @@ public abstract class COLLADAGeometry {
      *            the id it is referenced by
      * @param name
      *            the name of the geometry
+     * @param geometry the geometry
      */
     public COLLADAGeometry(COLLADAFile file, String id, String name, Geometry geometry) {
 

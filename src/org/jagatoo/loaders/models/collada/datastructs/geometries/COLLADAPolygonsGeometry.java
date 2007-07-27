@@ -21,6 +21,7 @@ public class COLLADAPolygonsGeometry extends COLLADAGeometry {
      * @param name {@inheritDoc}
      * @param polygonCount The number of polygons that should be
      * in that PolygonsGeometry
+     * @param geometry the geometry
      */
     public COLLADAPolygonsGeometry(COLLADAFile file, String id, String name, int polygonCount, Geometry geometry) {
 

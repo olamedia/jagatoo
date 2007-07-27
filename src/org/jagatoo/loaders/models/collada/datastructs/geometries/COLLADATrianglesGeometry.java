@@ -23,6 +23,7 @@ public class COLLADATrianglesGeometry extends COLLADAGeometry {
      * @param file TODO
      * @param id {@inheritDoc}
      * @param name {@inheritDoc}
+     * @param geometry the geometry
      */
     public COLLADATrianglesGeometry(COLLADAFile file, String id, String name, Geometry geometry) {
 

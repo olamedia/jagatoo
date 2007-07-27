@@ -9,45 +9,46 @@ import java.io.PrintStream;
  * which are printed before each message, thus permitting to have
  * a kind of a tree in your output. This is especially useful if you're
  * loading a tree-like file format (used for COLLADA here).
- * 
+ *
  * @author Amos Wenger (aka BlueSky)
  */
 public class HierarchicalOutputter {
-    
+
     private String totalSpaces = "";
-    private final String spacesPerTab; 
-    
+    private final String spacesPerTab;
+
     private PrintStream outputStream;
     private PrintStream errorStream;
-    
+
     private boolean printEnabled = true;
-    
+
     /**
      * Create a new HierarchicalOutputter
      */
     public HierarchicalOutputter() {
-        
+
         this(2);
-        
+
     }
-    
+
     /**
      * Create a new HierarchicalOutputter
      * @param spacesPerTab outputStream.print(message);
      */
     public HierarchicalOutputter(int spacesPerTab) {
-        
+
         this(System.out, System.err, spacesPerTab);
-        
+
     }
-    
+
     /**
      * Create a new HierarchicalOutputter
      * @param outputStream The stream used to output the messages
+     * @param errorStream The stream used to output the stacktraces
      * @param spacesPerTab {@inheritDoc}
      */
     public HierarchicalOutputter(PrintStream outputStream, PrintStream errorStream, int spacesPerTab) {
-        
+
         this.outputStream = outputStream;
         this.errorStream = errorStream;
         StringBuffer buff = new StringBuffer();
@@ -55,9 +56,9 @@ public class HierarchicalOutputter {
             buff.append(" ");
         }
         this.spacesPerTab = buff.toString();
-        
+
     }
-    
+
     /**
      * Increase the number of spaces before
      * every message printed by this Outputter
@@ -65,7 +66,7 @@ public class HierarchicalOutputter {
     public void increaseTabbing() {
         totalSpaces = totalSpaces + spacesPerTab;
     }
-    
+
     /**
      * Decrease the number of spaces before
      * every message printed by this Outputter
@@ -73,7 +74,7 @@ public class HierarchicalOutputter {
     public void decreaseTabbing() {
         totalSpaces = totalSpaces.substring(spacesPerTab.length());
     }
-    
+
     /**
      * Print a message to the output stream, with the right
      * tabbing.
@@ -82,6 +83,7 @@ public class HierarchicalOutputter {
     public void print(String message) {
         if(printEnabled) {
             StackTraceElement stackTraceElement = Thread.currentThread().getStackTrace()[2];
+            errorStream.print(totalSpaces);
             errorStream.println(stackTraceElement);
             errorStream.flush();
             outputStream.print(totalSpaces);
@@ -104,5 +106,5 @@ public class HierarchicalOutputter {
     public void setPrintEnabled(boolean printEnabled) {
         this.printEnabled = printEnabled;
     }
-    
+
 }
