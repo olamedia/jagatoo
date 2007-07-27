@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
-import org.jagatoo.loaders.models.collada.datastructs.COLLADAFile;
+import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.jibx.XMLCOLLADA;
 import org.jagatoo.loaders.models.collada.jibx.XMLLibraryControllers;
 import org.jagatoo.loaders.models.collada.jibx.XMLLibraryEffects;
@@ -69,9 +69,9 @@ public class COLLADALoader {
      *            The file to load the scene from
      * @return the loaded file
      */
-    public COLLADAFile load(String path) {
+    public AssetFolder load(String path) {
 
-        COLLADAFile collada = null;
+        AssetFolder collada = null;
 
         try {
             collada = load(new File(path));
@@ -90,11 +90,11 @@ public class COLLADALoader {
      *            The URL to load the scene from
      * @return the loaded file
      */
-    public COLLADAFile load(URL url) {
+    public AssetFolder load(URL url) {
 
         logger.print("Loading the URL : " + url);
 
-        COLLADAFile collada = null;
+        AssetFolder collada = null;
 
         try {
             // Find out the parent URL
@@ -118,11 +118,11 @@ public class COLLADALoader {
      *            The file to load the scene from
      * @return the loaded file
      */
-    public COLLADAFile load(File file) {
+    public AssetFolder load(File file) {
 
         logger.print("Loading the file : " + file.getPath());
 
-        COLLADAFile collada = null;
+        AssetFolder collada = null;
 
         try {
             collada = load(file.getParentFile().toURI().toURL(), new FileInputStream(file));
@@ -142,11 +142,11 @@ public class COLLADALoader {
      *            The stream to load the scene from
      * @return the loaded file
      */
-    public COLLADAFile load(URL basePath, InputStream stream) {
+    public AssetFolder load(URL basePath, InputStream stream) {
 
         long t1 = System.nanoTime();
 
-        COLLADAFile colladaFile = new COLLADAFile(basePath);
+        AssetFolder colladaFile = new AssetFolder(basePath);
 
         try {
 
@@ -188,7 +188,7 @@ public class COLLADALoader {
                 for (XMLLibraryControllers libraryControllers : libraryControllersList) {
                     logger.print("CC] Found LibraryControllers ! Investigating... !");
                     logger.increaseTabbing();
-                    COLLADALibraryControllersLoader.loadLibraryControllers(colladaFile, libraryControllers);
+                    LibraryControllersLoader.loadLibraryControllers(colladaFile, libraryControllers);
                     logger.decreaseTabbing();
                 }
             }
@@ -198,7 +198,7 @@ public class COLLADALoader {
                 for (XMLLibraryEffects libraryEffects : libraryEffectsList) {
                     logger.print("CC] Found LibraryEffects ! Investigating... !");
                     logger.increaseTabbing();
-                    COLLADALibraryEffectsLoader.loadLibraryEffects(colladaFile, libraryEffects);
+                    LibraryEffectsLoader.loadLibraryEffects(colladaFile, libraryEffects);
                     logger.decreaseTabbing();
                 }
             }
@@ -208,7 +208,7 @@ public class COLLADALoader {
                 for (XMLLibraryImages libraryImages : libraryImagesList) {
                     logger.print("CC] Found LibraryImages ! We know that !");
                     logger.increaseTabbing();
-                    COLLADALibraryImagesLoader.loadLibraryImages(colladaFile, libraryImages);
+                    LibraryImagesLoader.loadLibraryImages(colladaFile, libraryImages);
                     logger.decreaseTabbing();
                 }
             }
@@ -218,7 +218,7 @@ public class COLLADALoader {
                 for (XMLLibraryMaterials libraryMaterials : libraryMaterialsList) {
                     logger.print("CC] Found LibraryMaterials ! We know that !");
                     logger.increaseTabbing();
-                    COLLADALibraryMaterialsLoader.loadLibraryMaterials(colladaFile, libraryMaterials);
+                    LibraryMaterialsLoader.loadLibraryMaterials(colladaFile, libraryMaterials);
                     logger.decreaseTabbing();
                 }
             }
@@ -228,7 +228,7 @@ public class COLLADALoader {
                 for (XMLLibraryGeometries libraryGeometries : libraryGeometriesList) {
                     logger.print("CC] Found LibraryGeometries ! We know that !");
                     logger.increaseTabbing();
-                    COLLADALibraryGeometriesLoader.loadLibraryGeometries(colladaFile, libraryGeometries);
+                    LibraryGeometriesLoader.loadLibraryGeometries(colladaFile, libraryGeometries);
                     logger.decreaseTabbing();
                 }
             }
@@ -239,7 +239,7 @@ public class COLLADALoader {
                     logger
                     .print("CC] Found LibraryVisualScenes ! Investigating... !");
                     logger.increaseTabbing();
-                    COLLADALibraryVisualScenesLoader.loadLibraryVisualScenes(colladaFile, libraryVisualScenes);
+                    LibraryVisualScenesLoader.loadLibraryVisualScenes(colladaFile, libraryVisualScenes);
                     logger.decreaseTabbing();
                 }
             }
