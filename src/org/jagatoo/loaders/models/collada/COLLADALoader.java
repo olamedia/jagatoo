@@ -7,13 +7,13 @@ import java.net.URL;
 import java.util.List;
 
 import org.jagatoo.loaders.models.collada.datastructs.COLLADAFile;
-import org.jagatoo.loaders.models.collada.jibx.COLLADA;
-import org.jagatoo.loaders.models.collada.jibx.LibraryControllers;
-import org.jagatoo.loaders.models.collada.jibx.LibraryEffects;
-import org.jagatoo.loaders.models.collada.jibx.LibraryGeometries;
-import org.jagatoo.loaders.models.collada.jibx.LibraryImages;
-import org.jagatoo.loaders.models.collada.jibx.LibraryMaterials;
-import org.jagatoo.loaders.models.collada.jibx.LibraryVisualScenes;
+import org.jagatoo.loaders.models.collada.jibx.XMLCOLLADA;
+import org.jagatoo.loaders.models.collada.jibx.XMLLibraryControllers;
+import org.jagatoo.loaders.models.collada.jibx.XMLLibraryEffects;
+import org.jagatoo.loaders.models.collada.jibx.XMLLibraryGeometries;
+import org.jagatoo.loaders.models.collada.jibx.XMLLibraryImages;
+import org.jagatoo.loaders.models.collada.jibx.XMLLibraryMaterials;
+import org.jagatoo.loaders.models.collada.jibx.XMLLibraryVisualScenes;
 import org.jagatoo.loaders.models.collada.logging.HierarchicalOutputter;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
@@ -43,7 +43,7 @@ public class COLLADALoader {
 
         try {
 
-            factory = BindingDirectory.getFactory(COLLADA.class);
+            factory = BindingDirectory.getFactory(XMLCOLLADA.class);
 
             long t1 = System.nanoTime();
 
@@ -155,7 +155,7 @@ public class COLLADALoader {
             long l1 = System.nanoTime();
             // The second argument of unmarshalDocument is null, cause it's up to the unmarshaller
             // to figure out the encoding of the file.
-            COLLADA collada = (COLLADA) unmarshallingContext.unmarshalDocument(stream, null);
+            XMLCOLLADA collada = (XMLCOLLADA) unmarshallingContext.unmarshalDocument(stream, null);
             long l2 = System.nanoTime();
             logger.print("TT] Took " + ((l2 - l1) / 1000000)
                     + " milliseconds to parse");
@@ -183,9 +183,9 @@ public class COLLADALoader {
             }
              */
 
-            List<LibraryControllers> libraryControllersList = collada.libraryControllers;
+            List<XMLLibraryControllers> libraryControllersList = collada.libraryControllers;
             if(libraryControllersList != null) {
-                for (LibraryControllers libraryControllers : libraryControllersList) {
+                for (XMLLibraryControllers libraryControllers : libraryControllersList) {
                     logger.print("CC] Found LibraryControllers ! Investigating... !");
                     logger.increaseTabbing();
                     COLLADALibraryControllersLoader.loadLibraryControllers(colladaFile, libraryControllers);
@@ -193,9 +193,9 @@ public class COLLADALoader {
                 }
             }
 
-            List<LibraryEffects> libraryEffectsList = collada.libraryEffects;
+            List<XMLLibraryEffects> libraryEffectsList = collada.libraryEffects;
             if(libraryEffectsList != null) {
-                for (LibraryEffects libraryEffects : libraryEffectsList) {
+                for (XMLLibraryEffects libraryEffects : libraryEffectsList) {
                     logger.print("CC] Found LibraryEffects ! Investigating... !");
                     logger.increaseTabbing();
                     COLLADALibraryEffectsLoader.loadLibraryEffects(colladaFile, libraryEffects);
@@ -203,9 +203,9 @@ public class COLLADALoader {
                 }
             }
 
-            List<LibraryImages> libraryImagesList = collada.libraryImages;
+            List<XMLLibraryImages> libraryImagesList = collada.libraryImages;
             if(libraryImagesList != null) {
-                for (LibraryImages libraryImages : libraryImagesList) {
+                for (XMLLibraryImages libraryImages : libraryImagesList) {
                     logger.print("CC] Found LibraryImages ! We know that !");
                     logger.increaseTabbing();
                     COLLADALibraryImagesLoader.loadLibraryImages(colladaFile, libraryImages);
@@ -213,9 +213,9 @@ public class COLLADALoader {
                 }
             }
 
-            List<LibraryMaterials> libraryMaterialsList = collada.libraryMaterials;
+            List<XMLLibraryMaterials> libraryMaterialsList = collada.libraryMaterials;
             if(libraryMaterialsList != null) {
-                for (LibraryMaterials libraryMaterials : libraryMaterialsList) {
+                for (XMLLibraryMaterials libraryMaterials : libraryMaterialsList) {
                     logger.print("CC] Found LibraryMaterials ! We know that !");
                     logger.increaseTabbing();
                     COLLADALibraryMaterialsLoader.loadLibraryMaterials(colladaFile, libraryMaterials);
@@ -223,9 +223,9 @@ public class COLLADALoader {
                 }
             }
 
-            List<LibraryGeometries> libraryGeometriesList = collada.libraryGeometries;
+            List<XMLLibraryGeometries> libraryGeometriesList = collada.libraryGeometries;
             if(libraryGeometriesList != null) {
-                for (LibraryGeometries libraryGeometries : libraryGeometriesList) {
+                for (XMLLibraryGeometries libraryGeometries : libraryGeometriesList) {
                     logger.print("CC] Found LibraryGeometries ! We know that !");
                     logger.increaseTabbing();
                     COLLADALibraryGeometriesLoader.loadLibraryGeometries(colladaFile, libraryGeometries);
@@ -233,9 +233,9 @@ public class COLLADALoader {
                 }
             }
 
-            List<LibraryVisualScenes> libraryVisualScenesList = collada.libraryVisualScenes;
+            List<XMLLibraryVisualScenes> libraryVisualScenesList = collada.libraryVisualScenes;
             if(libraryVisualScenesList != null) {
-                for (LibraryVisualScenes libraryVisualScenes : libraryVisualScenesList) {
+                for (XMLLibraryVisualScenes libraryVisualScenes : libraryVisualScenesList) {
                     logger
                     .print("CC] Found LibraryVisualScenes ! Investigating... !");
                     logger.increaseTabbing();

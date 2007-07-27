@@ -12,12 +12,12 @@ import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAMesh;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAMeshDataInfo;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAMeshSources;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADATrianglesGeometry;
-import org.jagatoo.loaders.models.collada.jibx.Geometry;
-import org.jagatoo.loaders.models.collada.jibx.Input;
-import org.jagatoo.loaders.models.collada.jibx.LibraryGeometries;
-import org.jagatoo.loaders.models.collada.jibx.Mesh;
-import org.jagatoo.loaders.models.collada.jibx.Source;
-import org.jagatoo.loaders.models.collada.jibx.Triangles;
+import org.jagatoo.loaders.models.collada.jibx.XMLGeometry;
+import org.jagatoo.loaders.models.collada.jibx.XMLInput;
+import org.jagatoo.loaders.models.collada.jibx.XMLLibraryGeometries;
+import org.jagatoo.loaders.models.collada.jibx.XMLMesh;
+import org.jagatoo.loaders.models.collada.jibx.XMLSource;
+import org.jagatoo.loaders.models.collada.jibx.XMLTriangles;
 
 /**
  * Loader for LibraryGeometries
@@ -35,19 +35,19 @@ public class COLLADALibraryGeometriesLoader {
      *            The JAXB data to load from
      */
     static COLLADALibraryGeometries loadLibraryGeometries(
-            COLLADAFile colladaFile, LibraryGeometries libGeoms) {
+            COLLADAFile colladaFile, XMLLibraryGeometries libGeoms) {
 
         // LibraryGeometries
         COLLADALibraryGeometries colladaLibGeoms = colladaFile
         .getLibraryGeometries();
 
-        Collection<Geometry> geoms = libGeoms.geometries.values();
+        Collection<XMLGeometry> geoms = libGeoms.geometries.values();
         COLLADALoader.logger.print("There " + (geoms.size() > 1 ? "are" : "is") + " "
                 + geoms.size() + " geometr" + (geoms.size() > 1 ? "ies" : "y")
                 + " in this file.");
 
         int i = 0;
-        for (Geometry geom : geoms) {
+        for (XMLGeometry geom : geoms) {
 
             COLLADALoader.logger.print("Handling geometry " + i++);
 
@@ -68,20 +68,20 @@ public class COLLADALibraryGeometriesLoader {
      * @param geom
      */
     @SuppressWarnings("unchecked")
-    static COLLADAGeometry loadGeom(Geometry geom) {
+    static COLLADAGeometry loadGeom(XMLGeometry geom) {
 
         COLLADAGeometry colGeom = null;
 
-        Mesh mesh = geom.mesh;
+        XMLMesh mesh = geom.mesh;
 
         String verticesSource = mesh.vertices.inputs.get(0).source;
 
         // First we get all the vertices/normal data we need
-        List<Source> sources = mesh.sources;
-        HashMap<String, Source> sourcesMap = COLLADALibraryGeometriesLoader.getSourcesMap(mesh,verticesSource, sources);
+        List<XMLSource> sources = mesh.sources;
+        HashMap<String, XMLSource> sourcesMap = COLLADALibraryGeometriesLoader.getSourcesMap(mesh,verticesSource, sources);
 
         // Supported types :
-        Triangles tris = mesh.triangles;
+        XMLTriangles tris = mesh.triangles;
 
         // Unsupported types :
         //Polygons polys = mesh.polygons;
@@ -122,13 +122,13 @@ public class COLLADALibraryGeometriesLoader {
      * @param sources
      * @return The sources map
      */
-    static HashMap<String, Source> getSourcesMap(Mesh mesh,
-            String verticesSource, List<Source> sources) {
-        HashMap<String, Source> sourcesMap;
-        sourcesMap = new HashMap<String, Source>();
+    static HashMap<String, XMLSource> getSourcesMap(XMLMesh mesh,
+            String verticesSource, List<XMLSource> sources) {
+        HashMap<String, XMLSource> sourcesMap;
+        sourcesMap = new HashMap<String, XMLSource>();
         for (int i = 0; i < sources.size(); i++) {
 
-            Source source = sources.get(i);
+            XMLSource source = sources.get(i);
 
             // FIXME There may be more
             if (verticesSource.equals(source.id)) {
@@ -152,8 +152,8 @@ public class COLLADALibraryGeometriesLoader {
      * @return the loaded geometry
      */
     @SuppressWarnings("unchecked")
-    static COLLADATrianglesGeometry loadTriangles(Geometry geom,
-            Triangles tris, HashMap<String, Source> sourcesMap) {
+    static COLLADATrianglesGeometry loadTriangles(XMLGeometry geom,
+            XMLTriangles tris, HashMap<String, XMLSource> sourcesMap) {
 
         COLLADATrianglesGeometry trianglesGeometry = new COLLADATrianglesGeometry(
                 null, geom.id, geom.name, geom);
@@ -223,7 +223,7 @@ public class COLLADALibraryGeometriesLoader {
      * @return The mesh data info
      */
     @SuppressWarnings("unchecked")
-    static COLLADAMeshDataInfo getMeshDataInfo(List<Input> inputs, HashMap<String, Source> sourcesMap,
+    static COLLADAMeshDataInfo getMeshDataInfo(List<XMLInput> inputs, HashMap<String, XMLSource> sourcesMap,
             COLLADAMeshSources sources) {
 
         COLLADAMeshDataInfo meshDataInfo = new COLLADAMeshDataInfo();
@@ -234,7 +234,7 @@ public class COLLADALibraryGeometriesLoader {
         COLLADALoader.logger.print("TT] Parsing semantics....");
 
         for (int j = 0; j < inputs.size(); j++) {
-            Input input = inputs.get(j);
+            XMLInput input = inputs.get(j);
             COLLADALoader.logger.print("TT] Input semantic " + input.semantic
                     + ", offset " + input.offset + ", from source = "
                     + input.source);
@@ -246,26 +246,26 @@ public class COLLADALibraryGeometriesLoader {
             if (input.semantic.equals("VERTEX")) {
 
                 meshDataInfo.vertexOffset = input.offset;
-                Source source = sourcesMap.get(input.source);
+                XMLSource source = sourcesMap.get(input.source);
                 sources.vertices = source.floatArray.floats;
 
 
             } else if (input.semantic.equals("NORMAL")) {
 
                 meshDataInfo.normalOffset = input.offset;
-                Source source = sourcesMap.get(input.source);
+                XMLSource source = sourcesMap.get(input.source);
                 sources.normals = source.floatArray.floats;
 
             } else if (input.semantic.equals("TEXCOORD")) {
 
                 meshDataInfo.uvOffsets.add(input.offset);
-                Source source = sourcesMap.get(input.source);
+                XMLSource source = sourcesMap.get(input.source);
                 sources.uvs.add(source.floatArray.floats);
 
             } else if (input.semantic.equals("COLOR")) {
 
                 meshDataInfo.colorOffset = input.offset;
-                Source source = sourcesMap.get(input.source);
+                XMLSource source = sourcesMap.get(input.source);
                 sources.colors = source.floatArray.floats;
 
             } else {

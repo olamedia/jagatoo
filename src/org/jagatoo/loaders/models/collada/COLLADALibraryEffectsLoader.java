@@ -11,12 +11,12 @@ import org.jagatoo.loaders.models.collada.datastructs.effects.COLLADALibraryEffe
 import org.jagatoo.loaders.models.collada.datastructs.effects.COLLADAProfile;
 import org.jagatoo.loaders.models.collada.datastructs.effects.COLLADAProfileCommon;
 import org.jagatoo.loaders.models.collada.datastructs.images.COLLADASurface;
-import org.jagatoo.loaders.models.collada.jibx.Effect;
-import org.jagatoo.loaders.models.collada.jibx.LibraryEffects;
-import org.jagatoo.loaders.models.collada.jibx.ProfileCOMMON;
-import org.jagatoo.loaders.models.collada.jibx.ProfileCOMMON_NewParam;
-import org.jagatoo.loaders.models.collada.jibx.Sampler2D;
-import org.jagatoo.loaders.models.collada.jibx.Surface;
+import org.jagatoo.loaders.models.collada.jibx.XMLEffect;
+import org.jagatoo.loaders.models.collada.jibx.XMLLibraryEffects;
+import org.jagatoo.loaders.models.collada.jibx.XMLProfileCOMMON;
+import org.jagatoo.loaders.models.collada.jibx.XMLProfileCOMMON_NewParam;
+import org.jagatoo.loaders.models.collada.jibx.XMLSampler2D;
+import org.jagatoo.loaders.models.collada.jibx.XMLSurface;
 
 /**
  * Loader for LibraryEffects
@@ -34,12 +34,12 @@ public class COLLADALibraryEffectsLoader {
      *            The JAXB data to load from
      */
     static void loadLibraryEffects(COLLADAFile colladaFile,
-            LibraryEffects libEffects) {
+            XMLLibraryEffects libEffects) {
 
         COLLADALibraryEffects colLibEffects = colladaFile.getLibraryEffects();
-        Collection<Effect> effects = libEffects.effects;
+        Collection<XMLEffect> effects = libEffects.effects;
 
-        for (Effect effect : effects) {
+        for (XMLEffect effect : effects) {
 
             COLLADALoader.logger.print("TT] Effect \"" + effect.id + "\"");
             COLLADALoader.logger.increaseTabbing();
@@ -74,20 +74,20 @@ public class COLLADALibraryEffectsLoader {
      * @param type
      * @return the loaded profile
      */
-    static COLLADAProfile loadCommonProfile(Effect effect, ProfileCOMMON profile) {
+    static COLLADAProfile loadCommonProfile(XMLEffect effect, XMLProfileCOMMON profile) {
 
         COLLADAProfileCommon colladaProfile = new COLLADAProfileCommon();
         colladaProfile.surfaces = new HashMap<String, COLLADASurface>();
 
-        List<ProfileCOMMON_NewParam> newParams = profile.newParams;
+        List<XMLProfileCOMMON_NewParam> newParams = profile.newParams;
 
         if(newParams != null) {
 
-            for (ProfileCOMMON_NewParam newParam : newParams) {
+            for (XMLProfileCOMMON_NewParam newParam : newParams) {
 
                 if (newParam.surface != null) {
 
-                    Surface surface = newParam.surface;
+                    XMLSurface surface = newParam.surface;
                     COLLADASurface colladaSurface = new COLLADASurface(newParam.sid);
                     colladaSurface.imageIds = new ArrayList<String>();
                     COLLADALoader.logger.print("TT] Found surface ! (id = " + newParam.sid + ")");
@@ -103,7 +103,7 @@ public class COLLADALibraryEffectsLoader {
 
                     COLLADALoader.logger.print("TT] Found sampler ! (id = "+ newParam.sid + ")");
                     COLLADALoader.logger.increaseTabbing();
-                    Sampler2D sampler2D = newParam.sampler2D;
+                    XMLSampler2D sampler2D = newParam.sampler2D;
                     COLLADALoader.logger.print("TT] Sampler using source : " + sampler2D.source);
                     COLLADALoader.logger.decreaseTabbing();
 

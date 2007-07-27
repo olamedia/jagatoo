@@ -6,8 +6,8 @@ import java.util.HashMap;
 import org.jagatoo.loaders.models.collada.datastructs.COLLADAFile;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.COLLADAController;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.COLLADASkeletalController;
-import org.jagatoo.loaders.models.collada.jibx.Controller;
-import org.jagatoo.loaders.models.collada.jibx.LibraryControllers;
+import org.jagatoo.loaders.models.collada.jibx.XMLController;
+import org.jagatoo.loaders.models.collada.jibx.XMLLibraryControllers;
 
 /**
  * Loader for LibraryMaterials
@@ -25,13 +25,13 @@ public class COLLADALibraryControllersLoader {
      *            The JAXB data to load from
      */
     static void loadLibraryControllers(COLLADAFile colladaFile,
-            LibraryControllers controllers) {
+            XMLLibraryControllers controllers) {
 
         HashMap<String, COLLADAController> controllersMap = colladaFile
         .getLibraryControllers().getControllers();
-        Collection<Controller> controllersList = controllers.controllers.values();
+        Collection<XMLController> controllersList = controllers.controllers.values();
 
-        for (Controller controller : controllersList) {
+        for (XMLController controller : controllersList) {
             // FIXME : this is strange... a bug in Blender's exporter ?
             String source = controller.skin.source.replaceAll(" ", "_");
             String id = controller.id;

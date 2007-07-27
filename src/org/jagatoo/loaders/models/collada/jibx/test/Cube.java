@@ -3,7 +3,7 @@ package org.jagatoo.loaders.models.collada.jibx.test;
 import java.io.File;
 import java.io.FileInputStream;
 
-import org.jagatoo.loaders.models.collada.jibx.COLLADA;
+import org.jagatoo.loaders.models.collada.jibx.XMLCOLLADA;
 import org.jibx.runtime.BindingDirectory;
 import org.jibx.runtime.IBindingFactory;
 import org.jibx.runtime.IUnmarshallingContext;
@@ -17,12 +17,12 @@ public class Cube {
      */
     public static void main(String[] args) throws Exception {
 
-        IBindingFactory factory = BindingDirectory.getFactory(COLLADA.class);
+        IBindingFactory factory = BindingDirectory.getFactory(XMLCOLLADA.class);
 
         long t1 = System.nanoTime();
         IUnmarshallingContext uc = factory.createUnmarshallingContext();
         long t2 = System.nanoTime();
-        COLLADA coll = (COLLADA) uc.unmarshalDocument(
+        XMLCOLLADA coll = (XMLCOLLADA) uc.unmarshalDocument(
                 //Thread.currentThread().getContextClassLoader().getResourceAsStream("org/jagatoo/loaders/models/collada/jibx/models/cube.dae")
                 new FileInputStream(new File("/doc/dev/workspace/stratagemengine/flavors/middleage/models/units/fantassin_cape/fantassin_cape.dae"))
                 , null);

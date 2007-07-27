@@ -3,7 +3,7 @@ package org.jagatoo.loaders.models.collada.datastructs.controllers;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAGeometry;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAGeometryProvider;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADALibraryGeometries;
-import org.jagatoo.loaders.models.collada.jibx.Controller;
+import org.jagatoo.loaders.models.collada.jibx.XMLController;
 
 /**
  * A Dummy COLLADA Skeletal Controller.
@@ -27,7 +27,7 @@ public class COLLADASkeletalController extends COLLADAController {
      * @param sourceMeshId The source mesh ID
      * @param controller
      */
-    public COLLADASkeletalController(COLLADALibraryGeometries libGeoms, String sourceMeshId, Controller controller) {
+    public COLLADASkeletalController(COLLADALibraryGeometries libGeoms, String sourceMeshId, XMLController controller) {
 
         super(libGeoms, controller);
         this.sourceMeshId = sourceMeshId;

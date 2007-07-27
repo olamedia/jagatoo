@@ -5,19 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.jagatoo.loaders.models.collada.datastructs.COLLADAFile;
+import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.COLLADAController;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADAGeometryInstanceNode;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADALibraryVisualScenes;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADAMatrixTransform;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADANode;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADAScene;
-import org.jagatoo.loaders.models.collada.jibx.BindMaterial;
-import org.jagatoo.loaders.models.collada.jibx.InstanceController;
-import org.jagatoo.loaders.models.collada.jibx.InstanceGeometry;
-import org.jagatoo.loaders.models.collada.jibx.InstanceMaterial;
-import org.jagatoo.loaders.models.collada.jibx.LibraryVisualScenes;
-import org.jagatoo.loaders.models.collada.jibx.Node;
-import org.jagatoo.loaders.models.collada.jibx.VisualScene;
+import org.jagatoo.loaders.models.collada.jibx.XMLBindMaterial;
+import org.jagatoo.loaders.models.collada.jibx.XMLInstanceController;
+import org.jagatoo.loaders.models.collada.jibx.XMLInstanceGeometry;
+import org.jagatoo.loaders.models.collada.jibx.XMLInstanceMaterial;
+import org.jagatoo.loaders.models.collada.jibx.XMLLibraryVisualScenes;
+import org.jagatoo.loaders.models.collada.jibx.XMLNode;
+import org.jagatoo.loaders.models.collada.jibx.XMLVisualScene;
 
 /**
  * Class used to load LibraryVisualScenes
@@ -36,16 +37,16 @@ public class COLLADALibraryVisualScenesLoader {
      */
     @SuppressWarnings("unchecked")
     static void loadLibraryVisualScenes(COLLADAFile colladaFile,
-            LibraryVisualScenes libScenes) {
+            XMLLibraryVisualScenes libScenes) {
 
         COLLADALibraryVisualScenes colLibVisualScenes = colladaFile
         .getLibraryVisualsScenes();
         HashMap<String, COLLADAScene> scenes = colLibVisualScenes.getScenes();
 
-        Collection<VisualScene> visualScenes = libScenes.scenes.values();
+        Collection<XMLVisualScene> visualScenes = libScenes.scenes.values();
 
         COLLADALoader.logger.increaseTabbing();
-        for (VisualScene visualScene : visualScenes) {
+        for (XMLVisualScene visualScene : visualScenes) {
 
             COLLADAScene colScene = new COLLADAScene(visualScene.id,
                     visualScene.name);
@@ -54,7 +55,7 @@ public class COLLADALibraryVisualScenesLoader {
             COLLADALoader.logger.print("TT] Found scene [" + colScene.getId() + ":"
                     + colScene.getName() + "]");
             COLLADALoader.logger.increaseTabbing();
-            for (Node node : visualScene.nodes.values()) {
+            for (XMLNode node : visualScene.nodes.values()) {
 
                 COLLADALoader.logger.print("TT] Found node [" + node.id + ":"
                         + node.name + "]");
@@ -62,7 +63,7 @@ public class COLLADALibraryVisualScenesLoader {
 
                 COLLADANode colNode = null;
 
-                if (node.type == Node.Type.NODE) {
+                if (node.type == XMLNode.Type.NODE) {
 
                     COLLADALoader.logger.print("TT] Alright, it's a basic node");
 
@@ -70,11 +71,11 @@ public class COLLADALibraryVisualScenesLoader {
 
                     // FIXME : applying YAGNI here : we don't need to know whether these nodes are grouped or separate
                     if(node.instanceGeometries != null) {
-                        for (InstanceGeometry instanceGeometry : node.instanceGeometries) {
+                        for (XMLInstanceGeometry instanceGeometry : node.instanceGeometries) {
                             colNode = newCOLLADANode(colladaFile, node, transform, instanceGeometry.url, instanceGeometry.bindMaterial);
                         }
                     } else if(node.instanceControllers != null) {
-                        for (InstanceController instanceController : node.instanceControllers) {
+                        for (XMLInstanceController instanceController : node.instanceControllers) {
                             COLLADAController controller = colladaFile.getLibraryControllers().getControllers().get(instanceController.url);
                             controller.updateDestinationGeometry();
                             colNode = newCOLLADANode(colladaFile, node, transform, controller.getDestinationGeometry().getGeometry().id, instanceController.bindMaterial);
@@ -82,7 +83,9 @@ public class COLLADALibraryVisualScenesLoader {
                     }
 
 
-                } else if (node.type == Node.Type.JOINT) {
+                } else if (node.type == XMLNode.Type.JOINT) {
+
+                    Skeleton skeleton = COLLADASkeletonLoader.loadSkeleton(node);
 
                     COLLADALoader.logger
                     .print("TT] Joint nodes unsupported in the main loader yet (but successfully read in another program)");
@@ -118,13 +121,13 @@ public class COLLADALibraryVisualScenesLoader {
      * @param bindMaterial
      * @return
      */
-    static COLLADANode newCOLLADANode(COLLADAFile colladaFile, Node node,
-            COLLADAMatrixTransform transform, String geometryUrl, BindMaterial bindMaterial) {
+    static COLLADANode newCOLLADANode(COLLADAFile colladaFile, XMLNode node,
+            COLLADAMatrixTransform transform, String geometryUrl, XMLBindMaterial bindMaterial) {
         COLLADANode colNode;
         String materialUrl = null;
-        BindMaterial.TechniqueCommon techniqueCommon = bindMaterial.techniqueCommon;
-        List<InstanceMaterial> instanceMaterialList = techniqueCommon.instanceMaterials;
-        for (InstanceMaterial instanceMaterial : instanceMaterialList) {
+        XMLBindMaterial.TechniqueCommon techniqueCommon = bindMaterial.techniqueCommon;
+        List<XMLInstanceMaterial> instanceMaterialList = techniqueCommon.instanceMaterials;
+        for (XMLInstanceMaterial instanceMaterial : instanceMaterialList) {
             if(materialUrl == null) {
                 materialUrl = instanceMaterial.target;
             } else {

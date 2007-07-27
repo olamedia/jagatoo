@@ -6,8 +6,8 @@ import java.util.HashMap;
 import org.jagatoo.loaders.models.collada.datastructs.COLLADAFile;
 import org.jagatoo.loaders.models.collada.datastructs.materials.COLLADALibraryMaterials;
 import org.jagatoo.loaders.models.collada.datastructs.materials.COLLADAMaterial;
-import org.jagatoo.loaders.models.collada.jibx.LibraryMaterials;
-import org.jagatoo.loaders.models.collada.jibx.Material;
+import org.jagatoo.loaders.models.collada.jibx.XMLLibraryMaterials;
+import org.jagatoo.loaders.models.collada.jibx.XMLMaterial;
 
 /**
  * Loader for LibraryMaterials
@@ -25,17 +25,17 @@ public class COLLADALibraryMaterialsLoader {
      *            The JAXB data to load from
      */
     static void loadLibraryMaterials(COLLADAFile colladaFile,
-            LibraryMaterials libMaterials) {
+            XMLLibraryMaterials libMaterials) {
 
         COLLADALibraryMaterials colLibMaterials = colladaFile
         .getLibraryMaterials();
         HashMap<String, COLLADAMaterial> colMaterials = colLibMaterials
         .getMaterials();
 
-        Collection<Material> materials = libMaterials.materials.values();
+        Collection<XMLMaterial> materials = libMaterials.materials.values();
 
         COLLADALoader.logger.increaseTabbing();
-        for (Material material : materials) {
+        for (XMLMaterial material : materials) {
 
             COLLADAMaterial colMaterial = new COLLADAMaterial(colladaFile,
                     material.id, material.instanceEffect.url);

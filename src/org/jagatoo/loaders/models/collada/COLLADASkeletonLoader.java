@@ -2,7 +2,7 @@ package org.jagatoo.loaders.models.collada;
 
 import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
-import org.jagatoo.loaders.models.collada.jibx.Node;
+import org.jagatoo.loaders.models.collada.jibx.XMLNode;
 import org.openmali.vecmath.Matrix4f;
 import org.openmali.vecmath.Point3f;
 import org.openmali.vecmath.Quat4f;
@@ -26,7 +26,7 @@ public class COLLADASkeletonLoader {
      * @param rootNode
      * @return
      */
-    public static Skeleton loadSkeleton(Node rootNode) {
+    public static Skeleton loadSkeleton(XMLNode rootNode) {
 
         Point3f skeletonPos;
         Matrix4f localToWorld;
@@ -54,7 +54,7 @@ public class COLLADASkeletonLoader {
      * @param parentRoot
      * @param parentTip
      */
-    private static void loadJoint(Matrix4f localToWorld, Bone bone, Node node, Point3f parentRoot, Point3f parentTip) {
+    private static void loadJoint(Matrix4f localToWorld, Bone bone, XMLNode node, Point3f parentRoot, Point3f parentTip) {
 
         if(node.childrenList == null) {
 
@@ -154,7 +154,7 @@ public class COLLADASkeletonLoader {
             System.out.println("length = "+length);
             System.out.println("quat = "+quat);
 
-            for (Node child : node.childrenList) {
+            for (XMLNode child : node.childrenList) {
                 Bone newBone = new Bone(child.id, .2f, new Quat4f(0f, 0f, 0f, 1f));
                 bone.addChild(newBone);
                 loadJoint(localToWorld, newBone, child, parentTip, nodeTip);

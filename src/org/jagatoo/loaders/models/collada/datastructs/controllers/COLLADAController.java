@@ -2,7 +2,7 @@ package org.jagatoo.loaders.models.collada.datastructs.controllers;
 
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADAGeometryProvider;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.COLLADALibraryGeometries;
-import org.jagatoo.loaders.models.collada.jibx.Controller;
+import org.jagatoo.loaders.models.collada.jibx.XMLController;
 
 /**
  * A COLLADA Controller.
@@ -13,14 +13,14 @@ import org.jagatoo.loaders.models.collada.jibx.Controller;
  */
 public abstract class COLLADAController extends COLLADAGeometryProvider {
 
-    private final Controller controller;
+    private final XMLController controller;
 
     /**
      * Creates a new COLLADA Controller
      * @param libGeoms
      * @param controller
      */
-    public COLLADAController(COLLADALibraryGeometries libGeoms, Controller controller) {
+    public COLLADAController(COLLADALibraryGeometries libGeoms, XMLController controller) {
 
         super(libGeoms);
         this.controller = controller;
@@ -31,7 +31,7 @@ public abstract class COLLADAController extends COLLADAGeometryProvider {
     /**
      * @return the instanceController
      */
-    public Controller getController() {
+    public XMLController getController() {
         return controller;
     }
 
