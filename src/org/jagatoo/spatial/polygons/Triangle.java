@@ -497,7 +497,7 @@ public class Triangle extends Polygon
     /**
      * Calculates the face normal from the cross product of edge AC and AB.
      */
-    public Vector3f getFaceNormalABAC()
+    public Vector3f getFaceNormalACAB()
     {
         getFaceNormalACAB( faceNormal );
         
