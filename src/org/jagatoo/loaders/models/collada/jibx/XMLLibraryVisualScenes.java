@@ -9,14 +9,14 @@ import java.util.HashMap;
  * that are contained, and can be instanced with
  * a "scene" XML element in the COLLADA file.
  * Child of COLLADA.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class XMLLibraryVisualScenes {
-
+    
     private ArrayList<XMLVisualScene> scenesList = null;
     public HashMap<String, XMLVisualScene> scenes = null;
-
+    
     public void readVisualScenes() {
         scenes = new HashMap<String, XMLVisualScene>();
         for (XMLVisualScene scene : scenesList) {
@@ -24,5 +24,5 @@ public class XMLLibraryVisualScenes {
         }
         scenesList = null;
     }
-
+    
 }

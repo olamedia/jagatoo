@@ -10,7 +10,7 @@ import org.jagatoo.loaders.models.collada.datastructs.materials.Material;
  * than a list of nodes. But I'm applying the YAGNI here : I use
  * files from Blender only. If we ever need more, then we'll change
  * it.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class GeometryInstanceNode extends Node {
@@ -18,7 +18,7 @@ public class GeometryInstanceNode extends Node {
     /** Our geometry */
     private String geometryUrl;
     private String materialUrl;
-
+    
     /**
      * Create a new {@link GeometryInstanceNode}
      * @param file The COLLADA file this node belongs to
@@ -29,31 +29,29 @@ public class GeometryInstanceNode extends Node {
      * @param materialUrl The URL of the material bound to this node
      */
     public GeometryInstanceNode(AssetFolder file, String id, String name, COLLADATransform transform, String geometryUrl, String materialUrl) {
-
+        
         super(file, id, name, transform);
         this.geometryUrl = geometryUrl;
         this.materialUrl = materialUrl;
-
+        
     }
-
+    
     /**
-     *
      * @return the geometry
      */
     public Geometry getGeometry() {
-
+        
         return file.getLibraryGeometries().getGeometries().get(geometryUrl);
-
+        
     }
-
+    
     /**
-    *
-    * @return the material
-    */
-   public Material getMaterial() {
-
-       return file.getLibraryMaterials().getMaterials().get(materialUrl);
-
-   }
-
+     * @return the material
+     */
+    public Material getMaterial() {
+        
+        return file.getLibraryMaterials().getMaterials().get(materialUrl);
+        
+    }
+    
 }

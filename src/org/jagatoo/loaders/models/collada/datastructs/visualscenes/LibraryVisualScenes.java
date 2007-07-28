@@ -20,7 +20,7 @@ public class LibraryVisualScenes {
         this.scenes = new HashMap<String, Scene>();
         
     }
-
+    
     /**
      * @return the scenes
      */

@@ -5,16 +5,16 @@ import java.util.StringTokenizer;
 /**
  * An array of Booleans.
  * Child of Source.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class XMLBoolArray {
-
+    
     public int count;
     public String id;
-
+    
     public boolean[] bools;
-
+    
     public static boolean[] toArray(String boolValues) {
         StringTokenizer tknz = new StringTokenizer(boolValues);
         int count = tknz.countTokens();
@@ -24,5 +24,5 @@ public class XMLBoolArray {
         }
         return bools;
     }
-
+    
 }

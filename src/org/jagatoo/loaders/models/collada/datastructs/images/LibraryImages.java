@@ -8,20 +8,19 @@ import java.util.HashMap;
  * @author Amos Wenger (aka BlueSky)
  */
 public class LibraryImages {
- 
+    
     /** Map of images. Key = id, Value = image path */
     private final HashMap<String, String> images;
     
     /**
      * Creates a new COLLADALibraryImages
-     * 
      */
     public LibraryImages() {
         
         images = new HashMap<String, String>();
         
     }
-
+    
     /**
      * @return the images
      */

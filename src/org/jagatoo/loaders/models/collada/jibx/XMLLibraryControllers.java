@@ -6,18 +6,18 @@ import java.util.HashMap;
 /**
  * A Library of Controllers.
  * Child of COLLADA.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class XMLLibraryControllers {
-
+    
     /**
      * This field is written by JiBX and then parsed by the
      * readControllers() method and then the controllerMap HashMap
      * is written.
      */
     private ArrayList<XMLController> controllersList = null;
-
+    
     /**
      * A map of all controllers, which is filled by the readControllers()
      * method just after the controllers ArrayList has been written.
@@ -25,7 +25,7 @@ public class XMLLibraryControllers {
      * value = Controller
      */
     public HashMap<String, XMLController> controllers = null;
-
+    
     /**
      * Called just after controllers has been read, fill
      * the controllerMap.
@@ -37,5 +37,5 @@ public class XMLLibraryControllers {
         }
         controllersList = null;
     }
-
+    
 }

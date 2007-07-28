@@ -5,16 +5,16 @@ import java.util.StringTokenizer;
 /**
  * An array of Floats.
  * Child of Source.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class XMLFloatArray {
-
+    
     public int count;
     public String id;
-
+    
     public float[] floats;
-
+    
     public static float[] toArray(String floatValues) {
         StringTokenizer tknz = new StringTokenizer(floatValues);
         int count = tknz.countTokens();
@@ -24,5 +24,5 @@ public class XMLFloatArray {
         }
         return floats;
     }
-
+    
 }

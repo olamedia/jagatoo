@@ -5,16 +5,16 @@ import java.util.StringTokenizer;
 /**
  * An array of Names (String).
  * Child of Source.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class XMLNameArray {
-
+    
     public int count;
     public String id;
-
+    
     public String[] names;
-
+    
     public static String[] toArray(String nameValues) {
         StringTokenizer tknz = new StringTokenizer(nameValues);
         int count = tknz.countTokens();
@@ -24,5 +24,5 @@ public class XMLNameArray {
         }
         return names;
     }
-
+    
 }

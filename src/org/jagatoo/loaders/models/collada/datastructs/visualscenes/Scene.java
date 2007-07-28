@@ -17,12 +17,11 @@ public class Scene {
     
     /** A map of all nodes */
     private final HashMap<String, Node> nodes;
-
+    
     /**
      * Create a new COLLADAScene
      * @param id The id of the scene
      * @param name The name of the scene
-     * 
      */
     public Scene(String id, String name) {
         
@@ -31,21 +30,21 @@ public class Scene {
         this.nodes = new HashMap<String, Node>();
         
     }
-
+    
     /**
      * @return the nodes
      */
     public HashMap<String, Node> getNodes() {
         return nodes;
     }
-
+    
     /**
      * @return the id
      */
     public String getId() {
         return id;
     }
-
+    
     /**
      * @return the name
      */

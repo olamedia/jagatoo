@@ -20,99 +20,99 @@ import org.jagatoo.loaders.models.collada.datastructs.visualscenes.LibraryVisual
  * org.jagatoo.loaders.models.collada.schema.org.collada.x2005.x11.colladaSchema
  * package) is converted to a COLLADAFile. Then it can be used in a scenegraph,
  * e.g. Xith3D.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class AssetFolder {
-
+    
     /** LibraryControllers : contains all controllers */
     private LibraryControllers libraryControllers;
-
+    
     /** LibraryEffects : contains all effects */
     private LibraryEffects libraryEffects;
-
+    
     /** LibraryImages : contains all images */
     private LibraryImages libraryImages;
-
+    
     /** LibraryMaterials : contains all materials */
     private LibraryMaterials libraryMaterials;
-
+    
     /** LibraryGeometries : contains all geometries */
     private LibraryGeometries libraryGeometries;
-
+    
     /** LibraryVisualScenes : contains all visual scenes */
     private LibraryVisualScenes libraryVisualsScenes;
-
+    
     /**
      * The base path, used e.g. when loading textures.
      * Basically it's where this file has been loaded from.
      */
     private final URL basePath;
-
+    
     /**
      * Creates a new COLLADAFile
      * @param basePath The base path, used e.g. when loading textures
      */
     public AssetFolder(URL basePath) {
-
+        
         this.basePath = basePath;
-
+        
         libraryControllers = new LibraryControllers();
         libraryEffects = new LibraryEffects();
         libraryImages = new LibraryImages();
         libraryMaterials = new LibraryMaterials();
         libraryGeometries = new LibraryGeometries();
         libraryVisualsScenes = new LibraryVisualScenes();
-
+        
     }
-
+    
     /**
      * @return the libraryControllers
      */
     public LibraryControllers getLibraryControllers() {
         return libraryControllers;
     }
-
+    
     /**
      * @return the libraryEffects
      */
     public LibraryEffects getLibraryEffects() {
         return libraryEffects;
     }
-
+    
     /**
      * @return the libraryImages
      */
     public LibraryImages getLibraryImages() {
         return libraryImages;
     }
-
+    
     /**
      * @return the libraryMaterials
      */
     public LibraryMaterials getLibraryMaterials() {
         return libraryMaterials;
     }
-
+    
     /**
      * @return the libraryGeometries
      */
     public LibraryGeometries getLibraryGeometries() {
         return libraryGeometries;
     }
-
+    
     /**
      * @return the libraryVisualsScenes
      */
     public LibraryVisualScenes getLibraryVisualsScenes() {
         return libraryVisualsScenes;
     }
-
+    
     /**
      * @return the basePath
      */
     public URL getBasePath() {
         return basePath;
     }
-
+    
 }

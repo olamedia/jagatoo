@@ -1,18 +1,16 @@
 package org.jagatoo.loaders.models.collada.jibx;
 
-import org.jibx.runtime.IUnmarshallingContext;
-
 /**
  * A param is instruction on how to interpret
  * a part of a Source. It has a type and a name.
  * The name contains the "use" of the param, e.g.
  * "TIME", "ANGLE", "X", "Y", "Z"
  * Child of Accessor.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class XMLParam {
-
+    
     public static enum Type {
         /** Boolean */ _bool,
         /** Float */ _float,
@@ -21,9 +19,9 @@ public class XMLParam {
         /** IDREF (String) */ _IDREF,
         /** 4x4 float matrix */ _float4x4
     }
-
+    
     public XMLParam.Type type;
-
+    
     public static enum Name {
         /** X coordinate */ X,
         /** Y coordinate */ Y,
@@ -39,11 +37,11 @@ public class XMLParam {
         /** Weight */ WEIGHT,
         /** Joint */ JOINT
     }
-
+    
     public Name name;
-
+    
     public static Type readTypeString(String typeString) {
         return Type.valueOf("_"+typeString);
     }
-
+    
 }

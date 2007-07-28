@@ -10,11 +10,11 @@ import java.util.Date;
  * Source, Geometry, Image, Animation, AnimationClip,
  * Controller, Extra, Node, VisualScene, Library_*, Effect,
  * ForceField, PhysicsMaterial, PhysicsScene, PhysicsModel
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class XMLAsset {
-
+    
     public XMLContributor contributor = null;
     public Date created = null;
     public Date modified = null;
@@ -25,5 +25,5 @@ public class XMLAsset {
         Z_UP
     }
     public UpAxis upAxis = null;
-
+    
 }

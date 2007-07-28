@@ -5,16 +5,16 @@ import java.util.StringTokenizer;
 /**
  * An array of Integers.
  * Child of Source.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class XMLIntArray {
-
+    
     public int count;
     public String id;
-
+    
     public int[] ints;
-
+    
     public static int[] toArray(String intValues) {
         StringTokenizer tknz = new StringTokenizer(intValues);
         int count = tknz.countTokens();
@@ -24,5 +24,5 @@ public class XMLIntArray {
         }
         return ints;
     }
-
+    
 }

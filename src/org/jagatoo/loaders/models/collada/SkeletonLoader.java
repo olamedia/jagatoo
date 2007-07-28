@@ -10,42 +10,42 @@ import org.openmali.vecmath.Vector3f;
 
 /**
  * A loader for skeletons.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class SkeletonLoader {
-
+    
     /** The zero-point (0, 0, 0) */
     final static Point3f ZERO_POINT = new Point3f(0f, 0f, 0f);
-
+    
     /** The up point (0, 0, 1) Note : depends on the COLLADA assets : this should be taken into account */
     final static Vector3f UP = new Vector3f(0f, 0f, 1f);
-
+    
     /**
      * Loads a whole Skeleton.
      * @param rootNode
      * @return
      */
     public static Skeleton loadSkeleton(XMLNode rootNode) {
-
+        
         Point3f skeletonPos;
         Matrix4f localToWorld;
         // Get the localToWorld matrix
         localToWorld = rootNode.matrix.matrix4f;
         System.out.println("LocalToWorld = "+localToWorld);
-
+        
         // Get the root bone root position
         skeletonPos = new Point3f(localToWorld.m03, localToWorld.m13, localToWorld.m23);
-
+        
         // Create the root bone
         Bone rootBone = new Bone(rootNode.id, 0f, new Quat4f(0f, 0f, 0f, 1f));
-
+        
         loadJoint(localToWorld, rootBone, rootNode, ZERO_POINT, ZERO_POINT);
-
+        
         return new Skeleton(rootBone, skeletonPos);
-
+        
     }
-
+    
     /**
      * Loads a Joint, and its children of course.
      * @param localToWorld
@@ -55,14 +55,14 @@ public class SkeletonLoader {
      * @param parentTip
      */
     private static void loadJoint(Matrix4f localToWorld, Bone bone, XMLNode node, Point3f parentRoot, Point3f parentTip) {
-
+        
         if(node.childrenList == null) {
-
+            
             System.out.println("=====================================");
             System.out.println("[[Bone]] "+bone.getName());
-
+            
         } else {
-
+            
             /*
              * Get the node tip
              */
@@ -73,19 +73,19 @@ public class SkeletonLoader {
                     parentTip.y + colMatrix.getElement(1, 3),
                     parentTip.z + colMatrix.getElement(2, 3)
             );
-
+            
             /*
              * Transform all into world coordinates
              */
             Point3f parentRootW = new Point3f(parentRoot);
             localToWorld.transform(parentRootW);
-
+            
             Point3f parentTipW = new Point3f(parentTip);
             localToWorld.transform(parentTipW);
-
+            
             Point3f nodeTipW = new Point3f(nodeTip);
             localToWorld.transform(nodeTipW);
-
+            
             /*
              * Compute the vectors
              */
@@ -93,7 +93,7 @@ public class SkeletonLoader {
             nodeVecW.sub(nodeTipW, parentTipW);
             Vector3f parentVecW = new Vector3f();
             parentVecW.sub(parentTipW, parentRootW);
-
+            
             System.out.println("=====================================");
             System.out.println("[[Bone]] "+bone.getName());
             System.out.println("parentRoot = "+parentRoot);
@@ -106,14 +106,14 @@ public class SkeletonLoader {
             System.out.println("---");
             System.out.println("parentVecW = "+parentVecW);
             System.out.println("nodeVecW = "+nodeVecW);
-
+            
             // Retrieve length now, we'll normalize just after
             float length = nodeVecW.length();
-
+            
             // Normalize both vecs for calculations
             parentVecW.normalize();
             nodeVecW.normalize();
-
+            
             // Compute the angle
             double angle = Math.acos(parentVecW.dot(nodeVecW));
             if(Double.isNaN(angle)) {
@@ -142,26 +142,26 @@ public class SkeletonLoader {
                 axis.normalize();
                 axis.negate();
             }
-
-
+            
+            
             Quat4f quat = Rotations.toQuaternion(axis, angle);
             bone.setBindRotation(quat);
             bone.setLength(length);
-
+            
             System.out.println("---");
             System.out.println("angle = "+Math.toDegrees(angle));
             System.out.println("axis = "+axis);
             System.out.println("length = "+length);
             System.out.println("quat = "+quat);
-
+            
             for (XMLNode child : node.childrenList) {
                 Bone newBone = new Bone(child.id, .2f, new Quat4f(0f, 0f, 0f, 1f));
                 bone.addChild(newBone);
                 loadJoint(localToWorld, newBone, child, parentTip, nodeTip);
             }
-
+            
         }
-
+        
     }
-
+    
 }

@@ -11,14 +11,14 @@ import org.jagatoo.loaders.models.collada.jibx.XMLLibraryControllers;
 
 /**
  * Loader for LibraryMaterials
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class LibraryControllersLoader {
-
+    
     /**
      * Load LibraryControllers
-     *
+     * 
      * @param colladaFile
      *            The collada file to add them to
      * @param controllers
@@ -26,11 +26,11 @@ public class LibraryControllersLoader {
      */
     static void loadLibraryControllers(AssetFolder colladaFile,
             XMLLibraryControllers controllers) {
-
+        
         HashMap<String, Controller> controllersMap = colladaFile
         .getLibraryControllers().getControllers();
         Collection<XMLController> controllersList = controllers.controllers.values();
-
+        
         for (XMLController controller : controllersList) {
             // FIXME : this is strange... a bug in Blender's exporter ?
             String source = controller.skin.source.replaceAll(" ", "_");
@@ -39,7 +39,7 @@ public class LibraryControllersLoader {
                     + "\" and source : \"" + source + "\"");
             controllersMap.put(id, new SkeletalController(colladaFile.getLibraryGeometries(), source, controller));
         }
-
+        
     }
-
+    
 }

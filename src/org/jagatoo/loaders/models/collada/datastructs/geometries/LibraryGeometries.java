@@ -10,7 +10,7 @@ import java.util.HashMap;
  * @author Amos Wenger (aka BlueSky)
  */
 public class LibraryGeometries {
-
+    
     /** Map of all geoms : key is id, value is the COLLADAGeometry object */
     private final HashMap<String, Geometry> geometries;
     
@@ -22,7 +22,7 @@ public class LibraryGeometries {
         geometries = new HashMap<String, Geometry>();
         
     }
-
+    
     /**
      * @return the geometries in this COLLADALibraryGeometries
      */

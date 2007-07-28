@@ -10,14 +10,14 @@ import org.jagatoo.loaders.models.collada.jibx.XMLLibraryImages;
 
 /**
  * Loader for LibraryImages
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class LibraryImagesLoader {
-
+    
     /**
      * Load LibraryImages
-     *
+     * 
      * @param colladaFile
      *            The collada file to add them to
      * @param libImages
@@ -25,22 +25,22 @@ public class LibraryImagesLoader {
      */
     static void loadLibraryImages(AssetFolder colladaFile,
             XMLLibraryImages libImages) {
-
+        
         LibraryImages colLibImages = colladaFile.getLibraryImages();
         HashMap<String, String> colImages = colLibImages.getImages();
-
+        
         Collection<XMLImage> images = libImages.images.values();
-
+        
         COLLADALoader.logger.increaseTabbing();
         for (XMLImage image : images) {
-
+            
             COLLADALoader.logger.print("TT] Found image [" + image.id + ":"
                     + image.initFrom + "]");
             colImages.put(image.id, image.initFrom);
-
+            
         }
         COLLADALoader.logger.decreaseTabbing();
-
+        
     }
-
+    
 }

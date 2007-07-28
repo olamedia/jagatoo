@@ -5,16 +5,16 @@ import java.util.ArrayList;
 /**
  * A Library of Effects.
  * Child of COLLADA.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class XMLLibraryEffects {
-
+    
     /**
      * This field is written by JiBX and then parsed by the
      * readEffects() method and then the effectMap HashMap
      * is written.
      */
     public ArrayList<XMLEffect> effects = null;
-
+    
 }

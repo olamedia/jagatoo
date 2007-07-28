@@ -5,16 +5,16 @@ import java.util.StringTokenizer;
 /**
  * An array of IDREFs (String).
  * Child of Source.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class XMLIDREFArray {
-
+    
     public int count;
     public String id;
-
+    
     public String[] idrefs;
-
+    
     public static String[] toArray(String idrefValues) {
         StringTokenizer tknz = new StringTokenizer(idrefValues);
         int count = tknz.countTokens();
@@ -24,5 +24,5 @@ public class XMLIDREFArray {
         }
         return idrefs;
     }
-
+    
 }

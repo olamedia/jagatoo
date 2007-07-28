@@ -7,18 +7,18 @@ import java.util.HashMap;
  * A library of Geometries, that one COLLADA
  * file contains.
  * Child of COLLADA.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
 public class XMLLibraryGeometries {
-
+    
     /**
      * This field is written by JiBX and then parsed by the
      * readGeometries() method and then the geometryMap HashMap
      * is written.
      */
     private ArrayList<XMLGeometry> geometriesList = null;
-
+    
     /**
      * A map of all geometries, which is filled by the readGeometries()
      * method just after the geometries ArrayList has been written.
@@ -26,7 +26,7 @@ public class XMLLibraryGeometries {
      * value = Geometry
      */
     public HashMap<String, XMLGeometry> geometries = null;
-
+    
     /**
      * Called just after geometries has been read, fill
      * the geometryMap.
@@ -38,5 +38,5 @@ public class XMLLibraryGeometries {
         }
         geometriesList = null;
     }
-
+    
 }
