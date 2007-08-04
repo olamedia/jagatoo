@@ -175,7 +175,39 @@
 
 		<structure field="asset" usage="required"/>
 
-		<structure name="library_animations" ordered="false" allow-repeats="true" usage="optional"/>
+		<collection field="libraryAnimations" usage="optional">
+			<structure name="library_animations" type="org.jagatoo.loaders.models.collada.jibx.XMLLibraryAnimations" post-set="readAnimations">
+				<collection field="animationsList">
+					<structure name="animation" type="org.jagatoo.loaders.models.collada.jibx.XMLAnimation" ordered="false">
+
+						<value name="id" field="id" style="attribute" usage="optional"/>
+						<value name="name" field="name" style="attribute" usage="optional"/>
+						<structure field="asset" usage="optional"/>
+
+						<collection field="sources">
+							<structure type="org.jagatoo.loaders.models.collada.jibx.XMLSource"/>
+						</collection> <!-- sources -->
+
+						<collection field="samplers" item-type="org.jagatoo.loaders.models.collada.jibx.XMLSampler">
+							<structure name="sampler" type="org.jagatoo.loaders.models.collada.jibx.XMLSampler">
+								<value name="id" field="id" style="attribute"/>
+								<collection field="inputs">
+									<structure type="org.jagatoo.loaders.models.collada.jibx.XMLInput"/>
+								</collection>
+							</structure>
+						</collection> <!-- samplers -->
+
+						<collection field="channels" item-type="org.jagatoo.loaders.models.collada.jibx.XMLChannel">
+							<structure name="channel" type="org.jagatoo.loaders.models.collada.jibx.XMLChannel">
+								<value name="source" field="source" style="attribute" deserializer="org.jagatoo.loaders.models.collada.jibx.XMLIDREFUtils.parse"/>
+								<value name="target" field="target" style="attribute" deserializer="org.jagatoo.loaders.models.collada.jibx.XMLIDREFUtils.parse"/>
+							</structure>
+						</collection> <!-- samplers -->
+
+					</structure> <!-- animation -->
+				</collection> <!-- animationsList -->
+			</structure> <!-- library_animations -->
+		</collection> <!-- libraryAnimations -->
 
 		<structure name="library_animations_clips" ordered="false" allow-repeats="true" usage="optional"/>
 
