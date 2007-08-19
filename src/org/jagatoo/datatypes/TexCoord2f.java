@@ -22,7 +22,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * @param s the s element to use
      * @param t the t element to use
      */
-    public void set( float s, float t )
+    public final void set( float s, float t )
     {
         setS( s );
         setT( t );
@@ -31,15 +31,17 @@ public class TexCoord2f extends TexCoordf implements Serializable
     /**
      * Sets the S (1st) texCoord component.
      */
-    public void setS( float s )
+    public final void setS( float s )
     {
-        this.values[ 0 ] = s;
+        this.values[ roTrick + 0 ] = s;
+        
+        this.isDirty = true;
     }
     
     /**
      * @return the S (1st) texCoord component.
      */
-    public float getS()
+    public final float getS()
     {
         return( values[ 0 ] );
     }
@@ -47,15 +49,17 @@ public class TexCoord2f extends TexCoordf implements Serializable
     /**
      * Sets the T (2nd) texCoord component.
      */
-    public void setT( float t )
+    public final void setT( float t )
     {
-        this.values[ 1 ] = t;
+        this.values[ roTrick + 1 ] = t;
+        
+        this.isDirty = true;
     }
     
     /**
      * @return the T (2nd) texCoord component.
      */
-    public float getT()
+    public final float getT()
     {
         return( values[ 1 ] );
     }
@@ -65,9 +69,11 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public void addS( float v )
+    public final void addS( float v )
     {
-        this.values[ 0 ] += v;
+        this.values[ roTrick + 0 ] += v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -75,9 +81,11 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public void addT( float v )
+    public final void addT( float v )
     {
-        this.values[ 1 ] += v;
+        this.values[ roTrick + 1 ] += v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -85,9 +93,11 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public void subS( float v )
+    public final void subS( float v )
     {
-        this.values[ 0 ] -= v;
+        this.values[ roTrick + 0 ] -= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -95,9 +105,11 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public void subT( float v )
+    public final void subT( float v )
     {
-        this.values[ 1 ] -= v;
+        this.values[ roTrick + 1 ] -= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -105,9 +117,11 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public void mulS( float v )
+    public final void mulS( float v )
     {
-        this.values[ 0 ] *= v;
+        this.values[ roTrick + 0 ] *= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -115,9 +129,11 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public void mulT( float v )
+    public final void mulT( float v )
     {
-        this.values[ 1 ] *= v;
+        this.values[ roTrick + 1 ] *= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -126,10 +142,12 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * @param vs
      * @param vt
      */
-    public void mul( float vs, float vt )
+    public final void mul( float vs, float vt )
     {
-        this.values[ 0 ] *= vs;
-        this.values[ 1 ] *= vt;
+        this.values[ roTrick + 0 ] *= vs;
+        this.values[ roTrick + 1 ] *= vt;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -137,12 +155,14 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param factor the scalar value
      */
-    public void mul( float factor )
+    public final void mul( float factor )
     {
         for ( int i = 0; i < N; i++ )
         {
-            this.values[ i ] *= factor;
+            this.values[ roTrick + i ] *= factor;
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -150,9 +170,11 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public void divS( float v )
+    public final void divS( float v )
     {
-        this.values[ 0 ] /= v;
+        this.values[ roTrick + 0 ] /= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -160,9 +182,11 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * 
      * @param v
      */
-    public void divT( float v )
+    public final void divT( float v )
     {
-        this.values[ 1 ] /= v;
+        this.values[ roTrick + 1 ] /= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -171,10 +195,12 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * @param vs
      * @param vt
      */
-    public void div( float vs, float vt )
+    public final void div( float vs, float vt )
     {
-        this.values[ 0 ] /= vs;
-        this.values[ 1 ] /= vt;
+        this.values[ roTrick + 0 ] /= vs;
+        this.values[ roTrick + 1 ] /= vt;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -183,10 +209,12 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * @param s
      * @param t
      */
-    public void add( float s, float t )
+    public final void add( float s, float t )
     {
-        this.values[ 0 ] += s;
-        this.values[ 1 ] += t;
+        this.values[ roTrick + 0 ] += s;
+        this.values[ roTrick + 1 ] += t;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -195,10 +223,12 @@ public class TexCoord2f extends TexCoordf implements Serializable
      * @param s
      * @param t
      */
-    public void sub( float s, float t )
+    public final void sub( float s, float t )
     {
-        this.values[ 0 ] -= s;
-        this.values[ 1 ] -= t;
+        this.values[ roTrick + 0 ] -= s;
+        this.values[ roTrick + 1 ] -= t;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -239,12 +269,57 @@ public class TexCoord2f extends TexCoordf implements Serializable
     /**
      * Creates a new TexCoord2f instance.
      * 
+     * @param readOnly
+     * @param s the S element to use
+     * @param t the T element to use
+     */
+    public TexCoord2f( boolean readOnly, float s, float t )
+    {
+        super( readOnly, new float[] { s, t } );
+    }
+    
+    /**
+     * Creates a new TexCoord2f instance.
+     * 
+     * @param readOnly
+     * @param values the values array (must be at least size 2)
+     */
+    public TexCoord2f( boolean readOnly, float[] values )
+    {
+        this( readOnly, values[ 0 ], values[ 1 ] );
+    }
+    
+    /**
+     * Creates a new TexCoord2f instance.
+     * 
+     * @param readOnly
+     * @param texCoord the TexCoordf to copy the values from
+     */
+    public TexCoord2f( boolean readOnly, TexCoordf texCoord )
+    {
+        super( readOnly, newArray( texCoord.values, 2 ) );
+    }
+    
+    /**
+     * Creates a new TexCoord2f instance.
+     * 
+     * @param readOnly
+     * @param vec the TexCoord2f to copy the values from
+     */
+    public TexCoord2f( boolean readOnly )
+    {
+        this( readOnly, 0f, 0f );
+    }
+    
+    /**
+     * Creates a new TexCoord2f instance.
+     * 
      * @param s the S element to use
      * @param t the T element to use
      */
     public TexCoord2f( float s, float t )
     {
-        super( new float[] { s, t } );
+        this( false, s, t );
     }
     
     /**
@@ -254,7 +329,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      */
     public TexCoord2f( float[] values )
     {
-        this( values[ 0 ], values[ 1 ] );
+        this( false, values );
     }
     
     /**
@@ -264,7 +339,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      */
     public TexCoord2f( TexCoordf texCoord )
     {
-        super( newArray( texCoord.values, 2 ) );
+        this( false, texCoord );
     }
     
     /**
@@ -274,7 +349,7 @@ public class TexCoord2f extends TexCoordf implements Serializable
      */
     public TexCoord2f()
     {
-        this( 0f, 0f );
+        this( false );
     }
     
     /**

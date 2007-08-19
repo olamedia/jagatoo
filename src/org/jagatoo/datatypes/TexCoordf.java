@@ -13,11 +13,45 @@ public abstract class TexCoordf
     protected final int N;
     protected final float[] values;
     
+    protected final int roTrick;
+    protected boolean isDirty = false;
+    
+    
+    /**
+     * @return Is this tuple a read-only one?
+     */
+    public final boolean isReadOnly()
+    {
+        return( roTrick != 0 );
+    }
+    
+    /**
+     * Marks this tuple non-dirty.
+     * Any value-manipulation will mark it dirty again.
+     * 
+     * @return the old value
+     */
+    public final boolean setClean()
+    {
+        final boolean oldValue = this.isDirty;
+        
+        this.isDirty = false;
+        
+        return( oldValue );
+    }
+    
+    /**
+     * @return This tuple's dirty-flag
+     */
+    public final boolean isDirty()
+    {
+        return( isDirty );
+    }
     
     /**
      * @return this Vector's size().
      */
-    public int getSize()
+    public final int getSize()
     {
         return( N );
     }
@@ -27,9 +61,11 @@ public abstract class TexCoordf
      * 
      * @param values the values array (must be at least size 1)
      */
-    public void set( float[] values )
+    public final void set( float[] values )
     {
-        System.arraycopy( values, 0, this.values, 0, N );
+        System.arraycopy( values, 0, this.values, roTrick + 0, N );
+        
+        this.isDirty = true;
     }
     
     /**
@@ -37,9 +73,11 @@ public abstract class TexCoordf
      * 
      * @param texCoord the texCoord to be copied
      */
-    public void set( TexCoordf texCoord )
+    public final void set( TexCoordf texCoord )
     {
-        System.arraycopy( texCoord.values, 0, this.values, 0, N );
+        System.arraycopy( texCoord.values, 0, this.values, roTrick + 0, N );
+        
+        this.isDirty = true;
     }
     
     /**
@@ -47,9 +85,11 @@ public abstract class TexCoordf
      * 
      * @param buffer the buffer array to write the values to
      */
-    public void get( float[] buffer )
+    public final void get( float[] buffer )
     {
         System.arraycopy( this.values, 0, buffer, 0, N );
+        
+        this.isDirty = true;
     }
     
     /**
@@ -57,21 +97,25 @@ public abstract class TexCoordf
      * 
      * @param buffer the buffer vector to write the values to
      */
-    public void get( TexCoordf buffer )
+    public final void get( TexCoordf buffer )
     {
         System.arraycopy( this.values, 0, buffer.values, 0, Math.min( this.N, buffer.N ) );
+        
+        this.isDirty = true;
     }
     
     /**
      * Sets all components to zero.
      *
      */
-    public void setZero()
+    public final void setZero()
     {
         for ( int i = 0; i < N; i++ )
         {
-            this.values[ i ] = 0f;
+            this.values[ roTrick + i ] = 0f;
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -80,12 +124,14 @@ public abstract class TexCoordf
      * @param texCoord1 the first texCoord
      * @param texCoord2 the second texCoord
      */
-    public void add( TexCoordf texCoord1, TexCoordf texCoord2 )
+    public final void add( TexCoordf texCoord1, TexCoordf texCoord2 )
     {
         for ( int i = 0; i < N; i++ )
         {
-            this.values[ i ] = texCoord1.values[ i ] + texCoord2.values[ i ];
+            this.values[ roTrick + i ] = texCoord1.values[ i ] + texCoord2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -93,12 +139,14 @@ public abstract class TexCoordf
      * 
      * @param texCoord2 the other tuple
      */
-    public void add( TexCoordf texCoord2 )
+    public final void add( TexCoordf texCoord2 )
     {
         for ( int i = 0; i < N; i++ )
         {
-            this.values[ i ] += texCoord2.values[ i ];
+            this.values[ roTrick + i ] += texCoord2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -108,12 +156,14 @@ public abstract class TexCoordf
      * @param texCoord1 the first texCoord
      * @param texCoord2 the second texCoord
      */
-    public void sub( TexCoordf texCoord1, TexCoordf texCoord2 )
+    public final void sub( TexCoordf texCoord1, TexCoordf texCoord2 )
     {
         for ( int i = 0; i < N; i++ )
         {
-            this.values[ i ] = texCoord1.values[ i ] - texCoord2.values[ i ];
+            this.values[ roTrick + i ] = texCoord1.values[ i ] - texCoord2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -123,12 +173,14 @@ public abstract class TexCoordf
      * @param texCoord2 the other texCoord
      * 
      */
-    public void sub( TexCoordf texCoord2 )
+    public final void sub( TexCoordf texCoord2 )
     {
         for ( int i = 0; i < N; i++ )
         {
-            this.values[ i ] -= texCoord2.values[ i ];
+            this.values[ roTrick + i ] -= texCoord2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -139,12 +191,14 @@ public abstract class TexCoordf
      * @param texCoord1 the tuple to be multipled
      * @param texCoord2 the tuple to be added
      */
-    public void scaleAdd( float factor, TexCoordf texCoord1, TexCoordf texCoord2 )
+    public final void scaleAdd( float factor, TexCoordf texCoord1, TexCoordf texCoord2 )
     {
         for ( int i = 0; i < N; i++ )
         {
-            this.values[ i ] = factor * texCoord1.values[ i ] + texCoord2.values[ i ];
+            this.values[ roTrick + i ] = factor * texCoord1.values[ i ] + texCoord2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -154,12 +208,14 @@ public abstract class TexCoordf
      * @param factor the scalar value
      * @param texCoord2 the tuple to be added
      */
-    public void scaleAdd( float factor, TexCoordf texCoord2 )
+    public final void scaleAdd( float factor, TexCoordf texCoord2 )
     {
         for ( int i = 0; i < N; i++ )
         {
-            this.values[ i ] = factor * this.values[ i ] + texCoord2.values[ i ];
+            this.values[ roTrick + i ] = factor * this.values[ i ] + texCoord2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -167,13 +223,15 @@ public abstract class TexCoordf
      * 
      * @param min the lowest value in this tuple after clamping
      */
-    public void clampMin( float min )
+    public final void clampMin( float min )
     {
         for ( int i = 0; i < N; i++ )
         {
             if (this.values[ i ] < min )
-                this.values[ i ] = min;
+                this.values[ roTrick + i ] = min;
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -181,13 +239,15 @@ public abstract class TexCoordf
      * 
      * @param max the highest value in the tuple after clamping
      */
-    public void clampMax( float max )
+    public final void clampMax( float max )
     {
         for ( int i = 0; i < N; i++ )
         {
             if (this.values[ i ] > max )
-                this.values[ i ] = max;
+                this.values[ roTrick + i ] = max;
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -196,7 +256,7 @@ public abstract class TexCoordf
      * @param min the lowest value in this tuple after clamping
      * @param max the highest value in this tuple after clamping
      */
-    public void clamp( float min, float max )
+    public final void clamp( float min, float max )
     {
         clampMin( min );
         clampMax( max );
@@ -210,7 +270,7 @@ public abstract class TexCoordf
      * @param max the highest value in the tuple after clamping
      * @param vec the source tuple, which will not be modified
      */
-    public void clamp( float min, float max, TexCoordf vec )
+    public final void clamp( float min, float max, TexCoordf vec )
     {
         set( vec );
         
@@ -224,7 +284,7 @@ public abstract class TexCoordf
      * @param min the lowest value in the tuple after clamping
      * @parm that the source tuple, which will not be modified
      */
-    public void clampMin( float min, TexCoordf vec )
+    public final void clampMin( float min, TexCoordf vec )
     {
         set( vec );
         clampMin( min );
@@ -237,7 +297,7 @@ public abstract class TexCoordf
      * @param max the highest value in the tuple after clamping
      * @param vec the source tuple, which will not be modified
      */
-    public void clampMax( float max, TexCoordf vec )
+    public final void clampMax( float max, TexCoordf vec )
     {
         set( vec );
         clampMax( max );
@@ -250,14 +310,16 @@ public abstract class TexCoordf
      * @param t2 the first tuple
      * @param alpha the alpha interpolation parameter
      */
-    public void interpolate( TexCoordf texCoord2, float alpha )
+    public final void interpolate( TexCoordf texCoord2, float alpha )
     {
         final float beta = 1.0f - alpha;
         
         for ( int i = 0; i < N; i++ )
         {
-            this.values[ i ] = beta * this.values[ i ] + alpha * texCoord2.values[ i ];
+            this.values[ roTrick + i ] = beta * this.values[ i ] + alpha * texCoord2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -268,14 +330,16 @@ public abstract class TexCoordf
      * @param texCoord2 the second tuple
      * @param alpha the interpolation parameter
      */
-    public void interpolate( TexCoordf texCoord1, TexCoordf texCoord2, float alpha )
+    public final void interpolate( TexCoordf texCoord1, TexCoordf texCoord2, float alpha )
     {
         final float beta = 1.0f - alpha;
         
         for ( int i = 0; i < N; i++ )
         {
-            this.values[ i ] = beta * texCoord1.values[ i ] + alpha * texCoord2.values[ i ];
+            this.values[ roTrick + i ] = beta * texCoord1.values[ i ] + alpha * texCoord2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     private static int floatToIntBits( final float f )
@@ -400,11 +464,23 @@ public abstract class TexCoordf
      * 
      * @param values the values array (must be at least size 1)
      */
-    public TexCoordf( float[] values )
+    public TexCoordf( boolean readOnly, float[] values )
     {
         super();
         
         this.values = values;
         this.N = values.length;
+        
+        this.roTrick = readOnly ? -Integer.MAX_VALUE + values.length : 0;
+    }
+    
+    /**
+     * Creates a new TexCoord1f instance.
+     * 
+     * @param values the values array (must be at least size 1)
+     */
+    public TexCoordf( float[] values )
+    {
+        this( false, values );
     }
 }

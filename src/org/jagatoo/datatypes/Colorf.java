@@ -3,7 +3,6 @@ package org.jagatoo.datatypes;
 import java.io.Serializable;
 
 import org.jagatoo.datatypes.pools.ColorPool;
-import org.jagatoo.datatypes.readonly.ROColorf;
 
 /**
  * A simple float-based color implementation with or without alpha channel.
@@ -22,6 +21,40 @@ public class Colorf implements Serializable
     protected final float[] values;
     protected boolean hasAlpha;
     
+    protected final int roTrick;
+    protected boolean isDirty = false;
+    
+    
+    /**
+     * @return Is this tuple a read-only one?
+     */
+    public final boolean isReadOnly()
+    {
+        return( roTrick != 0 );
+    }
+    
+    /**
+     * Marks this tuple non-dirty.
+     * Any value-manipulation will mark it dirty again.
+     * 
+     * @return the old value
+     */
+    public final boolean setClean()
+    {
+        final boolean oldValue = this.isDirty;
+        
+        this.isDirty = false;
+        
+        return( oldValue );
+    }
+    
+    /**
+     * @return This tuple's dirty-flag
+     */
+    public final boolean isDirty()
+    {
+        return( isDirty );
+    }
     
     /**
      * Creates a gray of the given intensity.<br>
@@ -39,117 +72,117 @@ public class Colorf implements Serializable
     /**
      * The color white. In the default sRGB space.
      */
-    public static final ROColorf WHITE = new ROColorf( java.awt.Color.WHITE );
+    public static final Colorf WHITE = new Colorf( true, java.awt.Color.WHITE );
     
     /**
      * The color light gray. In the default sRGB space.
      */
-    public static final ROColorf LIGHT_GRAY = new ROColorf( java.awt.Color.GRAY );
+    public static final Colorf LIGHT_GRAY = new Colorf( true, java.awt.Color.GRAY );
     
     /**
      * A 10% gray. In the default sRGB space.
      */
-    public static final ROColorf GRAY10 = new ROColorf( 0.9f );
+    public static final Colorf GRAY10 = new Colorf( true, 0.9f );
     
     /**
      * A 20% gray. In the default sRGB space.
      */
-    public static final ROColorf GRAY20 = new ROColorf( 0.8f );
+    public static final Colorf GRAY20 = new Colorf( true, 0.8f );
     
     /**
      * A 30% gray. In the default sRGB space.
      */
-    public static final ROColorf GRAY30 = new ROColorf( 0.7f );
+    public static final Colorf GRAY30 = new Colorf( true, 0.7f );
     
     /**
      * A 40% gray. In the default sRGB space.
      */
-    public static final ROColorf GRAY40 = new ROColorf( 0.6f );
+    public static final Colorf GRAY40 = new Colorf( true, 0.6f );
     
     /**
      * A 50% gray. In the default sRGB space.
      */
-    public static final ROColorf GRAY50 = new ROColorf( 0.5f );
+    public static final Colorf GRAY50 = new Colorf( true, 0.5f );
     
     /**
      * A 60% gray. In the default sRGB space.
      */
-    public static final ROColorf GRAY60 = new ROColorf( 0.4f );
+    public static final Colorf GRAY60 = new Colorf( true, 0.4f );
     
     /**
      * A 70% gray. In the default sRGB space.
      */
-    public static final ROColorf GRAY70 = new ROColorf( 0.3f );
+    public static final Colorf GRAY70 = new Colorf( true, 0.3f );
     
     /**
      * A 80% gray. In the default sRGB space.
      */
-    public static final ROColorf GRAY80 = new ROColorf( 0.2f );
+    public static final Colorf GRAY80 = new Colorf( true, 0.2f );
     
     /**
      * A 90% gray. In the default sRGB space.
      */
-    public static final ROColorf GRAY90 = new ROColorf( 0.1f );
+    public static final Colorf GRAY90 = new Colorf( true, 0.1f );
     
     /**
      * The color gray. In the default sRGB space.
      */
-    public static final ROColorf GRAY = new ROColorf( java.awt.Color.GRAY );
+    public static final Colorf GRAY = new Colorf( true, java.awt.Color.GRAY );
     
     /**
      * The color dark gray. In the default sRGB space.
      */
-    public static final ROColorf DARK_GRAY = new ROColorf( java.awt.Color.DARK_GRAY );
+    public static final Colorf DARK_GRAY = new Colorf( true, java.awt.Color.DARK_GRAY );
     
     /**
      * The color black. In the default sRGB space.
      */
-    public static final ROColorf BLACK = new ROColorf( java.awt.Color.BLACK );
+    public static final Colorf BLACK = new Colorf( true, java.awt.Color.BLACK );
     
     /**
      * The color red. In the default sRGB space.
      */
-    public static final ROColorf RED = new ROColorf( java.awt.Color.RED );
+    public static final Colorf RED = new Colorf( true, java.awt.Color.RED );
     
     /**
      * The color pink. In the default sRGB space.
      */
-    public static final ROColorf PINK = new ROColorf( java.awt.Color.PINK );
+    public static final Colorf PINK = new Colorf( true, java.awt.Color.PINK );
     
     /**
      * The color orange. In the default sRGB space.
      */
-    public static final ROColorf ORANGE = new ROColorf( java.awt.Color.ORANGE );
+    public static final Colorf ORANGE = new Colorf( true, java.awt.Color.ORANGE );
     
     /**
      * The color yellow. In the default sRGB space.
      */
-    public static final ROColorf YELLOW = new ROColorf( java.awt.Color.YELLOW );
+    public static final Colorf YELLOW = new Colorf( true, java.awt.Color.YELLOW );
     
     /**
      * The color green. In the default sRGB space.
      */
-    public static final ROColorf GREEN = new ROColorf( java.awt.Color.GREEN );
+    public static final Colorf GREEN = new Colorf( true, java.awt.Color.GREEN );
     
     /**
      * The color magenta. In the default sRGB space.
      */
-    public static final ROColorf MAGENTA = new ROColorf( java.awt.Color.MAGENTA );
+    public static final Colorf MAGENTA = new Colorf( true, java.awt.Color.MAGENTA );
     
     /**
      * The color cyan. In the default sRGB space.
      */
-    public static final ROColorf CYAN = new ROColorf( java.awt.Color.CYAN );
+    public static final Colorf CYAN = new Colorf( true, java.awt.Color.CYAN );
     
     /**
      * The color blue. In the default sRGB space.
      */
-    public static final ROColorf BLUE = new ROColorf( java.awt.Color.BLUE );
+    public static final Colorf BLUE = new Colorf( true, java.awt.Color.BLUE );
     
     /**
      * @return this Vector's size().
      */
-    public int getSize()
+    public final int getSize()
     {
         return( N );
     }
@@ -157,7 +190,7 @@ public class Colorf implements Serializable
     /**
      * @return if this Colorf has an alpha channel.
      */
-    public boolean hasAlpha()
+    public final boolean hasAlpha()
     {
         return( hasAlpha );
     }
@@ -167,7 +200,7 @@ public class Colorf implements Serializable
      * 
      * @param color awt color
      */
-    public void set( java.awt.Color color )
+    public final void set( java.awt.Color color )
     {
         setRed( ((float)color.getRed()) / 255.0f );
         setGreen( ((float)color.getGreen()) / 255.0f );
@@ -176,6 +209,8 @@ public class Colorf implements Serializable
         hasAlpha = ( color.getAlpha() > 0 );
         if ( hasAlpha )
             setAlpha( ((float)color.getAlpha()) / 255.0f );
+        
+        this.isDirty = true;
     }
     
     /**
@@ -183,18 +218,20 @@ public class Colorf implements Serializable
      * 
      * @param values the values array (must be at least size 4)
      */
-    public void set( float[] values )
+    public final void set( float[] values )
     {
         if ( values.length > 3 )
         {
-            System.arraycopy( values, 0, this.values, 0, N );
+            System.arraycopy( values, 0, this.values, roTrick + 0, N );
             hasAlpha = ( values[ 3 ] > 0.0f );
         }
         else
         {
-            System.arraycopy( values, 0, this.values, 0, 3 );
+            System.arraycopy( values, 0, this.values, roTrick + 0, 3 );
             hasAlpha = false;
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -202,10 +239,12 @@ public class Colorf implements Serializable
      * 
      * @param color the tuple to be copied
      */
-    public void set( Colorf color )
+    public final void set( Colorf color )
     {
-        System.arraycopy( color.values, 0, this.values, 0, N );
+        System.arraycopy( color.values, 0, this.values, roTrick + 0, N );
         hasAlpha = color.hasAlpha;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -216,7 +255,7 @@ public class Colorf implements Serializable
      * @param b the blue element to use
      * @param a the alpha element to use
      */
-    public void set( float r, float g, float b, float a )
+    public final void set( float r, float g, float b, float a )
     {
         setRed( r );
         setGreen( g );
@@ -224,6 +263,8 @@ public class Colorf implements Serializable
         setAlpha( a );
         
         this.hasAlpha = ( a >= 0.0f );
+        
+        this.isDirty = true;
     }
     
     /**
@@ -233,13 +274,15 @@ public class Colorf implements Serializable
      * @param g the green element to use
      * @param b the blue element to use
      */
-    public void set( float r, float g, float b )
+    public final void set( float r, float g, float b )
     {
         setRed( r );
         setGreen( g );
         setBlue( b );
         
         this.hasAlpha = false;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -247,7 +290,7 @@ public class Colorf implements Serializable
      * 
      * @return AWT color
      */
-    public java.awt.Color get()
+    public final java.awt.Color getAWTColor()
     {
         if ( hasAlpha() )
             return( new java.awt.Color( getRed(), getGreen(), getBlue(), getAlpha() ) );
@@ -260,7 +303,7 @@ public class Colorf implements Serializable
      * 
      * @param buffer the buffer array to write the values to
      */
-    public void get( float[] buffer )
+    public final void get( float[] buffer )
     {
         final int n = hasAlpha() ? 4 : 3;
         System.arraycopy( this.values, 0, buffer, 0, n );
@@ -271,7 +314,7 @@ public class Colorf implements Serializable
      * 
      * @param buffer the buffer vector to write the values to
      */
-    public void get( Colorf buffer )
+    public final void get( Colorf buffer )
     {
         System.arraycopy( this.values, 0, buffer.values, 0, N );
         buffer.hasAlpha = this.hasAlpha;
@@ -280,15 +323,17 @@ public class Colorf implements Serializable
     /**
      * Sets the Red color component.
      */
-    public void setRed( float red )
+    public final void setRed( float red )
     {
-        this.values[ 0 ] = red;
+        this.values[ roTrick + 0 ] = red;
+        
+        this.isDirty = true;
     }
     
     /**
      * @return the Red color component.
      */
-    public float getRed()
+    public final float getRed()
     {
         return( values[ 0 ] );
     }
@@ -296,15 +341,17 @@ public class Colorf implements Serializable
     /**
      * Sets the Green color component.
      */
-    public void setGreen( float green )
+    public final void setGreen( float green )
     {
-        this.values[ 1 ] = green;
+        this.values[ roTrick + 1 ] = green;
+        
+        this.isDirty = true;
     }
     
     /**
      * @return the Green color component.
      */
-    public float getGreen()
+    public final float getGreen()
     {
         return( values[ 1 ] );
     }
@@ -312,15 +359,17 @@ public class Colorf implements Serializable
     /**
      * Sets the Blue color component.
      */
-    public void setBlue( float blue )
+    public final void setBlue( float blue )
     {
-        this.values[ 2 ] = blue;
+        this.values[ roTrick + 2 ] = blue;
+        
+        this.isDirty = true;
     }
     
     /**
      * @return the Blue color component.
      */
-    public float getBlue()
+    public final float getBlue()
     {
         return( values[ 2 ] );
     }
@@ -330,11 +379,13 @@ public class Colorf implements Serializable
      * 
      * @param alpha
      */
-    public void setAlpha( float alpha )
+    public final void setAlpha( float alpha )
     {
-        this.values[ 3 ] = alpha;
+        this.values[ roTrick + 3 ] = alpha;
         
         this.hasAlpha = ( alpha >= 0.0f );
+        
+        this.isDirty = true;
     }
     
     /**
@@ -342,7 +393,7 @@ public class Colorf implements Serializable
      * 
      * @see #getTransparency()
      */
-    public float getAlpha()
+    public final float getAlpha()
     {
         if ( hasAlpha() )
             return( values[ 3 ] );
@@ -354,15 +405,17 @@ public class Colorf implements Serializable
      * Sets all components to zero.
      *
      */
-    public void setZero()
+    public final void setZero()
     {
         for ( int i = 0; i < 3; i++ )
         {
-            this.values[ i ] = 0f;
+            this.values[ roTrick + i ] = 0f;
         }
         
         if ( hasAlpha() )
-            this.values[ 3 ] = 0.0f;
+            this.values[ roTrick + 3 ] = 0.0f;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -370,9 +423,11 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void addRed( float v )
+    public final void addRed( float v )
     {
-        this.values[ 0 ] += v;
+        this.values[ roTrick + 0 ] += v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -380,9 +435,11 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void addGreen( float v )
+    public final void addGreen( float v )
     {
-        this.values[ 1 ] += v;
+        this.values[ roTrick + 1 ] += v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -390,9 +447,11 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void addBlue( float v )
+    public final void addBlue( float v )
     {
-        this.values[ 2 ] += v;
+        this.values[ roTrick + 2 ] += v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -400,12 +459,14 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void addAlpha( float v )
+    public final void addAlpha( float v )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
         
-        this.values[ 3 ] += v;
+        this.values[ roTrick + 3 ] += v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -413,9 +474,11 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void subRed( float v )
+    public final void subRed( float v )
     {
-        this.values[ 0 ] -= v;
+        this.values[ roTrick + 0 ] -= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -423,9 +486,11 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void subGreen( float v )
+    public final void subGreen( float v )
     {
-        this.values[ 1 ] -= v;
+        this.values[ roTrick + 1 ] -= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -433,9 +498,11 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void subBlue( float v )
+    public final void subBlue( float v )
     {
-        this.values[ 2 ] -= v;
+        this.values[ roTrick + 2 ] -= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -443,12 +510,14 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void subAlpha( float v )
+    public final void subAlpha( float v )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
         
-        this.values[ 3 ] -= v;
+        this.values[ roTrick + 3 ] -= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -456,9 +525,11 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void mulRed( float v )
+    public final void mulRed( float v )
     {
-        this.values[ 0 ] *= v;
+        this.values[ roTrick + 0 ] *= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -466,9 +537,11 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void mulGreen( float v )
+    public final void mulGreen( float v )
     {
-        this.values[ 1 ] *= v;
+        this.values[ roTrick + 1 ] *= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -476,9 +549,11 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void mulBlue( float v )
+    public final void mulBlue( float v )
     {
-        this.values[ 2 ] *= v;
+        this.values[ roTrick + 2 ] *= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -486,12 +561,14 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void mulAlpha( float v )
+    public final void mulAlpha( float v )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
         
-        this.values[ 3 ] *= v;
+        this.values[ roTrick + 3 ] *= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -502,15 +579,17 @@ public class Colorf implements Serializable
      * @param vb
      * @param va
      */
-    public void mul( float vr, float vg, float vb, float va )
+    public final void mul( float vr, float vg, float vb, float va )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
         
-        this.values[ 0 ] *= vr;
-        this.values[ 1 ] *= vg;
-        this.values[ 2 ] *= vb;
-        this.values[ 3 ] *= va;
+        this.values[ roTrick + 0 ] *= vr;
+        this.values[ roTrick + 1 ] *= vg;
+        this.values[ roTrick + 2 ] *= vb;
+        this.values[ roTrick + 3 ] *= va;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -520,11 +599,13 @@ public class Colorf implements Serializable
      * @param vg
      * @param vb
      */
-    public void mul( float vr, float vg, float vb )
+    public final void mul( float vr, float vg, float vb )
     {
-        this.values[ 0 ] *= vr;
-        this.values[ 1 ] *= vg;
-        this.values[ 2 ] *= vb;
+        this.values[ roTrick + 0 ] *= vr;
+        this.values[ roTrick + 1 ] *= vg;
+        this.values[ roTrick + 2 ] *= vb;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -532,14 +613,16 @@ public class Colorf implements Serializable
      * 
      * @param factor the scalar value
      */
-    public void mul( float factor )
+    public final void mul( float factor )
     {
         final int n = hasAlpha() ? 4 : 3;
         
         for ( int i = 0; i < n; i++ )
         {
-            this.values[ i ] *= factor;
+            this.values[ roTrick + i ] *= factor;
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -547,9 +630,11 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void divRed( float v )
+    public final void divRed( float v )
     {
-        this.values[ 0 ] /= v;
+        this.values[ roTrick + 0 ] /= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -557,9 +642,11 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void divGreen( float v )
+    public final void divGreen( float v )
     {
-        this.values[ 1 ] /= v;
+        this.values[ roTrick + 1 ] /= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -567,9 +654,11 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void divBlue( float v )
+    public final void divBlue( float v )
     {
-        this.values[ 2 ] /= v;
+        this.values[ roTrick + 2 ] /= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -577,12 +666,14 @@ public class Colorf implements Serializable
      * 
      * @param v
      */
-    public void divAlpha( float v )
+    public final void divAlpha( float v )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
         
-        this.values[ 3 ] /= v;
+        this.values[ roTrick + 3 ] /= v;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -593,15 +684,17 @@ public class Colorf implements Serializable
      * @param vb
      * @param va
      */
-    public void div( float vr, float vg, float vb, float va )
+    public final void div( float vr, float vg, float vb, float va )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
         
-        this.values[ 0 ] /= vr;
-        this.values[ 1 ] /= vg;
-        this.values[ 2 ] /= vb;
-        this.values[ 3 ] /= va;
+        this.values[ roTrick + 0 ] /= vr;
+        this.values[ roTrick + 1 ] /= vg;
+        this.values[ roTrick + 2 ] /= vb;
+        this.values[ roTrick + 3 ] /= va;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -611,11 +704,13 @@ public class Colorf implements Serializable
      * @param vg
      * @param vb
      */
-    public void div( float vr, float vg, float vb )
+    public final void div( float vr, float vg, float vb )
     {
-        this.values[ 0 ] /= vr;
-        this.values[ 1 ] /= vg;
-        this.values[ 2 ] /= vb;
+        this.values[ roTrick + 0 ] /= vr;
+        this.values[ roTrick + 1 ] /= vg;
+        this.values[ roTrick + 2 ] /= vb;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -624,14 +719,16 @@ public class Colorf implements Serializable
      * @param color1 the first color
      * @param color2 the second color
      */
-    public void add( Colorf color1, Colorf color2 )
+    public final void add( Colorf color1, Colorf color2 )
     {
         final int n = hasAlpha() ? 4 : 3;
         
         for ( int i = 0; i < n; i++ )
         {
-            this.values[ i ] = color1.values[ i ] + color2.values[ i ];
+            this.values[ roTrick + i ] = color1.values[ i ] + color2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -639,14 +736,16 @@ public class Colorf implements Serializable
      * 
      * @param color2 the other tuple
      */
-    public void add( Colorf color2 )
+    public final void add( Colorf color2 )
     {
         final int n = hasAlpha() ? 4 : 3;
         
         for ( int i = 0; i < n; i++ )
         {
-            this.values[ i ] += color2.values[ i ];
+            this.values[ roTrick + i ] += color2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -657,15 +756,17 @@ public class Colorf implements Serializable
      * @param b
      * @param a
      */
-    public void add( float r, float g, float b, float a )
+    public final void add( float r, float g, float b, float a )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
         
-        this.values[ 0 ] += r;
-        this.values[ 1 ] += g;
-        this.values[ 2 ] += b;
-        this.values[ 3 ] += a;
+        this.values[ roTrick + 0 ] += r;
+        this.values[ roTrick + 1 ] += g;
+        this.values[ roTrick + 2 ] += b;
+        this.values[ roTrick + 3 ] += a;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -675,11 +776,13 @@ public class Colorf implements Serializable
      * @param g
      * @param b
      */
-    public void add( float r, float g, float b )
+    public final void add( float r, float g, float b )
     {
-        this.values[ 0 ] += r;
-        this.values[ 1 ] += g;
-        this.values[ 2 ] += b;
+        this.values[ roTrick + 0 ] += r;
+        this.values[ roTrick + 1 ] += g;
+        this.values[ roTrick + 2 ] += b;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -689,14 +792,16 @@ public class Colorf implements Serializable
      * @param color1 the first color
      * @param color2 the second color
      */
-    public void sub( Colorf color1, Colorf color2 )
+    public final void sub( Colorf color1, Colorf color2 )
     {
         final int n = hasAlpha() ? 4 : 3;
         
         for ( int i = 0; i < n; i++ )
         {
-            this.values[ i ] = color1.values[ i ] - color2.values[ i ];
+            this.values[ roTrick + i ] = color1.values[ i ] - color2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -706,14 +811,16 @@ public class Colorf implements Serializable
      * @param color2 the other color
      * 
      */
-    public void sub( Colorf color2 )
+    public final void sub( Colorf color2 )
     {
         final int n = hasAlpha() ? 4 : 3;
         
         for ( int i = 0; i < n; i++ )
         {
-            this.values[ i ] -= color2.values[ i ];
+            this.values[ roTrick + i ] -= color2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -724,15 +831,17 @@ public class Colorf implements Serializable
      * @param b
      * @param a
      */
-    public void sub( float r, float g, float b, float a )
+    public final void sub( float r, float g, float b, float a )
     {
         if ( !hasAlpha() )
             throw( new UnsupportedOperationException( "no alpha channel" ) );
         
-        this.values[ 0 ] -= r;
-        this.values[ 1 ] -= g;
-        this.values[ 2 ] -= b;
-        this.values[ 3 ] -= a;
+        this.values[ roTrick + 0 ] -= r;
+        this.values[ roTrick + 1 ] -= g;
+        this.values[ roTrick + 2 ] -= b;
+        this.values[ roTrick + 3 ] -= a;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -742,11 +851,13 @@ public class Colorf implements Serializable
      * @param g
      * @param b
      */
-    public void sub( float r, float g, float b )
+    public final void sub( float r, float g, float b )
     {
-        this.values[ 0 ] -= r;
-        this.values[ 1 ] -= g;
-        this.values[ 2 ] -= b;
+        this.values[ roTrick + 0 ] -= r;
+        this.values[ roTrick + 1 ] -= g;
+        this.values[ roTrick + 2 ] -= b;
+        
+        this.isDirty = true;
     }
     
     /**
@@ -754,15 +865,17 @@ public class Colorf implements Serializable
      * 
      * @param min the lowest value in this tuple after clamping
      */
-    public void clampMin( float min )
+    public final void clampMin( float min )
     {
         final int n = hasAlpha() ? 4 : 3;
         
         for ( int i = 0; i < n; i++ )
         {
             if (this.values[ i ] < min )
-                this.values[ i ] = min;
+                this.values[ roTrick + i ] = min;
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -770,15 +883,17 @@ public class Colorf implements Serializable
      * 
      * @param max the highest value in the tuple after clamping
      */
-    public void clampMax( float max )
+    public final void clampMax( float max )
     {
         final int n = hasAlpha() ? 4 : 3;
         
         for ( int i = 0; i < n; i++ )
         {
             if (this.values[ i ] > max )
-                this.values[ i ] = max;
+                this.values[ roTrick + i ] = max;
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -787,10 +902,12 @@ public class Colorf implements Serializable
      * @param min the lowest value in this tuple after clamping
      * @param max the highest value in this tuple after clamping
      */
-    public void clamp( float min, float max )
+    public final void clamp( float min, float max )
     {
         clampMin( min );
         clampMax( max );
+        
+        this.isDirty = true;
     }
     
     /**
@@ -801,11 +918,13 @@ public class Colorf implements Serializable
      * @param max the highest value in the tuple after clamping
      * @param vec the source tuple, which will not be modified
      */
-    public void clamp( float min, float max, Colorf vec )
+    public final void clamp( float min, float max, Colorf vec )
     {
         set( vec );
         
         clamp( min, max );
+        
+        this.isDirty = true;
     }
     
     /**
@@ -815,10 +934,12 @@ public class Colorf implements Serializable
      * @param min the lowest value in the tuple after clamping
      * @parm that the source tuple, which will not be modified
      */
-    public void clampMin( float min, Colorf vec )
+    public final void clampMin( float min, Colorf vec )
     {
         set( vec );
         clampMin( min );
+        
+        this.isDirty = true;
     }
     
     /**
@@ -828,10 +949,12 @@ public class Colorf implements Serializable
      * @param max the highest value in the tuple after clamping
      * @param vec the source tuple, which will not be modified
      */
-    public void clampMax( float max, Colorf vec )
+    public final void clampMax( float max, Colorf vec )
     {
         set( vec );
         clampMax( max );
+        
+        this.isDirty = true;
     }
     
     /**
@@ -841,7 +964,7 @@ public class Colorf implements Serializable
      * @param t2 the first tuple
      * @param val the alpha interpolation parameter
      */
-    public void interpolate( Colorf color2, float val )
+    public final void interpolate( Colorf color2, float val )
     {
         final float beta = 1.0f - val;
         
@@ -849,8 +972,10 @@ public class Colorf implements Serializable
         
         for ( int i = 0; i < n; i++ )
         {
-            this.values[ i ] = beta * this.values[ i ] + val * color2.values[ i ];
+            this.values[ roTrick + i ] = beta * this.values[ i ] + val * color2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     /**
@@ -861,7 +986,7 @@ public class Colorf implements Serializable
      * @param color2 the second tuple
      * @param val the interpolation parameter
      */
-    public void interpolate( Colorf color1, Colorf color2, float val )
+    public final void interpolate( Colorf color1, Colorf color2, float val )
     {
         final float beta = 1.0f - val;
         
@@ -869,8 +994,10 @@ public class Colorf implements Serializable
         
         for ( int i = 0; i < n; i++ )
         {
-            this.values[ i ] = beta * color1.values[ i ] + val * color2.values[ i ];
+            this.values[ roTrick + i ] = beta * color1.values[ i ] + val * color2.values[ i ];
         }
+        
+        this.isDirty = true;
     }
     
     private static int floatToIntBits( final float f )
@@ -1003,10 +1130,96 @@ public class Colorf implements Serializable
      * @param b the blue element to use
      * @param a the aalpha channel to use
      */
-    public Colorf( float r, float g, float b, float a )
+    public Colorf( boolean readOnly, float r, float g, float b, float a )
     {
         this.values = new float[] { r, g, b, a };
         this.hasAlpha = ( a >= 0.0f );
+        
+        this.roTrick = readOnly ? -Integer.MAX_VALUE + values.length : 0;
+    }
+    
+    /**
+     * Creates a new Colorf instance.
+     * 
+     * @param r the red element to use
+     * @param g the green element to use
+     * @param b the blue element to use
+     */
+    public Colorf( boolean readOnly, float r, float g, float b )
+    {
+        this( readOnly, r, g, b, -1f );
+    }
+    
+    /**
+     * Creates a new Colorf instance.
+     * 
+     * @param intensity the gray intensity (used for all three r,g,b values
+     */
+    public Colorf( boolean readOnly, float intensity )
+    {
+        this( readOnly, intensity, intensity, intensity );
+    }
+    
+    /**
+     * Creates a new Colorf instance.
+     * 
+     * @param values the values array (must be at least size 3)
+     */
+    public Colorf( boolean readOnly, float[] values )
+    {
+        this( readOnly, values[ 0 ], values[ 1 ], values[ 2 ], ( values.length > 3 ) ? values[ 3 ] : -1f );
+    }
+    
+    /**
+     * Creates a new Colorf instance.
+     * 
+     * @param color the Colorf to copy the values from
+     */
+    public Colorf( boolean readOnly, Colorf color )
+    {
+        this( readOnly, color.values );
+        
+        this.hasAlpha = color.hasAlpha;
+    }
+    
+    /**
+     * Creates a new Colorf instance.
+     * 
+     * @param vec the Vector4f to copy the values from
+     */
+    public Colorf( boolean readOnly )
+    {
+        this( readOnly, 0f, 0f, 0f, -1f );
+    }
+    
+    public Colorf( boolean readOnly, java.awt.Color color )
+    {
+        super();
+        
+        this.values = new float[] { 0f, 0f, 0f, 0f };
+        
+        this.values[ 0 ] = ((float)color.getRed()) / 255.0f;
+        this.values[ 1 ] = ((float)color.getGreen()) / 255.0f;
+        this.values[ 2 ] = ((float)color.getBlue()) / 255.0f;
+        
+        this.hasAlpha = ( color.getAlpha() > 0 );
+        if ( hasAlpha )
+            this.values[ 3 ] = ((float)color.getAlpha()) / 255.0f;
+        
+        this.roTrick = readOnly ? -Integer.MAX_VALUE + values.length : 0;
+    }
+    
+    /**
+     * Creates a new Colorf instance.
+     * 
+     * @param r the red element to use
+     * @param g the green element to use
+     * @param b the blue element to use
+     * @param a the aalpha channel to use
+     */
+    public Colorf( float r, float g, float b, float a )
+    {
+        this( false, r, g, b, a );
     }
     
     /**
@@ -1018,7 +1231,7 @@ public class Colorf implements Serializable
      */
     public Colorf( float r, float g, float b )
     {
-        this( r, g, b, -1f );
+        this( false, r, g, b );
     }
     
     /**
@@ -1028,7 +1241,7 @@ public class Colorf implements Serializable
      */
     public Colorf( float intensity )
     {
-        this( intensity, intensity, intensity );
+        this( false, intensity );
     }
     
     /**
@@ -1038,7 +1251,7 @@ public class Colorf implements Serializable
      */
     public Colorf( float[] values )
     {
-        this( values[ 0 ], values[ 1 ], values[ 2 ], ( values.length > 3 ) ? values[ 3 ] : -1f );
+        this( false, values );
     }
     
     /**
@@ -1048,9 +1261,7 @@ public class Colorf implements Serializable
      */
     public Colorf( Colorf color )
     {
-        this( color.values );
-        
-        this.hasAlpha = color.hasAlpha;
+        this( false, color );
     }
     
     /**
@@ -1060,16 +1271,12 @@ public class Colorf implements Serializable
      */
     public Colorf()
     {
-        this( 0f, 0f, 0f, -1f );
+        this( false );
     }
     
     public Colorf( java.awt.Color color )
     {
-        super();
-        
-        this.values = new float[] { 0f, 0f, 0f, 0f };
-        
-        set( color );
+        this( false, color );
     }
     
     /**
