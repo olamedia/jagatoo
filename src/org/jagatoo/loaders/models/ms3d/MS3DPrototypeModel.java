@@ -1,16 +1,15 @@
 package org.jagatoo.loaders.models.ms3d;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
 import org.jagatoo.loaders.models.ms3d.utils.RotationUtils;
 import org.jagatoo.util.streams.LittleEndianDataInputStream;
-import org.openmali.Interpolation;
 import org.openmali.vecmath.Matrix4f;
 import org.openmali.vecmath.Point3f;
 import org.openmali.vecmath.Quat4f;
+import org.openmali.vecmath.util.Interpolation;
 
 public class MS3DPrototypeModel {
 
@@ -269,7 +268,7 @@ public class MS3DPrototypeModel {
 		for (int i = 0; i < joints.length; i++) {
 			joint = joints[ i ];
 
-			//if there is no keyframes, don´t do any transformations
+			//if there is no keyframes, donï¿½t do any transformations
 			if( !joint.hasKeyFrames() ) {
 				joint.matFinal.set( joint.matAbs );
 				continue;
