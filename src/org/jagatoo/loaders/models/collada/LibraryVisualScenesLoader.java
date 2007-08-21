@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
-import org.jagatoo.loaders.models.collada.datastructs.controllers.Controller;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.ControllerInstanceNode;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.GeometryInstanceNode;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.LibraryVisualScenes;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.MatrixTransform;
@@ -72,23 +71,21 @@ public class LibraryVisualScenesLoader {
                     // FIXME : applying YAGNI here : we don't need to know whether these nodes are grouped or separate
                     if(node.instanceGeometries != null) {
                         for (XMLInstanceGeometry instanceGeometry : node.instanceGeometries) {
-                            colNode = newCOLLADANode(colladaFile, node, transform, instanceGeometry.url, instanceGeometry.bindMaterial);
+                            colNode = newCOLLADAGeometryInstanceNode(colladaFile, node, transform, instanceGeometry.url, instanceGeometry.bindMaterial);
                         }
                     } else if(node.instanceControllers != null) {
                         for (XMLInstanceController instanceController : node.instanceControllers) {
-                            Controller controller = colladaFile.getLibraryControllers().getControllers().get(instanceController.url);
-                            controller.updateDestinationGeometry();
-                            colNode = newCOLLADANode(colladaFile, node, transform, controller.getDestinationGeometry().getGeometry().id, instanceController.bindMaterial);
+                            colNode = newCOLLADAGeometryInstanceNode(colladaFile, node, transform, instanceController.url, instanceController.bindMaterial);
                         }
                     }
 
 
                 } else if (node.type == XMLNode.Type.JOINT) {
 
+                    COLLADALoader.logger.print("TT] Alright, it's a skeleton node");
+                    
                     colLibVisualScenes.setSkeleton( SkeletonLoader.loadSkeleton(node) );
-
-                    COLLADALoader.logger
-                    .print("TT] Joint nodes unsupported in the main loader yet (but successfully read in another program)");
+                    
 
                 } else {
 
@@ -113,7 +110,7 @@ public class LibraryVisualScenesLoader {
     }
 
     /**
-     * Creates a new COLLADA node from the informations given
+     * Creates a new COLLADA node (type : geometry instance) from the informations given
      * @param colladaFile
      * @param node
      * @param transform
@@ -121,9 +118,9 @@ public class LibraryVisualScenesLoader {
      * @param bindMaterial
      * @return
      */
-    static Node newCOLLADANode(AssetFolder colladaFile, XMLNode node,
+    static GeometryInstanceNode newCOLLADAGeometryInstanceNode(AssetFolder colladaFile, XMLNode node,
             MatrixTransform transform, String geometryUrl, XMLBindMaterial bindMaterial) {
-        Node colNode;
+        GeometryInstanceNode colNode;
         String materialUrl = null;
         XMLBindMaterial.TechniqueCommon techniqueCommon = bindMaterial.techniqueCommon;
         List<XMLInstanceMaterial> instanceMaterialList = techniqueCommon.instanceMaterials;
@@ -141,6 +138,40 @@ public class LibraryVisualScenesLoader {
                 node.name,
                 transform,
                 geometryUrl,
+                materialUrl
+        );
+        return colNode;
+    }
+    
+    /**
+     * Creates a new COLLADA node (type : controller instance) from the informations given
+     * @param colladaFile
+     * @param node
+     * @param transform
+     * @param geometryUrl
+     * @param bindMaterial
+     * @return
+     */
+    static ControllerInstanceNode newCOLLADAControllerInstanceNode(AssetFolder colladaFile, XMLNode node,
+            MatrixTransform transform, String controllerUrl, XMLBindMaterial bindMaterial) {
+        ControllerInstanceNode colNode;
+        String materialUrl = null;
+        XMLBindMaterial.TechniqueCommon techniqueCommon = bindMaterial.techniqueCommon;
+        List<XMLInstanceMaterial> instanceMaterialList = techniqueCommon.instanceMaterials;
+        for (XMLInstanceMaterial instanceMaterial : instanceMaterialList) {
+            if(materialUrl == null) {
+                materialUrl = instanceMaterial.target;
+            } else {
+                COLLADALoader.logger.print("TT] Several materials for the same controller instance ! Skipping....");
+            }
+        }
+
+        colNode = new ControllerInstanceNode(
+                colladaFile,
+                node.id,
+                node.name,
+                transform,
+                controllerUrl,
                 materialUrl
         );
         return colNode;
