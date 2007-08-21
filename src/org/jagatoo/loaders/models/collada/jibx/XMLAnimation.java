@@ -1,6 +1,9 @@
 package org.jagatoo.loaders.models.collada.jibx;
 
+import java.text.CollationElementIterator;
 import java.util.ArrayList;
+
+import org.jagatoo.loaders.models.collada.exceptions.ColladaLoaderException;
 
 /**
  * A COLLADA animation.
@@ -19,5 +22,58 @@ public class XMLAnimation {
     public ArrayList<XMLSource> sources = null;
     public ArrayList<XMLSampler> samplers = null;
     public ArrayList<XMLChannel> channels = null;
+
+
+    /**
+     * Search a source with the specified id
+     * @param id
+     * @return
+     */
+    public XMLSource getSource( String id ) {
+    	for (XMLSource source : sources) {
+			if( source.id.equals( id ) ) {
+				return source;
+			}
+		}
+    	throw new ColladaLoaderException( "Could not found source with id " + id );
+    }
+
+
+    /**
+     * @return the target bone name for this animation
+     */
+	public String getTargetBone() {
+		return channels.get( 0 ).getTargetBone();
+	}
+
+	/**
+	 * @return a float array with all the times of the key frames
+	 */
+	public float[] getInput() {
+		return getSource( samplers.get( 0 ).getInput( "INPUT" ).source ).floatArray.floats;
+	}
+
+	/**
+	 * @return a float array with the values of all the key frames
+	 */
+	public float[] getOutput() {
+		return getSource( samplers.get( 0 ).getInput( "OUTPUT" ).source ).floatArray.floats;
+	}
+
+	/**
+	 * Tells if the animation contains transformation key frames or rotation key frames
+	 */
+	public boolean hasTranslationKeyFrames() {
+		return channels.get( 0 ).hasTranslationKeyFrame();
+	}
+
+
+	/**
+	 * @return the rotation axis of the animation.
+	 * It only works if the animation if for rotation
+	 */
+	public byte getRotationAxis() {
+		return channels.get( 0 ).getRotationAxis();
+	}
 
 }

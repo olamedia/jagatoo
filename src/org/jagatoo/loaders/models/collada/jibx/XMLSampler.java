@@ -2,6 +2,8 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.ArrayList;
 
+import org.jagatoo.loaders.models.collada.exceptions.ColladaLoaderException;
+
 /**
  * A COLLADA Sampler.
  *
@@ -14,5 +16,19 @@ public class XMLSampler {
     public String id = null;
 
     public ArrayList<XMLInput> inputs = null;
+
+    /**
+     * Search the input with the specified semantic
+     * @param semantic
+     * @return
+     */
+    public XMLInput getInput( String semantic ) {
+    	for (XMLInput input : inputs) {
+    		if( input.semantic.equals( semantic ) ) {
+    			return input;
+    		}
+		}
+    	throw new ColladaLoaderException( "Could not found input with semantic " + semantic );
+    }
 
 }
