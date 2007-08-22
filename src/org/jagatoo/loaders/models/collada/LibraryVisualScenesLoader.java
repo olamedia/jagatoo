@@ -75,7 +75,7 @@ public class LibraryVisualScenesLoader {
                         }
                     } else if(node.instanceControllers != null) {
                         for (XMLInstanceController instanceController : node.instanceControllers) {
-                            colNode = newCOLLADAGeometryInstanceNode(colladaFile, node, transform, instanceController.url, instanceController.bindMaterial);
+                            colNode = newCOLLADAControllerInstanceNode(colladaFile, node, transform, instanceController.url, instanceController.bindMaterial);
                         }
                     }
 

@@ -26,7 +26,7 @@ public class SkeletonIterator implements Iterator<Bone> {
 	}
 
 	/**
-	 * Reset the iterator to it´s initial position
+	 * Reset the iterator to itï¿½s initial position
 	 */
 	public void reset() {
 		Bone bone = this.skeleton.rootBone;
@@ -51,7 +51,7 @@ public class SkeletonIterator implements Iterator<Bone> {
 	}
 
 	public Bone next() {
-		return bones.get( currentIndex );
+		return bones.get( ++currentIndex );
 	}
 
 
