@@ -11,10 +11,11 @@ import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
  */
 public class LibraryVisualScenes {
 
-	private Skeleton skeleton;
-
     /** Map of all scenes */
     private final HashMap<String, Scene> scenes;
+
+    /** Map of all skeletons */
+    private final HashMap<String, Skeleton> skeletons;
 
     /**
      * Creates a new COLLADALibraryVisualScenes
@@ -22,6 +23,7 @@ public class LibraryVisualScenes {
     public LibraryVisualScenes() {
 
         this.scenes = new HashMap<String, Scene>();
+        this.skeletons = new HashMap<String, Skeleton>();
 
     }
 
@@ -32,12 +34,11 @@ public class LibraryVisualScenes {
         return scenes;
     }
 
-	public Skeleton getSkeleton() {
-		return skeleton;
-	}
-
-	public void setSkeleton(Skeleton skeleton) {
-		this.skeleton = skeleton;
-	}
+    /**
+     * @return the skeletons
+     */
+    public HashMap<String, Skeleton> getSkeletons() {
+        return skeletons;
+    }
 
 }

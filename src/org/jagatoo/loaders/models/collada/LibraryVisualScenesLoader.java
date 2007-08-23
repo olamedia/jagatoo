@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
+import org.jagatoo.loaders.models.collada.datastructs.controllers.Controller;
+import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalController;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.ControllerInstanceNode;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.GeometryInstanceNode;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.LibraryVisualScenes;
@@ -76,6 +78,10 @@ public class LibraryVisualScenesLoader {
                     } else if(node.instanceControllers != null) {
                         for (XMLInstanceController instanceController : node.instanceControllers) {
                             colNode = newCOLLADAControllerInstanceNode(colladaFile, node, transform, instanceController.url, instanceController.bindMaterial);
+                            Controller controller = colladaFile.getLibraryControllers().getControllers().get(instanceController.url);
+                            if(controller instanceof SkeletalController) {
+                                ((SkeletalController) controller).setSkeleton(colLibVisualScenes.getSkeletons().get(instanceController.skeleton));
+                            }
                         }
                     }
 
@@ -84,7 +90,7 @@ public class LibraryVisualScenesLoader {
 
                     COLLADALoader.logger.print("TT] Alright, it's a skeleton node");
                     
-                    colLibVisualScenes.setSkeleton( SkeletonLoader.loadSkeleton(node) );
+                    colLibVisualScenes.getSkeletons().put(node.id, SkeletonLoader.loadSkeleton(node));
                     
 
                 } else {
