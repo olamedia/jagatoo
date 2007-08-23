@@ -1,6 +1,10 @@
 package org.jagatoo.loaders.models.collada.datastructs.animation;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.openmali.vecmath.Matrix3f;
 import org.openmali.vecmath.Point3f;
@@ -27,7 +31,8 @@ public class Skeleton implements Iterable<Bone> {
      * Iterator for easy managment of the bones
      */
 	private SkeletonIterator iterator;
-
+	
+	
     /**
      * Create a new Skeleton
      * @param rootBone The root bone
@@ -83,6 +88,9 @@ public class Skeleton implements Iterable<Bone> {
 
             bone.absoluteTranslation.set(skeletonPos);
             bone.absoluteTranslation.z += bone.getLength();
+            
+            //FIXME need to use relativeTranslation and relativeScaling
+            
 
         } else {
 
@@ -99,6 +107,10 @@ public class Skeleton implements Iterable<Bone> {
             tempPoint.set(0f, 0f, bone.getLength());
             tempMatrix.transform(tempPoint);
             bone.absoluteTranslation.add(tempPoint);
+            
+            
+            //FIXME need to use relativeTranslation and relativeScaling
+            
 
         }
 

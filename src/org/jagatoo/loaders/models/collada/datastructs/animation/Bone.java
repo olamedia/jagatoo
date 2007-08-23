@@ -3,6 +3,7 @@ package org.jagatoo.loaders.models.collada.datastructs.animation;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jagatoo.loaders.models.ms3d.MS3DKeyFrame;
 import org.openmali.vecmath.Matrix4f;
 import org.openmali.vecmath.Point3f;
 import org.openmali.vecmath.Quat4f;
@@ -34,6 +35,17 @@ public class Bone {
 
     /** The rotation of this bone */
     public Quat4f relativeRotation;
+    
+    /**
+     * The translation of this bone
+     */
+    public Point3f relativeTranslation;
+    
+    /**
+     * The scaling of this bone
+     */
+    public Point3f relativeScaling;
+    
 
     /**
      * The absolute rotation of this bone, ie, a multiplication
@@ -63,8 +75,15 @@ public class Bone {
     final Point3f absoluteTranslation;
 
 
-    public List<KeyFrame> transKeyFrames = new ArrayList<KeyFrame>();
-    public List<KeyFrame> rotKeyFrames = new ArrayList<KeyFrame>();
+    /**
+     * Temporal key frames for the bone.
+     * They are reference extracted from the current animation and they 
+     * will change every time you play a different animation.
+     * They are here to simplify the animation algorithm.
+     */
+    public KeyFrame[] transKeyFrames;
+    public KeyFrame[] rotKeyFrames;
+    public KeyFrame[] scaleKeyFrames;
 
 
     /**
@@ -87,6 +106,7 @@ public class Bone {
         invBindMatrix.invert(bindMatrix);
 
         this.relativeRotation = new Quat4f(0f, 0f, 0f, 1f);
+        this.relativeTranslation = new Point3f( 0f, 0f, 0f );
 
         // Init absolute rot/trans
         this.absoluteRotation = new Quat4f(0f, 0f, 0f, 1f);
@@ -213,5 +233,62 @@ public class Bone {
     public Point3f getAbsoluteTranslation() {
         return absoluteTranslation;
     }
+
+    
+    /**
+     * @return true if the bone has at least one key frame of any kind
+     */
+	public boolean hasKeyFrames() {
+		return transKeyFrames.length + rotKeyFrames.length + scaleKeyFrames.length > 0;
+	}
+
+	/**
+	 * Completes the relativeTranslation and relativeRotation all with 0.
+	 */
+	public void setNoRelativeMovement() {
+		this.relativeTranslation.set( 0f, 0f, 0f );
+		this.relativeRotation.set( 0f, 0f, 0f, 0f );
+	}
+
+	/**
+	 * Selects the current translation key frame, based on the current time
+	 * @param currenTime beetween 0 and the end of the animation, in miliseconds
+	 * @return frame index selected
+	 */
+	public int selectCurrentTransFrame(long currentTime) {
+		return searchNextFrame( transKeyFrames, currentTime );
+	}
+	
+	/**
+	 * Selects the current translation key frame, based on the current time
+	 * @param currenTime beetween 0 and the end of the animation, in miliseconds
+	 * @return frame index selected
+	 */
+	public int selectCurrentRotFrame(long currentTime) {
+		return searchNextFrame( transKeyFrames, currentTime );
+	}
+	
+	/**
+	 * Selects the current scaling key frame, based on the current time
+	 * @param currenTime beetween 0 and the end of the animation, in miliseconds
+	 * @return frame index selected
+	 */
+	public int selectCurrentScaleFrame(long currentTime) {
+		return searchNextFrame( scaleKeyFrames, currentTime );
+	}
+	
+	/**
+	 * Searchs the next key frame according to the current time
+	 * @param frames
+	 * @param currentTime in miliseconds
+	 * @return selected key frame index
+	 */
+	private int searchNextFrame( KeyFrame[] frames, long currentTime ) {
+		int frame = 0;
+		while( frame < frames.length && frames[ frame ].time < currentTime ) {
+			frame++;
+		}
+		return frame;
+	}
 
 }

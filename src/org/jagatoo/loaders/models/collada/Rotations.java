@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import org.jagatoo.util.math.MatrixUtils;
 import org.openmali.vecmath.Matrix3f;
 import org.openmali.vecmath.Quat4f;
+import org.openmali.vecmath.Tuple3f;
 import org.openmali.vecmath.Vector3f;
 
 /**
@@ -28,16 +29,47 @@ public class Rotations {
      * @author Martin Baker (euclideanspace.com)
      */
     public static Quat4f toQuaternion(float rotX, float rotY, float rotZ) {
+        return toQuaternion( new Quat4f(), rotX, rotY, rotZ );
         
-        float x = (float) Math.toRadians(rotX);
+    }
+    
+    /**
+     * Convert Euler angles (in degrees) to a (normalized) Quaternion.
+     * @param tup rotation values
+     * @return The Quaternion representing the same rotation.
+     */
+    public static Quat4f toQuaternion(Tuple3f tup) {
+        return toQuaternion( new Quat4f(), tup.x, tup.y, tup.z );
+        
+    }
+    
+    
+    /**
+     * Convert Euler angles (in degrees) to a (normalized) Quaternion.
+     * @param quat destiny quaternion
+     * @param rotX Rotation about the X axis, in degrees
+     * @param rotY Rotation about the Y axis, in degrees
+     * @param rotZ Rotation about the Z axis, in degrees
+     * @return the given quaternion with complete with the values
+     */
+    public static Quat4f toQuaternion( Quat4f quat, float rotX, float rotY, float rotZ ) {
+    	float x = (float) Math.toRadians(rotX);
         float y = (float) Math.toRadians(rotY);
         float z = (float) Math.toRadians(rotZ);
         Matrix3f matrix = MatrixUtils.eulerToMatrix3f(x, y, z);
-        Quat4f quat = new Quat4f();
         quat.set(matrix);
         quat.normalize();
         return quat;
-        
+    }
+    
+    /**
+     * Convert Euler angles (in degrees) to a (normalized) Quaternion.
+     * @param quat destiny quaternion
+     * @param tup rotation values
+     * @return the given quaternion with complete with the values
+     */
+    public static Quat4f toQuaternion( Quat4f quat, Tuple3f tup ) {
+    	return toQuaternion( quat, tup.x, tup.y, tup.z );
     }
     
     /**

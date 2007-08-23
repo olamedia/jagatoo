@@ -32,12 +32,10 @@ public abstract class GeometryProvider {
     }
     
     /**
-     * @param nanoSecondsDelta The number of nanoseconds of which to advance (usually
-     * equal to the number of nanoseconds that have passed since the last update,
-     * except if they has been a pause or something like that).
+     * @param currentTime the frame time in miliseconds
      * @return the destinationGeometry computed from the source mesh
      */
-    public abstract Geometry updateDestinationGeometry(long nanoSecondsDelta);
+    public abstract Geometry updateDestinationGeometry(long currentTime);
 
     /**
      * @return the destinationGeometry

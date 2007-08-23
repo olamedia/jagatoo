@@ -343,7 +343,7 @@ public class MS3DPrototypeModel {
 
 			}
 
-			//set the translation parto of the matrix
+			//set the translation part of the matrix
 			matTmp.setTranslation( translation );
 
 			//calculate the joints final transformation

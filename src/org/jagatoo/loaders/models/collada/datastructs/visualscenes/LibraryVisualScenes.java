@@ -16,7 +16,7 @@ public class LibraryVisualScenes {
 
     /** Map of all skeletons */
     private final HashMap<String, Skeleton> skeletons;
-
+    
     /**
      * Creates a new COLLADALibraryVisualScenes
      */

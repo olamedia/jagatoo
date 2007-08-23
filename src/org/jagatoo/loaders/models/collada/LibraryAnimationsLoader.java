@@ -22,54 +22,71 @@ public class LibraryAnimationsLoader {
 	public static void loadLibraryAnimations(AssetFolder colladaFile,
 			XMLLibraryAnimations libAnim ) {
 
-		Skeleton skeleton = colladaFile.getLibraryVisualsScenes().getSkeleton();
-
 		Collection<XMLAnimation> anims = libAnim.animations.values();
 		COLLADALoader.logger.print("There " + (anims.size() > 1 ? "are" : "is") + " "
                 + anims.size() + " animation" + (anims.size() > 1 ? "s" : "")
                 + " in this file.");
 
-
-		//loop through each bone
-		int animCount;
-		KeyFrame keyFrame;
-		for (Bone bone : skeleton ) {
-
-			COLLADALoader.logger.print( "Loading animations for bone" + bone.getName() );
-
-			//search the animations for each bone, max 4 ( 3 rots and 1 trans )
-			animCount = 0;
-			for (XMLAnimation animation : anims) {
-				if( animCount < MAX_ANIMATIONS_PER_BONE &&
-						animation.getTargetBone().equals( bone.getName() ) ) {
-
-					//it큦 a translation key frame
-					if ( animation.hasTranslationKeyFrames() ) {
-						for (int j = 0, k = 0; j < animation.getInput().length; j++, k+=3) {
-							keyFrame = KeyFrame.buildTranslationKeyFrame(
-												animation.getInput()[ j ],
-												animation.getOutput(),
-												k );
-							bone.transKeyFrames.add( keyFrame );
-						}
-
-						//it큦 a rotation key frame
-					} else {
-						for (int j = 0; j < animation.getInput().length; j++) {
-							keyFrame = KeyFrame.buildRotationKeyFrame(
-											animation.getInput()[ j ],
-											animation.getOutput()[ j ],
-											animation.getRotationAxis() );
-							bone.rotKeyFrames.add( keyFrame );
-						}
-					}
-
-					//update total anims for the bone
-					animCount++;
-				}
-			}
-			compressRotationKeyFrames( bone );
-		}
+		
+		
+		//FIXME we must know generate COLLADAACtion objects, each one with a AnimationGroup
+		// fill with key frames
+		//but I don't where to save all this COLLADAACtion.
+		
+		
+		
+		
+		
+		/*
+		 * for( all Skeletons ) {
+		 * 
+		 * But we must know what skeleton belongs each bone
+		 * 
+		 */
+		
+//		Skeleton skeleton = colladaFile.getLibraryVisualsScenes()
+//		.getSkeletons().get( "SHOULD BE THE CURRENT SKELETON" );
+//
+//		//loop through each bone
+//		int animCount;
+//		KeyFrame keyFrame;
+//		for (Bone bone : skeleton ) {
+//
+//			COLLADALoader.logger.print( "Loading animations for bone" + bone.getName() );
+//
+//			//search the animations for each bone, max 4 ( 3 rots and 1 trans )
+//			animCount = 0;
+//			for (XMLAnimation animation : anims) {
+//				if( animCount < MAX_ANIMATIONS_PER_BONE &&
+//						animation.getTargetBone().equals( bone.getName() ) ) {
+//
+//					//it큦 a translation key frame
+//					if ( animation.hasTranslationKeyFrames() ) {
+//						for (int j = 0, k = 0; j < animation.getInput().length; j++, k+=3) {
+//							keyFrame = KeyFrame.buildTranslationKeyFrame(
+//												animation.getInput()[ j ],
+//												animation.getOutput(),
+//												k );
+//							bone.transKeyFrames.add( keyFrame );
+//						}
+//
+//						//it큦 a rotation key frame
+//					} else {
+//						for (int j = 0; j < animation.getInput().length; j++) {
+//							keyFrame = KeyFrame.buildRotationKeyFrame(
+//											animation.getInput()[ j ],
+//											animation.getOutput()[ j ],
+//											animation.getRotationAxis() );
+//							bone.rotKeyFrames.add( keyFrame );
+//						}
+//					}
+//
+//					//update total anims for the bone
+//					animCount++;
+//				}
+//			}
+//			compressRotationKeyFrames( bone );
+//		}
 	}
 
 	/**

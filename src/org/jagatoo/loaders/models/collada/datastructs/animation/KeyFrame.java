@@ -12,12 +12,12 @@ public class KeyFrame {
 	/**
 	 * Key frame time
 	 */
-	private float time;
+	public long time;
 
 	/**
 	 * Key frame transform values: translation or rotation (in radians)
 	 */
-	private Point3f values;
+	public Point3f values;
 
 
 	/**
@@ -30,7 +30,7 @@ public class KeyFrame {
 	 */
 	public static KeyFrame buildTranslationKeyFrame(float time, float[] values, int valueIndex) {
 		KeyFrame frame = new KeyFrame();
-		frame.time = time;
+		frame.time = (long)(time * 1000);
 		frame.values = new Point3f( values[ valueIndex ], values[ valueIndex + 1 ], values[ valueIndex + 2 ] );
 		return frame;
 	}
@@ -44,7 +44,7 @@ public class KeyFrame {
 	 */
 	public static KeyFrame buildRotationKeyFrame( float time, float angle, byte axis ) {
 		KeyFrame frame = new KeyFrame();
-		frame.time = time;
+		frame.time = (long)(time * 1000);
 		float radians = (float)Math.toRadians( angle );
 		if( axis == X_AXIS ) {
 			frame.values = new Point3f( radians, 0, 0 );
@@ -54,16 +54,6 @@ public class KeyFrame {
 			frame.values = new Point3f( 0, 0, radians );
 		}
 		return frame;
-	}
-
-
-	public float getTime() {
-		return time;
-	}
-
-
-	public Point3f getValues() {
-		return values;
 	}
 
 }
