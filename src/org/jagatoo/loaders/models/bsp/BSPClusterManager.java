@@ -232,4 +232,15 @@ public class BSPClusterManager
         this.planes         = planes;
         this.nodes          = nodes;
     }
+    
+    public BSPClusterManager( BSPClusterManager template )
+    {
+        this.bspVisData     = template.bspVisData;
+        this.bspFaces       = template.bspFaces;
+        this.faceBitset     = template.faceBitset;
+        this.clusterLeafs   = template.clusterLeafs;
+        this.leafToCluster  = template.leafToCluster;
+        this.planes         = template.planes;
+        this.nodes          = template.nodes;
+    }
 }
