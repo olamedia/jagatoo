@@ -50,19 +50,19 @@ import org.openmali.vecmath.Vector3f;
  */
 public class BSPClusterManager
 {
-    private BSPVisData     bspVisData;
-    private BSPFace[]      bspFaces;
+    protected BSPVisData     bspVisData;
+    protected BSPFace[]      bspFaces;
     
-    private BitSet         faceBitset;
-    private List<int[]>[]  clusterLeafs;
-    private int[]          leafToCluster;
-    private float[]        planes;
-    private int[]          nodes;
+    protected BitSet         faceBitset;
+    protected List<int[]>[]  clusterLeafs;
+    protected int[]          leafToCluster;
+    protected float[]        planes;
+    protected int[]          nodes;
     
-    private Vector3f       normal = new Vector3f();
+    private   Vector3f       normal = new Vector3f();
     
-    private boolean        usePVS = true;
-    private boolean        lastUsePVS = true;
+    private   boolean        usePVS = true;
+    private   boolean        lastUsePVS = true;
     
     /**
      * Calculates which cluster the camera position is in
