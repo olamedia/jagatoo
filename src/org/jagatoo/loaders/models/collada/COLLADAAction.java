@@ -49,7 +49,7 @@ public class COLLADAAction {
     /**
      * Creates a new COLLADAAction.
      * 
-     * @param model
+     * @param the id of this COLLADA Action
      */
     public COLLADAAction(String id) {
         

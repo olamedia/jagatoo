@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
 import org.jagatoo.loaders.models.collada.exceptions.ColladaLoaderException;
+import org.jagatoo.loaders.models.collada.jibx.XMLChannel.ChannelType;
 
 /**
  * A COLLADA animation.
@@ -63,8 +64,8 @@ public class XMLAnimation {
 	/**
 	 * Tells if the animation contains transformation key frames or rotation key frames
 	 */
-	public boolean hasTranslationKeyFrames() {
-		return channels.get( 0 ).hasTranslationKeyFrame();
+	public ChannelType getType() {
+		return channels.get( 0 ).type;
 	}
 
 

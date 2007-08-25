@@ -15,33 +15,45 @@ import org.jagatoo.loaders.models.collada.exceptions.ColladaLoaderException;
  */
 public class XMLChannel {
     
+    /**
+     * The type of a channel
+     * 
+     * @author Amos Wenger (aka BlueSky)
+     */
+    public static enum ChannelType {
+        /** A translate channel */
+        TRANSLATE,
+        /** A rotate channel */
+        ROTATE,
+        /** A scale channel */
+        SCALE
+    }
+    
+    public ChannelType type;
+    
     public final static String TRANSLATE_TARGET = "translate";
-    public final static String ROTATION_TARGET = "rotate";
+    public final static String ROTATE_TARGET = "rotate";
+    public final static String SCALE_TARGET = "scale";
     
     public String source = null;
     public String target = null;
     
     private String targetBone = null;
     private KeyFrame.Axis targetAxis;
-    private boolean isTranslate = false;
     
     //target="Root/rotateX.ANGLE"
     //target="Root/translate"
+    //target="Root/scale"
     
     public String getTargetBone() {
         checkIsParsed();
         return this.targetBone;
     }
     
-    public boolean hasTranslationKeyFrame() {
-        checkIsParsed();
-        return this.isTranslate;
-    }
-    
     public KeyFrame.Axis getRotationAxis() {
         checkIsParsed();
-        if( isTranslate ) {
-            throw new ColladaLoaderException( "It is not a rotation key frame" );
+        if (type != ChannelType.ROTATE) {
+            throw new ColladaLoaderException("It is not a rotation key frame");
         }
         return this.targetAxis;
     }
@@ -51,34 +63,48 @@ public class XMLChannel {
      * Parse the target attribute and gets the bone and the type of movement
      */
     private void checkIsParsed() {
-        if( targetBone == null ) {
+        
+        if (targetBone == null) {
             
-            StringTokenizer tok = new StringTokenizer( target );
-            targetBone = tok.nextToken( "/" );
-            String trans =  tok.nextToken();
+            StringTokenizer tok = new StringTokenizer(target);
+            targetBone = tok.nextToken("/");
+            String trans = tok.nextToken();
             
             //see if it's a translation or a rotation
-            if( trans.equals( TRANSLATE_TARGET ) ) {
-                isTranslate = true;
+            if (trans.equals(TRANSLATE_TARGET)) {
                 
-                //if it's a rotation, get the axis
-            } else {
-                isTranslate = false;
-                if( trans.indexOf( "X" ) != -1 ) {
+                /*
+                 * It's a translate channel
+                 */
+                type = ChannelType.TRANSLATE;
+                
+            } else if (trans.equals(ROTATE_TARGET)) {
+                
+                /*
+                 * It's a rotate channel
+                 */
+                type = ChannelType.ROTATE;
+
+                System.out.println("PARSING TRANS !!!!!!!!!!!!!!!!!!!!!!!!! TRANS = "+trans);
+                
+                // Get the axis
+                if (trans.contains("X")) {
                     targetAxis = KeyFrame.Axis.X;
-                } else if( trans.indexOf( "Y" ) != -1 ) {
+                } else if (trans.contains("Y")) {
                     targetAxis = KeyFrame.Axis.Y;
                 } else {
                     targetAxis = KeyFrame.Axis.Z;
                 }
+                
+            } else if (trans.equals(SCALE_TARGET)) {
+                
+                /*
+                 * It's a scale channel
+                 */
+                
             }
         }
+        
     }
     
 }
-
-
-
-
-
-
