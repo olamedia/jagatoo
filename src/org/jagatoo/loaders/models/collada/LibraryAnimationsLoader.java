@@ -1,6 +1,5 @@
 package org.jagatoo.loaders.models.collada;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -9,12 +8,15 @@ import java.util.Map;
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
-import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.jibx.XMLAnimation;
-import org.jagatoo.loaders.models.collada.jibx.XMLInput;
 import org.jagatoo.loaders.models.collada.jibx.XMLLibraryAnimations;
-import org.jagatoo.loaders.models.collada.jibx.XMLSampler;
 
+/**
+ * Library animations loader.
+ * 
+ * @author Matias Leone (aka Maguila)
+ * @author Amos Wenger (aka BlueSky)
+ */
 public class LibraryAnimationsLoader {
 
 	private static final int MAX_ANIMATIONS_PER_BONE = 4;
@@ -60,7 +62,7 @@ public class LibraryAnimationsLoader {
 //				if( animCount < MAX_ANIMATIONS_PER_BONE &&
 //						animation.getTargetBone().equals( bone.getName() ) ) {
 //
-//					//it´s a translation key frame
+//					//it's a translation key frame
 //					if ( animation.hasTranslationKeyFrames() ) {
 //						for (int j = 0, k = 0; j < animation.getInput().length; j++, k+=3) {
 //							keyFrame = KeyFrame.buildTranslationKeyFrame(
@@ -70,7 +72,7 @@ public class LibraryAnimationsLoader {
 //							bone.transKeyFrames.add( keyFrame );
 //						}
 //
-//						//it´s a rotation key frame
+//						//it's a rotation key frame
 //					} else {
 //						for (int j = 0; j < animation.getInput().length; j++) {
 //							keyFrame = KeyFrame.buildRotationKeyFrame(
@@ -108,7 +110,7 @@ public class LibraryAnimationsLoader {
 //		for (int i = 0; i < bone.rotKeyFrames.size(); i++) {
 //
 //			name = bone.getName();
-//			//see if it´s a new frame time
+//			//see if it's a new frame time
 //			if( !framesMap.containsKey( name ) ) {
 //				frames = new ArrayList<KeyFrame>();
 //				framesMap.put( name, frames );

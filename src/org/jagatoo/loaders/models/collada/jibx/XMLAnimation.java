@@ -1,8 +1,8 @@
 package org.jagatoo.loaders.models.collada.jibx;
 
-import java.text.CollationElementIterator;
 import java.util.ArrayList;
 
+import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
 import org.jagatoo.loaders.models.collada.exceptions.ColladaLoaderException;
 
 /**
@@ -72,7 +72,7 @@ public class XMLAnimation {
 	 * @return the rotation axis of the animation.
 	 * It only works if the animation if for rotation
 	 */
-	public byte getRotationAxis() {
+	public KeyFrame.Axis getRotationAxis() {
 		return channels.get( 0 ).getRotationAxis();
 	}
 

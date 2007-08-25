@@ -51,18 +51,16 @@ public interface AnimatableModel {
      * was doing (we don't mind if it was paused or what..)
      * @param action The action to play
      * @param loop true if we should loop the animation
-     * @param currentTime current frame time in miliseconds
      */
-    public void play(COLLADAAction action, boolean loop, long currentTime);
+    public void play(COLLADAAction action, boolean loop);
     
     /**
      * Begin to play a particular action, whatever the model
      * was doing (we don't mind if it was paused or what..)
      * @param actionId The ID String of the action to play
      * @param loop true if we should loop the animation
-     * @param currentTime current frame time in miliseconds
      */
-    public void play(String actionId, boolean loop, long currentTime);
+    public void play(String actionId, boolean loop);
     
     /**
      * Pause the model (stop to play an animation). The model
