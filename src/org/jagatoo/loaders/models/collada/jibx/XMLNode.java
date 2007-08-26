@@ -3,9 +3,9 @@ package org.jagatoo.loaders.models.collada.jibx;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import org.jagatoo.util.math.MatrixUtils;
 import org.openmali.vecmath.Matrix4f;
 import org.openmali.vecmath.Point3f;
+import org.openmali.vecmath.util.MatrixUtils;
 
 /**
  * A Node can have a Transform and can instance

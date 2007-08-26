@@ -4,11 +4,11 @@ import java.util.StringTokenizer;
 
 import javax.swing.JOptionPane;
 
-import org.jagatoo.util.math.MatrixUtils;
 import org.openmali.vecmath.Matrix3f;
 import org.openmali.vecmath.Quat4f;
 import org.openmali.vecmath.Tuple3f;
 import org.openmali.vecmath.Vector3f;
+import org.openmali.vecmath.util.MatrixUtils;
 
 /**
  * Rotations utility functions.

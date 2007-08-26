@@ -34,10 +34,10 @@
 package org.jagatoo.datatypes.impl;
 
 import org.jagatoo.datatypes.Placeable;
-import org.jagatoo.util.math.MatrixUtils;
 import org.openmali.vecmath.Matrix3f;
 import org.openmali.vecmath.Point3f;
 import org.openmali.vecmath.Tuple3f;
+import org.openmali.vecmath.util.MatrixUtils;
 
 /**
  * A small, GC-friendly implementation of the Placeable
