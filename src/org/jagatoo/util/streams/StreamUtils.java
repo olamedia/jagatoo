@@ -2,7 +2,6 @@ package org.jagatoo.util.streams;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 /**
  * Contains static utility methods for Stream.
@@ -43,7 +42,10 @@ public class StreamUtils
             i++;
         }
         
-        return( Arrays.copyOf( buffer, i ) );
+        final byte[] copy = new byte[ i ];
+        System.arraycopy( buffer, 0, copy, 0, Math.min( buffer.length, i ) );
+        
+        return( copy );
     }
     
     /**
