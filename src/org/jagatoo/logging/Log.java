@@ -85,6 +85,58 @@ public final class Log
     }
     
     /**
+     * Sets the String to be prefixed to the actualy logging output n times.
+     * 
+     * @param indentationString
+     */
+    public static final void setIndentationString( String indentationString )
+    {
+        logMgr.setIndentationString( indentationString );
+    }
+    
+    /**
+     * @return the String to be prefixed to the actualy logging output n times.
+     */
+    public static final String getIndentationString()
+    {
+        return( logMgr.getIndentationString() );
+    }
+    
+    /**
+     * Sets the indentation level to use for the following log outputs.
+     * 
+     * @param indentation
+     */
+    public static final void setIndentation( int indentation )
+    {
+        logMgr.setIndentation( indentation );
+    }
+    
+    /**
+     * @return the indentation level to use for the following log outputs.
+     */
+    public static final int getIndentation()
+    {
+        return( logMgr.getIndentation() );
+    }
+    
+    /**
+     * Increases the indentation level to use for the following log outputs by one.
+     */
+    public static final void increaseIndentation()
+    {
+        logMgr.setIndentation( logMgr.getIndentation() + 1 );
+    }
+    
+    /**
+     * Decreases the indentation level to use for the following log outputs by one.
+     */
+    public static final void decreaseIndentation()
+    {
+        logMgr.setIndentation( logMgr.getIndentation() - 1 );
+    }
+    
+    /**
      * Prints out a log message without a newline.
      * 
      * @param channel

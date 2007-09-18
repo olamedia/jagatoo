@@ -152,7 +152,47 @@ public class LogManager
     private boolean lastNewLine = true;
     private HashSet<String> debugPackageFilter = new HashSet<String>();
     
+    private String indentationString = "    ";
+    private int indentation = 0;
+    private final StringBuffer strBuff = new StringBuffer();
+    
     private static LogManager instance = null;
+    
+    /**
+     * Sets the String to be prefixed to the actualy logging output n times.
+     * 
+     * @param indentationString
+     */
+    public final void setIndentationString( String indentationString )
+    {
+        this.indentationString = indentationString;
+    }
+    
+    /**
+     * @return the String to be prefixed to the actualy logging output n times.
+     */
+    public final String getIndentationString()
+    {
+        return( indentationString );
+    }
+    
+    /**
+     * Sets the indentation level to use for the following log outputs.
+     * 
+     * @param indentation
+     */
+    public final void setIndentation( int indentation )
+    {
+        this.indentation = Math.max( 0, indentation );
+    }
+    
+    /**
+     * @return the indentation level to use for the following log outputs.
+     */
+    public final int getIndentation()
+    {
+        return( indentation );
+    }
     
     public final void setTimestampingEnabled( boolean enabled )
     {
@@ -287,6 +327,17 @@ public class LogManager
         return( callerPackage );
     }
     
+    private final String getIndentPrefix()
+    {
+        strBuff.setLength( 0 );
+        for ( int i = 0; i < indentation; i++ )
+        {
+            strBuff.append( indentationString );
+        }
+        
+        return( strBuff.toString() );
+    }
+    
     private final synchronized void internalPrintln( LogChannel channel, int logLevel, String message )
     {
         if ( !isAnyLogInterfaceRegistered( channel, logLevel ) )
@@ -314,7 +365,7 @@ public class LogManager
         
         for ( int i = 0; i < logs.size(); i++ )
         {
-            logs.get( i ).println( channel, logLevel, prefix + message );
+            logs.get( i ).println( channel, logLevel, prefix + getIndentPrefix() + message );
         }
         
         this.lastNewLine = true;
@@ -369,7 +420,7 @@ public class LogManager
         
         for ( int i = 0; i < logs.size(); i++ )
         {
-            logs.get( i ).print( channel, logLevel, prefix1 + prefix2 + message );
+            logs.get( i ).print( channel, logLevel, prefix1 + prefix2 + getIndentPrefix() + message );
         }
         
         this.lastNewLine = false;

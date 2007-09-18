@@ -87,6 +87,58 @@ public final class JAGTLog
     }
     
     /**
+     * Sets the String to be prefixed to the actualy logging output n times.
+     * 
+     * @param indentationString
+     */
+    public static final void setIndentationString( String indentationString )
+    {
+        Log.setIndentationString( indentationString );
+    }
+    
+    /**
+     * @return the String to be prefixed to the actualy logging output n times.
+     */
+    public static final String getIndentationString()
+    {
+        return( Log.getIndentationString() );
+    }
+    
+    /**
+     * Sets the indentation level to use for the following log outputs.
+     * 
+     * @param indentation
+     */
+    public static final void setIndentation( int indentation )
+    {
+        Log.setIndentation( indentation );
+    }
+    
+    /**
+     * @return the indentation level to use for the following log outputs.
+     */
+    public static final int getIndentation()
+    {
+        return( Log.getIndentation() );
+    }
+    
+    /**
+     * Increases the indentation level to use for the following log outputs by one.
+     */
+    public static final void increaseIndentation()
+    {
+        Log.increaseIndentation();
+    }
+    
+    /**
+     * Decreases the indentation level to use for the following log outputs by one.
+     */
+    public static final void decreaseIndentation()
+    {
+        Log.decreaseIndentation();
+    }
+    
+    /**
      * Prints out a log message without a newline.
      * 
      * @param logLevel
