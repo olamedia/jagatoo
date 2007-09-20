@@ -47,6 +47,8 @@ public class Bone {
      * relativeTranslation at all : you will have "translation keyframes" only
      * for the root bone, and we can handle that with the "Transform" object in
      * our "Model". OK ?
+     * 
+     * Matias Leone: yes, you are right. No relativeTranslation.
      */
     // public Point3f relativeTranslation;
     /**
@@ -87,6 +89,8 @@ public class Bone {
      * Amos Wenger : again, we would rather store that in the Skeleton itself,
      * because there can be (not mandatory) translation keyframes ONLY for the
      * root bone.
+     * 
+     * Matias Leone: ok.
      */
     // public KeyFrame[] transKeyFrames;
     /**
@@ -300,6 +304,8 @@ public class Bone {
     /*
      * Amos Wenger : Again, this has been moved in Skeleton, as concerns only
      * the root bone.
+     * 
+     * Matias Leone: ok
      */
     /**
      * Selects the current translation key frame, based on the current time
@@ -324,6 +330,8 @@ public class Bone {
         /*
          * Amos Wenger : there was a mistake here. You used "transKeyFrames"
          * instead of "rotKeyFrames"
+         * 
+         * Matias Leone: sorry, copy paste's fault
          */
         return KeyFrame.searchNextFrame(rotKeyFrames, currentTime);
     }

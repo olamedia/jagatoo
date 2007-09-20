@@ -10,7 +10,11 @@ import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.Geometry;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.GeometryProvider;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.LibraryGeometries;
+import org.jagatoo.loaders.models.collada.datastructs.geometries.Mesh;
+import org.jagatoo.loaders.models.collada.datastructs.geometries.MeshSources;
+import org.jagatoo.loaders.models.collada.datastructs.geometries.TrianglesGeometry;
 import org.jagatoo.loaders.models.collada.jibx.XMLController;
+import org.jagatoo.loaders.models.collada.jibx.XMLSkin;
 
 /**
  * A COLLADA Skeletal Controller. It computes mesh
@@ -133,6 +137,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
         // update absolutes transitions for all bones
         skeleton.updateAbsolutes();
 
+        
         /*
          * Now I need to to apply transitions to every vertex. I need the
          * following information and I don't know where the hell it's: 1) The
@@ -143,12 +148,60 @@ public class SkeletalController extends Controller implements AnimatableModel {
          * could find something is Mesh, It has the vertices and normals
          * indices, but not the triangles
          */
-
+        
+        
+        /*
+         * Apply the transitions to every vertex using the bone's weights
+         */
+        TrianglesGeometry triMesh = (TrianglesGeometry) sourceMesh;
+        
+        //current mesh
+        Mesh mesh = triMesh.mesh;
+        
+        //vertices and normals sources
+        MeshSources sources = mesh.sources;
+        
+        //skin info
+        XMLSkin skin = this.getController().skin;
+        
+        //iterate over vertices
+        Influence[] influences;
+        for (int i = 0; i < mesh.vertexIndices.length; i++) {
+        	influences = skin.buildInfluencesForVertex( i );
+        	
+        	//check if there is any influence
+			if( influences.length > 0 ) {
+				
+				//normalize influences
+	        	normalizeInfluences( influences );
+				
+	        	
+	        	/*
+	        	 * To be continued...
+	        	 */
+	        	
+	        	//use the destinationGeometry
+	        	
+	        	//transform the normals, only rotation
+	        	
+	        	//transform the vertex, rotation and translation
+				
+			}
+		}
+        
         return destinationGeometry;
         
     }
 
-    // // // // // // ANIMATION PART - ENDS// // // // // //
+    /**
+     * Normalize the influences weights
+     */
+    private void normalizeInfluences(Influence[] influences) {
+		//TODO not done yet
+		
+	}
+
+	// // // // // // ANIMATION PART - ENDS// // // // // //
     
     /**
      * Set the skeleton of this controller
