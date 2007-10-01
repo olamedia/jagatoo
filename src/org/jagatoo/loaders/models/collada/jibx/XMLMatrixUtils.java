@@ -20,7 +20,7 @@ public class XMLMatrixUtils {
         StringTokenizer tknz = new StringTokenizer(str);
         for(int y = 0; y < 4; y++) {
             for(int x = 0; x < 4; x++) {
-                matrix.matrix4f.setElement(x, y, Float.parseFloat(tknz.nextToken()));
+                matrix.matrix4f.set(x, y, Float.parseFloat(tknz.nextToken()));
             }
         }
         return matrix;
@@ -38,7 +38,7 @@ public class XMLMatrixUtils {
         StringTokenizer tknz = new StringTokenizer(str);
         for(int x = 0; x < 4; x++) {
             for(int y = 0; y < 4; y++) {
-                matrix.matrix4f.setElement(x, y, Float.parseFloat(tknz.nextToken()));
+                matrix.matrix4f.set(x, y, Float.parseFloat(tknz.nextToken()));
             }
         }
         return matrix;

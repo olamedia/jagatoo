@@ -1,7 +1,7 @@
 package org.jagatoo.datatypes;
 
-import org.openmali.vecmath.Matrix3f;
-import org.openmali.vecmath.Tuple3f;
+import org.openmali.vecmath2.Matrix3f;
+import org.openmali.vecmath2.Tuple3f;
 
 /**
  * Placeable object : you can get/set Position and Rotation

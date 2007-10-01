@@ -33,7 +33,7 @@
  */
 package org.jagatoo.loaders.models.ac3d;
 
-import org.openmali.vecmath.Color3f;
+import org.openmali.vecmath2.Colorf;
 
 /**
  * Contains all the information for an ac3d material tag.
@@ -50,13 +50,13 @@ public class AC3DMaterial
     /** The name of the material */
     private String   name;
     /** The color of the material */
-    private Color3f  color;
+    private Colorf  color;
     /** The color of ambient light reflected */
-    private Color3f  amb;
+    private Colorf  amb;
     /** The emited color of this material */
-    private Color3f  emis;
+    private Colorf  emis;
     /** The speculative color of the material */
-    private Color3f  spec;
+    private Colorf  spec;
     /** The shinyness */
     private float    shininess;
     /** The translucancy of the material */
@@ -73,32 +73,32 @@ public class AC3DMaterial
     /**
      * @return The color
      */
-    public Color3f getColor() {
-        return( new Color3f( color ) );
+    public Colorf getColor() {
+        return( new Colorf( color ) );
     }
     
     /**
      * @return The ambient reflectiveness color
      */
-    public Color3f getAmbience()
+    public Colorf getAmbience()
     {
-        return( new Color3f( amb ) );
+        return( new Colorf( amb ) );
     }
     
     /**
      * @return The emissive color
      */
-    public Color3f getEmissive()
+    public Colorf getEmissive()
     {
-        return( new Color3f( emis ) );
+        return( new Colorf( emis ) );
     }
     
     /**
      * @return The specular color
      */
-    public Color3f getSpecular()
+    public Colorf getSpecular()
     {
-        return( new Color3f( spec ) );
+        return( new Colorf( spec ) );
     }
     
     /**
@@ -137,16 +137,16 @@ public class AC3DMaterial
      * @param shininess The shininess
      * @param translucency The transluncancy
      */
-    public AC3DMaterial( int index, String name, Color3f color, Color3f ambient,
-                         Color3f emissive, Color3f specular, float shininess, float translucency )
+    public AC3DMaterial( int index, String name, Colorf color, Colorf ambient,
+                         Colorf emissive, Colorf specular, float shininess, float translucency )
     {
         this.index        = index;
         this.name         = new String( name );
         // take copies of the color objects
-        this.color        = new Color3f( color );
-        this.amb          = new Color3f( ambient );
-        this.emis         = new Color3f( emissive );
-        this.spec         = new Color3f( specular );
+        this.color        = new Colorf( color );
+        this.amb          = new Colorf( ambient );
+        this.emis         = new Colorf( emissive );
+        this.spec         = new Colorf( specular );
         this.shininess    = shininess;
         this.translucency = translucency;
         

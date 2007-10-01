@@ -33,7 +33,7 @@
  */
 package org.jagatoo.loaders.models.md2;
 
-import org.openmali.vecmath.Vector3f;
+import org.openmali.vecmath2.Vector3f;
 
 /**
  * A list of MD2 normals referred to by MD2Vertex

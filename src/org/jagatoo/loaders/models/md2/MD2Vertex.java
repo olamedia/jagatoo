@@ -35,8 +35,8 @@ package org.jagatoo.loaders.models.md2;
 
 import java.io.IOException;
 import java.io.DataInputStream;
-import org.openmali.vecmath.Point3f;
-import org.openmali.vecmath.Vector3f;
+import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.Vector3f;
 
 /**
  * A vertex stored with an MD2 file
@@ -57,9 +57,9 @@ public class MD2Vertex
      */
     public MD2Vertex( DataInputStream in, float[] scale, float[] translate ) throws IOException
     {        
-        vertex.x = ( in.read() * scale[ 0 ] ) + translate[ 0 ];
-        vertex.y = ( in.read() * scale[ 1 ] ) + translate[ 1 ];
-        vertex.z = ( in.read() * scale[ 2 ] ) + translate[ 2 ];
+        vertex.setX( ( in.read() * scale[ 0 ] ) + translate[ 0 ] );
+        vertex.setY( ( in.read() * scale[ 1 ] ) + translate[ 1 ] );
+        vertex.setZ( ( in.read() * scale[ 2 ] ) + translate[ 2 ] );
         
         lightNormal = (short)in.read();
     }

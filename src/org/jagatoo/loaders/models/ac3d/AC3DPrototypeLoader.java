@@ -33,8 +33,6 @@
  */
 package org.jagatoo.loaders.models.ac3d;
 
-import org.openmali.vecmath.Color3f;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,6 +42,8 @@ import java.net.URL;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+
+import org.openmali.vecmath2.Colorf;
 
 /**
  * Parses the AC3D data file into a java model.
@@ -92,13 +92,13 @@ public class AC3DPrototypeLoader
         // The name of the material
         String name;
         // The colour of the material
-        Color3f color;
+        Colorf color;
         // The color of ambient light reflected
-        Color3f amb;
+        Colorf amb;
         // The emited color of this material
-        Color3f emis;
+        Colorf emis;
         // The speculative color of the material
-        Color3f spec;
+        Colorf spec;
         // The shinyness
         float shininess;
         // The translucancy of the material
@@ -115,25 +115,25 @@ public class AC3DPrototypeLoader
         r = Float.parseFloat( tokenizer.nextToken() );
         g = Float.parseFloat( tokenizer.nextToken() );
         b = Float.parseFloat( tokenizer.nextToken() );
-        color = new Color3f( r, g, b );
+        color = new Colorf( r, g, b );
         
         tokenizer.nextToken();// amb
         r = Float.parseFloat( tokenizer.nextToken() );
         g = Float.parseFloat( tokenizer.nextToken() );
         b = Float.parseFloat( tokenizer.nextToken() );
-        amb = new Color3f( r, g, b );
+        amb = new Colorf( r, g, b );
         
         tokenizer.nextToken();// emis
         r = Float.parseFloat( tokenizer.nextToken() );
         g = Float.parseFloat( tokenizer.nextToken() );
         b = Float.parseFloat( tokenizer.nextToken() );
-        emis = new Color3f( r, g, b );
+        emis = new Colorf( r, g, b );
         
         tokenizer.nextToken();// spec
         r = Float.parseFloat( tokenizer.nextToken() );
         g = Float.parseFloat( tokenizer.nextToken() );
         b = Float.parseFloat( tokenizer.nextToken() );
-        spec = new Color3f( r, g, b );
+        spec = new Colorf( r, g, b );
         
         tokenizer.nextToken();// shi
         shininess = Float.parseFloat( tokenizer.nextToken() );

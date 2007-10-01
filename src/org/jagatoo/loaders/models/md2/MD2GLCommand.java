@@ -36,7 +36,8 @@ package org.jagatoo.loaders.models.md2;
 import java.io.IOException;
 
 import org.jagatoo.util.streams.LittleEndianDataInputStream;
-import org.openmali.vecmath.TexCoord2f;
+
+import org.openmali.vecmath2.TexCoord2f;
 
 /**
  * A single GL command within a MD2 File.
@@ -57,8 +58,8 @@ public class MD2GLCommand
      */
     public MD2GLCommand( LittleEndianDataInputStream in ) throws IOException
     {
-        coords.x = in.readFloat();
-        coords.y = 1.0f - in.readFloat();
+        coords.setS( in.readFloat() );
+        coords.setT( 1.0f - in.readFloat() );
         vertex = in.readInt();
     }
     

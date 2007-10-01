@@ -3,10 +3,10 @@ package org.jagatoo.loaders.models.collada;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.jibx.XMLNode;
-import org.openmali.vecmath.Matrix4f;
-import org.openmali.vecmath.Point3f;
-import org.openmali.vecmath.Quat4f;
-import org.openmali.vecmath.Vector3f;
+import org.openmali.vecmath2.Matrix4f;
+import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.Quaternion4f;
+import org.openmali.vecmath2.Vector3f;
 
 /**
  * A loader for skeletons.
@@ -35,10 +35,10 @@ public class SkeletonLoader {
         System.out.println("LocalToWorld = "+localToWorld);
         
         // Get the root bone root position
-        skeletonPos = new Point3f(localToWorld.m03, localToWorld.m13, localToWorld.m23);
+        skeletonPos = new Point3f(localToWorld.m03(), localToWorld.m13(), localToWorld.m23());
         
         // Create the root bone
-        Bone rootBone = new Bone(rootNode.id, 0f, new Quat4f(0f, 0f, 0f, 1f));
+        Bone rootBone = new Bone(rootNode.id, 0f, new Quaternion4f(0f, 0f, 0f, 1f));
         
         loadJoint(localToWorld, rootBone, rootNode, ZERO_POINT, ZERO_POINT);
         
@@ -69,9 +69,9 @@ public class SkeletonLoader {
             Matrix4f colMatrix = node.childrenList.get(0).matrix.matrix4f;
             System.out.println("ColMatrix = "+colMatrix);
             Point3f nodeTip = new Point3f(
-                    parentTip.x + colMatrix.getElement(0, 3),
-                    parentTip.y + colMatrix.getElement(1, 3),
-                    parentTip.z + colMatrix.getElement(2, 3)
+                    parentTip.getX() + colMatrix.get(0, 3),
+                    parentTip.getY() + colMatrix.get(1, 3),
+                    parentTip.getZ() + colMatrix.get(2, 3)
             );
             
             /*
@@ -123,7 +123,7 @@ public class SkeletonLoader {
             }
             Vector3f axis = new Vector3f();
             axis.cross(parentVecW, nodeVecW);
-            if(Float.isNaN(axis.x) | Float.isNaN(axis.y) | Float.isNaN(axis.z)) {
+            if(Float.isNaN(axis.getX()) | Float.isNaN(axis.getY()) | Float.isNaN(axis.getZ())) {
                 // Singularity : Angle = 0. The axis found is (NaN,NaN,NaN)
                 // In this case we reset it to UP.
                 axis.set(UP);
@@ -132,7 +132,7 @@ public class SkeletonLoader {
                 // Singularity : Angle = 180, there is no single axis
                 // In this case, we take an axis which is perpendicular
                 // to one of the two vectors. This avoid NaNs
-                axis.set(parentVecW.z, parentVecW.x, parentVecW.y);
+                axis.set(parentVecW.getZ(), parentVecW.getX(), parentVecW.getY());
                 // For quaternion conversion
                 axis.normalize();
                 // Workaround
@@ -144,7 +144,7 @@ public class SkeletonLoader {
             }
             
             
-            Quat4f quat = Rotations.toQuaternion(axis, angle);
+            Quaternion4f quat = Rotations.toQuaternion(axis, angle);
             bone.setBindRotation(quat);
             bone.setLength(length);
             
@@ -155,7 +155,7 @@ public class SkeletonLoader {
             System.out.println("quat = "+quat);
             
             for (XMLNode child : node.childrenList) {
-                Bone newBone = new Bone(child.id, .2f, new Quat4f(0f, 0f, 0f, 1f));
+                Bone newBone = new Bone(child.id, .2f, new Quaternion4f(0f, 0f, 0f, 1f));
                 bone.addChild(newBone);
                 loadJoint(localToWorld, newBone, child, parentTip, nodeTip);
             }

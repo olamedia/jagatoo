@@ -130,7 +130,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
             KeyFrameComputer.computeTuple3f(currentTime, bone.scaleKeyFrames, bone.relativeScaling);
             
             // Rotation
-            KeyFrameComputer.computeQuat4f(currentTime, bone.rotKeyFrames, bone.relativeRotation);
+            KeyFrameComputer.computeQuaternion4f(currentTime, bone.rotKeyFrames, bone.relativeRotation);
             
         }
         

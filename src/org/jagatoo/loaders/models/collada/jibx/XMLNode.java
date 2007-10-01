@@ -3,9 +3,9 @@ package org.jagatoo.loaders.models.collada.jibx;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import org.openmali.vecmath.Matrix4f;
-import org.openmali.vecmath.Point3f;
-import org.openmali.vecmath.util.MatrixUtils;
+import org.openmali.vecmath2.Matrix4f;
+import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.util.MatrixUtils;
 
 /**
  * A Node can have a Transform and can instance
@@ -68,9 +68,7 @@ public class XMLNode {
                 Float.parseFloat(tknz.nextToken())
         );
         float angle = Float.parseFloat(tknz.nextToken());
-        rotate.x *= angle;
-        rotate.y *= angle;
-        rotate.z *= angle;
+        rotate.mul( angle );
         Matrix4f mat = MatrixUtils.eulerToMatrix4f(rotate);
         // System.out.println("Mat before rotate : \n"+matrix.matrix4f);
         matrix.matrix4f.mul(mat);
@@ -88,20 +86,20 @@ public class XMLNode {
         
         // System.out.println("Mat before scale : \n"+matrix.matrix4f);
         
-        matrix.matrix4f.m00 *= scale.x;
-        matrix.matrix4f.m01 *= scale.x;
-        matrix.matrix4f.m02 *= scale.x;
-        matrix.matrix4f.m03 *= scale.x;
+        matrix.matrix4f.mul( 0, 0, scale.getX() );
+        matrix.matrix4f.mul( 0, 1, scale.getX() );
+        matrix.matrix4f.mul( 0, 2, scale.getX() );
+        matrix.matrix4f.mul( 0, 3, scale.getX() );
         
-        matrix.matrix4f.m10 *= scale.y;
-        matrix.matrix4f.m11 *= scale.y;
-        matrix.matrix4f.m12 *= scale.y;
-        matrix.matrix4f.m13 *= scale.y;
+        matrix.matrix4f.mul( 1, 0, scale.getY() );
+        matrix.matrix4f.mul( 1, 1, scale.getY() );
+        matrix.matrix4f.mul( 1, 2, scale.getY() );
+        matrix.matrix4f.mul( 1, 3, scale.getY() );
         
-        matrix.matrix4f.m20 *= scale.z;
-        matrix.matrix4f.m21 *= scale.z;
-        matrix.matrix4f.m22 *= scale.z;
-        matrix.matrix4f.m23 *= scale.z;
+        matrix.matrix4f.mul( 2, 0, scale.getZ() );
+        matrix.matrix4f.mul( 2, 1, scale.getZ() );
+        matrix.matrix4f.mul( 2, 2, scale.getZ() );
+        matrix.matrix4f.mul( 2, 3, scale.getZ() );
         
         // System.out.println("Mat after scale of "+scale+" : \n"+matrix.matrix4f);
     }

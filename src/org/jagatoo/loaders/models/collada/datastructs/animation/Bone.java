@@ -3,9 +3,9 @@ package org.jagatoo.loaders.models.collada.datastructs.animation;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openmali.vecmath.Matrix4f;
-import org.openmali.vecmath.Point3f;
-import org.openmali.vecmath.Quat4f;
+import org.openmali.vecmath2.Matrix4f;
+import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.Quaternion4f;
 
 /**
  * A Bone
@@ -22,7 +22,7 @@ public class Bone {
     String name;
     
     /** The bind rotation */
-    private final Quat4f bindRotation;
+    private final Quaternion4f bindRotation;
     
     /** The length of this bone */
     private float length;
@@ -34,7 +34,7 @@ public class Bone {
     final Matrix4f invBindMatrix;
     
     /** The rotation of this bone */
-    public Quat4f relativeRotation;
+    public Quaternion4f relativeRotation;
     
     /**
      * The translation of this bone
@@ -66,7 +66,7 @@ public class Bone {
      * the transform matrix for each bone once per frame, not once per
      * setRotation()
      */
-    final Quat4f absoluteRotation;
+    final Quaternion4f absoluteRotation;
     
     /**
      * The absolute translation of this bone, ie, the position of this bone...
@@ -119,7 +119,7 @@ public class Bone {
      * @param bindRotation
      *                The bind rotation of this bone
      */
-    public Bone(String name, float length, Quat4f bindRotation) {
+    public Bone(String name, float length, Quaternion4f bindRotation) {
         
         this.name = name;
         
@@ -128,18 +128,18 @@ public class Bone {
         
         this.bindMatrix = new Matrix4f();
         this.bindMatrix.set(bindRotation);
-        this.bindMatrix.m23 = length; // Set the Z translational component of
+        this.bindMatrix.m23( length ); // Set the Z translational component of
                                         // the matrix to length
         this.invBindMatrix = new Matrix4f();
         invBindMatrix.invert(bindMatrix);
         
-        this.relativeRotation = new Quat4f(0f, 0f, 0f, 1f);
+        this.relativeRotation = new Quaternion4f(0f, 0f, 0f, 1f);
         /*
          * Here, no need either.
          */
         // this.relativeTranslation = new Point3f( 0f, 0f, 0f );
         // Init absolute rot/trans/scaling
-        this.absoluteRotation = new Quat4f(0f, 0f, 0f, 1f);
+        this.absoluteRotation = new Quaternion4f(0f, 0f, 0f, 1f);
         this.absoluteTranslation = new Point3f(0f, 0f, 0f);
         this.absoluteScaling = new Point3f(1f, 1f, 1f);
         
@@ -197,7 +197,7 @@ public class Bone {
     /**
      * @return the bindRotation
      */
-    public Quat4f getBindRotation() {
+    public Quaternion4f getBindRotation() {
         return bindRotation;
     }
     
@@ -206,7 +206,7 @@ public class Bone {
      * 
      * @param quat
      */
-    public void setBindRotation(Quat4f quat) {
+    public void setBindRotation(Quaternion4f quat) {
         bindRotation.set(quat);
         bindMatrix.set(bindRotation);
     }
@@ -225,7 +225,7 @@ public class Bone {
      */
     public void setLength(float length) {
         this.length = length;
-        bindMatrix.m23 = length;
+        bindMatrix.m23( length );
         invBindMatrix.invert(bindMatrix);
     }
     
@@ -263,7 +263,7 @@ public class Bone {
      * 
      * @return a quaternion containing the absolute rotation
      */
-    public Quat4f getAbsoluteRotation() {
+    public Quaternion4f getAbsoluteRotation() {
         return absoluteRotation;
     }
     

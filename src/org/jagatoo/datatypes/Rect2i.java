@@ -38,8 +38,8 @@ import java.util.List;
 
 import org.jagatoo.datatypes.util.RepositionListener2i;
 import org.jagatoo.datatypes.util.ResizeListener2i;
-import org.openmali.vecmath.Point2i;
-import org.openmali.vecmath.Tuple2i;
+import org.openmali.vecmath2.Point2i;
+import org.openmali.vecmath2.Tuple2i;
 
 
 /**
@@ -148,7 +148,7 @@ public class Rect2i implements Positioned2i, Sized2i
      */
     public void setLocation(Tuple2i upperLeft)
     {
-        setLocation( upperLeft.x, upperLeft.y );
+        setLocation( upperLeft.getX(), upperLeft.getY() );
     }
     
     /**
@@ -164,7 +164,7 @@ public class Rect2i implements Positioned2i, Sized2i
      */
     public int getLeft()
     {
-        return( upperLeft.x );
+        return( upperLeft.getX() );
     }
     
     /**
@@ -172,7 +172,7 @@ public class Rect2i implements Positioned2i, Sized2i
      */
     public int getTop()
     {
-        return( upperLeft.y );
+        return( upperLeft.getY() );
     }
     
     /**
@@ -200,7 +200,7 @@ public class Rect2i implements Positioned2i, Sized2i
      */
     public void setSize(Tuple2i size)
     {
-        setSize( size.x, size.y );
+        setSize( size.getX(), size.getY() );
     }
     
     /**
@@ -216,7 +216,7 @@ public class Rect2i implements Positioned2i, Sized2i
      */
     public int getWidth()
     {
-        return( size.x );
+        return( size.getX() );
     }
     
     /**
@@ -224,7 +224,7 @@ public class Rect2i implements Positioned2i, Sized2i
      */
     public int getHeight()
     {
-        return( size.y );
+        return( size.getY() );
     }
     
     /**

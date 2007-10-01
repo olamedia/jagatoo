@@ -33,7 +33,7 @@
  */
 package org.jagatoo.datatypes;
 
-import org.openmali.vecmath.Tuple2f;
+import org.openmali.vecmath2.Tuple2f;
 
 /**
  * A Sized2f class provides getters and setters for the size.

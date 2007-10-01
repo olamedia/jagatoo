@@ -1,6 +1,6 @@
 package org.jagatoo.loaders.models.collada.jibx;
 
-import org.openmali.vecmath.Matrix4f;
+import org.openmali.vecmath2.Matrix4f;
 
 /**
  * A column-major matrix

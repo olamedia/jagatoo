@@ -40,7 +40,7 @@ import java.util.Set;
 
 import org.jagatoo.loaders.models.bsp.lumps.BSPFace;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVisData;
-import org.openmali.vecmath.Vector3f;
+import org.openmali.vecmath2.Vector3f;
 
 /**
  * This class is used to manage the visibility of all the BSP clusters.
@@ -77,9 +77,9 @@ public class BSPClusterManager
         {
             final int node = index * 3;
             final int planeIndex = nodes[ node + 0 ] * 4;
-            normal.x = planes[ planeIndex + 0 ];
-            normal.y = planes[ planeIndex + 1 ];
-            normal.z = planes[ planeIndex + 2 ];
+            normal.setX( planes[ planeIndex + 0 ] );
+            normal.setY( planes[ planeIndex + 1 ] );
+            normal.setZ( planes[ planeIndex + 2 ] );
             float d = planes[ planeIndex + 3 ];
             
             // Distance from point to a plane

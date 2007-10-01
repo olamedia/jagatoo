@@ -1,6 +1,6 @@
 package org.jagatoo.loaders.models.collada.datastructs.visualscenes;
 
-import org.openmali.vecmath.Matrix4f;
+import org.openmali.vecmath2.Matrix4f;
 
 /**
  * A COLLADA Transform using a 4x4 Matrix to represent the transformation.

@@ -33,7 +33,7 @@
  */
 package org.jagatoo.loaders.models.bsp.lumps;
 
-import org.openmali.vecmath.Vector3f;
+import org.openmali.vecmath2.Vector3f;
 
 /**
  * TODO: Insert package comments here

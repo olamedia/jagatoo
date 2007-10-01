@@ -77,9 +77,9 @@ public class BSPPrototypeLoader
         for ( int i = 0; i < num; i++ )
         {
             planes[ i ]          = new BSPPlane();
-            planes[ i ].normal.x = file.readFloat();
-            planes[ i ].normal.y = file.readFloat();
-            planes[ i ].normal.z = file.readFloat();
+            planes[ i ].normal.setX( file.readFloat() );
+            planes[ i ].normal.setY( file.readFloat() );
+            planes[ i ].normal.setZ( file.readFloat() );
             planes[ i ].d        = file.readFloat();
         }
         
@@ -251,19 +251,19 @@ public class BSPPrototypeLoader
         for ( int i = 0; i < num; i++ )
         {
             vertices[ i ]                 = new BSPVertex();
-            vertices[ i ].position.x      = file.readFloat();
-            vertices[ i ].position.y      = file.readFloat();
-            vertices[ i ].position.z      = file.readFloat();
+            vertices[ i ].position.setX(    file.readFloat() );
+            vertices[ i ].position.setY(    file.readFloat() );
+            vertices[ i ].position.setZ(    file.readFloat() );
             
-            vertices[ i ].texCoord.x      = file.readFloat();
-            vertices[ i ].texCoord.y      = file.readFloat();
+            vertices[ i ].texCoord.setS(    file.readFloat() );
+            vertices[ i ].texCoord.setT(    file.readFloat() );
             
-            vertices[ i ].lightTexCoord.x = file.readFloat();
-            vertices[ i ].lightTexCoord.y = file.readFloat();
+            vertices[ i ].lightTexCoord.setS( file.readFloat() );
+            vertices[ i ].lightTexCoord.setT( file.readFloat() );
             
-            vertices[ i ].normal.x        = file.readFloat();
-            vertices[ i ].normal.y        = file.readFloat();
-            vertices[ i ].normal.z        = file.readFloat();
+            vertices[ i ].normal.setX(      file.readFloat() );
+            vertices[ i ].normal.setY(      file.readFloat() );
+            vertices[ i ].normal.setZ(      file.readFloat() );
             
             int r = file.readByte();
             if ( r < 0 )
@@ -281,10 +281,10 @@ public class BSPPrototypeLoader
             if ( a < 0 )
                 a = -a + 127;
             
-            vertices[ i ].color.x = (float)r / 255f;
-            vertices[ i ].color.y = (float)g / 255f;
-            vertices[ i ].color.z = (float)b / 255f;
-            vertices[ i ].color.w = (float)a / 255f;
+            vertices[ i ].color.setRed( (float)r / 255f );
+            vertices[ i ].color.setGreen( (float)g / 255f );
+            vertices[ i ].color.setBlue( (float)b / 255f );
+            vertices[ i ].color.setAlpha( (float)a / 255f );
         }
         
         return( vertices );

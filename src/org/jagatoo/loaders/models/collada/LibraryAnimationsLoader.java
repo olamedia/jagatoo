@@ -96,7 +96,7 @@ public class LibraryAnimationsLoader {
 
                             // it's a rotation key frame
                             for (int j = 0; j < animation.getInput().length; j++) {
-                                keyFrame = KeyFrame.buildQuat4fKeyFrame(
+                                keyFrame = KeyFrame.buildQuaternion4fKeyFrame(
                                         animation.getInput()[ j ],
                                         animation.getOutput()[ j ],
                                         animation.getRotationAxis() );

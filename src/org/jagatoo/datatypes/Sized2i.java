@@ -34,7 +34,7 @@
 package org.jagatoo.datatypes;
 
 import org.jagatoo.datatypes.util.ResizeListener2i;
-import org.openmali.vecmath.Tuple2i;
+import org.openmali.vecmath2.Tuple2i;
 
 
 /**

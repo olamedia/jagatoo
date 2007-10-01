@@ -37,8 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jagatoo.datatypes.util.ResizeListener2i;
-import org.openmali.vecmath.Point2i;
-import org.openmali.vecmath.Tuple2i;
+import org.openmali.vecmath2.Point2i;
+import org.openmali.vecmath2.Tuple2i;
 
 
 /**
@@ -121,7 +121,7 @@ public class Dim2i implements Sized2i
      */
     public void setSize( Tuple2i size )
     {
-        setSize( size.x, size.y );
+        setSize( size.getX(), size.getY() );
     }
     
     /**
@@ -137,7 +137,7 @@ public class Dim2i implements Sized2i
      */
     public int getWidth()
     {
-        return( size.x );
+        return( size.getX() );
     }
     
     /**
@@ -145,7 +145,7 @@ public class Dim2i implements Sized2i
      */
     public int getHeight()
     {
-        return( size.y );
+        return( size.getY() );
     }
     
     /**
@@ -156,7 +156,7 @@ public class Dim2i implements Sized2i
         if ( getHeight() != 0 )
             return( (float)getWidth() / (float)getHeight() );
         
-        return( 0 );
+        return( 0f );
     }
     
     /**

@@ -3,8 +3,8 @@ package org.jagatoo.loaders.models.ms3d.utils;
 import java.io.IOException;
 
 import org.jagatoo.util.streams.LittleEndianDataInputStream;
-import org.openmali.vecmath.Point3f;
-import org.openmali.vecmath.Point4f;
+import org.openmali.vecmath2.Colorf;
+import org.openmali.vecmath2.Point3f;
 
 public class BinaryUtils {
 
@@ -43,10 +43,9 @@ public class BinaryUtils {
 		return new Point3f(in.readFloat(), in.readFloat(), in.readFloat());
 	}
 
-	public static Point4f readPoint4f(LittleEndianDataInputStream in)
+	public static Colorf readColorf(LittleEndianDataInputStream in)
 			throws IOException {
-		return new Point4f(in.readFloat(), in.readFloat(), in.readFloat(), in
-				.readFloat());
+		return new Colorf(in.readFloat(), in.readFloat(), in.readFloat(), in.readFloat());
 	}
 
 }

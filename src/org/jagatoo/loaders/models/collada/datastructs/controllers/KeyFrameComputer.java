@@ -3,9 +3,9 @@ package org.jagatoo.loaders.models.collada.datastructs.controllers;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFramePoint3f;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrameQuat4f;
-import org.openmali.vecmath.Point3f;
-import org.openmali.vecmath.Quat4f;
-import org.openmali.vecmath.util.Interpolation;
+import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.Quaternion4f;
+import org.openmali.vecmath2.util.Interpolation;
 
 /**
  * This class is used to interpolate Tuple3f from
@@ -66,12 +66,12 @@ public class KeyFrameComputer {
     
 
     /**
-     * Interpolate a Quat4f between two keyframes
+     * Interpolate a Quaternion4f between two keyframes
      * @param currentTime The time in the animation
      * @param keyFrames The keyframes of the animation (translation or scaling)
      * @param toInterpolate
      */
-    public static void computeQuat4f(long currentTime, KeyFrameQuat4f[] keyFrames, Quat4f toInterpolate) {
+    public static void computeQuaternion4f(long currentTime, KeyFrameQuat4f[] keyFrames, Quaternion4f toInterpolate) {
         
         int frame = KeyFrame.searchNextFrame(keyFrames, currentTime);
         

@@ -33,9 +33,9 @@
  */
 package org.jagatoo.loaders.models.md2;
 
-import org.openmali.vecmath.Point3f;
-import org.openmali.vecmath.TexCoord2f;
-import org.openmali.vecmath.Vector3f;
+import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.TexCoord2f;
+import org.openmali.vecmath2.Vector3f;
 
 /**
  * A single frame rendered from an MD2 Model

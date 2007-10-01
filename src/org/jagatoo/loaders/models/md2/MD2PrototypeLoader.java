@@ -40,9 +40,9 @@ import java.util.List;
 
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.util.streams.StreamUtils;
-import org.openmali.vecmath.Point3f;
-import org.openmali.vecmath.TexCoord2f;
-import org.openmali.vecmath.Vector3f;
+import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.TexCoord2f;
+import org.openmali.vecmath2.Vector3f;
 
 /**
  * A Loader to load quake 2 model files
@@ -76,14 +76,14 @@ public class MD2PrototypeLoader
      * 
      * @return <i>true</i>, if this frame should be rendered
      */
-    private static boolean isFrameValid( String frameName, List filter )
+    private static boolean isFrameValid( String frameName, List< String > filter )
     {
         if ( filter == null )
             return( true );
         
         for ( int i = 0; i < filter.size(); i++ )
         {
-            String f = (String)filter.get( i );
+            final String f = filter.get( i );
             if ( frameName.startsWith( f ) )
                 return( true );
         }
@@ -217,7 +217,7 @@ public class MD2PrototypeLoader
      * @param filter A list of <code>String</code> to filter the frames
      * @param bNormals Whether or not to load vertex-normal data
      */
-    public static final MD2ModelPrototype load( InputStream in, int loadFlags, String skin, List filter, boolean bNormals ) throws IOException, ParsingErrorException
+    public static final MD2ModelPrototype load( InputStream in, int loadFlags, String skin, List< String > filter, boolean bNormals ) throws IOException, ParsingErrorException
     {
         if ( !( in instanceof BufferedInputStream ) )
             in = new BufferedInputStream( in );

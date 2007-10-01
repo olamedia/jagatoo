@@ -33,7 +33,7 @@
  */
 package org.jagatoo.datatypes;
 
-import org.openmali.vecmath.Tuple2i;
+import org.openmali.vecmath2.Tuple2i;
 
 /**
  * A Sized2iRO class provides getters but no setters for the size.

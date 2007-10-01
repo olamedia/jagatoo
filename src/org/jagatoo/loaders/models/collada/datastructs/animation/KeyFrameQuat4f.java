@@ -1,6 +1,6 @@
 package org.jagatoo.loaders.models.collada.datastructs.animation;
 
-import org.openmali.vecmath.Quat4f;
+import org.openmali.vecmath2.Quaternion4f;
 
 /**
  * A KeyFrame containing Quaternions.
@@ -11,6 +11,6 @@ import org.openmali.vecmath.Quat4f;
 public class KeyFrameQuat4f extends KeyFrame {
     
     /** Rotational value */
-    public Quat4f value;
+    public Quaternion4f value;
     
 }

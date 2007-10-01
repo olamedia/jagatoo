@@ -33,7 +33,7 @@
  */
 package org.jagatoo.loaders.models.bsp.util;
 
-import org.openmali.vecmath.Point3f;
+import org.openmali.vecmath2.Point3f;
 
 import org.jagatoo.loaders.models.bsp.lumps.BSPVertex;
 
@@ -89,9 +89,12 @@ public class PatchSurface
                 a = cp[ai];
                 b = cp[bi];
                 
-                if ((a.position.x != b.position.x) ||
-                    (a.position.y != b.position.y) ||
-                    (a.position.z != b.position.z))
+                /*
+                if ( ( a.position.getX() != b.position.getX() ) ||
+                     ( a.position.getY() != b.position.getY() ) ||
+                     ( a.position.getZ() != b.position.getZ() ) )
+                */
+                if ( !a.position.equals( b.position ) )
                 {
                     found = true;
                     
@@ -123,9 +126,12 @@ public class PatchSurface
                 a = cp[ai];
                 b = cp[bi];
                 
-                if ((a.position.x != b.position.x) ||
-                    (a.position.y != b.position.y) ||
-                    (a.position.z != b.position.z))
+                /*
+                if ( ( a.position.getX() != b.position.getX() ) ||
+                     ( a.position.getY() != b.position.getY() ) ||
+                     ( a.position.getZ() != b.position.getZ() ) )
+                */
+                if ( !a.position.equals( b.position ) )
                 {
                     found = true;
                     

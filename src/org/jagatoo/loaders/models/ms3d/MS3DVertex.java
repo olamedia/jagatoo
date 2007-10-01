@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import org.jagatoo.loaders.models.ms3d.utils.BinaryUtils;
 import org.jagatoo.util.streams.LittleEndianDataInputStream;
-import org.openmali.vecmath.Point3f;
+import org.openmali.vecmath2.Point3f;
 
 public class MS3DVertex {
 

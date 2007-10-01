@@ -34,10 +34,10 @@
 package org.jagatoo.datatypes.impl;
 
 import org.jagatoo.datatypes.Placeable;
-import org.openmali.vecmath.Matrix3f;
-import org.openmali.vecmath.Point3f;
-import org.openmali.vecmath.Tuple3f;
-import org.openmali.vecmath.util.MatrixUtils;
+import org.openmali.vecmath2.Matrix3f;
+import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.Tuple3f;
+import org.openmali.vecmath2.util.MatrixUtils;
 
 /**
  * A small, GC-friendly implementation of the Placeable
@@ -143,21 +143,21 @@ public abstract class PlaceableImpl implements Placeable {
      * Interpolators to only one dimension
      */
     
-    public float getPositionX() {return this.position.x;}
-    public float getPositionY() {return this.position.y;}
-    public float getPositionZ() {return this.position.y;}
+    public float getPositionX() {return this.position.getX();}
+    public float getPositionY() {return this.position.getY();}
+    public float getPositionZ() {return this.position.getY();}
     
-    public float getRotationX() {return getRotation().x;}
-    public float getRotationY() {return getRotation().y;}
-    public float getRotationZ() {return getRotation().z;}
+    public float getRotationX() {return getRotation().getX();}
+    public float getRotationY() {return getRotation().getY();}
+    public float getRotationZ() {return getRotation().getZ();}
     
-    public void setPositionX(float v) {this.position.x = v; onPositionChanged();}
-    public void setPositionY(float v) {this.position.y = v; onPositionChanged();}
-    public void setPositionZ(float v) {this.position.z = v; onPositionChanged();}
+    public void setPositionX(float v) {this.position.setX( v ); onPositionChanged();}
+    public void setPositionY(float v) {this.position.setY( v ); onPositionChanged();}
+    public void setPositionZ(float v) {this.position.setZ( v ); onPositionChanged();}
     
-    public void setRotationX(float v) {Tuple3f rot = getRotation(); MatrixUtils.eulerToMatrix3f(v, rot.y, rot.z, this.rotation); onRotationChanged();}
-    public void setRotationY(float v) {Tuple3f rot = getRotation(); MatrixUtils.eulerToMatrix3f(rot.x, v, rot.z, this.rotation); onRotationChanged();}
-    public void setRotationZ(float v) {Tuple3f rot = getRotation(); MatrixUtils.eulerToMatrix3f(rot.x, rot.y, v, this.rotation); onRotationChanged();}
+    public void setRotationX(float v) {Tuple3f rot = getRotation(); MatrixUtils.eulerToMatrix3f(v, rot.getY(), rot.getZ(), this.rotation); onRotationChanged();}
+    public void setRotationY(float v) {Tuple3f rot = getRotation(); MatrixUtils.eulerToMatrix3f(rot.getX(), v, rot.getZ(), this.rotation); onRotationChanged();}
+    public void setRotationZ(float v) {Tuple3f rot = getRotation(); MatrixUtils.eulerToMatrix3f(rot.getX(), rot.getY(), v, this.rotation); onRotationChanged();}
     
     public abstract void onPositionChanged();
     public abstract void onRotationChanged();

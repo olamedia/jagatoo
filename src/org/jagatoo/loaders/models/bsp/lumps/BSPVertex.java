@@ -33,10 +33,10 @@
  */
 package org.jagatoo.loaders.models.bsp.lumps;
 
-import org.openmali.vecmath.Color4f;
-import org.openmali.vecmath.Point3f;
-import org.openmali.vecmath.TexCoord2f;
-import org.openmali.vecmath.Vector3f;
+import org.openmali.vecmath2.Colorf;
+import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.TexCoord2f;
+import org.openmali.vecmath2.Vector3f;
 
 /**
  * Represents a single BSP vertex
@@ -51,56 +51,56 @@ public class BSPVertex
     public TexCoord2f  texCoord;
     public TexCoord2f  lightTexCoord;
     public Vector3f    normal;
-    public Color4f     color;
+    public Colorf      color;
     
     public void swizzle()
     {
-        float y    = position.y;
-        position.y = position.z;
-        position.z = -y;
+        final float y = position.getY();
+        position.setY( position.getZ() );
+        position.setZ( -y );
     }
     
-    public void scale(float scale)
+    public void scale( float scale )
     {
-        position.scale(scale);
-        texCoord.scale(scale);
-        lightTexCoord.scale(scale);
-        normal.scale(scale);
-        color.scale(scale);
+        position.scale( scale );
+        texCoord.mul( scale );
+        lightTexCoord.mul( scale );
+        normal.scale( scale );
+        color.mul( scale );
     }
     
-    public void add( BSPVertex v)
+    public void add( BSPVertex v )
     {
-        position.add(v.position);
-        texCoord.add(v.texCoord);
-        lightTexCoord.add(v.lightTexCoord);
-        color.add(v.color);
+        position.add( v.position );
+        texCoord.add( v.texCoord );
+        lightTexCoord.add( v.lightTexCoord );
+        color.add( v.color );
     }
     
-    public void set(BSPVertex a)
+    public void set( BSPVertex a )
     {
-        position.set(a.position);
-        texCoord.set(a.texCoord);
-        lightTexCoord.set(a.lightTexCoord);
-        color.set(a.color);
+        position.set( a.position );
+        texCoord.set( a.texCoord );
+        lightTexCoord.set( a.lightTexCoord );
+        color.set( a.color );
     }
     
-    public void avg(BSPVertex a, BSPVertex b)
+    public void avg( BSPVertex a, BSPVertex b )
     {
-        set(a);
-        add(b);
-        scale(0.5f);
+        set( a );
+        add( b );
+        scale( 0.5f );
     }
 
     public BSPVertex copy()
     {
         BSPVertex v = new BSPVertex();
         
-        v.position.set(position);
-        v.texCoord.set(texCoord);
-        v.lightTexCoord.set(lightTexCoord);
-        v.normal.set(normal);
-        v.color.set(color);
+        v.position.set( position );
+        v.texCoord.set( texCoord );
+        v.lightTexCoord.set( lightTexCoord );
+        v.normal.set( normal );
+        v.color.set( color );
         
         return( v );
     }
@@ -111,6 +111,6 @@ public class BSPVertex
         texCoord = new TexCoord2f();
         lightTexCoord = new TexCoord2f();
         normal = new Vector3f();
-        color = new Color4f();
+        color = new Colorf();
     }
 }

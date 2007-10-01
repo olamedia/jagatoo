@@ -2,8 +2,8 @@ package org.jagatoo.loaders.models.collada.datastructs.animation;
 
 import java.util.Iterator;
 
-import org.openmali.vecmath.Matrix3f;
-import org.openmali.vecmath.Point3f;
+import org.openmali.vecmath2.Matrix3f;
+import org.openmali.vecmath2.Point3f;
 
 /**
  * A Skeleton. It contains a root bone, which can have several children
@@ -99,7 +99,7 @@ public class Skeleton implements Iterable<Bone> {
             bone.absoluteRotation.mul(bone.relativeRotation);
             
             bone.absoluteTranslation.set(relativeTranslation);
-            bone.absoluteTranslation.z += bone.getLength();
+            bone.absoluteTranslation.addZ( bone.getLength() );
             
             bone.absoluteScaling.set(bone.relativeScaling);
             
@@ -126,10 +126,10 @@ public class Skeleton implements Iterable<Bone> {
             bone.absoluteTranslation.add(tempPoint);
             
             bone.absoluteScaling.set(parentBone.absoluteScaling);
-            bone.absoluteScaling.set(bone.absoluteScaling.x
-                    * bone.relativeScaling.x, bone.absoluteScaling.y
-                    * bone.relativeScaling.y, bone.absoluteScaling.z
-                    * bone.relativeScaling.z);
+            bone.absoluteScaling.set(bone.absoluteScaling.getX()
+                    * bone.relativeScaling.getX(), bone.absoluteScaling.getY()
+                    * bone.relativeScaling.getY(), bone.absoluteScaling.getZ()
+                    * bone.relativeScaling.getZ());
             
             /*
              * Amos Wenger : nope, relativeTranslation is used only for the root
@@ -140,10 +140,10 @@ public class Skeleton implements Iterable<Bone> {
         }
         
         // Both for root and children nodes
-        bone.absoluteTranslation.set(bone.absoluteTranslation.x
-                * bone.absoluteScaling.x, bone.absoluteTranslation.y
-                * bone.absoluteScaling.y, bone.absoluteTranslation.z
-                * bone.absoluteScaling.z);
+        bone.absoluteTranslation.set(bone.absoluteTranslation.getX()
+                * bone.absoluteScaling.getX(), bone.absoluteTranslation.getY()
+                * bone.absoluteScaling.getY(), bone.absoluteTranslation.getZ()
+                * bone.absoluteScaling.getZ());
         
         for (int i = 0; i < bone.numChildren(); i++) {
             

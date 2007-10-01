@@ -1,6 +1,6 @@
 package org.jagatoo.loaders.models.collada.datastructs.animation;
 
-import org.openmali.vecmath.Point3f;
+import org.openmali.vecmath2.Point3f;
 
 /**
  * A KeyFrame containing Point3fs.

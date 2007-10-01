@@ -4,29 +4,30 @@ import java.io.IOException;
 
 import org.jagatoo.loaders.models.ms3d.utils.BinaryUtils;
 import org.jagatoo.util.streams.LittleEndianDataInputStream;
-import org.openmali.vecmath.Point4f;
+
+import org.openmali.vecmath2.Colorf;
 
 public class MS3DMaterial {
-
+    
 	public String name;
-	public Point4f ambient;
-	public Point4f diffuse;
-	public Point4f specular;
-	public Point4f emissive;
+	public Colorf ambient;
+	public Colorf diffuse;
+	public Colorf specular;
+	public Colorf emissive;
 	public float shininess;
 	public float transparency;
 	public int mode;
 	public int[] textureMap = new int[128];
 	public int[] alpha = new int[128];
 	//public CImage m_Texture;
-
-
+	
+	
 	public MS3DMaterial(LittleEndianDataInputStream in) throws IOException {
 		name = BinaryUtils.readString(in, 32);
-		ambient = BinaryUtils.readPoint4f(in);
-		diffuse = BinaryUtils.readPoint4f(in);
-		specular = BinaryUtils.readPoint4f(in);
-		emissive = BinaryUtils.readPoint4f(in);
+		ambient = BinaryUtils.readColorf(in);
+		diffuse = BinaryUtils.readColorf(in);
+		specular = BinaryUtils.readColorf(in);
+		emissive = BinaryUtils.readColorf(in);
 		shininess = in.readFloat();
 		transparency = in.readFloat();
 		mode = in.readUnsignedByte();
@@ -35,10 +36,3 @@ public class MS3DMaterial {
 	}
 
 }
-
-
-
-
-
-
-

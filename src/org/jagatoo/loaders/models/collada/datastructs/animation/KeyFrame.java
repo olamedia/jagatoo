@@ -1,7 +1,7 @@
 package org.jagatoo.loaders.models.collada.datastructs.animation;
 
 import org.jagatoo.loaders.models.collada.Rotations;
-import org.openmali.vecmath.Point3f;
+import org.openmali.vecmath2.Point3f;
 
 /**
  * A KeyFrame contains information for the animation of a Bone. It can contain
@@ -70,7 +70,7 @@ public abstract class KeyFrame {
      *                the axis of the rotation
      * @return a new key frame
      */
-    public static KeyFrame buildQuat4fKeyFrame(float time, float angle, Axis axis) {
+    public static KeyFrame buildQuaternion4fKeyFrame(float time, float angle, Axis axis) {
         
         KeyFrameQuat4f frame = new KeyFrameQuat4f();
         frame.time = (long) (time * 1000);

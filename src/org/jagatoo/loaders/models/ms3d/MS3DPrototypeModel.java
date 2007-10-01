@@ -6,10 +6,10 @@ import java.io.IOException;
 
 import org.jagatoo.loaders.models.ms3d.utils.RotationUtils;
 import org.jagatoo.util.streams.LittleEndianDataInputStream;
-import org.openmali.vecmath.Matrix4f;
-import org.openmali.vecmath.Point3f;
-import org.openmali.vecmath.Quat4f;
-import org.openmali.vecmath.util.Interpolation;
+import org.openmali.vecmath2.Matrix4f;
+import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.Quaternion4f;
+import org.openmali.vecmath2.util.Interpolation;
 
 public class MS3DPrototypeModel {
 
@@ -331,16 +331,16 @@ public class MS3DPrototypeModel {
 				float timeDist = curFrame.time - prevFrame.time;
 
 				//interpolate distance with nlerp
-				Quat4f quatCur = RotationUtils.toQuaternion( curFrame.param );
-				Quat4f quatPrev = RotationUtils.toQuaternion( prevFrame.param );
-				Quat4f quatSpeed = new Quat4f();
+				Quaternion4f quatCur = RotationUtils.toQuaternion( curFrame.param );
+				Quaternion4f quatPrev = RotationUtils.toQuaternion( prevFrame.param );
+				Quaternion4f quatSpeed = new Quaternion4f();
 				Interpolation.nlerp(quatSpeed, quatCur, quatPrev, timeDist);
 
 				//scale quatSpeed with elapsed time
 				quatSpeed.scale( 1 / timeDist );
 
 				//apply to matrix
-				matTmp.set( quatSpeed.toMatrix4f() );
+				matTmp.set( quatSpeed );
 
 			}
 
