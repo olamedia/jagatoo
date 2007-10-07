@@ -7,6 +7,8 @@
 	<classpathentry kind="lib" path="third-party/commons-io-1.2.jar"/>
 	<classpathentry kind="lib" path="third-party/commons-lang-2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="third-party/xml/jibx/jibx-run.jar" sourcepath="/home/bluesky/Desktop/jibx_1_1_5.zip"/>
+	<classpathentry kind="lib" path="third-party/xml/xstream/xstream-1.2.1.jar"/>
+	<classpathentry kind="lib" path="third-party/xml/jdom.jar"/>
 	<classpathentry exported="true" kind="lib" path="bin"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
