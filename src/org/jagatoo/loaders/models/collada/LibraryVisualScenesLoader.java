@@ -1,10 +1,12 @@
 package org.jagatoo.loaders.models.collada;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
+import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.Controller;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalController;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.ControllerInstanceNode;
@@ -39,7 +41,7 @@ public class LibraryVisualScenesLoader {
     @SuppressWarnings("unchecked")
     static void loadLibraryVisualScenes(AssetFolder colladaFile,
             XMLLibraryVisualScenes libScenes) {
-
+        
         LibraryVisualScenes colLibVisualScenes = colladaFile
         .getLibraryVisualsScenes();
         HashMap<String, Scene> scenes = colLibVisualScenes.getScenes();
@@ -70,7 +72,7 @@ public class LibraryVisualScenesLoader {
 
                     MatrixTransform transform = new MatrixTransform(node.matrix.matrix4f);
 
-                    // FIXME : applying YAGNI here : we don't need to know whether these nodes are grouped or separate
+                    // FIXME : applying YAGNI (You Ain't Gonna Need It) philosophy here : we don't need to know whether these nodes are grouped or separate
                     if(node.instanceGeometries != null) {
                         for (XMLInstanceGeometry instanceGeometry : node.instanceGeometries) {
                             colNode = newCOLLADAGeometryInstanceNode(colladaFile, node, transform, instanceGeometry.url, instanceGeometry.bindMaterial);
@@ -89,9 +91,19 @@ public class LibraryVisualScenesLoader {
                 } else if (node.type == XMLNode.Type.JOINT) {
 
                     COLLADALoader.logger.print("TT] Alright, it's a skeleton node");
-                    
-                    colLibVisualScenes.getSkeletons().put(node.id, SkeletonLoader.loadSkeleton(node));
-                    
+
+                    Skeleton skeleton = SkeletonLoader.loadSkeleton(node);
+                    colLibVisualScenes.getSkeletons().put(node.id, skeleton);
+                    Collection<Controller> controllers = colladaFile.getLibraryControllers().getControllers().values();
+                    for(Controller controller : controllers) {
+                        if(controller instanceof SkeletalController) {
+                            SkeletalController skController = (SkeletalController) controller;
+                            if(node.id.equals(skController.getController().skin.source)) {
+                                skController.setSkeleton(skeleton);
+                            }
+                        }
+                    }
+
 
                 } else {
 
@@ -148,7 +160,7 @@ public class LibraryVisualScenesLoader {
         );
         return colNode;
     }
-    
+
     /**
      * Creates a new COLLADA node (type : controller instance) from the informations given
      * @param colladaFile
