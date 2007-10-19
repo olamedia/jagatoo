@@ -41,6 +41,7 @@ import org.jagatoo.loaders.models.md5.reader.MD5MathUtil;
 import org.jagatoo.util.nio.BufferUtils;
 import org.openmali.vecmath2.Point3f;
 import org.openmali.vecmath2.TexCoord2f;
+import org.openmali.vecmath2.Tuple3f;
 import org.openmali.vecmath2.Vector3f;
 
 import java.nio.FloatBuffer;
@@ -157,18 +158,21 @@ public class MD5RenderMesh
         //normalBuffer = computeNormals( subMesh.numvert, vertexBuffer, subMesh.triangle );
     }
     
-    private static final void readVectorFromBuffer( Vector3f vec, FloatBuffer buff, int index )
+    private static final void readTupleFromBuffer( Tuple3f tup, FloatBuffer buff, int index )
     {
-        vec.setX( buff.get( index * 3 + 0 ) );
-        vec.setY( buff.get( index * 3 + 1 ) );
-        vec.setZ( buff.get( index * 3 + 2 ) );        
+        tup.setX( buff.get( index * 3 + 0 ) );
+        tup.setY( buff.get( index * 3 + 1 ) );
+        tup.setZ( buff.get( index * 3 + 2 ) );        
     }
     
     public FloatBuffer computeNormals( int numvert, FloatBuffer vertexBuffer, Vector< MD5Triangle > triangle )
     {
-        Vector3f vector1 = new Vector3f();
-        Vector3f vector2 = new Vector3f();
-        Vector3f vector3 = new Vector3f();
+        Point3f coord1 = new Point3f();
+        Point3f coord2 = new Point3f();
+        Point3f coord3 = new Point3f();
+        
+        Vector3f tmp1 = new Vector3f();
+        Vector3f tmp2 = new Vector3f();
         
         // Get the current object
         
@@ -179,17 +183,17 @@ public class MD5RenderMesh
         // Go though all of the faces of this object
         for ( int i = 0; i < numtris; i++ )
         {
-            readVectorFromBuffer( vector1, vertexBuffer, triangle.elementAt( i ).triangle[ 0 ] );
-            readVectorFromBuffer( vector2, vertexBuffer, triangle.elementAt( i ).triangle[ 1 ] );
-            readVectorFromBuffer( vector3, vertexBuffer, triangle.elementAt( i ).triangle[ 2 ] );
+            readTupleFromBuffer( coord1, vertexBuffer, triangle.elementAt( i ).triangle[ 0 ] );
+            readTupleFromBuffer( coord2, vertexBuffer, triangle.elementAt( i ).triangle[ 1 ] );
+            readTupleFromBuffer( coord3, vertexBuffer, triangle.elementAt( i ).triangle[ 2 ] );
             
-            vector1.sub( vector3 );
+            tmp1.sub( coord1, coord3 );
+            tmp2.sub( coord3, coord2 );
             
-            Vector3f tmp = new Vector3f();
-            tmp.sub( vector3, vector2 );
-            vector1.cross( vector1, tmp );
-            vector1.normalize();
-            tempNormals[ i ] = vector1;
+            tmp1.cross( tmp1, tmp2 );
+            tmp1.normalize();
+            
+            tempNormals[ i ] = new Vector3f( tmp1 );
         }
         
         Vector3f sum = new Vector3f();
@@ -209,7 +213,7 @@ public class MD5RenderMesh
             
             sum.div( (float)( -shared ) );
             sum.normalize();
-            normals[ i ] = sum;
+            normals[ i ] = new Vector3f( sum );
             
             sum.setZero(); // Reset the sum
             shared = 0; // Reset the shared
