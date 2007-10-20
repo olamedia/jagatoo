@@ -213,6 +213,7 @@ public class MD5RenderMesh
             
             sum.div( (float)( -shared ) );
             sum.normalize();
+            sum.negate();
             normals[ i ] = new Vector3f( sum );
             
             sum.setZero(); // Reset the sum
