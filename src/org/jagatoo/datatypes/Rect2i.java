@@ -180,27 +180,38 @@ public class Rect2i implements Positioned2i, Sized2i
      * 
      * @param width
      * @param height
+     * 
+     * @return true, if the size actually has changed
      */
-    public void setSize(int width, int height)
+    public boolean setSize(int width, int height)
     {
         final int oldWidth = getWidth();
         final int oldHeight = getHeight();
         
-        this.size.set( width, height );
+        if ( ( oldWidth != width ) || ( oldHeight != height ) )
+        {
+            this.size.set( width, height );
+            
+            isDirty = true;
+            
+            fireResizeEvent( oldWidth, oldHeight, width, height );
+            
+            return( true );
+        }
         
-        isDirty = true;
-        
-        fireResizeEvent( oldWidth, oldHeight, width, height );
+        return( false );
     }
     
     /**
      * Sets the rectangle's size.
      * 
      * @param size
+     * 
+     * @return true, if the size actually has changed
      */
-    public void setSize(Tuple2i size)
+    public boolean setSize(Tuple2i size)
     {
-        setSize( size.getX(), size.getY() );
+        return( setSize( size.getX(), size.getY() ) );
     }
     
     /**

@@ -45,22 +45,26 @@ public interface Sized2f
     /**
      * Sets the size.
      * 
-     * @param size
+     * @param width
+     * @param height
+     * 
+     * @return true, if the size actually has changed
      */
-    public void setSize( Tuple2f size );
+    public boolean setSize( float width, float height );
+    
+    /**
+     * Sets the size.
+     * 
+     * @param size
+     * 
+     * @return true, if the size actually has changed
+     */
+    public boolean setSize( Tuple2f size );
     
     /**
      * @return the size
      */
     public Tuple2f getSize();
-    
-    /**
-     * Sets the size.
-     * 
-     * @param width
-     * @param height
-     */
-    public void setSize( float width, float height );
     
     /**
      * @return the width
