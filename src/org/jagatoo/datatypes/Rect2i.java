@@ -128,27 +128,38 @@ public class Rect2i implements Positioned2i, Sized2i
      * 
      * @param left
      * @param top
+     * 
+     * @return true, if the location actually has changed
      */
-    public void setLocation(int left, int top)
+    public boolean setLocation(int left, int top)
     {
         final int oldLeft = getLeft();
         final int oldTop = getTop();
         
-        this.upperLeft.set( left, top );
+        if ( ( oldLeft != left ) || ( oldTop != top ) )
+        {
+            this.upperLeft.set( left, top );
+            
+            isDirty = true;
+            
+            fireRepositionEvent( oldLeft, oldTop, left, top );
+            
+            return( true );
+        }
         
-        isDirty = true;
-        
-        fireRepositionEvent( oldLeft, oldTop, left, top );
+        return( false );
     }
     
     /**
      * Sets the upper-left corner's coordinates.
      * 
      * @param upperLeft
+     * 
+     * @return true, if the location actually has changed
      */
-    public void setLocation(Tuple2i upperLeft)
+    public boolean setLocation(Tuple2i upperLeft)
     {
-        setLocation( upperLeft.getX(), upperLeft.getY() );
+        return( setLocation( upperLeft.getX(), upperLeft.getY() ) );
     }
     
     /**

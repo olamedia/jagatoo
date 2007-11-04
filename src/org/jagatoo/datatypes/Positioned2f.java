@@ -43,24 +43,28 @@ import org.openmali.vecmath2.Tuple2f;
 public interface Positioned2f
 {
     /**
+     * Sets the position.
+     * 
+     * @param left position
+     * @param top position
+     * 
+     * @return true, if the location actually has changed
+     */
+    public boolean setLocation( float left, float top );
+    
+    /**
      * Sets the location.
      * 
      * @param location
+     * 
+     * @return true, if the location actually has changed
      */
-    public void setLocation( Tuple2f location );
+    public boolean setLocation( Tuple2f location );
     
     /**
      * @return the position
      */
     public Tuple2f getLocation();
-    
-    /**
-     * Sets the position.
-     * 
-     * @param left position
-     * @param top position
-     */
-    public void setLocation( float left, float top );
     
     /**
      * @return the left position

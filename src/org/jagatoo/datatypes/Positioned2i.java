@@ -64,15 +64,19 @@ public interface Positioned2i
      * 
      * @param left
      * @param top
+     * 
+     * @return true, if the location actually has changed
      */
-    public void setLocation( int left, int top );
+    public boolean setLocation( int left, int top );
     
     /**
      * Sets the position.
      * 
      * @param location
+     * 
+     * @return true, if the location actually has changed
      */
-    public void setLocation( Tuple2i location );
+    public boolean setLocation( Tuple2i location );
     
     /**
      * @return the position
