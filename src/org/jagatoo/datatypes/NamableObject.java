@@ -39,6 +39,8 @@ public interface NamableObject extends NamedObject
 {
     /**
      * Sets this Object's name.
+     * 
+     * @param name
      */
-    public void setName();
+    public void setName( String name );
 }
