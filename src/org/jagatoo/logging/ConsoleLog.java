@@ -101,7 +101,7 @@ public class ConsoleLog implements LogInterface
             if ( LogLevel.isError( logLevel ) )
                 System.err.print( message );
             else
-                System.err.print( message );
+                System.out.print( message );
         }
     }
     
@@ -115,7 +115,7 @@ public class ConsoleLog implements LogInterface
             if ( LogLevel.isError( logLevel ) )
                 System.err.println( message );
             else
-                System.err.println( message );
+                System.out.println( message );
         }
     }
     
