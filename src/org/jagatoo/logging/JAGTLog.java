@@ -173,7 +173,7 @@ public final class JAGTLog
     /**
      * This is an alias for println( channel, REGULAR, message ).
      * 
-     * @param exception
+     * @param message
      */
     public static final void println( String message )
     {

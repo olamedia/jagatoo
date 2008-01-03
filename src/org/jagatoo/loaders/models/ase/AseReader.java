@@ -66,7 +66,6 @@ public class AseReader //extends LineNumberReader
      * to Xith3D
      * 
      * @param in Reader to read ASE data from
-     * @param f ASE file object to reconstruct data to
      * @param convertMeshCoordinates true if ASE coordinates should be converted
      *            to Xith3D format, false if they should be left unchanged
      */

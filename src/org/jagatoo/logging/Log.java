@@ -178,7 +178,7 @@ public final class Log
      * This is an alias for println( channel, REGULAR, message ).
      * 
      * @param channel
-     * @param exception
+     * @param message
      */
     public static final void println( LogChannel channel, String message )
     {

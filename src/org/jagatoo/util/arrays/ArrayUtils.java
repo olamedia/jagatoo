@@ -8,7 +8,7 @@ package org.jagatoo.util.arrays;
 public final class ArrayUtils
 {
     /**
-     * @returns true, if both float arrays are either the same instance (or both null),
+     * @return true, if both float arrays are either the same instance (or both null),
      * or the same langth and all elements are equal.
      * 
      * @param a

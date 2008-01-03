@@ -85,7 +85,7 @@ public class MD2Header
     /** 
      * Creates new MD2Header 
      * 
-     * @param f The file to read the header from
+     * @param b The file to read the header from
      */
     public MD2Header( byte[] b ) throws IOException
     {        

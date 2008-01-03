@@ -58,7 +58,7 @@ public class MS3DJoint {
 
 	/**
 	 * Selects the current transformation key frame, based on the current time
-	 * @param currenTime beetween 0 and the end of the animation, in seconds
+	 * @param currentTime beetween 0 and the end of the animation, in seconds
 	 * @return frame index selected
 	 */
 	public int selectCurrentTransFrame(float currentTime) {
@@ -68,7 +68,7 @@ public class MS3DJoint {
 
 	/**
 	 * Selects the current rotation key frame, based on the current time
-	 * @param currenTime beetween 0 and the end of the animation, in seconds
+	 * @param currentTime beetween 0 and the end of the animation, in seconds
 	 * @return frame index selected
 	 */
 	public int selectCurrentRotFrame(float currentTime) {
@@ -92,7 +92,7 @@ public class MS3DJoint {
 
 	/**
 	 * Says if the joint has at least one key frame to animate
-	 * @return
+	 * @return true/false
 	 */
 	public boolean hasKeyFrames() {
 		return this.numRotFrames != 0 || this.numTransFrames != 0;

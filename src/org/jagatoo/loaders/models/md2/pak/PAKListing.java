@@ -152,7 +152,7 @@ public class PAKListing
      * Creates new PAKListing. 
      * 
      * @param header The PAK header of this file
-     * @param file The file to read the listing from
+     * @param totalData The file to read the listing from
      */
     public PAKListing( PAKHeader header, byte[] totalData ) throws IOException
     {

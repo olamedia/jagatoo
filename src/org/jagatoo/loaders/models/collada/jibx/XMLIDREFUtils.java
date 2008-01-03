@@ -11,7 +11,7 @@ public class XMLIDREFUtils {
      * Parse an IDREF, which means, currently,
      * to remove the trailing "#" if any.
      * @param idref
-     * @return
+     * @return the parsed String
      */
     public static String parse(String idref) {
         

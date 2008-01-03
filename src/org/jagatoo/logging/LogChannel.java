@@ -76,8 +76,6 @@ public class LogChannel
     
     /**
      * {@inheritDoc}
-     * 
-     * @param o
      */
     @Override
     public int hashCode()

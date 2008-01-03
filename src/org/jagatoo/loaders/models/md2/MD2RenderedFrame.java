@@ -73,8 +73,12 @@ public class MD2RenderedFrame
      * @param name The name of this frame
      * @param fans The shape defining the triangle fans 
      * @param strips The shape defining the triangle strips
-     * @param app The appearance to apply
-     * @param factory The factory to use to produce the shape of this rendered frame
+     * @param fansTex
+     * @param stripsTex
+     * @param fansNorms
+     * @param stripsNorms
+     * @param fanCounts
+     * @param stripCounts
      */
     public MD2RenderedFrame( String name, Point3f[] fans, Point3f[] strips,
                              TexCoord2f[] fansTex, TexCoord2f[] stripsTex,

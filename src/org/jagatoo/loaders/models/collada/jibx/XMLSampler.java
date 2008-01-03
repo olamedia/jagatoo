@@ -20,7 +20,7 @@ public class XMLSampler {
     /**
      * Search the input with the specified semantic
      * @param semantic
-     * @return
+     * @return the XML input
      */
     public XMLInput getInput( String semantic ) {
     	for (XMLInput input : inputs) {

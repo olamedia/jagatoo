@@ -75,7 +75,7 @@ public class PAKHeader
     /** 
      * Creates new PAKHeader 
      * 
-     * @param file The file to read the header from
+     * @param data The file to read the header from
      */
     public PAKHeader( byte[] data ) throws IOException
     {

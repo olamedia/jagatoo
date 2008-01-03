@@ -57,7 +57,7 @@ public class MD2Frame
     /** 
      * Creates new MD2Frame. 
      * 
-     * @param tin The datainput stream to read the frame from
+     * @param din The datainput stream to read the frame from
      * @param header The header to assist the load
      */
     public MD2Frame( DataInputStream din, MD2Header header ) throws IOException

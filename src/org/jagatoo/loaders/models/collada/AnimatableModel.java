@@ -17,7 +17,7 @@ public interface AnimatableModel {
     /**
      * Get the prototype model (Jagatoo side) used by this model
      * (Game engine side).
-     * @return
+     * @return the prototype model
      */
     public ColladaProtoypeModel getPrototypeModel();
     

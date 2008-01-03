@@ -110,7 +110,7 @@ public class PAKArchive
     /** 
      * Creates new PAKArchive.
      * 
-     * @param file The file to read as a PAK
+     * @param filename The file to read as a PAK
      */
     public PAKArchive( String filename ) throws IOException
     {

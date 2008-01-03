@@ -28,7 +28,7 @@ public class XMLAnimation {
     /**
      * Search a source with the specified id
      * @param id
-     * @return
+     * @return the XML source
      */
     public XMLSource getSource( String id ) {
         for (XMLSource source : sources) {

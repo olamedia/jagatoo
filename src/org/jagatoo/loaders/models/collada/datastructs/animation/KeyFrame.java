@@ -34,7 +34,6 @@ public abstract class KeyFrame {
     /**
      * Creates a translation key frame
      * 
-     * @param bone
      * @param time
      *                frame time
      * @param values

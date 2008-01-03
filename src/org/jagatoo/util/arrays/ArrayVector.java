@@ -263,8 +263,8 @@ public final class ArrayVector
      * places the values into the trg vector.
      * 
      * @param min the lowest value in the tuple after clamping
-     * @parm src the source tuple, which will not be modified
-     * @parm trg the target tuple, which will be modified
+     * @param src the source tuple, which will not be modified
+     * @param trg the target tuple, which will be modified
      */
     public static final void clampMin( float min, float[] src, float[] trg )
     {
@@ -291,9 +291,9 @@ public final class ArrayVector
      * Clamps the maximum value of the tuple parameter to the max parameter and
      * places the values into the trg vector.
      * 
-     * @param min the lowest value in the tuple after clamping
-     * @parm src the source tuple, which will not be modified
-     * @parm trg the target tuple, which will be modified
+     * @param max the lowest value in the tuple after clamping
+     * @param src the source tuple, which will not be modified
+     * @param trg the target tuple, which will be modified
      */
     public static final void clampMax( float max, float[] src, float[] trg )
     {

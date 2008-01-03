@@ -253,7 +253,7 @@ public class MS3DPrototypeModel {
 
 	/**
 	 *
-	 * @param gameTime in seconds
+	 * @param currentTime in seconds
 	 */
 	public void animate( float currentTime ) {
 

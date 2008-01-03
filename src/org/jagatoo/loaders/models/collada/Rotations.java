@@ -27,7 +27,6 @@ public class Rotations {
      * @param rotY Rotation about the Y axis, in degrees
      * @param rotZ Rotation about the Z axis, in degrees
      * @return The Quaternion representing the same rotation.
-     * @author Martin Baker (euclideanspace.com)
      */
     public static Quaternion4f toQuaternion(float rotX, float rotY, float rotZ) {
         return toQuaternion( new Quaternion4f(), rotX, rotY, rotZ );
@@ -78,7 +77,6 @@ public class Rotations {
      * Note : the Quaternion can be non-normalized.
      * @param quaternion The quaternion
      * @return The euler angles (in degrees)
-     * @author Martin Baker (euclideanspace.com)
      */
     public static Tuple3f toEuler(Quaternion4f quaternion) {
         
@@ -114,7 +112,7 @@ public class Rotations {
      * Credits goes to euclideanspace.com author.
      * @param axis The axis. Must be unit-length
      * @param angle The angle, in degrees
-     * @return
+     * @return the rotation quaternion
      */
     public static Quaternion4f toQuaternion(Vector3f axis, double angle) {
         

@@ -17,13 +17,10 @@ public abstract class GeometryProvider {
     protected LibraryGeometries libGeoms;
 
     /**
-     * Creates a new COLLADAController
+     * Creates a new COLLADAController.
+     * 
      * @param libGeoms The {@link LibraryGeometries} we need to compute
      * the destination mesh.
-     * @param destinationGeometry Geometry is the {@link Geometry} which will
-     * be updated with the result of the computations of this
-     * {@link GeometryProvider}. It can be null at first and then
-     * set by setDestinationMesh()
      */
     public GeometryProvider(LibraryGeometries libGeoms) {
         

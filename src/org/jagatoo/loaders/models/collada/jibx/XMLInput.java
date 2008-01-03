@@ -31,7 +31,7 @@ public class XMLInput {
     /**
      * Try to recognize the semantic name.
      * If unknown, return Semantic.OTHER
-     * @return
+     * @return the semantic
      */
     public Semantic recognizeSemantic() {
         

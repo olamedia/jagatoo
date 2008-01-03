@@ -13,7 +13,7 @@ public class XMLMatrixUtils {
      * Read a Blender-COLLADA row-major matrix and
      * returns a column-major Vecmath matrix.
      * @param str
-     * @return
+     * @return the 4x4 XML matrix
      */
     public static XMLMatrix4x4 readRowMajor(String str) {
         XMLMatrix4x4 matrix = new XMLMatrix4x4();
@@ -31,7 +31,7 @@ public class XMLMatrixUtils {
      * Read a Blender-COLLADA column-major matrix and
      * returns a column-major Vecmath matrix.
      * @param str
-     * @return
+     * @return the 4x4 XML matrix
      */
     public static XMLMatrix4x4 readColumnMajor(String str) {
         XMLMatrix4x4 matrix = new XMLMatrix4x4();

@@ -24,7 +24,7 @@ public class SkeletonLoader {
     /**
      * Loads a whole Skeleton.
      * @param rootNode
-     * @return
+     * @return the skeleton
      */
     public static Skeleton loadSkeleton(XMLNode rootNode) {
         
