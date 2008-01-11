@@ -170,7 +170,7 @@ public final class Log
      */
     public static final void print( LogChannel channel, Throwable exception )
     {
-        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.ERROR ) )
+        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.EXCEPTION ) )
             logMgr.print( channel, exception );
     }
     
