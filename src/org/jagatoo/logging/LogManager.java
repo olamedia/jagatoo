@@ -127,12 +127,11 @@ public class LogManager
         {
             for ( int i = off; i < (off + len); i++ )
             {
-                char ch = cbuf[ i ];
+                final char ch = cbuf[ i ];
                 
                 if ( ch == 13 )
                 {
-                    String s = buf.toString();
-                    println( channel, type, s );
+                    internalPrint( channel, type, new String[] { buf.toString() }, true );
                     buf.setLength( 0 );
                 }
                 else if ( ch >= 32 )
@@ -338,53 +337,30 @@ public class LogManager
         return( strBuff.toString() );
     }
     
-    private final synchronized void internalPrintln( LogChannel channel, int logLevel, String message )
+    private final String composeMessage( String prefix1, String prefix2, Object[] message )
     {
-        if ( !isAnyLogInterfaceRegistered( channel, logLevel ) )
+        getIndentationString();
+        
+        for ( int i = 0; i < message.length; i++ )
+        {
+            strBuff.append( message[ i ].toString() );
+        }
+        
+        if ( ( prefix1 != null ) && ( prefix2 != null ) )
+            return( prefix1 + prefix2 + getIndentPrefix() + strBuff.toString() );
+        else if ( prefix1 != null )
+            return( prefix1 + getIndentPrefix() + strBuff.toString() );
+        else if ( prefix2 != null )
+            return( prefix2 + getIndentPrefix() + strBuff.toString() );
+        else
+            return( getIndentPrefix() + strBuff.toString() );
+    }
+    
+    private final synchronized void internalPrint( LogChannel channel, int logLevel, Object[] message, boolean appendNL )
+    {
+        if ( ( message == null ) || ( message.length == 0 ) )
             return;
         
-        if ( logLevel >= LogLevel.DEBUG )
-        {
-            if ( !debugPackageFilter.isEmpty() )
-            {
-                final String callerPackage = getCallerPackage();
-                if ( !debugPackageFilter.contains( callerPackage  ) )
-                    return;
-            }
-        }
-        
-        final String prefix;
-        if ( lastNewLine && isTimestampingEnabled() )
-        {
-            prefix = "[" + getTimeString() + ", " + getMemory() + "] ";
-        }
-        else
-        {
-            prefix = "";
-        }
-        
-        for ( int i = 0; i < logs.size(); i++ )
-        {
-            logs.get( i ).println( channel, logLevel, prefix + getIndentPrefix() + message );
-        }
-        
-        this.lastNewLine = true;
-    }
-    
-    /**
-     * This method will call all the log objects to store the message,
-     * if they want to.
-     * 
-     * @param logLevel the logLevel of this message
-     * @param message the string message to be printed to the log
-     */
-    final void println( LogChannel channel, int logLevel, String message )
-    {
-        internalPrintln( channel, logLevel, message );
-    }
-    
-    synchronized final void print( LogChannel channel, int logLevel, String message )
-    {
         if ( !isAnyLogInterfaceRegistered( channel, logLevel ) )
             return;
         
@@ -405,7 +381,7 @@ public class LogManager
         }
         else
         {
-            prefix1 = "";
+            prefix1 = null;
         }
         
         final String prefix2;
@@ -415,15 +391,44 @@ public class LogManager
         }
         else
         {
-            prefix2 = "";
+            prefix2 = null;
         }
         
         for ( int i = 0; i < logs.size(); i++ )
         {
-            logs.get( i ).print( channel, logLevel, prefix1 + prefix2 + getIndentPrefix() + message );
+            final LogInterface log = logs.get( i );
+            
+            if ( appendNL )
+                log.println( channel, logLevel, composeMessage( prefix1, prefix2, message ) );
+            else
+                log.print( channel, logLevel, composeMessage( prefix1, prefix2, message ) );
         }
         
-        this.lastNewLine = false;
+        this.lastNewLine = true;
+    }
+    
+    /**
+     * This method will call all the log objects to store the message,
+     * if they want to.
+     * 
+     * @param logLevel the logLevel of this message
+     * @param message the string message to be printed to the log
+     */
+    synchronized final void print( LogChannel channel, int logLevel, Object[] message )
+    {
+        internalPrint( channel, logLevel, message, false );
+    }
+    
+    /**
+     * This method will call all the log objects to store the message,
+     * if they want to.
+     * 
+     * @param logLevel the logLevel of this message
+     * @param message the string message to be printed to the log
+     */
+    synchronized final void println( LogChannel channel, int logLevel, Object[] message )
+    {
+        internalPrint( channel, logLevel, message, true );
     }
     
     final void print( LogChannel channel, Throwable e )
@@ -433,6 +438,8 @@ public class LogManager
             p = new PrintWriter( new LogWriter( channel, LogLevel.ERROR ), true );
         else
             p = new PrintWriter( new LogWriter( channel, LogLevel.EXCEPTION ), true );
+        
+        lastNewLine = true;
         
         e.printStackTrace( p );
     }

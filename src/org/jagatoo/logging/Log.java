@@ -143,7 +143,7 @@ public final class Log
      * @param logLevel
      * @param message
      */
-    public static final void print( LogChannel channel, int logLevel, String message )
+    public static final void print( LogChannel channel, int logLevel, Object... message )
     {
         if ( logMgr.isAnyLogInterfaceRegistered( channel, logLevel ) )
             logMgr.print( channel, logLevel, message );
@@ -156,7 +156,7 @@ public final class Log
      * @param logLevel
      * @param message
      */
-    public static final void println( LogChannel channel, int logLevel, String message )
+    public static final void println( LogChannel channel, int logLevel, Object... message )
     {
         if ( logMgr.isAnyLogInterfaceRegistered( channel, logLevel ) )
             logMgr.println( channel, logLevel, message );
@@ -180,7 +180,7 @@ public final class Log
      * @param channel
      * @param message
      */
-    public static final void println( LogChannel channel, String message )
+    public static final void println( LogChannel channel, Object... message )
     {
         if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.REGULAR ) )
             logMgr.println( channel, LogLevel.REGULAR, message );
@@ -192,7 +192,7 @@ public final class Log
      * @param channel
      * @param message
      */
-    public static final void printlnEx( LogChannel channel, String message )
+    public static final void printlnEx( LogChannel channel, Object... message )
     {
         if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.EXHAUSTIVE ) )
             logMgr.println( channel, LogLevel.EXHAUSTIVE, message );
@@ -204,7 +204,7 @@ public final class Log
      * @param channel
      * @param message
      */
-    public static final void error( LogChannel channel, String message )
+    public static final void error( LogChannel channel, Object... message )
     {
         if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.ERROR ) )
             logMgr.println( channel, LogLevel.ERROR, message );
@@ -216,7 +216,7 @@ public final class Log
      * @param channel
      * @param message
      */
-    public static final void exception( LogChannel channel, String message )
+    public static final void exception( LogChannel channel, Object... message )
     {
         if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.EXCEPTION ) )
             logMgr.println( channel, LogLevel.EXCEPTION, message );
@@ -228,7 +228,7 @@ public final class Log
      * @param channel
      * @param message
      */
-    public static final void debug( LogChannel channel, String message )
+    public static final void debug( LogChannel channel, Object... message )
     {
         if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.DEBUG ) )
             logMgr.println( channel, LogLevel.DEBUG, message );
@@ -240,7 +240,7 @@ public final class Log
      * @param channel
      * @param message
      */
-    public static final void profile( LogChannel channel, String message )
+    public static final void profile( LogChannel channel, Object... message )
     {
         if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.PROFILE ) )
             logMgr.println( channel, LogLevel.PROFILE, message );

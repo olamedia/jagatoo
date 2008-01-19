@@ -144,7 +144,7 @@ public final class JAGTLog
      * @param logLevel
      * @param message
      */
-    public static final void print( int logLevel, String message )
+    public static final void print( int logLevel, Object... message )
     {
         Log.print( LOG_CHANNEL, logLevel, message );
     }
@@ -155,7 +155,7 @@ public final class JAGTLog
      * @param logLevel
      * @param message
      */
-    public static final void println( int logLevel, String message )
+    public static final void println( int logLevel, Object... message )
     {
         Log.println( LOG_CHANNEL, logLevel, message );
     }
@@ -175,7 +175,7 @@ public final class JAGTLog
      * 
      * @param message
      */
-    public static final void println( String message )
+    public static final void println( Object... message )
     {
         Log.println( LOG_CHANNEL, LogLevel.REGULAR, message );
     }
@@ -185,7 +185,7 @@ public final class JAGTLog
      * 
      * @param message
      */
-    public static final void printlnEx( String message )
+    public static final void printlnEx( Object... message )
     {
         Log.println( LOG_CHANNEL, LogLevel.EXHAUSTIVE, message );
     }
@@ -195,7 +195,7 @@ public final class JAGTLog
      * 
      * @param message
      */
-    public static final void error( String message )
+    public static final void error( Object... message )
     {
         Log.println( LOG_CHANNEL, LogLevel.ERROR, message );
     }
@@ -205,7 +205,7 @@ public final class JAGTLog
      * 
      * @param message
      */
-    public static final void exception( String message )
+    public static final void exception( Object... message )
     {
         Log.println( LOG_CHANNEL, LogLevel.EXCEPTION, message );
     }
@@ -215,7 +215,7 @@ public final class JAGTLog
      * 
      * @param message
      */
-    public static final void debug( String message )
+    public static final void debug( Object... message )
     {
         Log.println( LOG_CHANNEL, LogLevel.DEBUG, message );
     }
@@ -225,7 +225,7 @@ public final class JAGTLog
      * 
      * @param message
      */
-    public static final void profile( String message )
+    public static final void profile( Object... message )
     {
         Log.println( LOG_CHANNEL, LogLevel.PROFILE, message );
     }
