@@ -151,7 +151,6 @@ public class LibraryGeometriesLoader {
      * @param tris
      * @return the loaded geometry
      */
-    @SuppressWarnings("unchecked")
     static TrianglesGeometry loadTriangles(XMLGeometry geom,
             XMLTriangles tris, HashMap<String, XMLSource> sourcesMap) {
 

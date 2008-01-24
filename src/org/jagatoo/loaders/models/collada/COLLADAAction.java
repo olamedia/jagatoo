@@ -89,10 +89,8 @@ public class COLLADAAction {
     public void prepareBones() {
         
         for (Bone bone : this.skeleton) {
-            bone.rotKeyFrames = this.rotKeyFrames.get(bone).toArray(
-                    new KeyFrameQuat4f[0]);
-            bone.scaleKeyFrames = this.scaleKeyFrames.get(bone).toArray(
-                    new KeyFramePoint3f[0]);
+            bone.rotKeyFrames = this.rotKeyFrames.get(bone);
+            bone.scaleKeyFrames = this.scaleKeyFrames.get(bone);
         }
     }
     

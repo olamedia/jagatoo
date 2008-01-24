@@ -20,19 +20,26 @@ public class XMLSkin {
 
 	public String source = null;
     
-    // Here we instanciate it because if not read, it should be identity
+    // Here we instantiate it because if not read, it should be identity
     // (so the COLLADA doc says)
     public XMLMatrix4x4 bindShapeMatrix = new XMLMatrix4x4();
     
     public ArrayList<XMLSource> sources = null;
     public ArrayList<XMLInput> jointsInputs = null;
-    public XMLVertexWeights vertexWeights = null;
+    public XMLVertexWeights vertexWeights = new XMLVertexWeights();
     
     /**
      * Build an array of BoneWeight for easy skinning manipulation
      */
     public Influence[] buildInfluencesForVertex( int vertexIndex ) {
     	//get the number of influences (bone-weight) for the vertex
+    	if(vertexIndex >= vertexWeights.vcount.ints.length) {
+//FIXME:   		throw new Error("Requested vertex index, " + vertexIndex + ", is " +
+//    				"greater than the size of XMLVertexWeights vertices array's " +
+//    				"max index number, which is " +
+//    				(vertexWeights.vcount.ints.length-1) + ".");
+    		vertexIndex = vertexWeights.vcount.ints.length-1;
+    	}
     	int influences = vertexWeights.vcount.ints[ vertexIndex ];
     	
     	
@@ -42,6 +49,9 @@ public class XMLSkin {
     	
     	//fill the array "skin-weights" source
     	Influence[] boneWeights = new Influence[ influences ];
+    	for (int i = 0; i < boneWeights.length; i++) {
+    		boneWeights[i] = new Influence();
+		}
     	//FIXME I don`t know how to use well the offset attribute:
     	/*
     	 * Example:
@@ -62,7 +72,7 @@ public class XMLSkin {
      */
 	private XMLSource getWeightSources() {
 		for (XMLSource source : sources) {
-			if ( source.id.equals( SKING_WEIGHT_SOURCE ) ) {
+			if ( source.id.contains( SKING_WEIGHT_SOURCE ) ) {
 				return source;
 			}
 		}

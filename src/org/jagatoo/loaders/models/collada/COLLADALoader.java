@@ -174,6 +174,17 @@ public class COLLADALoader {
 
             logger.increaseTabbing();
 
+            
+            List<XMLLibraryGeometries> libraryGeometriesList = collada.libraryGeometries;
+            if(libraryGeometriesList != null) {
+                for (XMLLibraryGeometries libraryGeometries : libraryGeometriesList) {
+                    logger.print("CC] Found LibraryGeometries ! We know that !");
+                    logger.increaseTabbing();
+                    LibraryGeometriesLoader.loadLibraryGeometries(colladaFile, libraryGeometries);
+                    logger.decreaseTabbing();
+                }
+            }
+
             List<XMLLibraryControllers> libraryControllersList = collada.libraryControllers;
             if(libraryControllersList != null) {
                 for (XMLLibraryControllers libraryControllers : libraryControllersList) {
@@ -203,27 +214,8 @@ public class COLLADALoader {
                     logger.decreaseTabbing();
                 }
             }
-
-            List<XMLLibraryMaterials> libraryMaterialsList = collada.libraryMaterials;
-            if(libraryMaterialsList != null) {
-                for (XMLLibraryMaterials libraryMaterials : libraryMaterialsList) {
-                    logger.print("CC] Found LibraryMaterials ! We know that !");
-                    logger.increaseTabbing();
-                    LibraryMaterialsLoader.loadLibraryMaterials(colladaFile, libraryMaterials);
-                    logger.decreaseTabbing();
-                }
-            }
-
-            List<XMLLibraryGeometries> libraryGeometriesList = collada.libraryGeometries;
-            if(libraryGeometriesList != null) {
-                for (XMLLibraryGeometries libraryGeometries : libraryGeometriesList) {
-                    logger.print("CC] Found LibraryGeometries ! We know that !");
-                    logger.increaseTabbing();
-                    LibraryGeometriesLoader.loadLibraryGeometries(colladaFile, libraryGeometries);
-                    logger.decreaseTabbing();
-                }
-            }
-
+            
+            
             List<XMLLibraryVisualScenes> libraryVisualScenesList = collada.libraryVisualScenes;
             if(libraryVisualScenesList != null) {
                 for (XMLLibraryVisualScenes libraryVisualScenes : libraryVisualScenesList) {
@@ -235,10 +227,20 @@ public class COLLADALoader {
                 }
             }
 
+            List<XMLLibraryMaterials> libraryMaterialsList = collada.libraryMaterials;
+            if(libraryMaterialsList != null) {
+                for (XMLLibraryMaterials libraryMaterials : libraryMaterialsList) {
+                    logger.print("CC] Found LibraryMaterials ! We know that !");
+                    logger.increaseTabbing();
+                    LibraryMaterialsLoader.loadLibraryMaterials(colladaFile, libraryMaterials);
+                    logger.decreaseTabbing();
+                }
+            }
+            
             List<XMLLibraryAnimations> libraryAnimationsList = collada.libraryAnimations;
             if ( libraryAnimationsList != null ) {
             	for (XMLLibraryAnimations libraryAnimations : libraryAnimationsList) {
-            		logger.print("CC] Found LibraryGeometries ! We should know that !");
+            		logger.print("CC] Found LibraryAnimations ! We should know that !");
                     logger.increaseTabbing();
                     LibraryAnimationsLoader.loadLibraryAnimations( colladaFile, libraryAnimations );
                     logger.decreaseTabbing();
@@ -247,7 +249,6 @@ public class COLLADALoader {
             }
 
             logger.decreaseTabbing();
-
 
             //creates a simple model to perform the skeleton animation algorithm
             colladaFile.setModel( new ColladaProtoypeModel( colladaFile ) );

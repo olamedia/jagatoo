@@ -1,5 +1,7 @@
 package org.jagatoo.loaders.models.collada.datastructs.animation;
 
+import java.util.List;
+
 import org.jagatoo.loaders.models.collada.Rotations;
 import org.openmali.vecmath2.Point3f;
 
@@ -52,7 +54,6 @@ public abstract class KeyFrame {
                 values[valueIndex + 1],
                 values[valueIndex + 2]
         );
-        
         return frame;
         
     }
@@ -106,11 +107,11 @@ public abstract class KeyFrame {
      *                in milliseconds
      * @return selected key frame index
      */
-    public static int searchNextFrame(KeyFrame[] frames, long currentTime) {
+    public static int searchNextFrame(List<? extends KeyFrame> frames, long currentTime) {
         
         int frame = 0;
         
-        while (frame < frames.length && frames[frame].time < currentTime) {
+        while (frame < frames.size() && frames.get(frame).time < currentTime) {
             frame++;
         }
         

@@ -1,5 +1,6 @@
 package org.jagatoo.loaders.models.collada;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,8 +10,11 @@ import java.util.Map;
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
+import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFramePoint3f;
+import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrameQuat4f;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.jibx.XMLAnimation;
+import org.jagatoo.loaders.models.collada.jibx.XMLChannel;
 import org.jagatoo.loaders.models.collada.jibx.XMLLibraryAnimations;
 import org.jagatoo.loaders.models.collada.jibx.XMLChannel.ChannelType;
 
@@ -43,7 +47,7 @@ public class LibraryAnimationsLoader {
         // fill with key frames
         //but I don't where to save all this COLLADAACtion.
 
-
+        HashMap<String, COLLADAAction> colAnims = colladaFile.getLibraryAnimations().getAnimations();
 
 
 
@@ -56,15 +60,19 @@ public class LibraryAnimationsLoader {
 
         for(Skeleton skeleton : colladaFile.getLibraryVisualsScenes().getSkeletons().values()) {
 
+        	//create new Action
+            COLLADALoader.logger.print("Creating new COLLADAAction with ID of " + skeleton.getRootBone().getName() + "-action.");
+            COLLADAAction currAction = new COLLADAAction(skeleton.getRootBone().getName() + "-action");
+            currAction.setSkeleton(skeleton);
+        	
             // loop through each bone
             int animCount;
             KeyFrame keyFrame;
             Iterator<Bone> it = skeleton.iterator();
             while(it.hasNext()) {
-
                 Bone bone = it.next();
 
-                COLLADALoader.logger.print( "Loading animations for bone" + bone.getName() );
+                COLLADALoader.logger.print( "Loading animations for bone " + bone.getName() );
 
                 COLLADALoader.logger.increaseTabbing();
 
@@ -72,27 +80,25 @@ public class LibraryAnimationsLoader {
                 animCount = 0;
                 for (XMLAnimation animation : anims) {
                     if( animCount < MAX_ANIMATIONS_PER_BONE &&
-                            animation.getTargetBone().equals( bone.getName() ) ) {
+                            animation.getTargetBone().equals( bone.getName() )) {
 
                         COLLADALoader.logger.print("Loading animation "+animation.name+" of type "+animation.getType()+
                                 (animation.getType() == ChannelType.ROTATE ? (" and of axis "+animation.getRotationAxis()):""));
-
+                        if(animation.getType() == null) animation.channels.get(0).type = XMLChannel.ChannelType.SCALE;
                         switch(animation.getType()) {
 
                         case TRANSLATE :
 
                             // it's a translation key frame
-
-                            /*
                             for (int j = 0, k = 0; j < animation.getInput().length; j++, k+=3) {
                                 keyFrame = KeyFrame.buildPoint3fKeyFrame(
                                         animation.getInput()[ j ],
                                         animation.getOutput(),
                                         k );
-                                bone.transKeyFrames.add( keyFrame );
+                                currAction.getSkeleton().transKeyFrames.add((KeyFramePoint3f)keyFrame);
                             }
 
-                             */
+                             
                             break;
 
                         case ROTATE :
@@ -108,7 +114,7 @@ public class LibraryAnimationsLoader {
                                  * And anyway this should be added to a COLLADAAction,
                                  * not to the bones
                                  */
-                                //bone.rotKeyFrames.add( keyFrame );
+                                bone.rotKeyFrames.add( (KeyFrameQuat4f)keyFrame );
                             }
 
                             break;
@@ -126,13 +132,15 @@ public class LibraryAnimationsLoader {
                                  * And anyway this should be added to a COLLADAAction,
                                  * not to the bones
                                  */
-                                //bone.scaleKeyFrames.add( keyFrame );
+                                bone.scaleKeyFrames.add( (KeyFramePoint3f)keyFrame );
                             }
 
                             break;
 
                         }
-
+                        //add current Action
+                        colAnims.put(currAction.getId(), currAction);
+                        
                         //update total anims for the bone
                         animCount++;
                     }

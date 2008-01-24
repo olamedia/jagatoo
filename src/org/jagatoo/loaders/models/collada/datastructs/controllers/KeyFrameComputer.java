@@ -1,5 +1,7 @@
 package org.jagatoo.loaders.models.collada.datastructs.controllers;
 
+import java.util.List;
+
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFramePoint3f;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrameQuat4f;
@@ -22,7 +24,7 @@ public class KeyFrameComputer {
      * @param keyFrames The keyframes of the animation (translation or scaling)
      * @param toInterpolate
      */
-    public static void computeTuple3f(long currentTime, KeyFramePoint3f[] keyFrames, Point3f toInterpolate) {
+    public static void computeTuple3f(long currentTime, List<KeyFramePoint3f> keyFrames, Point3f toInterpolate) {
         
         int frame = KeyFrame.searchNextFrame(keyFrames, currentTime);
         
@@ -32,15 +34,15 @@ public class KeyFrameComputer {
              * Case 1 : we're before the first keyframe
              * Solution : take the first keyframe
              */
-            toInterpolate.set(keyFrames[frame].value);
+            toInterpolate.set(keyFrames.get(frame).value);
             
-        } else if (frame == keyFrames.length) {
+        } else if (frame == keyFrames.size()) {
             
             /*
              * Case 2 : we're after the last keyframe
              * Solution : take the last keyframe
              */
-            toInterpolate.set(keyFrames[frame - 1].value);
+            toInterpolate.set(keyFrames.get(frame-1).value);
             
         } else {
             
@@ -48,8 +50,8 @@ public class KeyFrameComputer {
              * Case 3 : we're between two keyframes
              * Solution : interpolate
              */
-            KeyFramePoint3f prevFrame = keyFrames[frame - 1];
-            KeyFramePoint3f nextFrame = keyFrames[frame];
+            KeyFramePoint3f prevFrame = keyFrames.get(frame - 1);
+            KeyFramePoint3f nextFrame = keyFrames.get(frame);
             
             // time distance beetween both frames
             long timeDist = nextFrame.time - prevFrame.time;
@@ -71,7 +73,7 @@ public class KeyFrameComputer {
      * @param keyFrames The keyframes of the animation (translation or scaling)
      * @param toInterpolate
      */
-    public static void computeQuaternion4f(long currentTime, KeyFrameQuat4f[] keyFrames, Quaternion4f toInterpolate) {
+    public static void computeQuaternion4f(long currentTime, List<KeyFrameQuat4f> keyFrames, Quaternion4f toInterpolate) {
         
         int frame = KeyFrame.searchNextFrame(keyFrames, currentTime);
         
@@ -81,15 +83,15 @@ public class KeyFrameComputer {
              * Case 1 : we're before the first keyframe
              * Solution : take the first keyframe
              */
-            toInterpolate.set(keyFrames[frame].value);
+            toInterpolate.set(keyFrames.get(frame).value);
             
-        } else if (frame == keyFrames.length) {
+        } else if (frame == keyFrames.size()) {
             
             /*
              * Case 2 : we're after the last keyframe
              * Solution : take the last keyframe
              */
-            toInterpolate.set(keyFrames[frame - 1].value);
+            toInterpolate.set(keyFrames.get(frame - 1).value);
             
         } else {
             
@@ -97,8 +99,8 @@ public class KeyFrameComputer {
              * Case 3 : we're between two keyframes
              * Solution : interpolate
              */
-            KeyFrameQuat4f prevFrame = keyFrames[frame - 1];
-            KeyFrameQuat4f nextFrame = keyFrames[frame];
+            KeyFrameQuat4f prevFrame = keyFrames.get(frame - 1);
+            KeyFrameQuat4f nextFrame = keyFrames.get(frame);
             
             // time distance beetween both frames
             long timeDist = nextFrame.time - prevFrame.time;

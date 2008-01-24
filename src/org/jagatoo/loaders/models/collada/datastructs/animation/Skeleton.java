@@ -1,6 +1,8 @@
 package org.jagatoo.loaders.models.collada.datastructs.animation;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.openmali.vecmath2.Matrix3f;
 import org.openmali.vecmath2.Point3f;
@@ -27,7 +29,7 @@ public class Skeleton implements Iterable<Bone> {
     public final Point3f relativeTranslation;
 
     /** The keyframes of position */
-    public KeyFramePoint3f[] transKeyFrames;
+    public List<KeyFramePoint3f> transKeyFrames;
 
     /**
      * Iterator for easy managment of the bones
@@ -47,6 +49,7 @@ public class Skeleton implements Iterable<Bone> {
 
         this.rootBone = rootBone;
         this.relativeTranslation = relativeTranslation;
+        transKeyFrames = new ArrayList<KeyFramePoint3f>();
 
     }
 

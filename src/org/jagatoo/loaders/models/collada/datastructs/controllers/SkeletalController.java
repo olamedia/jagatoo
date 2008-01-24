@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.jagatoo.loaders.models.collada.AnimatableModel;
 import org.jagatoo.loaders.models.collada.COLLADAAction;
+import org.jagatoo.loaders.models.collada.COLLADALoader;
 import org.jagatoo.loaders.models.collada.datastructs.ColladaProtoypeModel;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
@@ -30,7 +31,6 @@ public class SkeletalController extends Controller implements AnimatableModel {
     private String sourceMeshId = null;
 
     /** COLLADA Geometry */
-    @SuppressWarnings("unused")
     private Geometry sourceMesh;
 
     /** The skeleton we're using to compute */
@@ -50,8 +50,11 @@ public class SkeletalController extends Controller implements AnimatableModel {
 
         super(libGeoms, controller);
         this.sourceMeshId = sourceMeshId;
-        // Not a good idea : the libGeoms isn't filled at this time
-        //this.sourceMesh = libGeoms.getGeometries().get(sourceMeshId);
+        // Not a good idea : the libGeoms isn't filled at this time.
+        // Yes It Is, Due To My Change.
+        System.out.println("The geometry at sourceMeshId, which is "
+        		+ sourceMeshId + ", is equal to " + libGeoms.getGeometries().get(this.sourceMeshId));
+        this.sourceMesh = libGeoms.getGeometries().get(this.sourceMeshId);
 
     }
 
@@ -122,13 +125,13 @@ public class SkeletalController extends Controller implements AnimatableModel {
         if(skeleton == null) {
 
             System.out
-            .println("Hey ! We haven't been initialized yet... Damn.");
+            .println("Hey ! We haven't been initialized yet... Darn.");
 
         } else {
 
             System.out
-            .println("Know what ? Our skeleton root bone is named is : "
-                    + skeleton.getRootBone().getName());
+            .println("Know what ? Our skeleton root bone is named \""
+                    + skeleton.getRootBone().getName()+"\"");
 
             // deltaT to animate
             currentTime += deltaT;
@@ -138,9 +141,10 @@ public class SkeletalController extends Controller implements AnimatableModel {
 
             // loop through all bones
             for (Bone bone : this.skeleton) {
-
+            	System.out.println("Bone " + bone.getName());
                 // if there is no keyframes, don't do any transformations
                 if (!bone.hasKeyFrames()) {
+                	System.out.println("no keyframes!");
                     bone.setNoRelativeMovement();
                     continue;
                 }

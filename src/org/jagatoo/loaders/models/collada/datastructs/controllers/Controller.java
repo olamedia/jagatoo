@@ -21,11 +21,8 @@ public abstract class Controller extends GeometryProvider {
      * @param controller
      */
     public Controller(LibraryGeometries libGeoms, XMLController controller) {
-        
         super(libGeoms);
         this.controller = controller;
-        
-        
     }
     
     /**

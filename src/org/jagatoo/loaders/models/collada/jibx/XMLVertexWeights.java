@@ -12,6 +12,6 @@ public class XMLVertexWeights {
     
     public ArrayList<XMLInput> inputs = null;
     public XMLIntArray vcount = null;
-    public XMLIntArray v = null;
+    public XMLIntArray v = new XMLIntArray();
     
 }

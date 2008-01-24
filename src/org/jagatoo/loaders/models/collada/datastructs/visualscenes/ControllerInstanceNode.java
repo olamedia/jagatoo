@@ -37,12 +37,11 @@ public class ControllerInstanceNode extends Node {
     }
     
     /**
-     * @return the geometry
+     * @return the controller
      */
     public Controller getController() {
         
         return file.getLibraryControllers().getControllers().get(controllerUrl);
-        
     }
     
     /**

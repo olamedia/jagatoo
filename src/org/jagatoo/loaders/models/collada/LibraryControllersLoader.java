@@ -37,7 +37,8 @@ public class LibraryControllersLoader {
             String id = controller.id;
             COLLADALoader.logger.print("TT] Found controller with Id : \"" + id
                     + "\" and source : \"" + source + "\"");
-            controllersMap.put(id, new SkeletalController(colladaFile.getLibraryGeometries(), source, controller));
+            colladaFile.getLibraryControllers().getControllers()
+            .put(id, new SkeletalController(colladaFile.getLibraryGeometries(), source, controller));
         }
         
     }

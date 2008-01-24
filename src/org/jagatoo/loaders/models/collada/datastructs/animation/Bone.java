@@ -76,14 +76,14 @@ public class Bone {
      * animation. They are here to simplify the animation algorithm.
      * These are ROTATION key frames.
      */
-    public KeyFrameQuat4f[] rotKeyFrames;
+    public List<KeyFrameQuat4f> rotKeyFrames = new ArrayList<KeyFrameQuat4f>();
     /**
      * Temporal key frames for the bone. They are reference extracted from the
      * current animation and they will change every time you play a different
      * animation. They are here to simplify the animation algorithm.
      * These are SCALE key frames.
      */
-    public KeyFramePoint3f[] scaleKeyFrames;
+    public List<KeyFramePoint3f> scaleKeyFrames = new ArrayList<KeyFramePoint3f>();
 
 
     /**
@@ -258,8 +258,8 @@ public class Bone {
      * @return true if the bone has at least one key frame of any kind
      */
     public boolean hasKeyFrames() {
-        return rotKeyFrames.length
-                + scaleKeyFrames.length > 0;
+        return rotKeyFrames.size()
+                + scaleKeyFrames.size() > 0;
     }
 
     /**

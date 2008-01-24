@@ -2,6 +2,7 @@ package org.jagatoo.loaders.models.collada.datastructs;
 
 import java.net.URL;
 
+import org.jagatoo.loaders.models.collada.datastructs.animation.LibraryAnimations;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.LibraryControllers;
 import org.jagatoo.loaders.models.collada.datastructs.effects.LibraryEffects;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.LibraryGeometries;
@@ -42,6 +43,9 @@ public class AssetFolder {
 
     /** LibraryVisualScenes : contains all visual scenes */
     private LibraryVisualScenes libraryVisualsScenes;
+    
+    /** LibraryAnimations : contains all animations/actions */
+    private LibraryAnimations libraryAnimations;
 
     private ColladaProtoypeModel model;
 
@@ -60,6 +64,7 @@ public class AssetFolder {
         this.basePath = basePath;
 
         libraryControllers = new LibraryControllers();
+        libraryAnimations = new LibraryAnimations();
         libraryEffects = new LibraryEffects();
         libraryImages = new LibraryImages();
         libraryMaterials = new LibraryMaterials();
@@ -108,6 +113,13 @@ public class AssetFolder {
      */
     public LibraryVisualScenes getLibraryVisualsScenes() {
         return libraryVisualsScenes;
+    }
+    
+    /**
+     * @return the libraryAnimations
+     */
+    public LibraryAnimations getLibraryAnimations() {
+        return libraryAnimations;
     }
 
     /**

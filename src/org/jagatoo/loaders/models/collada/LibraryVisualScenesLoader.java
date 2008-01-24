@@ -74,15 +74,19 @@ public class LibraryVisualScenesLoader {
 
                     // FIXME : applying YAGNI (You Ain't Gonna Need It) philosophy here : we don't need to know whether these nodes are grouped or separate
                     if(node.instanceGeometries != null) {
+                    	COLLADALoader.logger.print("TT] A geometry node!");
                         for (XMLInstanceGeometry instanceGeometry : node.instanceGeometries) {
                             colNode = newCOLLADAGeometryInstanceNode(colladaFile, node, transform, instanceGeometry.url, instanceGeometry.bindMaterial);
                         }
                     } else if(node.instanceControllers != null) {
+                    	COLLADALoader.logger.print("TT] A controller node!");
                         for (XMLInstanceController instanceController : node.instanceControllers) {
                             colNode = newCOLLADAControllerInstanceNode(colladaFile, node, transform, instanceController.url, instanceController.bindMaterial);
                             Controller controller = colladaFile.getLibraryControllers().getControllers().get(instanceController.url);
                             if(controller instanceof SkeletalController) {
+                            	COLLADALoader.logger.print("Wow! It's a Skeletal Controller Node!");
                                 ((SkeletalController) controller).setSkeleton(colLibVisualScenes.getSkeletons().get(instanceController.skeleton));
+                                ((SkeletalController) controller).setDestinationMesh(colladaFile.getLibraryGeometries().getGeometries().get(((SkeletalController) controller).getSourceMeshId()));
                             }
                         }
                     }
@@ -115,9 +119,10 @@ public class LibraryVisualScenesLoader {
                 COLLADALoader.logger.decreaseTabbing();
 
                 if (colNode != null) {
+                	COLLADALoader.logger.print("TT] Successfully adding colNode " + colNode.getId());
                     colScene.getNodes().put(colNode.getId(), colNode);
-                } else {
-                    COLLADALoader.logger.print("TT] NULL node !! Something went wrong...");
+                } else if (node.type != XMLNode.Type.JOINT) {
+                    COLLADALoader.logger.print("TT] NULL node! Something went wrong...");
                 }
 
             }

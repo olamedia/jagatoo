@@ -20,9 +20,9 @@ public class XMLAnimation {
 
     public XMLAsset asset = null;
 
-    public ArrayList<XMLSource> sources = null;
-    public ArrayList<XMLSampler> samplers = null;
-    public ArrayList<XMLChannel> channels = null;
+    public ArrayList<XMLSource> sources = new ArrayList<XMLSource>();
+    public ArrayList<XMLSampler> samplers = new ArrayList<XMLSampler>();
+    public ArrayList<XMLChannel> channels = new ArrayList<XMLChannel>();
 
 
     /**
