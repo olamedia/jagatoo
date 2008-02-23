@@ -47,7 +47,7 @@ public class SkeletonIterator implements Iterator<Bone> {
 	}
 
 	public boolean hasNext() {
-		return currentIndex + 1 < bones.size();
+		return (currentIndex + 1) < bones.size();
 	}
 
 	public Bone next() {

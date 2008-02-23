@@ -1,6 +1,7 @@
 package org.jagatoo.loaders.models.collada.datastructs.controllers;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.jagatoo.loaders.models.collada.AnimatableModel;
 import org.jagatoo.loaders.models.collada.COLLADAAction;
@@ -50,11 +51,9 @@ public class SkeletalController extends Controller implements AnimatableModel {
 
         super(libGeoms, controller);
         this.sourceMeshId = sourceMeshId;
-        // Not a good idea : the libGeoms isn't filled at this time.
-        // Yes It Is, Due To My Change.
         System.out.println("The geometry at sourceMeshId, which is "
-        		+ sourceMeshId + ", is equal to " + libGeoms.getGeometries().get(this.sourceMeshId));
-        this.sourceMesh = libGeoms.getGeometries().get(this.sourceMeshId);
+        		+ sourceMeshId + ", is equal to " + libGeoms.getGeometries().get(sourceMeshId));
+        this.sourceMesh = libGeoms.getGeometries().get(sourceMeshId);
 
     }
 
@@ -128,7 +127,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
             .println("Hey ! We haven't been initialized yet... Darn.");
 
         } else {
-
+            this.skeleton.resetIterator();
             System.out
             .println("Know what ? Our skeleton root bone is named \""
                     + skeleton.getRootBone().getName()+"\"");
@@ -137,10 +136,13 @@ public class SkeletalController extends Controller implements AnimatableModel {
             currentTime += deltaT;
 
             // Translation : only for the skeleton
-            KeyFrameComputer.computeTuple3f(currentTime, skeleton.transKeyFrames, skeleton.relativeTranslation);
 
+            KeyFrameComputer.computeTuple3f(currentTime, skeleton.transKeyFrames, skeleton.relativeTranslation);
+            System.out.println("Here");
             // loop through all bones
-            for (Bone bone : this.skeleton) {
+            Iterable<Bone> boneIt = this.skeleton;
+            System.out.println(boneIt.iterator().hasNext());
+            for (Bone bone : boneIt) {
             	System.out.println("Bone " + bone.getName());
                 // if there is no keyframes, don't do any transformations
                 if (!bone.hasKeyFrames()) {
@@ -148,7 +150,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
                     bone.setNoRelativeMovement();
                     continue;
                 }
-
+                System.out.println("Keyframes");
                 // Scaling
                 KeyFrameComputer.computeTuple3f(currentTime, bone.scaleKeyFrames, bone.relativeScaling);
 
@@ -166,9 +168,10 @@ public class SkeletalController extends Controller implements AnimatableModel {
 
         /*
          * Now I need to to apply transitions to every vertex. I need the
-         * following information and I don't know where the hell it's: 1) The
-         * mesh I am animating 2) The triangles of that mesh 3) The vertices 3
-         * for each triangle 4) The normals 3 for each triangle
+         * following information and I don't know where 1) The
+         * mesh I am animating is 2) The triangles of that mesh are 3) The
+         * vertices, 3 for each triangle, are 4) The normals 3 for each triangle
+         * are.
          *
          * I suppose there should be something in Geometry. The only place I
          * could find something is Mesh, It has the vertices and normals
@@ -189,7 +192,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
 
         //skin info
         XMLSkin skin = this.getController().skin;
-
+        
         //iterate over vertices
         Influence[] influences;
         for (int i = 0; i < mesh.vertexIndices.length; i++) {

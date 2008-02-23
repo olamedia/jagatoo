@@ -17,7 +17,7 @@ public class PolygonsGeometry extends Geometry {
     /**
      * Creates a new COLLADA Polygons Geometry.
      *
-     * @param file TODO
+     * @param file The given AssetFolder to load from
      * @param id {@inheritDoc}
      * @param name {@inheritDoc}
      * @param polygonCount The number of polygons that should be

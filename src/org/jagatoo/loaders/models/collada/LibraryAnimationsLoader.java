@@ -49,8 +49,6 @@ public class LibraryAnimationsLoader {
 
         HashMap<String, COLLADAAction> colAnims = colladaFile.getLibraryAnimations().getAnimations();
 
-
-
         /*
          * for( all Skeletons ) {
          *
@@ -68,7 +66,7 @@ public class LibraryAnimationsLoader {
             // loop through each bone
             int animCount;
             KeyFrame keyFrame;
-            Iterator<Bone> it = skeleton.iterator();
+            Iterator<Bone> it = currAction.getSkeleton().iterator();
             while(it.hasNext()) {
                 Bone bone = it.next();
 
@@ -90,6 +88,7 @@ public class LibraryAnimationsLoader {
                         case TRANSLATE :
 
                             // it's a translation key frame
+                        	System.out.println("Translation key frame...");
                             for (int j = 0, k = 0; j < animation.getInput().length; j++, k+=3) {
                                 keyFrame = KeyFrame.buildPoint3fKeyFrame(
                                         animation.getInput()[ j ],
@@ -109,11 +108,6 @@ public class LibraryAnimationsLoader {
                                         animation.getInput()[ j ],
                                         animation.getOutput()[ j ],
                                         animation.getRotationAxis() );
-                                /*
-                                 * FIXME : It's no longer a list, but an array, now
-                                 * And anyway this should be added to a COLLADAAction,
-                                 * not to the bones
-                                 */
                                 bone.rotKeyFrames.add( (KeyFrameQuat4f)keyFrame );
                             }
 
@@ -127,11 +121,6 @@ public class LibraryAnimationsLoader {
                                         animation.getInput()[ j ],
                                         animation.getOutput(),
                                         k );
-                                /*
-                                 * FIXME : It's no longer a list but an array, now
-                                 * And anyway this should be added to a COLLADAAction,
-                                 * not to the bones
-                                 */
                                 bone.scaleKeyFrames.add( (KeyFramePoint3f)keyFrame );
                             }
 
@@ -145,7 +134,7 @@ public class LibraryAnimationsLoader {
                         animCount++;
                     }
                 }
-
+//                currAction.setSkeleton(skeleton);
                 COLLADALoader.logger.decreaseTabbing();
 
                 compressRotationKeyFrames( bone );

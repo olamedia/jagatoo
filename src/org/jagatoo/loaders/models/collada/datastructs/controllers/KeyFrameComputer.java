@@ -50,6 +50,7 @@ public class KeyFrameComputer {
              * Case 3 : we're between two keyframes
              * Solution : interpolate
              */
+        	System.out.println("Interpolating...");
             KeyFramePoint3f prevFrame = keyFrames.get(frame - 1);
             KeyFramePoint3f nextFrame = keyFrames.get(frame);
             
@@ -76,7 +77,7 @@ public class KeyFrameComputer {
     public static void computeQuaternion4f(long currentTime, List<KeyFrameQuat4f> keyFrames, Quaternion4f toInterpolate) {
         
         int frame = KeyFrame.searchNextFrame(keyFrames, currentTime);
-        
+        System.out.println("Frame = " + frame);
         if (frame == 0) {
             
             /*

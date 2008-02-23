@@ -150,5 +150,9 @@ public class Skeleton implements Iterable<Bone> {
         }
         return this.iterator;
     }
+    
+    public void resetIterator() {
+    	this.iterator.reset();
+    }
 
 }

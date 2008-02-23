@@ -18,7 +18,7 @@ public class TrianglesGeometry extends Geometry {
     /**
      * Creates a new COLLADAGeometry.
      *
-     * @param file TODO
+     * @param file The given AssetFolder to load from
      * @param id {@inheritDoc}
      * @param name {@inheritDoc}
      * @param geometry the geometry
