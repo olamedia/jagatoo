@@ -170,7 +170,7 @@ public class COLLADALoader {
                     + "\n the COLLADA schema used for parsing is the for 1.4.1, tests for development"
                     + "\n have been done with 1.4.0 files exported by Blender (Illusoft script)");
 
-            logger.print("TT] Exploring libs...");
+            logger.print("TT] Exploring libraries...");
 
             logger.increaseTabbing();
 

@@ -82,6 +82,10 @@ public class SkeletalController extends Controller implements AnimatableModel {
      * Last animated time
      */
     private long currentTime = -1;
+    
+    private boolean bonesPrepared = false;
+    
+    private Iterable<Bone> boneIt = this.skeleton;
 
     /**
      * Starts playing the selected animation
@@ -89,16 +93,19 @@ public class SkeletalController extends Controller implements AnimatableModel {
     public void play(COLLADAAction action, boolean loop) {
 
         this.currentAction = action;
-
-        // we use the skeleton of the action
-        this.skeleton = action.getSkeleton();
-        this.loop = loop;
-
+        
         // complete the temps array reference in each bone of the skeleton
-        action.prepareBones();
+        currentAction.prepareBones();
+        bonesPrepared = true;
+        
+        // we use the skeleton of the action
+        this.skeleton = currentAction.getSkeleton();
+        this.loop = loop;
+        this.skeleton.resetIterator();
+        
+        boneIt = this.skeleton;
 
         currentTime = 0;
-
     }
 
     @Override
@@ -127,9 +134,8 @@ public class SkeletalController extends Controller implements AnimatableModel {
             .println("Hey ! We haven't been initialized yet... Darn.");
 
         } else {
-            this.skeleton.resetIterator();
             System.out
-            .println("Know what ? Our skeleton root bone is named \""
+            .println("Our skeleton root bone is named \""
                     + skeleton.getRootBone().getName()+"\"");
 
             // deltaT to animate
@@ -138,12 +144,14 @@ public class SkeletalController extends Controller implements AnimatableModel {
             // Translation : only for the skeleton
 
             KeyFrameComputer.computeTuple3f(currentTime, skeleton.transKeyFrames, skeleton.relativeTranslation);
-            System.out.println("Here");
             // loop through all bones
-            Iterable<Bone> boneIt = this.skeleton;
-            System.out.println(boneIt.iterator().hasNext());
+            if(currentAction == null) return destinationGeometry;
+            if(!bonesPrepared) {
+            	currentAction.prepareBones();
+                this.skeleton = currentAction.getSkeleton();
+            }
+            boneIt = this.skeleton;
             for (Bone bone : boneIt) {
-            	System.out.println("Bone " + bone.getName());
                 // if there is no keyframes, don't do any transformations
                 if (!bone.hasKeyFrames()) {
                 	System.out.println("no keyframes!");

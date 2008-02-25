@@ -29,12 +29,12 @@ public class Skeleton implements Iterable<Bone> {
     public final Point3f relativeTranslation;
 
     /** The keyframes of position */
-    public List<KeyFramePoint3f> transKeyFrames;
+    public List<KeyFramePoint3f> transKeyFrames = new ArrayList<KeyFramePoint3f>();;
 
     /**
      * Iterator for easy managment of the bones
      */
-    private SkeletonIterator iterator;
+   private SkeletonIterator iterator = new SkeletonIterator(this);
 
 
     /**
@@ -145,13 +145,17 @@ public class Skeleton implements Iterable<Bone> {
     }
 
     public Iterator<Bone> iterator() {
-        if (this.iterator == null) {
-            this.iterator = new SkeletonIterator(this);
-        }
+    	if(this.iterator == null ) {
+    		this.iterator = new SkeletonIterator(this);
+    	}
+    	if(!this.iterator.hasNext()) {
+    		resetIterator();
+    	}
         return this.iterator;
     }
     
     public void resetIterator() {
+    	this.iterator = new SkeletonIterator(this);
     	this.iterator.reset();
     }
 

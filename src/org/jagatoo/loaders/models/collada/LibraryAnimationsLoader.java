@@ -56,9 +56,11 @@ public class LibraryAnimationsLoader {
          *
          */
 
-        for(Skeleton skeleton : colladaFile.getLibraryVisualsScenes().getSkeletons().values()) {
-
+        for (Iterator<Skeleton> iterator = colladaFile.getLibraryVisualsScenes().getSkeletons().values().iterator(); iterator.hasNext();) {
+        	
+        	Skeleton skeleton = iterator.next();
         	//create new Action
+        	skeleton.resetIterator();
             COLLADALoader.logger.print("Creating new COLLADAAction with ID of " + skeleton.getRootBone().getName() + "-action.");
             COLLADAAction currAction = new COLLADAAction(skeleton.getRootBone().getName() + "-action");
             currAction.setSkeleton(skeleton);
@@ -76,6 +78,7 @@ public class LibraryAnimationsLoader {
 
                 // search the animations for each bone, max 4 ( 3 rots and 1 trans )
                 animCount = 0;
+                List<KeyFrameQuat4f> rotAnims = new ArrayList<KeyFrameQuat4f>();
                 for (XMLAnimation animation : anims) {
                     if( animCount < MAX_ANIMATIONS_PER_BONE &&
                             animation.getTargetBone().equals( bone.getName() )) {
@@ -83,6 +86,9 @@ public class LibraryAnimationsLoader {
                         COLLADALoader.logger.print("Loading animation "+animation.name+" of type "+animation.getType()+
                                 (animation.getType() == ChannelType.ROTATE ? (" and of axis "+animation.getRotationAxis()):""));
                         if(animation.getType() == null) animation.channels.get(0).type = XMLChannel.ChannelType.SCALE;
+                        
+
+                        
                         switch(animation.getType()) {
 
                         case TRANSLATE :
@@ -94,7 +100,7 @@ public class LibraryAnimationsLoader {
                                         animation.getInput()[ j ],
                                         animation.getOutput(),
                                         k );
-                                currAction.getSkeleton().transKeyFrames.add((KeyFramePoint3f)keyFrame);
+ //                               currAction.getSkeleton().transKeyFrames.add((KeyFramePoint3f)keyFrame);
                             }
 
                              
@@ -108,7 +114,7 @@ public class LibraryAnimationsLoader {
                                         animation.getInput()[ j ],
                                         animation.getOutput()[ j ],
                                         animation.getRotationAxis() );
-                                bone.rotKeyFrames.add( (KeyFrameQuat4f)keyFrame );
+                                rotAnims.add( (KeyFrameQuat4f)keyFrame );
                             }
 
                             break;
@@ -126,21 +132,24 @@ public class LibraryAnimationsLoader {
 
                             break;
 
-                        }
-                        //add current Action
-                        colAnims.put(currAction.getId(), currAction);
+                        }//end of animation type switch
+
                         
                         //update total anims for the bone
                         animCount++;
-                    }
-                }
-//                currAction.setSkeleton(skeleton);
-                COLLADALoader.logger.decreaseTabbing();
+                    }//end of bone validation if loop
 
+
+                }//end of animation iterator
                 compressRotationKeyFrames( bone );
-            }
+                currAction.rotKeyFrames.put(bone, rotAnims);
 
-        }
+            }//end of bone iterator
+            //add current Action
+            currAction.setSkeleton(skeleton);
+            colAnims.put(currAction.getId(), currAction);
+            COLLADALoader.logger.decreaseTabbing(); 
+        }//end of skeleton iterator
     }
 
     /**

@@ -258,8 +258,13 @@ public class Bone {
      * @return true if the bone has at least one key frame of any kind
      */
     public boolean hasKeyFrames() {
-        return rotKeyFrames.size()
-                + scaleKeyFrames.size() > 0;
+    	int total = 0;
+    	if(rotKeyFrames != null)
+    		total += rotKeyFrames.size();
+    	if(scaleKeyFrames != null)
+            total += scaleKeyFrames.size();
+        if(total > 0) return true;
+        return false;
     }
 
     /**

@@ -15,14 +15,12 @@ public class SkeletonIterator implements Iterator<Bone> {
 	private List<Bone> bones = new ArrayList<Bone>();
 	private int currentIndex;
 
-
 	/**
 	 * Creates an iterator for the bones of the skeleton
 	 * @param skeleton
 	 */
 	public SkeletonIterator( Skeleton skeleton ) {
 		this.skeleton = skeleton;
-		reset();
 	}
 
 	/**
@@ -30,6 +28,7 @@ public class SkeletonIterator implements Iterator<Bone> {
 	 */
 	public void reset() {
 		Bone bone = this.skeleton.rootBone;
+		bones.clear();
 		fillBoneList( bone, bones );
 		currentIndex = -1;
 	}

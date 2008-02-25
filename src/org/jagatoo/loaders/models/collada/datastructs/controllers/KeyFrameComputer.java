@@ -25,8 +25,9 @@ public class KeyFrameComputer {
      * @param toInterpolate
      */
     public static void computeTuple3f(long currentTime, List<KeyFramePoint3f> keyFrames, Point3f toInterpolate) {
-        
-        int frame = KeyFrame.searchNextFrame(keyFrames, currentTime);
+        int frame = 0;
+        if(keyFrames == null || frame >= keyFrames.size()) return;
+        frame = KeyFrame.searchNextFrame(keyFrames, currentTime);
         
         if (frame == 0) {
             

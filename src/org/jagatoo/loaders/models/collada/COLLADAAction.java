@@ -2,6 +2,7 @@ package org.jagatoo.loaders.models.collada;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -30,15 +31,15 @@ public class COLLADAAction {
      * Translation key frames : if any, define the movement of the
      * Skeleton itself (e.g. moves the whole model)
      */
-    private final List<KeyFramePoint3f> transKeyFrames = new ArrayList<KeyFramePoint3f> ();
+    public final List<KeyFramePoint3f> transKeyFrames = new ArrayList<KeyFramePoint3f> ();
     /**
      * Rotation key frames, per bone.
      */
-    private final Map<Bone, List<KeyFrameQuat4f>> rotKeyFrames = new HashMap<Bone, List<KeyFrameQuat4f>>();
+    public final Map<Bone, List<KeyFrameQuat4f>> rotKeyFrames = new HashMap<Bone, List<KeyFrameQuat4f>>();
     /**
      * Scale key frames, per bone.
      */
-    private final Map<Bone, List<KeyFramePoint3f>> scaleKeyFrames = new HashMap<Bone, List<KeyFramePoint3f>>();
+    public final Map<Bone, List<KeyFramePoint3f>> scaleKeyFrames = new HashMap<Bone, List<KeyFramePoint3f>>();
     
     /**
      * Skeleton for this action
@@ -87,10 +88,13 @@ public class COLLADAAction {
      * arrays
      */
     public void prepareBones() {
-        
-        for (Bone bone : this.skeleton) {
-            bone.rotKeyFrames = this.rotKeyFrames.get(bone);
-            bone.scaleKeyFrames = this.scaleKeyFrames.get(bone);
+        skeleton.resetIterator();
+        for (Iterator<Bone> iterator = this.skeleton.iterator(); iterator.hasNext();) {
+        	Bone bone = iterator.next();
+        	System.out.println(rotKeyFrames.get(bone));
+            bone.rotKeyFrames = rotKeyFrames.get(bone);
+            bone.scaleKeyFrames = scaleKeyFrames.get(bone);
+            System.out.println(bone.rotKeyFrames.equals(rotKeyFrames.get(bone)));
         }
     }
     
