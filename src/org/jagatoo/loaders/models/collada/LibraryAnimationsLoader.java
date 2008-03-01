@@ -87,8 +87,6 @@ public class LibraryAnimationsLoader {
                                 (animation.getType() == ChannelType.ROTATE ? (" and of axis "+animation.getRotationAxis()):""));
                         if(animation.getType() == null) animation.channels.get(0).type = XMLChannel.ChannelType.SCALE;
                         
-
-                        
                         switch(animation.getType()) {
 
                         case TRANSLATE :

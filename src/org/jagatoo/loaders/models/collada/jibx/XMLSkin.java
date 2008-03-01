@@ -33,19 +33,10 @@ public class XMLSkin {
      */
     public Influence[] buildInfluencesForVertex( int vertexIndex ) {
     	//get the number of influences (bone-weight) for the vertex
-    	if(vertexIndex >= vertexWeights.vcount.ints.length) {
-//FIXME:   		throw new Error("Requested vertex index, " + vertexIndex + ", is " +
-//    				"greater than the size of XMLVertexWeights vertices array's " +
-//    				"max index number, which is " +
-//    				(vertexWeights.vcount.ints.length-1) + ".");
-    		vertexIndex = vertexWeights.vcount.ints.length-1;
-    	}
     	int influences = vertexWeights.vcount.ints[ vertexIndex ];
-    	
     	
     	//get the "skin-weights", maybe it could be done only one time, when the sources array is filled.
     	XMLSource weightSources = getWeightSources();
-    	
     	
     	//fill the array "skin-weights" source
     	Influence[] boneWeights = new Influence[ influences ];

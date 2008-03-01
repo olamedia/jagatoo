@@ -1,13 +1,14 @@
 package org.jagatoo.loaders.models.collada.datastructs.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import org.jagatoo.loaders.models.collada.AnimatableModel;
 import org.jagatoo.loaders.models.collada.COLLADAAction;
-import org.jagatoo.loaders.models.collada.COLLADALoader;
 import org.jagatoo.loaders.models.collada.datastructs.ColladaProtoypeModel;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
+import org.jagatoo.loaders.models.collada.datastructs.animation.LibraryAnimations;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.Geometry;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.GeometryProvider;
@@ -32,7 +33,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
     private String sourceMeshId = null;
 
     /** COLLADA Geometry */
-    private Geometry sourceMesh;
+    private Geometry sourceGeom;
 
     /** The skeleton we're using to compute */
     private Skeleton skeleton;
@@ -41,20 +42,22 @@ public class SkeletalController extends Controller implements AnimatableModel {
      * Creates a new COLLADASkeletalController
      *
      * @param libGeoms
-     *                The {@link LibraryGeometries} we need
+     *                The {@link LibraryGeometries} we need to get our sourceMesh from
      * @param sourceMeshId
      *                The source mesh ID
      * @param controller
+     * 	              The XML Controller instance
+     * @param libAnims 
+     *                The library of animations to load actions from
      */
     public SkeletalController(LibraryGeometries libGeoms, String sourceMeshId,
-            XMLController controller) {
+            XMLController controller, LibraryAnimations libAnims, Skeleton skel) {
 
         super(libGeoms, controller);
         this.sourceMeshId = sourceMeshId;
-        System.out.println("The geometry at sourceMeshId, which is "
-        		+ sourceMeshId + ", is equal to " + libGeoms.getGeometries().get(sourceMeshId));
-        this.sourceMesh = libGeoms.getGeometries().get(sourceMeshId);
-
+        this.skeleton = skel;
+        
+        this.sourceGeom = libGeoms.getGeometries().get(sourceMeshId);
     }
 
     /**
@@ -67,15 +70,19 @@ public class SkeletalController extends Controller implements AnimatableModel {
     // // // // // // ANIMATION PART - BEGINS// // // // // //
 
     /**
+     * List of animations that exist 
+     * for this SkeletalController's skeleton.
+     */
+    private ArrayList<COLLADAAction> actions = new ArrayList<COLLADAAction>();
+    
+    /**
      * The current action that is being used
      */
-    @SuppressWarnings("unused")
     private COLLADAAction currentAction;
 
     /**
      * For animation looping
      */
-    @SuppressWarnings("unused")
     private boolean loop = false;
 
     /**
@@ -83,8 +90,14 @@ public class SkeletalController extends Controller implements AnimatableModel {
      */
     private long currentTime = -1;
     
+    /**
+     * Tells if have bones been prepared for current action
+     */
     private boolean bonesPrepared = false;
     
+    /**
+     * Iterator through skeleton bones
+     */
     private Iterable<Bone> boneIt = this.skeleton;
 
     /**
@@ -114,16 +127,15 @@ public class SkeletalController extends Controller implements AnimatableModel {
         // TODO once this method works well, we should optimize all the
         // variables declarations
 
-        if(sourceMesh == null) {
+        if(sourceGeom == null) {
 
-            sourceMesh = libGeoms.getGeometries().get(sourceMeshId);
-
-            System.out.println("Sourcemesh is a "+sourceMesh.getClass().getName());
-            if(!(sourceMesh instanceof TrianglesGeometry)) {
-                throw new Error("Only TrianglesGeometry is supported for now ! Try" +
-                            " enabling the 'Triangles' option when exportin from your modeling tool");
+            sourceGeom = libGeoms.getGeometries().get(sourceMeshId);
+            
+            if(!(sourceGeom instanceof TrianglesGeometry)) {
+                throw new Error("Only TrianglesGeometry is supported for now ! Make" +
+                            " sure your model is triangulated when exporting from your modeling tool.");
             } else {
-                this.destinationGeometry = sourceMesh.copy();
+                this.destinationGeometry = sourceGeom.copy();
             }
 
         }
@@ -190,7 +202,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
         /*
          * Apply the transitions to every vertex using the bone's weights
          */
-        TrianglesGeometry triMesh = (TrianglesGeometry) sourceMesh;
+        TrianglesGeometry triMesh = (TrianglesGeometry) sourceGeom;
 
         //current mesh
         Mesh mesh = triMesh.getMesh();
@@ -204,7 +216,10 @@ public class SkeletalController extends Controller implements AnimatableModel {
         //iterate over vertices
         Influence[] influences;
         for (int i = 0; i < mesh.vertexIndices.length; i++) {
-            influences = skin.buildInfluencesForVertex( i );
+        	//TODO: I have no idea how to fix the fact that "i" must be
+        	//divided by 6.  It has to do with the relative array sizes
+        	//(see XMLSkin).
+            influences = skin.buildInfluencesForVertex( i/6 );
 
             //check if there is any influence
             if( influences.length > 0 ) {
@@ -212,17 +227,24 @@ public class SkeletalController extends Controller implements AnimatableModel {
                 //normalize influences
                 normalizeInfluences( influences );
 
-
-                /*
-                 * To be continued...
-                 */
-
-                //use the destinationGeometry
+                //TODO: use the destinationGeometry
 
                 //transform the normals, only rotation
 
                 //transform the vertex, rotation and translation
+                
+                //Kukanani:This is a big test, still under construction.
+                //TODO:
 
+                for(int j = 0; j < sourceGeom.getMesh().vertexIndices.length; j+=3) {
+//                     Point3f vertex = new Point3f(
+//                    		 sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]],
+//                    		 sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]],
+//                    		 sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+2]]);
+            //         skin.vertexWeights.v.ints;
+            //         vertex.add(x, y, z)
+            //         System.out.println(vertex);
+                }
             }
         }
 
@@ -234,7 +256,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
      * Normalize the influences weights
      */
     private void normalizeInfluences(Influence[] influences) {
-        //TODO not done yet
+        //TODO: not done yet
 
     }
 
@@ -266,13 +288,11 @@ public class SkeletalController extends Controller implements AnimatableModel {
     }
 
     public boolean hasActions() {
-        // TODO Auto-generated method stub
-        return false;
+        return (currentAction == null ? false : true);
     }
 
     public boolean isLooping() {
-        // TODO Auto-generated method stub
-        return false;
+        return loop;
     }
 
     public boolean isPlaying() {
@@ -282,7 +302,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
 
     public int numActions() {
         // TODO Auto-generated method stub
-        return 0;
+        return (currentAction == null ? 0 : 1);
     }
 
     public void pause() {

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class XMLVertexWeights {
     
     public ArrayList<XMLInput> inputs = null;
-    public XMLIntArray vcount = null;
+    public XMLIntArray vcount = new XMLIntArray();
     public XMLIntArray v = new XMLIntArray();
     
 }
