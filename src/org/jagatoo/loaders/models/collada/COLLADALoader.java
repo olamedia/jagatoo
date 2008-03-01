@@ -253,7 +253,6 @@ public class COLLADALoader {
             //creates a simple model to perform the skeleton animation algorithm
             colladaFile.setModel( new ColladaProtoypeModel( colladaFile ) );
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }

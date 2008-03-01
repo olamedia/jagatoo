@@ -41,12 +41,6 @@ public class LibraryAnimationsLoader {
                 + anims.size() + " animation" + (anims.size() > 1 ? "s" : "")
                 + " in this file.");
 
-
-
-        //FIXME we must know generate COLLADAACtion objects, each one with a AnimationGroup
-        // fill with key frames
-        //but I don't where to save all this COLLADAACtion.
-
         HashMap<String, COLLADAAction> colAnims = colladaFile.getLibraryAnimations().getAnimations();
 
         /*

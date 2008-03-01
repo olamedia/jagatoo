@@ -72,7 +72,6 @@ public class LibraryVisualScenesLoader {
 
                     MatrixTransform transform = new MatrixTransform(node.matrix.matrix4f);
 
-                    // FIXME : applying YAGNI (You Ain't Gonna Need It) philosophy here : we don't need to know whether these nodes are grouped or separate
                     if(node.instanceGeometries != null) {
                     	COLLADALoader.logger.print("TT] A geometry node!");
                         for (XMLInstanceGeometry instanceGeometry : node.instanceGeometries) {

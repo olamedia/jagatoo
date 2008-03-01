@@ -226,17 +226,10 @@ public class SkeletalController extends Controller implements AnimatableModel {
         
         //iterate over vertices
         Influence[] influences;
-        for (int i = 0; i < mesh.vertexIndices.length; i++) {
-        	//TODO: I have no idea how to fix the fact that "i" must be
-        	//divided by 6.  It has to do with the relative array sizes
-        	//(see XMLSkin).
-            influences = skin.buildInfluencesForVertex( i/6 );
+
 
             //check if there is any influence
-            if( influences.length > 0 ) {
 
-                //normalize influences
-                normalizeInfluences( influences );
 
                 //TODO: use the destinationGeometry
 
@@ -245,23 +238,24 @@ public class SkeletalController extends Controller implements AnimatableModel {
                 //transform the vertex, rotation and translation
                 
                 //This is a big test, still under construction.
-                //TODO:
 
-                for(int j = 0; j < destinationGeometry.getMesh().vertexIndices.length; j+=3) {
-                     Point3f vertex = new Point3f(
-                    		 sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]],
-                    		 sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]],
-                    		 sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+2]]);
-                     System.out.println("old: " + vertex);
-            //         skin.vertexWeights.v.ints;
-                     sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]] = sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]]-5;
-                     System.out.println("new: " + vertex);
-                }
-            }
+        for(int j = 0; j < mesh.vertexIndices.length; j+=3) {
+        	//TODO: I have no idea how to fix the fact that "i" must be
+        	//divided by 6.  It has to do with the relative array sizes
+        	//(see XMLSkin).
+        	influences = skin.buildInfluencesForVertex( j/6 );
+        	if( influences.length <= 0 ) return destinationGeometry;
+        	normalizeInfluences( influences );
+        	Point3f vertex = new Point3f(
+        			sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]],
+        			sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]],
+        			sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+2]]);
+            System.out.println("old: " + vertex);
+
+            sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]] = sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]]+30;
+            System.out.println("new: " + vertex);
         }
-
         return destinationGeometry;
-
     }
 
     /**
