@@ -18,6 +18,7 @@ import org.jagatoo.loaders.models.collada.datastructs.geometries.MeshSources;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.TrianglesGeometry;
 import org.jagatoo.loaders.models.collada.jibx.XMLController;
 import org.jagatoo.loaders.models.collada.jibx.XMLSkin;
+import org.openmali.vecmath2.Point3f;
 
 /**
  * A COLLADA Skeletal Controller. It computes mesh
@@ -243,17 +244,18 @@ public class SkeletalController extends Controller implements AnimatableModel {
 
                 //transform the vertex, rotation and translation
                 
-                //Kukanani:This is a big test, still under construction.
+                //This is a big test, still under construction.
                 //TODO:
 
-                for(int j = 0; j < sourceGeom.getMesh().vertexIndices.length; j+=3) {
-//                     Point3f vertex = new Point3f(
-//                    		 sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]],
-//                    		 sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]],
-//                    		 sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+2]]);
+                for(int j = 0; j < destinationGeometry.getMesh().vertexIndices.length; j+=3) {
+                     Point3f vertex = new Point3f(
+                    		 sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]],
+                    		 sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]],
+                    		 sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+2]]);
+                     System.out.println("old: " + vertex);
             //         skin.vertexWeights.v.ints;
-            //         vertex.add(x, y, z)
-            //         System.out.println(vertex);
+                     sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]] = sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]]-5;
+                     System.out.println("new: " + vertex);
                 }
             }
         }
