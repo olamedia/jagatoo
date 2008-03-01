@@ -73,7 +73,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
      * List of animations that exist 
      * for this SkeletalController's skeleton.
      */
-    private ArrayList<COLLADAAction> actions = new ArrayList<COLLADAAction>();
+    private HashMap<String, COLLADAAction> actions = new HashMap<String, COLLADAAction>();
     
     /**
      * The current action that is being used
@@ -89,6 +89,11 @@ public class SkeletalController extends Controller implements AnimatableModel {
      * Last animated time
      */
     private long currentTime = -1;
+    
+    /**
+     * Is the animation playing?
+     */
+    private boolean playing = false;
     
     /**
      * Tells if have bones been prepared for current action
@@ -119,6 +124,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
         boneIt = this.skeleton;
 
         currentTime = 0;
+        playing = true;
     }
 
     @Override
@@ -127,6 +133,8 @@ public class SkeletalController extends Controller implements AnimatableModel {
         // TODO once this method works well, we should optimize all the
         // variables declarations
 
+
+    	
         if(sourceGeom == null) {
 
             sourceGeom = libGeoms.getGeometries().get(sourceMeshId);
@@ -139,6 +147,8 @@ public class SkeletalController extends Controller implements AnimatableModel {
             }
 
         }
+        
+    	if(!playing) return this.destinationGeometry;
 
         if(skeleton == null) {
 
@@ -273,13 +283,11 @@ public class SkeletalController extends Controller implements AnimatableModel {
     }
 
     public COLLADAAction getAction(String id) {
-        // TODO Auto-generated method stub
-        return null;
+        return actions.get(id);
     }
 
     public HashMap<String, COLLADAAction> getActions() {
-        // TODO Auto-generated method stub
-        return null;
+        return actions;
     }
 
     public ColladaProtoypeModel getPrototypeModel() {
@@ -288,7 +296,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
     }
 
     public boolean hasActions() {
-        return (currentAction == null ? false : true);
+        return (actions.values().size() > 0 ? true : false);
     }
 
     public boolean isLooping() {
@@ -296,28 +304,23 @@ public class SkeletalController extends Controller implements AnimatableModel {
     }
 
     public boolean isPlaying() {
-        // TODO Auto-generated method stub
-        return false;
+        return playing;
     }
 
     public int numActions() {
-        // TODO Auto-generated method stub
-        return (currentAction == null ? 0 : 1);
+    	return actions.values().size();
     }
 
     public void pause() {
-        // TODO Auto-generated method stub
-
+        playing = false;
     }
 
     public void play(String actionId, boolean loop) {
-        // TODO Auto-generated method stub
-
+        this.play(actions.get(actionId), loop);
     }
 
     public void resume() {
-        // TODO Auto-generated method stub
-
+        playing = true;
     }
 
 }
