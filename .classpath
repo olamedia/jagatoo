@@ -1,14 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/openmali"/>
 	<classpathentry exported="true" kind="lib" path="third-party/xml/jibx/jibx-run.jar" sourcepath="/home/bluesky/Desktop/jibx_1_1_5.zip"/>
 	<classpathentry kind="lib" path="third-party/groovy/groovy-all-1.1-BETA-1.jar"/>
 	<classpathentry kind="lib" path="third-party/commons-io-1.2.jar"/>
 	<classpathentry kind="lib" path="third-party/commons-lang-2.1.jar"/>
 	<classpathentry kind="lib" path="third-party/xml/xstream/xstream-1.2.1.jar"/>
 	<classpathentry kind="lib" path="third-party/xml/jdom.jar"/>
-	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/openmali"/>
-	<classpathentry exported="true" kind="lib" path="/xith3d/third-party/math/openmali.jar" sourcepath="/openmali/src"/>
+	<classpathentry kind="lib" path="third-party/lwjgl/lwjgl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="jagatoo/third-party/lwjgl/linux"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="third-party/input/jinput/jinput.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="jagatoo/third-party/input/jinput"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="third-party/gluegen/gluegen-rt.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="jagatoo/third-party/gluegen/linux-i586"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="third-party/jogl/jogl.jar">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="jagatoo/third-party/jogl/linux-i586"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
