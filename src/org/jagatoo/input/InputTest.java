@@ -371,7 +371,6 @@ public class InputTest implements InputListener
         {
             is = new AWTInputSystem( new AWTCanvas( jogl.getCanvas() ) );
             setupInputSystem( is );
-            //is.getMouse().setAbsolute( false );
             
             while ( jogl.getFrame().isDisplayable() )
             {
@@ -394,8 +393,8 @@ public class InputTest implements InputListener
     
     public InputTest() throws Throwable
     {
-        //startLWJGL();
-        startJInput();
+        startLWJGL();
+        //startJInput();
         //startAWT();
     }
     
