@@ -326,20 +326,13 @@ public class LogManager
         return( callerPackage );
     }
     
-    private final String getIndentPrefix()
+    private final String composeMessage( String prefix1, String prefix2, Object[] message )
     {
         strBuff.setLength( 0 );
         for ( int i = 0; i < indentation; i++ )
         {
-            strBuff.append( indentationString );
+            strBuff.append( getIndentationString() );
         }
-        
-        return( strBuff.toString() );
-    }
-    
-    private final String composeMessage( String prefix1, String prefix2, Object[] message )
-    {
-        getIndentationString();
         
         for ( int i = 0; i < message.length; i++ )
         {
@@ -347,13 +340,13 @@ public class LogManager
         }
         
         if ( ( prefix1 != null ) && ( prefix2 != null ) )
-            return( prefix1 + prefix2 + getIndentPrefix() + strBuff.toString() );
+            return( prefix1 + prefix2 + strBuff.toString() );
         else if ( prefix1 != null )
-            return( prefix1 + getIndentPrefix() + strBuff.toString() );
+            return( prefix1 + strBuff.toString() );
         else if ( prefix2 != null )
-            return( prefix2 + getIndentPrefix() + strBuff.toString() );
+            return( prefix2 + strBuff.toString() );
         else
-            return( getIndentPrefix() + strBuff.toString() );
+            return( strBuff.toString() );
     }
     
     private final synchronized void internalPrint( LogChannel channel, int logLevel, Object[] message, boolean appendNL )
