@@ -1,11 +1,10 @@
 package org.jagatoo.loaders.models.collada.datastructs.controllers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.jagatoo.loaders.models.collada.AnimatableModel;
 import org.jagatoo.loaders.models.collada.COLLADAAction;
+import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.datastructs.ColladaProtoypeModel;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
 import org.jagatoo.loaders.models.collada.datastructs.animation.LibraryAnimations;
@@ -17,6 +16,7 @@ import org.jagatoo.loaders.models.collada.datastructs.geometries.Mesh;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.MeshSources;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.TrianglesGeometry;
 import org.jagatoo.loaders.models.collada.jibx.XMLController;
+import org.jagatoo.loaders.models.collada.jibx.XMLInput;
 import org.jagatoo.loaders.models.collada.jibx.XMLSkin;
 import org.openmali.vecmath2.Point3f;
 
@@ -129,7 +129,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
     }
 
     @Override
-    public Geometry updateDestinationGeometry(long deltaT) {
+    public Geometry updateDestinationGeometry(long currTime) {
 
         // TODO once this method works well, we should optimize all the
         // variables declarations
@@ -162,7 +162,7 @@ public class SkeletalController extends Controller implements AnimatableModel {
                     + skeleton.getRootBone().getName()+"\"");
 
             // deltaT to animate
-            currentTime += deltaT;
+            currentTime = currTime;
 
             // Translation : only for the skeleton
 
@@ -196,7 +196,6 @@ public class SkeletalController extends Controller implements AnimatableModel {
         }
 
 
-
         /*
          * Now I need to to apply transitions to every vertex. I need the
          * following information and I don't know where 1) The
@@ -227,34 +226,39 @@ public class SkeletalController extends Controller implements AnimatableModel {
         //iterate over vertices
         Influence[] influences;
 
-
             //check if there is any influence
 
-
                 //TODO: use the destinationGeometry
-
-                //transform the normals, only rotation
-
-                //transform the vertex, rotation and translation
+                //1. transform the normals, only rotation
+                //2. transform the vertex, rotation and translation
                 
                 //This is a big test, still under construction.
 
-        for(int j = 0; j < mesh.vertexIndices.length; j+=3) {
+        for(int j = 0; j < sources.vertices.length; j+=3) {
+        	
         	//TODO: I have no idea how to fix the fact that "i" must be
         	//divided by 6.  It has to do with the relative array sizes
         	//(see XMLSkin).
         	influences = skin.buildInfluencesForVertex( j/6 );
         	if( influences.length <= 0 ) return destinationGeometry;
         	normalizeInfluences( influences );
-        	Point3f vertex = new Point3f(
-        			sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]],
-        			sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]],
-        			sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+2]]);
-            System.out.println("old: " + vertex);
-
-            sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]] = sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]]+30;
-            System.out.println("new: " + vertex);
+//        	Point3f vertex = new Point3f(
+//        			sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]],
+//        			sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]],
+ //       			sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+2]]);
+            System.out.println("old by mesh: " + sourceGeom.getMesh().vertexIndices[j]);
+            sourceGeom.getMesh().vertexIndices[j] = sourceGeom.getMesh().vertexIndices[j]+30;
+            System.out.println("new by mesh: " + sourceGeom.getMesh().vertexIndices[j]);
+            
+            System.out.println("old by mesh tris: " + sourceGeom.getGeometry().mesh.triangles.p[j]);
+            sourceGeom.getGeometry().mesh.triangles.p[j] = sourceGeom.getGeometry().mesh.triangles.p[j]+1;
+            System.out.println("old by mesh tris: " + sourceGeom.getGeometry().mesh.triangles.p[j]);
+            
+            System.out.println("old by sources: " + sources.vertices[j]);
+            sources.vertices[j] = sources.vertices[j] + 30;
+            System.out.println("new by sources: " + sources.vertices[j]);
         }
+        destinationGeometry = sourceGeom.copy();
         return destinationGeometry;
     }
 
