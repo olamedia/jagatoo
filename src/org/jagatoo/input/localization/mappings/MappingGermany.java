@@ -73,37 +73,37 @@ public class MappingGermany implements Mapping
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
                     return( '!' );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '¹' );
+                    return( (char)185 );
                 break;
             case _2:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
                     return( '"' );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '²' );
+                    return( (char)178 );
                 break;
             case _3:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '§' );
+                    return( (char)167 );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '³' );
+                    return( (char)179 );
                 break;
             case _4:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
                     return( '$' );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '¼' );
+                    return( (char)188 );
                 break;
             case _5:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
                     return( '%' );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '½' );
+                    return( (char)189 );
                 break;
             case _6:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
                     return( '&' );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '¬' );
+                    return( (char)172 );
                 break;
             case _7:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
