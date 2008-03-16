@@ -1,9 +1,5 @@
 /**
- * Copyright (c) 2003-2007, Xith3D Project Group all rights reserved.
- * 
- * Portions based on the Java3D interface, Copyright by Sun Microsystems.
- * Many thanks to the developers of Java3D and Sun Microsystems for their
- * innovation and design.
+ * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:

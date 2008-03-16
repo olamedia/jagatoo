@@ -34,7 +34,7 @@ package org.jagatoo.util.strings;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public final class StringUtil
+public final class StringUtils
 {
     /**
      * Checks, whether the given String argument is intepretable as numeric value.
@@ -77,7 +77,7 @@ public final class StringUtil
         return( str.equalsIgnoreCase( "true" ) || str.equalsIgnoreCase( "false" ) );
     }
     
-    private StringUtil()
+    private StringUtils()
     {
     }
 }

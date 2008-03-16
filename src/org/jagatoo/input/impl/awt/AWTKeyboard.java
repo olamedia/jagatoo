@@ -31,7 +31,6 @@ package org.jagatoo.input.impl.awt;
 
 import java.util.BitSet;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
@@ -43,7 +42,6 @@ import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
 import org.jagatoo.input.events.KeyboardEvent;
-import org.jagatoo.input.events.KeyboardEventPool;
 import org.jagatoo.input.localization.KeyboardLocalizer;
 import org.jagatoo.input.misc.Canvas;
 
