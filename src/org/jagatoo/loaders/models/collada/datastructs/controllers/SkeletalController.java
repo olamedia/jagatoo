@@ -30,6 +30,8 @@
 package org.jagatoo.loaders.models.collada.datastructs.controllers;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map.Entry;
 
 import org.jagatoo.loaders.models.collada.AnimatableModel;
 import org.jagatoo.loaders.models.collada.COLLADAAction;
@@ -84,6 +86,8 @@ public class SkeletalController extends Controller implements AnimatableModel {
         this.sourceMeshId = sourceMeshId;
         this.skeleton = skel;
         
+        this.libAnims = libAnims;
+        
         this.sourceGeom = libGeoms.getGeometries().get(sourceMeshId);
     }
 
@@ -101,6 +105,11 @@ public class SkeletalController extends Controller implements AnimatableModel {
      * for this SkeletalController's skeleton.
      */
     private HashMap<String, COLLADAAction> actions = new HashMap<String, COLLADAAction>();
+    
+    /**
+     * Library Of Animations
+     */
+    public LibraryAnimations libAnims;
     
     /**
      * The current action that is being used
@@ -342,7 +351,18 @@ public class SkeletalController extends Controller implements AnimatableModel {
     }
 
     public void play(String actionId, boolean loop) {
+    	calcActions(actionId);
         this.play(actions.get(actionId), loop);
+    }
+    
+    public void calcActions(String actionId) {
+    	for(Iterator<Entry<String, COLLADAAction>> i = libAnims.getAnimations().entrySet().iterator(); i.hasNext();) {
+    		Entry<String, COLLADAAction> entry = i.next();
+    		if(entry.getKey().equals(actionId)) {
+    			System.out.println("Action found");
+    			actions.put(entry.getKey(), entry.getValue());
+    		}
+    	}
     }
 
     public void resume() {

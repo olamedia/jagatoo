@@ -41,6 +41,8 @@ import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFramePoint3f;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrameQuat4f;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
+import org.jagatoo.loaders.models.collada.datastructs.controllers.Controller;
+import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalController;
 import org.jagatoo.loaders.models.collada.jibx.XMLAnimation;
 import org.jagatoo.loaders.models.collada.jibx.XMLChannel;
 import org.jagatoo.loaders.models.collada.jibx.XMLLibraryAnimations;
@@ -154,11 +156,9 @@ public class LibraryAnimationsLoader {
 
                         }//end of animation type switch
 
-                        
                         //update total anims for the bone
                         animCount++;
                     }//end of bone validation if loop
-
 
                 }//end of animation iterator
                 compressRotationKeyFrames( bone );
@@ -170,6 +170,13 @@ public class LibraryAnimationsLoader {
             colAnims.put(currAction.getId(), currAction);
             COLLADALoader.logger.decreaseTabbing(); 
         }//end of skeleton iterator
+       
+       for (Iterator<Controller> iterator = colladaFile.getLibraryControllers().getControllers().values().iterator(); iterator.hasNext();) {
+		Controller name = iterator.next();
+			if(name instanceof SkeletalController) {
+				((SkeletalController)name).libAnims = colladaFile.getLibraryAnimations();
+			}
+       }
     }
 
     /**
