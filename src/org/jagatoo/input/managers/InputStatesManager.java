@@ -40,11 +40,11 @@ import org.jagatoo.input.devices.components.DigitalDeviceComponent.DigiState;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class KeyStatesManager
+public class InputStatesManager
 {
-    private final KeyBindingsManager< ? extends InputActionInterface > keyBindings;
+    private final InputBindingsManager< ? extends InputActionInterface > keyBindings;
     
-    private KeyStatesManipulator manipulator = null;
+    private InputStatesManipulator manipulator = null;
     
     protected final boolean[] states1;
     protected final boolean[] states2;
@@ -54,13 +54,13 @@ public class KeyStatesManager
     protected boolean swapper = false;
     
     /**
-     * @return the {@link KeyStatesManipulator} for this manager.
+     * @return the {@link InputStatesManipulator} for this manager.
      */
-    public KeyStatesManipulator getKeyStatesManipulator()
+    public InputStatesManipulator getKeyStatesManipulator()
     {
         if ( manipulator == null )
         {
-            manipulator = new KeyStatesManipulator( this );
+            manipulator = new InputStatesManipulator( this );
         }
         
         return( manipulator );
@@ -74,7 +74,7 @@ public class KeyStatesManager
         return( states1.length );
     }
     
-    public final KeyBindingsManager< ? extends InputActionInterface > getKeyBindings()
+    public final InputBindingsManager< ? extends InputActionInterface > getKeyBindings()
     {
         return( keyBindings );
     }
@@ -188,7 +188,7 @@ public class KeyStatesManager
         }
     }
     
-    public KeyStatesManager( KeyBindingsManager< ? extends InputActionInterface > keyBindings )
+    public InputStatesManager( InputBindingsManager< ? extends InputActionInterface > keyBindings )
     {
         this.keyBindings = keyBindings;
         

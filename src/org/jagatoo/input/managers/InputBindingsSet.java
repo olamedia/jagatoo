@@ -34,7 +34,7 @@ package org.jagatoo.input.managers;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public enum KeyBindingsSet
+public enum InputBindingsSet
 {
     PRIMARY,
     SECONDARY;

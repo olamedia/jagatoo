@@ -32,12 +32,12 @@ package org.jagatoo.input.managers;
 import org.jagatoo.input.actions.InputActionInterface;
 
 /**
- * The {@link KeyStatesManipulator} provides a simple interface for
+ * The {@link InputStatesManipulator} provides a simple interface for
  * key states manipulations.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class KeyStatesManipulator
+public class InputStatesManipulator
 {
     private final Boolean[] states;
     
@@ -63,7 +63,7 @@ public class KeyStatesManipulator
     }
     
     /**
-     * Applies the new key states to the {@link KeyStatesManager}.
+     * Applies the new key states to the {@link InputStatesManager}.
      */
     protected void apply( boolean[] currStates )
     {
@@ -76,7 +76,7 @@ public class KeyStatesManipulator
         }
     }
     
-    protected KeyStatesManipulator( KeyStatesManager keyStatesManager )
+    protected InputStatesManipulator( InputStatesManager keyStatesManager )
     {
         this.states = new Boolean[ keyStatesManager.getNumStates() ];
         for ( int i = 0; i < states.length; i++ )

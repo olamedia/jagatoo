@@ -49,38 +49,38 @@ import org.jagatoo.input.devices.components.MouseButton;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class KeyBindingsManager< A extends InputActionInterface >
+public class InputBindingsManager< A extends InputActionInterface >
 {
-    private static final int NUM_KEY_SETS = KeyBindingsSet.values().length;
+    private static final int NUM_KEY_SETS = InputBindingsSet.values().length;
     
     private final HashMap< DeviceComponent, A > keyBindings;
     private final DeviceComponent[][] boundKeys;
     
-    private final ArrayList< KeyBindingListener< A > > listeners = new ArrayList< KeyBindingListener< A > >();
+    private final ArrayList< InputBindingListener< A > > listeners = new ArrayList< InputBindingListener< A > >();
     
-    public final void addKeyBindingListener( KeyBindingListener< A > l )
+    public final void addKeyBindingListener( InputBindingListener< A > l )
     {
         listeners.add( l );
     }
     
-    public final void removeKeyBindingListener( KeyBindingListener< A > l )
+    public final void removeKeyBindingListener( InputBindingListener< A > l )
     {
         listeners.remove( l );
     }
     
-    protected final void notifyBound( DeviceComponent key, KeyBindingsSet set, A action )
+    protected final void notifyBound( DeviceComponent key, InputBindingsSet set, A action )
     {
         for ( int i = 0; i < listeners.size(); i++ )
         {
-            listeners.get( i ).onKeyBound( key, set, action );
+            listeners.get( i ).onInputComponentBound( key, set, action );
         }
     }
     
-    protected final void notifyUnbound( DeviceComponent key, KeyBindingsSet set, A action )
+    protected final void notifyUnbound( DeviceComponent key, InputBindingsSet set, A action )
     {
         for ( int i = 0; i < listeners.size(); i++ )
         {
-            listeners.get( i ).onKeyUnbound( key, set, action );
+            listeners.get( i ).onInputComponentUnbound( key, set, action );
         }
     }
     
@@ -129,7 +129,7 @@ public class KeyBindingsManager< A extends InputActionInterface >
                         */
                         boundKeys[ ordinal ][ i ] = null;
                         
-                        notifyUnbound( key, KeyBindingsSet.values()[ i ], prevBound );
+                        notifyUnbound( key, InputBindingsSet.values()[ i ], prevBound );
                         
                         return( prevBound );
                     }
@@ -175,11 +175,11 @@ public class KeyBindingsManager< A extends InputActionInterface >
     
     /**
      * @param key the key of the requested InputAction
-     * @param set the {@link KeyBindingsSet} (may be null for an arbitrary set)
+     * @param set the {@link InputBindingsSet} (may be null for an arbitrary set)
      * 
      * @return the InputAction, that is currently bound to the given key.
      */
-    public final A getBoundAction( DeviceComponent key, KeyBindingsSet set )
+    public final A getBoundAction( DeviceComponent key, InputBindingsSet set )
     {
         if ( set == null )
             return( keyBindings.get( key ) );
@@ -208,7 +208,7 @@ public class KeyBindingsManager< A extends InputActionInterface >
      * 
      * @return the key, the given action is bound to.
      */
-    public final DeviceComponent getBoundKey( A action, KeyBindingsSet set )
+    public final DeviceComponent getBoundKey( A action, InputBindingsSet set )
     {
         final DeviceComponent[] keys = boundKeys[ action.ordinal() ];
         
@@ -223,11 +223,11 @@ public class KeyBindingsManager< A extends InputActionInterface >
      * 
      * @param key the key to bind
      * @param action the InputAction to map to the given key
-     * @param set the {@link KeyBindingsSet} the key is to be bound at. (may be null to take the next free set or the PRIMARY)
+     * @param set the {@link InputBindingsSet} the key is to be bound at. (may be null to take the next free set or the PRIMARY)
      * 
-     * @return the {@link KeyBindingsSet}, the key has been bound at.
+     * @return the {@link InputBindingsSet}, the key has been bound at.
      */
-    public final KeyBindingsSet bindKey( DeviceComponent key, A action, KeyBindingsSet set )
+    public final InputBindingsSet bindKey( DeviceComponent key, A action, InputBindingsSet set )
     {
         DeviceComponent[] keys = boundKeys[ action.ordinal() ];
         
@@ -245,13 +245,13 @@ public class KeyBindingsManager< A extends InputActionInterface >
             {
                 if ( keys[ i ] == null )
                 {
-                    set = KeyBindingsSet.values()[ i ];
+                    set = InputBindingsSet.values()[ i ];
                     break;
                 }
             }
             
             if ( set == null )
-                set = KeyBindingsSet.PRIMARY;
+                set = InputBindingsSet.PRIMARY;
         }
         
         if ( keys[ set.ordinal() ] != null )
@@ -268,14 +268,14 @@ public class KeyBindingsManager< A extends InputActionInterface >
     }
     
     /**
-     * Binds a key to a specific InputAction at the fist free {@link KeyBindingsSet} or {@link KeyBindingsSet#PRIMARY}.
+     * Binds a key to a specific InputAction at the fist free {@link InputBindingsSet} or {@link InputBindingsSet#PRIMARY}.
      *
      * @param key the key to bind
      * @param action the InputAction to map to the given key
      * 
-     * @return the {@link KeyBindingsSet}, the key has been bound at.
+     * @return the {@link InputBindingsSet}, the key has been bound at.
      */
-    public final KeyBindingsSet bindKey( DeviceComponent key, A action )
+    public final InputBindingsSet bindKey( DeviceComponent key, A action )
     {
         return( bindKey( key, action, null ) );
     }
@@ -285,7 +285,7 @@ public class KeyBindingsManager< A extends InputActionInterface >
      * 
      * @param set
      */
-    public final void unbindAllKeys( KeyBindingsSet set )
+    public final void unbindAllKeys( InputBindingsSet set )
     {
         for ( int i = 0; i < boundKeys.length; i++ )
         {
@@ -297,7 +297,7 @@ public class KeyBindingsManager< A extends InputActionInterface >
                     {
                         if ( boundKeys[ i ][ j ] != null )
                         {
-                            notifyUnbound( boundKeys[ i ][ j ], KeyBindingsSet.values()[ j ], keyBindings.get( boundKeys[ i ][ j ] ) );
+                            notifyUnbound( boundKeys[ i ][ j ], InputBindingsSet.values()[ j ], keyBindings.get( boundKeys[ i ][ j ] ) );
                             
                             keyBindings.remove( boundKeys[ i ][ j ] );
                             boundKeys[ i ][ j ] = null;
@@ -309,7 +309,7 @@ public class KeyBindingsManager< A extends InputActionInterface >
                     final int j = set.ordinal();
                     if ( boundKeys[ i ][ j ] != null )
                     {
-                        notifyUnbound( boundKeys[ i ][ j ], KeyBindingsSet.values()[ j ], keyBindings.get( boundKeys[ i ][ j ] ) );
+                        notifyUnbound( boundKeys[ i ][ j ], InputBindingsSet.values()[ j ], keyBindings.get( boundKeys[ i ][ j ] ) );
                         
                         keyBindings.remove( boundKeys[ i ][ j ] );
                         boundKeys[ i ][ j ] = null;
@@ -360,7 +360,7 @@ public class KeyBindingsManager< A extends InputActionInterface >
     /**
      * Sets the key-bindings Map with the KeyCodes mapped to InputActions.
      */
-    public final void set( KeyBindingsManager< ? extends A > keyBindings, boolean clearBefore )
+    public final void set( InputBindingsManager< ? extends A > keyBindings, boolean clearBefore )
     {
         if ( clearBefore )
             unbindAllKeys();
@@ -388,7 +388,7 @@ public class KeyBindingsManager< A extends InputActionInterface >
                     
                     if ( keyBindings.boundKeys[ i ][ j ] != null )
                     {
-                        notifyBound( keyBindings.boundKeys[ i ][ j ], KeyBindingsSet.values()[ j ], keyBindings.keyBindings.get( keyBindings.boundKeys[ i ][ j ] ) );
+                        notifyBound( keyBindings.boundKeys[ i ][ j ], InputBindingsSet.values()[ j ], keyBindings.keyBindings.get( keyBindings.boundKeys[ i ][ j ] ) );
                     }
                 }
             }
@@ -403,7 +403,7 @@ public class KeyBindingsManager< A extends InputActionInterface >
     /**
      * Sets the key-bindings Map with the KeyCodes mapped to InputActions.
      */
-    public final void set( KeyBindingsManager< ? extends A > keyBindings )
+    public final void set( InputBindingsManager< ? extends A > keyBindings )
     {
         set( keyBindings, true );
     }
@@ -443,7 +443,7 @@ public class KeyBindingsManager< A extends InputActionInterface >
         }
     }
     
-    public KeyBindingsManager( int numCommands )
+    public InputBindingsManager( int numCommands )
     {
         this.keyBindings = new HashMap< DeviceComponent, A >();
         this.boundKeys = new DeviceComponent[ numCommands ][];

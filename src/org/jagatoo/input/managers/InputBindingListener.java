@@ -33,27 +33,27 @@ import org.jagatoo.input.actions.InputActionInterface;
 import org.jagatoo.input.devices.components.DeviceComponent;
 
 /**
- * This Listener is notified of set/unset KeyBindings.
+ * This listener is notified of set/unset input-bindings.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface KeyBindingListener< C extends InputActionInterface >
+public interface InputBindingListener< A extends InputActionInterface >
 {
     /**
      * This event is fired, when a key is bound to a command.
      * 
-     * @param key
+     * @param ic
      * @param set
-     * @param command
+     * @param action
      */
-    public void onKeyBound( DeviceComponent key, KeyBindingsSet set, C command );
+    public void onInputComponentBound( DeviceComponent ic, InputBindingsSet set, A action );
     
     /**
      * This event is fired, when a key is unbound from a command.
      * 
-     * @param key
+     * @param ic
      * @param set
-     * @param command
+     * @param action
      */
-    public void onKeyUnbound( DeviceComponent key, KeyBindingsSet set, C command );
+    public void onInputComponentUnbound( DeviceComponent ic, InputBindingsSet set, A action );
 }
