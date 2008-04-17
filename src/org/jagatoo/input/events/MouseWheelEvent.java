@@ -71,7 +71,7 @@ public class MouseWheelEvent extends MouseEvent
     @Override
     public String toString()
     {
-        return( "MouseWheelEvent( pos = (" + getMouse().getX() + ", " + getMouse().getY() + "), " +
+        return( "MouseWheelEvent( pos = (" + getMouse().getCurrentX() + ", " + getMouse().getCurrentY() + "), " +
                 "buttonsState = " + getMouse().getButtonsState() + ", " +
                 "wheel = " + getWheelDelta() + (isPageMove() ? " (PAGE)" : "") + ", " +
                 "when = " + getWhen() +

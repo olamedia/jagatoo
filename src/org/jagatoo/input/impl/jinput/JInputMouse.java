@@ -35,6 +35,7 @@ import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.devices.components.DeviceComponent;
+import org.jagatoo.input.devices.components.MouseAxis;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
 import org.jagatoo.input.events.EventQueue;
@@ -42,7 +43,7 @@ import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * JInput implementation of the Mouse class.
@@ -109,8 +110,8 @@ public class JInputMouse extends Mouse
         int centerY = 0;
         try
         {
-            centerX = getCanvas().getWidth() / 2;
-            centerY = getCanvas().getHeight() / 2;
+            centerX = getSourceWindow().getWidth() / 2;
+            centerY = getSourceWindow().getHeight() / 2;
         }
         catch ( Throwable t )
         {
@@ -137,71 +138,73 @@ public class JInputMouse extends Mouse
             
             while ( mouse.getEventQueue().getNextEvent( event ) )
             {
+                if ( !getSourceWindow().receivsInputEvents() )
+                    continue;
+                
                 final DeviceComponent comp = compMap.get( event.getComponent() );
                 
-                if ( comp == null )
+                switch ( comp.getType() )
                 {
-                    final String compName = event.getComponent().getName();
-                    
-                    if ( compName.equals( "x" ) )
-                    {
-                        final int dx_ = (int)event.getComponent().getPollData();
-                        dx += dx_;
-                        if ( isAbsolute() )
-                            storePosition( getX() + dx_, getY() );
-                    }
-                    else if ( compName.equals( "y" ) )
-                    {
-                        final int dy_ = (int)event.getComponent().getPollData();
-                        dy += dy_;
-                        if ( isAbsolute() )
-                            storePosition( getX(), getY() + dy_ );
-                    }
-                }
-                else
-                {
-                    switch ( comp.getType() )
-                    {
-                        case MOUSE_BUTTON:
-                            MouseButton button = (MouseButton)comp;
-                            
-                            if ( !isButtonPressed( button ) )
-                            {
-                                final MouseButtonPressedEvent pressedEv = prepareMouseButtonPressedEvent( button, nanoTime );
+                    case MOUSE_AXIS:
+                        final MouseAxis axis = (MouseAxis)comp;
+                        
+                        switch ( axis.getID() )
+                        {
+                            case 'X':
+                                final int dx_ = (int)event.getComponent().getPollData();
+                                dx += dx_;
+                                if ( isAbsolute() )
+                                    storePosition( getCurrentX() + dx_, getCurrentY() );
+                                break;
                                 
-                                if ( isQueued )
-                                    eventQueue.enqueue( pressedEv );
-                                else
-                                    fireOnMouseButtonPressed( pressedEv, true );
-                            }
-                            else
-                            {
-                                final MouseButtonReleasedEvent releasedEv = prepareMouseButtonReleasedEvent( button, nanoTime );
-                                
-                                if ( isQueued )
-                                    eventQueue.enqueue( releasedEv );
-                                else
-                                    fireOnMouseButtonReleased( releasedEv, true );
-                            }
-                            break;
-                            
-                        case MOUSE_WHEEL:
-                            final int wheelDelta = (int)event.getValue();
-                            
-                            final MouseWheelEvent wheelEv = prepareMouseWheelMovedEvent( wheelDelta, false, nanoTime );
+                            case 'Y':
+                                final int dy_ = (int)event.getComponent().getPollData();
+                                dy += dy_;
+                                if ( isAbsolute() )
+                                    storePosition( getCurrentX(), getCurrentY() + dy_ );
+                                break;
+                        }
+                        break;
+                        
+                    case MOUSE_BUTTON:
+                        MouseButton button = (MouseButton)comp;
+                        
+                        if ( !isButtonPressed( button ) )
+                        {
+                            final MouseButtonPressedEvent pressedEv = prepareMouseButtonPressedEvent( button, nanoTime );
                             
                             if ( isQueued )
-                                eventQueue.enqueue( wheelEv );
+                                eventQueue.enqueue( pressedEv );
                             else
-                                fireOnMouseWheelMoved( wheelEv, true );
-                            break;
-                    }
+                                fireOnMouseButtonPressed( pressedEv, true );
+                        }
+                        else
+                        {
+                            final MouseButtonReleasedEvent releasedEv = prepareMouseButtonReleasedEvent( button, nanoTime );
+                            
+                            if ( isQueued )
+                                eventQueue.enqueue( releasedEv );
+                            else
+                                fireOnMouseButtonReleased( releasedEv, true );
+                        }
+                        break;
+                        
+                    case MOUSE_WHEEL:
+                        final int wheelDelta = (int)event.getValue();
+                        
+                        final MouseWheelEvent wheelEv = prepareMouseWheelMovedEvent( wheelDelta, false, nanoTime );
+                        
+                        if ( isQueued )
+                            eventQueue.enqueue( wheelEv );
+                        else
+                            fireOnMouseWheelMoved( wheelEv, true );
+                        break;
                 }
             }
             
             if ( ( dx != 0 ) || ( dy != 0 ) )
             {
-                final MouseMovedEvent movedEv = prepareMouseMovedEvent( getX(), getY(), dx, dy, nanoTime );
+                final MouseMovedEvent movedEv = prepareMouseMovedEvent( getCurrentX(), getCurrentY(), dx, dy, nanoTime );
                 
                 if ( isQueued )
                     eventQueue.enqueue( movedEv );
@@ -260,7 +263,7 @@ public class JInputMouse extends Mouse
             
             if ( absolute )
             {
-                org.lwjgl.input.Mouse.setCursorPosition( lastAbsoluteX, getCanvas().getHeight() - lastAbsoluteY );
+                org.lwjgl.input.Mouse.setCursorPosition( lastAbsoluteX, getSourceWindow().getHeight() - lastAbsoluteY );
             }
             */
         }
@@ -344,9 +347,9 @@ public class JInputMouse extends Mouse
         return( hasWheel );
     }
     
-    protected JInputMouse( EventQueue eveneQueue, Canvas canvas, net.java.games.input.Mouse mouse ) throws InputSystemException
+    protected JInputMouse( InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Mouse mouse ) throws InputSystemException
     {
-        super( eveneQueue, canvas, mouse.getName(), init_getNumButtons( mouse ), init_hasWheel( mouse ) );
+        super( sourceWindow, eveneQueue, mouse.getName(), init_getNumButtons( mouse ), init_hasWheel( mouse ) );
         
         this.mouse = mouse;
         
@@ -356,10 +359,17 @@ public class JInputMouse extends Mouse
             
             for ( int i = 0; i < comps.length; i++ )
             {
-                if ( comps[ i ].getName().equals( "z" ) )
+                if ( comps[ i ].getName().equals( "x" ) )
+                {
+                    compMap.put( comps[ i ], getXAxis() );
+                }
+                else if ( comps[ i ].getName().equals( "y" ) )
+                {
+                    compMap.put( comps[ i ], getYAxis() );
+                }
+                else if ( comps[ i ].getName().equals( "z" ) )
                 {
                     compMap.put( comps[ i ], getWheel() );
-                    break;
                 }
             }
         }

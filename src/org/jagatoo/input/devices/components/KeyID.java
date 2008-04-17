@@ -389,7 +389,7 @@ public enum KeyID
     
     public static final KeyID valueOf( Key key )
     {
-        final String keyName = key.getKeyName();
+        final String keyName = key.getName();
         
         if ( keyName.equals( "0" ) )
             return( KeyID._0 );

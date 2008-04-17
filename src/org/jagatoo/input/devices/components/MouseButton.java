@@ -41,7 +41,6 @@ public final class MouseButton extends DigitalDeviceComponent
     
     private final int index;
     private final int maskValue;
-    private final String name;
     
     public final int getIndex()
     {
@@ -51,14 +50,6 @@ public final class MouseButton extends DigitalDeviceComponent
     public final int getMaskValue()
     {
         return( maskValue );
-    }
-    
-    /**
-     * @return the button's name.
-     */
-    public final String getName()
-    {
-        return( name );
     }
     
     /**
@@ -72,12 +63,11 @@ public final class MouseButton extends DigitalDeviceComponent
     
     MouseButton( String name )
     {
-        super( Type.MOUSE_BUTTON );
+        super( Type.MOUSE_BUTTON, name );
         
         this.index = nextButtonIDX++;
         this.maskValue = nextButtonMaskValue;
         nextButtonMaskValue *= 2;
-        this.name = name;
         
         MouseButtons.buttonsMap[ this.index ] = this;
     }

@@ -32,6 +32,7 @@ package org.jagatoo.input.devices;
 import java.util.ArrayList;
 
 import org.jagatoo.input.InputSystemException;
+import org.jagatoo.input.devices.components.MouseAxis;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
 import org.jagatoo.input.devices.components.MouseWheel;
@@ -47,20 +48,15 @@ import org.jagatoo.input.events.MouseWheelEvent;
 import org.jagatoo.input.listeners.MouseListener;
 import org.jagatoo.input.listeners.MouseStopListener;
 import org.jagatoo.input.managers.MouseStopManager;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 public abstract class Mouse extends InputDevice
 {
-    private final Canvas canvas;
-    
-    private int currentX = -1;
-    private int currentY = -1;
+    private final MouseAxis xAxis, yAxis;
+    private final MouseButton[] buttons;
+    private final MouseWheel wheel;
     
     private boolean isAbsolute = true;
-    
-    private final MouseButton[] buttons;
-    
-    private final MouseWheel wheel;
     
     private MouseStopManager stopManager = null;
     
@@ -76,11 +72,6 @@ public abstract class Mouse extends InputDevice
     private long lastWhen_moved = -1L;
     private long lastWhen_wheelMoved = -1L;
     private long lastWhen_stopped = -1L;
-    
-    public final Canvas getCanvas()
-    {
-        return( canvas );
-    }
     
     public final void startMouseStopManager() throws InputSystemException
     {
@@ -115,6 +106,22 @@ public abstract class Mouse extends InputDevice
     }
     
     /**
+     * @return the MouseAxis instance for this Mouse's X-axis.
+     */
+    public final MouseAxis getXAxis()
+    {
+        return( xAxis );
+    }
+    
+    /**
+     * @return the MouseAxis instance for this Mouse's Y-axis.
+     */
+    public final MouseAxis getYAxis()
+    {
+        return( yAxis );
+    }
+    
+    /**
      * This method stores the positional values and may do
      * some additional implementation dependent stuff.
      * 
@@ -123,12 +130,12 @@ public abstract class Mouse extends InputDevice
      */
     public void setPosition( int x, int y ) throws InputSystemException
     {
-        this.currentX = x;
-        this.currentY = y;
+        this.xAxis.setValue( x );
+        this.yAxis.setValue( y );
     }
     
     /**
-     * Centers the mouse cursor on the canvas.
+     * Centers the mouse cursor on the source-window.
      * 
      * @throws InputSystemException
      */
@@ -142,24 +149,24 @@ public abstract class Mouse extends InputDevice
      */
     protected void storePosition( int x, int y )
     {
-        this.currentX = x;
-        this.currentY = y;
+        this.xAxis.setValue( x );
+        this.yAxis.setValue( y );
     }
     
     /**
      * @return the current x-position of this Mouse.
      */
-    public final int getX()
+    public final int getCurrentX()
     {
-        return( currentX );
+        return( xAxis.getIntValue() );
     }
     
     /**
      * @return the current y-position of this Mouse.
      */
-    public final int getY()
+    public final int getCurrentY()
     {
-        return( currentY );
+        return( yAxis.getIntValue() );
     }
     
     /**
@@ -467,7 +474,7 @@ public abstract class Mouse extends InputDevice
         if ( !isEnabled() || ( numStopListeners == 0 ) )
             return( null );
         
-        MouseStoppedEvent e = MouseEventPool.allocStopped( this, getX(), getY(), when, lastWhen_stopped );
+        MouseStoppedEvent e = MouseEventPool.allocStopped( this, getCurrentX(), getCurrentY(), when, lastWhen_stopped );
         
         lastWhen_stopped = when;
         
@@ -536,13 +543,13 @@ public abstract class Mouse extends InputDevice
         {
             this.isAbsolute = absolute;
             setAbsoluteImpl( absolute );
-            getCanvas().refreshCursor();
+            getSourceWindow().refreshCursor();
         }
         else if ( this.isAbsolute && !absolute )
         {
             this.isAbsolute = absolute;
             setAbsoluteImpl( absolute );
-            getCanvas().refreshCursor();
+            getSourceWindow().refreshCursor();
         }
     }
     
@@ -573,18 +580,17 @@ public abstract class Mouse extends InputDevice
             stopManager = null;
         }
         
+        this.setAbsolute( true );
+        
         destroyImpl();
     }
     
-    protected Mouse( EventQueue eveneQueue, Canvas canvas, String name, int numButtons, boolean hasWheel ) throws InputSystemException
+    protected Mouse( InputSourceWindow sourceWindow, EventQueue eveneQueue, String name, int numButtons, boolean hasWheel ) throws InputSystemException
     {
-        super( eveneQueue, name );
+        super( sourceWindow, eveneQueue, name );
         
-        if ( canvas == null )
-            throw( new InputSystemException( "The Canvas must not be null." ) );
-        
-        this.canvas = canvas;
-        
+        this.xAxis = new MouseAxis( 'X', "Mouse-X-Axis" );
+        this.yAxis = new MouseAxis( 'Y', "Mouse-Y-Axis" );
         this.buttons = new MouseButton[ numButtons ];
         
         for ( int i = 0; i < buttons.length; i++ )

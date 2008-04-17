@@ -27,63 +27,33 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.devices.components;
+package org.jagatoo.input.managers;
+
+import org.jagatoo.input.actions.InputActionInterface;
+import org.jagatoo.input.devices.components.DeviceComponent;
 
 /**
- * Insert type comment here.
+ * This Listener is notified of set/unset KeyBindings.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class ControllerButton extends DigitalDeviceComponent
+public interface KeyBindingListener< C extends InputActionInterface >
 {
-    private final int index;
-    
-    private DigiState state = DigiState.UP;
+    /**
+     * This event is fired, when a key is bound to a command.
+     * 
+     * @param key
+     * @param set
+     * @param command
+     */
+    public void onKeyBound( DeviceComponent key, KeyBindingsSet set, C command );
     
     /**
-     * @return the Button's index.
+     * This event is fired, when a key is unbound from a command.
+     * 
+     * @param key
+     * @param set
+     * @param command
      */
-    public final int getIndex()
-    {
-        return( index );
-    }
-    
-    public void setState( DigiState state )
-    {
-        this.state = state;
-    }
-    
-    public final void setState( boolean state )
-    {
-        if ( state )
-            setState( DigiState.DOWN );
-        else
-            setState( DigiState.UP );
-    }
-    
-    public final DigiState getState()
-    {
-        return( state );
-    }
-    
-    public final boolean getBooleanState()
-    {
-        return( state.getBooleanValue() );
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString()
-    {
-        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", index = " + getIndex() + ", state = " + getState() + " }" );
-    }
-    
-    public ControllerButton( int index, String name )
-    {
-        super( Type.CONTROLLER_BUTTON, name );
-        
-        this.index = index;
-    }
+    public void onKeyUnbound( DeviceComponent key, KeyBindingsSet set, C command );
 }

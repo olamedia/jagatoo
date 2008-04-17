@@ -35,7 +35,7 @@ import org.jagatoo.input.devices.DeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * Insert type comment here.
@@ -64,7 +64,7 @@ public class JInputDeviceFactory extends DeviceFactory
         {
             if ( controllers[ i ].getType() == net.java.games.input.Controller.Type.MOUSE )
             {
-                tmpMouses[ numMouses++ ] = new JInputMouse( getEveneQueue(), getCanvas(), (net.java.games.input.Mouse)controllers[ i ] );
+                tmpMouses[ numMouses++ ] = new JInputMouse( getSourceWindow(), getEveneQueue(), (net.java.games.input.Mouse)controllers[ i ] );
             }
         }
         
@@ -96,7 +96,7 @@ public class JInputDeviceFactory extends DeviceFactory
             {
                 if ( controllers[ i ].getComponents().length > 10 )
                 {
-                    tmpKeyboards[ numKeyboards++ ] = new JInputKeyboard( getEveneQueue(), getCanvas(), (net.java.games.input.Keyboard)controllers[ i ] );
+                    tmpKeyboards[ numKeyboards++ ] = new JInputKeyboard( getSourceWindow(), getEveneQueue(), (net.java.games.input.Keyboard)controllers[ i ] );
                 }
             }
         }
@@ -151,7 +151,7 @@ public class JInputDeviceFactory extends DeviceFactory
             {
                 if ( controllers[ i ].getComponents().length > 10 )
                 {
-                    tmpControllers[ numControllers++ ] = new JInputController( getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
+                    tmpControllers[ numControllers++ ] = new JInputController( getSourceWindow(), getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
                 }
             }
         }
@@ -162,8 +162,8 @@ public class JInputDeviceFactory extends DeviceFactory
         return( controllers2 );
     }
     
-    public JInputDeviceFactory( Canvas canvas, EventQueue eveneQueue )
+    public JInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
     {
-        super( canvas, eveneQueue );
+        super( sourceWindow, eveneQueue );
     }
 }

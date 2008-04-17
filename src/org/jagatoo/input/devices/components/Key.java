@@ -40,8 +40,6 @@ public class Key extends DigitalDeviceComponent
     
     private final int keyCode;
     
-    private final String keyName;
-    
     private final boolean hasKeyChar;
     
     /**
@@ -69,14 +67,6 @@ public class Key extends DigitalDeviceComponent
     }
     
     /**
-     * @return this key's name.
-     */
-    public final String getKeyName()
-    {
-        return( keyName );
-    }
-    
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -85,7 +75,7 @@ public class Key extends DigitalDeviceComponent
         if ( !(key instanceof Key ) )
             return( false );
         
-        return( this.getKeyName().equals( ((Key)key).getKeyName() ) );
+        return( this.getName().equals( ((Key)key).getName() ) );
     }
     
     /**
@@ -94,7 +84,7 @@ public class Key extends DigitalDeviceComponent
     @Override
     public int hashCode()
     {
-        return( getKeyName().hashCode() );
+        return( getName().hashCode() );
     }
     
     /**
@@ -103,14 +93,13 @@ public class Key extends DigitalDeviceComponent
     @Override
     public String toString()
     {
-        return( "Key { name = " + getKeyName() + ", ID = " + getDeviceComponentID() + ", keyCode = " + getKeyCode() + " }" );
+        return( "Key { name = " + getName() + ", ID = " + getDeviceComponentID() + ", keyCode = " + getKeyCode() + " }" );
     }
     
     public Key( String keyName, boolean hasKeyChar )
     {
-        super( Type.KEY );
+        super( Type.KEY, keyName );
         
-        this.keyName = keyName;
         this.hasKeyChar = hasKeyChar;
         
         this.keyID = KeyID.valueOf( this );

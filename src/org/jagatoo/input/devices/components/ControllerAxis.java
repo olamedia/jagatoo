@@ -37,7 +37,6 @@ package org.jagatoo.input.devices.components;
 public abstract class ControllerAxis extends AnalogDeviceComponent
 {
     private final int index;
-    private final String name;
     
     private float minValue = -1f;
     private float maxValue = +1f;
@@ -55,14 +54,6 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
     public final int getIndex()
     {
         return( index );
-    }
-    
-    /**
-     * @return the Axis' name.
-     */
-    public final String getName()
-    {
-        return( name );
     }
     
     private final void updateNormValue()
@@ -100,7 +91,7 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
      * {@inheritDoc}
      */
     @Override
-    public void setValue( int intValue, float floatValue )
+    protected void setValue( int intValue, float floatValue )
     {
         super.setValue( intValue, floatValue );
         
@@ -150,10 +141,9 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
     
     public ControllerAxis( int index, String name, float deadZone, float povX, float povY )
     {
-        super( Type.CONTROLLER_AXIS );
+        super( Type.CONTROLLER_AXIS, name );
         
         this.index = index;
-        this.name = name;
         this.deadZone = deadZone;
         this.povX = povX;
         this.povY = povY;

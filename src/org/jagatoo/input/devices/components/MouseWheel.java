@@ -36,8 +36,13 @@ package org.jagatoo.input.devices.components;
  */
 public class MouseWheel extends AnalogDeviceComponent
 {
+    public MouseWheel( String name )
+    {
+        super( Type.MOUSE_WHEEL, name );
+    }
+    
     public MouseWheel()
     {
-        super( Type.MOUSE_WHEEL );
+        this( "Mouse Wheel" );
     }
 }

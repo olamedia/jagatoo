@@ -33,7 +33,7 @@ import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * LWJGL implementation of the {@link InputSystem}.
@@ -153,13 +153,13 @@ public class LWJGLInputSystem extends InputSystem
     }
     
     @Override
-    protected LWJGLDeviceFactory createDeviceFactory( Canvas canvas, EventQueue eventQueue )
+    protected LWJGLDeviceFactory createDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
-        return( new LWJGLDeviceFactory( canvas, eventQueue ) );
+        return( new LWJGLDeviceFactory( sourceWindow, eventQueue ) );
     }
     
-    public LWJGLInputSystem( Canvas canvas )
+    public LWJGLInputSystem( InputSourceWindow sourceWindow )
     {
-        super( canvas );
+        super( sourceWindow );
     }
 }

@@ -45,7 +45,7 @@ public abstract class MouseButtonEvent extends MouseEvent
      */
     public final int getX()
     {
-        return( getMouse().getX() );
+        return( getMouse().getCurrentX() );
     }
     
     /**
@@ -53,7 +53,7 @@ public abstract class MouseButtonEvent extends MouseEvent
      */
     public final int getY()
     {
-        return( getMouse().getY() );
+        return( getMouse().getCurrentY() );
     }
     
     

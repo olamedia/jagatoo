@@ -41,6 +41,7 @@ import org.jagatoo.input.events.ControllerButtonPressedEvent;
 import org.jagatoo.input.events.ControllerButtonReleasedEvent;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.listeners.ControllerListener;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 public abstract class Controller extends InputDevice
 {
@@ -103,6 +104,17 @@ public abstract class Controller extends InputDevice
     {
         listeners.remove( l );
         numListeners = listeners.size();
+    }
+    
+    /**
+     * @param button
+     * 
+     * @return true, if the queried {@link ControllerButton} is pressed on this Controller.
+     */
+    public final boolean isButtonPressed( ControllerButton button )
+    {
+        //return( ( buttonState & button.getMaskValue() ) != 0 );
+        return( false );
     }
     
     protected final ControllerButtonPressedEvent prepareControllerButtonPressed( ControllerButton button, long when )
@@ -233,9 +245,9 @@ public abstract class Controller extends InputDevice
         destroyImpl();
     }
     
-    protected Controller( EventQueue eveneQueue, String name, ControllerAxis[] axes, ControllerButton[] buttons ) throws InputSystemException
+    protected Controller( InputSourceWindow sourceWindow, EventQueue eveneQueue, String name, ControllerAxis[] axes, ControllerButton[] buttons ) throws InputSystemException
     {
-        super( eveneQueue, name );
+        super( sourceWindow, eveneQueue, name );
         
         this.axes = axes;
         this.lastWhen_axisChanged = new long[ axes.length ];

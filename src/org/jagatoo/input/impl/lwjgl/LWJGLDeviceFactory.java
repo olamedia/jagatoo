@@ -35,7 +35,7 @@ import org.jagatoo.input.devices.DeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * Insert type comment here.
@@ -56,7 +56,7 @@ public class LWJGLDeviceFactory extends DeviceFactory
     @Override
     protected LWJGLMouse[] initMouses() throws InputSystemException
     {
-        return( new LWJGLMouse[] { new LWJGLMouse( getEveneQueue(), getCanvas() ) } );
+        return( new LWJGLMouse[] { new LWJGLMouse( getSourceWindow(), getEveneQueue() ) } );
     }
     
     @Override
@@ -71,7 +71,7 @@ public class LWJGLDeviceFactory extends DeviceFactory
     @Override
     protected LWJGLKeyboard[] initKeyboards() throws InputSystemException
     {
-        return( new LWJGLKeyboard[] { new LWJGLKeyboard( getEveneQueue(), getCanvas() ) } );
+        return( new LWJGLKeyboard[] { new LWJGLKeyboard( getSourceWindow(), getEveneQueue() ) } );
     }
     
     @Override
@@ -97,7 +97,7 @@ public class LWJGLDeviceFactory extends DeviceFactory
             
             for ( int i = 0; i < count; i++ )
             {
-                controllers[ i ] = new LWJGLController( getEveneQueue(), org.lwjgl.input.Controllers.getController( i ) );
+                controllers[ i ] = new LWJGLController( getSourceWindow(), getEveneQueue(), org.lwjgl.input.Controllers.getController( i ) );
             }
             
             return( controllers );
@@ -117,8 +117,8 @@ public class LWJGLDeviceFactory extends DeviceFactory
         }
     }
     
-    public LWJGLDeviceFactory( Canvas canvas, EventQueue eveneQueue )
+    public LWJGLDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
     {
-        super( canvas, eveneQueue );
+        super( sourceWindow, eveneQueue );
     }
 }

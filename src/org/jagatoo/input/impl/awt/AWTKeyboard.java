@@ -43,7 +43,7 @@ import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
 import org.jagatoo.input.events.KeyboardEvent;
 import org.jagatoo.input.localization.KeyboardLocalizer;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * AWT implementation of the Keyboard class.
@@ -415,6 +415,9 @@ public class AWTKeyboard extends Keyboard
         if ( !isEnabled() )
             return;
         
+        if ( !getSourceWindow().receivsInputEvents() )
+            return;
+        
         switch ( _e.getID() )
         {
             case java.awt.event.KeyEvent.KEY_PRESSED:
@@ -450,7 +453,6 @@ public class AWTKeyboard extends Keyboard
         {
             processKeyEvent( (java.awt.event.KeyEvent)event );
         }
-        
     };
     
     /**
@@ -469,14 +471,14 @@ public class AWTKeyboard extends Keyboard
         }
     }
     
-    protected AWTKeyboard( EventQueue eveneQueue, Canvas canvas ) throws InputSystemException
+    protected AWTKeyboard( InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
     {
-        super( eveneQueue, canvas, "Primary Keyboard" );
+        super( sourceWindow, eveneQueue, "Primary Keyboard" );
         
         try
         {
             /*
-            final java.awt.Component component = (java.awt.Component)canvas.getDrawable();
+            final java.awt.Component component = (java.awt.Component)sourceWindow.getDrawable();
             component.addKeyListener( new java.awt.event.KeyListener()
             {
                 public void keyPressed( java.awt.event.KeyEvent e )

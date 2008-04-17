@@ -39,7 +39,7 @@ import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * LWJGL implementation of the Mouse class.
@@ -82,7 +82,7 @@ public class LWJGLMouse extends Mouse
         {
             if ( isAbsolute() )
             {
-                org.lwjgl.input.Mouse.setCursorPosition( x, getCanvas().getHeight() - y );
+                org.lwjgl.input.Mouse.setCursorPosition( x, getSourceWindow().getHeight() - y );
             }
             else
             {
@@ -114,8 +114,8 @@ public class LWJGLMouse extends Mouse
         int centerY = 0;
         try
         {
-            centerX = getCanvas().getWidth() / 2;
-            centerY = getCanvas().getHeight() / 2;
+            centerX = getSourceWindow().getWidth() / 2;
+            centerY = getSourceWindow().getHeight() / 2;
         }
         catch ( Throwable t )
         {
@@ -141,8 +141,11 @@ public class LWJGLMouse extends Mouse
             
             while ( org.lwjgl.input.Mouse.next() )
             {
+                if ( !getSourceWindow().receivsInputEvents() )
+                    continue;
+                
                 final int x = org.lwjgl.input.Mouse.getEventX();
-                final int y = getCanvas().getHeight() - org.lwjgl.input.Mouse.getEventY();
+                final int y = getSourceWindow().getHeight() - org.lwjgl.input.Mouse.getEventY();
                 
                 final int dx = org.lwjgl.input.Mouse.getEventDX();
                 final int dy = -org.lwjgl.input.Mouse.getEventDY();
@@ -157,7 +160,7 @@ public class LWJGLMouse extends Mouse
                 
                 if ( ( dx != 0 ) || ( dy != 0 ) )
                 {
-                    final MouseMovedEvent movEv = prepareMouseMovedEvent( getX(), getY(), dx, dy, nanoTime );
+                    final MouseMovedEvent movEv = prepareMouseMovedEvent( getCurrentX(), getCurrentY(), dx, dy, nanoTime );
                     
                     if ( isQueued )
                         eventQueue.enqueue( movEv );
@@ -248,7 +251,7 @@ public class LWJGLMouse extends Mouse
             
             if ( absolute )
             {
-                org.lwjgl.input.Mouse.setCursorPosition( getX(), getCanvas().getHeight() - getY() );
+                org.lwjgl.input.Mouse.setCursorPosition( getCurrentX(), getSourceWindow().getHeight() - getCurrentY() );
             }
         }
         catch ( Throwable t )
@@ -315,8 +318,8 @@ public class LWJGLMouse extends Mouse
         return( org.lwjgl.input.Mouse.hasWheel() );
     }
     
-    protected LWJGLMouse( EventQueue eveneQueue, Canvas canvas ) throws InputSystemException
+    protected LWJGLMouse( InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
     {
-        super( eveneQueue, canvas, "Primary Mouse", init_getNumButtons(), init_hasWheel() );
+        super( sourceWindow, eveneQueue, "Primary Mouse", init_getNumButtons(), init_hasWheel() );
     }
 }

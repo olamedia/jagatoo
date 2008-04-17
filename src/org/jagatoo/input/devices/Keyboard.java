@@ -42,22 +42,15 @@ import org.jagatoo.input.events.KeyTypedEvent;
 import org.jagatoo.input.events.KeyboardEvent;
 import org.jagatoo.input.events.KeyboardEventPool;
 import org.jagatoo.input.listeners.KeyboardListener;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 public abstract class Keyboard extends InputDevice
 {
-    private final Canvas canvas;
-    
     private final boolean[] keyStates;
     
     private int modifierMask = 0;
     
     private final ArrayList< KeyboardListener > listeners = new ArrayList< KeyboardListener >();
-    
-    public final Canvas getCanvas()
-    {
-        return( canvas );
-    }
     
     public void addKeyboardListener( KeyboardListener l )
     {
@@ -269,14 +262,9 @@ public abstract class Keyboard extends InputDevice
         destroyImpl();
     }
     
-    protected Keyboard( EventQueue eveneQueue, Canvas canvas, String name ) throws InputSystemException
+    protected Keyboard( InputSourceWindow sourceWindow, EventQueue eveneQueue, String name ) throws InputSystemException
     {
-        super( eveneQueue, name );
-        
-        if ( canvas == null )
-            throw( new InputSystemException( "The Canvas must not be null." ) );
-        
-        this.canvas = canvas;
+        super( sourceWindow, eveneQueue, name );
         
         this.keyStates = new boolean[ Keys.getNumKeys() ];
         java.util.Arrays.fill( keyStates, false );

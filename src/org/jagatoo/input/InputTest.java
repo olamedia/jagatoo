@@ -57,7 +57,7 @@ import org.jagatoo.input.impl.awt.AWTInputSystem;
 import org.jagatoo.input.impl.jinput.JInputInputSystem;
 import org.jagatoo.input.impl.lwjgl.LWJGLInputSystem;
 import org.jagatoo.input.listeners.InputListener;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 import org.jagatoo.input.misc.Cursor;
 
 import org.lwjgl.opengl.Display;
@@ -111,7 +111,7 @@ public class InputTest implements InputListener
     
     public void onMouseWheelMoved( MouseWheelEvent e, int wheelDelta )
     {
-        System.out.println( "Wheel moved: " + e.getWheelDelta() + ", " + e.isPageMove() + ", " + e.getMouse().getX() + ", " + e.getMouse().getY() + ", " + e.getMouse().getButtonsState() );
+        System.out.println( "Wheel moved: " + e.getWheelDelta() + ", " + e.isPageMove() + ", " + e.getMouse().getCurrentX() + ", " + e.getMouse().getCurrentY() + ", " + e.getMouse().getButtonsState() );
     }
     
     public void onMouseStopped( MouseStoppedEvent e, int x, int y )
@@ -212,13 +212,18 @@ public class InputTest implements InputListener
     }
     
     
-    private static class LWJGLCanvas implements Canvas
+    private static class LWJGLSourceWindow implements InputSourceWindow
     {
         private Cursor cursor = Cursor.DEFAULT_CURSOR;
         
         public Object getDrawable()
         {
             return( null );
+        }
+        
+        public boolean receivsInputEvents()
+        {
+            return( true );
         }
         
         public int getWidth()
@@ -246,7 +251,7 @@ public class InputTest implements InputListener
         }
     };
     
-    private static class AWTCanvas implements Canvas
+    private static class AWTSourceWindow implements InputSourceWindow
     {
         final java.awt.Component component;
         
@@ -255,6 +260,11 @@ public class InputTest implements InputListener
         public Object getDrawable()
         {
             return( component );
+        }
+        
+        public boolean receivsInputEvents()
+        {
+            return( true );
         }
         
         public int getWidth()
@@ -281,7 +291,7 @@ public class InputTest implements InputListener
             return( cursor );
         }
         
-        public AWTCanvas( java.awt.Component component )
+        public AWTSourceWindow( java.awt.Component component )
         {
             this.component = component;
         }
@@ -298,7 +308,7 @@ public class InputTest implements InputListener
         InputSystem is = null;
         try
         {
-            is = new LWJGLInputSystem( new LWJGLCanvas() );
+            is = new LWJGLInputSystem( new LWJGLSourceWindow() );
             setupInputSystem( is );
             
             while ( !Display.isCloseRequested() )
@@ -329,7 +339,7 @@ public class InputTest implements InputListener
         InputSystem is = null;
         try
         {
-            is = new JInputInputSystem( new LWJGLCanvas() );
+            is = new JInputInputSystem( new LWJGLSourceWindow() );
             setupInputSystem( is );
             
             while ( !Display.isCloseRequested() )
@@ -369,7 +379,7 @@ public class InputTest implements InputListener
         InputSystem is = null;
         try
         {
-            is = new AWTInputSystem( new AWTCanvas( jogl.getCanvas() ) );
+            is = new AWTInputSystem( new AWTSourceWindow( jogl.getCanvas() ) );
             setupInputSystem( is );
             
             while ( jogl.getFrame().isDisplayable() )
@@ -393,8 +403,8 @@ public class InputTest implements InputListener
     
     public InputTest() throws Throwable
     {
-        startLWJGL();
-        //startJInput();
+        //startLWJGL();
+        startJInput();
         //startAWT();
     }
     

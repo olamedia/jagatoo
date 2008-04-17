@@ -40,7 +40,7 @@ import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseEventPool;
 import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * AWT implementation of the Mouse class.
@@ -144,8 +144,8 @@ public class AWTMouse extends Mouse
         int centerY = 0;
         try
         {
-            centerX = getCanvas().getWidth() / 2;
-            centerY = getCanvas().getHeight() / 2;
+            centerX = getSourceWindow().getWidth() / 2;
+            centerY = getSourceWindow().getHeight() / 2;
         }
         catch ( Throwable t )
         {
@@ -250,6 +250,9 @@ public class AWTMouse extends Mouse
         if ( !isEnabled() )
             return;
         
+        if ( !getSourceWindow().receivsInputEvents() )
+            return;
+        
         switch ( _e.getID() )
         {
             case java.awt.event.MouseEvent.MOUSE_PRESSED:
@@ -283,8 +286,8 @@ public class AWTMouse extends Mouse
                 {
                     final int x = _e.getX();
                     final int y = _e.getY();
-                    final int dx = x - getX();
-                    final int dy = y - getY();
+                    final int dx = x - getCurrentX();
+                    final int dy = y - getCurrentY();
                     
                     storePosition( x, y );
                     
@@ -378,15 +381,15 @@ public class AWTMouse extends Mouse
         }
     }
     
-    protected AWTMouse( EventQueue eveneQueue, Canvas canvas ) throws InputSystemException
+    protected AWTMouse( InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
     {
-        super( eveneQueue, canvas, "Primary Mouse", 12, true );
+        super( sourceWindow, eveneQueue, "Primary Mouse", 12, true );
         
         try
         {
             java.awt.Toolkit.getDefaultToolkit().addAWTEventListener( eventListener, java.awt.AWTEvent.MOUSE_EVENT_MASK | java.awt.AWTEvent.MOUSE_MOTION_EVENT_MASK/* | java.awt.AWTEvent.MOUSE_WHEEL_EVENT_MASK*/ );
             
-            java.awt.Component component = (java.awt.Component)canvas.getDrawable();
+            java.awt.Component component = (java.awt.Component)sourceWindow.getDrawable();
             component.addMouseWheelListener( new java.awt.event.MouseWheelListener()
             {
                 public void mouseWheelMoved( java.awt.event.MouseWheelEvent e )

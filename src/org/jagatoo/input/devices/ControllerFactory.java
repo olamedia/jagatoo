@@ -27,63 +27,20 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.devices.components;
+package org.jagatoo.input.devices;
+
+import org.jagatoo.input.InputSystemException;
 
 /**
- * Insert type comment here.
+ * A ControllerFactory is a simple factory to access all {@link Controller}s
+ * available on the system.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class ControllerButton extends DigitalDeviceComponent
+public interface ControllerFactory
 {
-    private final int index;
-    
-    private DigiState state = DigiState.UP;
-    
     /**
-     * @return the Button's index.
+     * @return an array of all the installed Controllers in the system.
      */
-    public final int getIndex()
-    {
-        return( index );
-    }
-    
-    public void setState( DigiState state )
-    {
-        this.state = state;
-    }
-    
-    public final void setState( boolean state )
-    {
-        if ( state )
-            setState( DigiState.DOWN );
-        else
-            setState( DigiState.UP );
-    }
-    
-    public final DigiState getState()
-    {
-        return( state );
-    }
-    
-    public final boolean getBooleanState()
-    {
-        return( state.getBooleanValue() );
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String toString()
-    {
-        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", index = " + getIndex() + ", state = " + getState() + " }" );
-    }
-    
-    public ControllerButton( int index, String name )
-    {
-        super( Type.CONTROLLER_BUTTON, name );
-        
-        this.index = index;
-    }
+    public Controller[] getControllers() throws InputSystemException;
 }

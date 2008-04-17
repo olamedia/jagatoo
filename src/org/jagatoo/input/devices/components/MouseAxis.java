@@ -27,47 +27,35 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.misc;
+package org.jagatoo.input.devices.components;
 
 /**
- * This is an abstraction of the link between the input system
- * and the render canvas.
+ * Represents one axis of a mouse device.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface Canvas
+public final class MouseAxis extends AnalogDeviceComponent
 {
-    /**
-     * @return the object to draw on and to attach the cursor to.
-     */
-    public Object getDrawable();
+    private final char id;
+    
+    public final char getID()
+    {
+        return( id );
+    }
     
     /**
-     * @return the canvas' width.
+     * {@inheritDoc}
      */
-    public int getWidth();
+    @Override
+    public String toString()
+    {
+        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", ID = " + getID() + ", value = " + getFloatValue() + " }" );
+    }
     
-    /**
-     * @return the canvas' height.
-     */
-    public int getHeight();
-    
-    /**
-     * Sets the new Cursor for this Mouse.
-     * Use <code>null</code> for an invisible Cursor.
-     * Use {@link Cursor#DEFAULT_CURSOR} for the system's default Cursor.
-     * 
-     * @param cursor
-     */
-    public void setCursor( Cursor cursor );
-    
-    /**
-     * Refreshes the Cursor on this canvas.
-     */
-    public void refreshCursor();
-    
-    /**
-     * @return the currently used Cursor.
-     */
-    public Cursor getCursor();
+    public MouseAxis( char id, String name )
+    {
+        super( Type.MOUSE_AXIS, name );
+        
+        this.id = id;
+    }
 }

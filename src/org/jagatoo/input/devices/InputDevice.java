@@ -37,9 +37,12 @@ import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.listeners.InputStateListener;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 public abstract class InputDevice implements Enableable
 {
+    private final InputSourceWindow sourceWindow;
+    
     private final EventQueue eventQueue;
     
     private final String name;
@@ -47,6 +50,11 @@ public abstract class InputDevice implements Enableable
     private boolean enabled = true;
     
     private final ArrayList< InputStateListener > stateListeners = new ArrayList< InputStateListener >();
+    
+    public final InputSourceWindow getSourceWindow()
+    {
+        return( sourceWindow );
+    }
     
     protected final EventQueue getEventQueue()
     {
@@ -140,8 +148,12 @@ public abstract class InputDevice implements Enableable
      */
     public abstract void destroy() throws InputSystemException;
     
-    public InputDevice( EventQueue eveneQueue, String name ) throws InputSystemException
+    public InputDevice( InputSourceWindow sourceWindow, EventQueue eveneQueue, String name ) throws InputSystemException
     {
+        if ( sourceWindow == null )
+            throw( new InputSystemException( "The InputSourceWindow must not be null." ) );
+        
+        this.sourceWindow = sourceWindow;
         this.eventQueue = eveneQueue;
         this.name = name;
     }

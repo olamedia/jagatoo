@@ -40,7 +40,7 @@ public class AnalogDeviceComponent extends DeviceComponent
     private float floatValue = 0f;
     private float scale = 1000.0f;
     
-    public void setValue( int intValue, float floatValue )
+    protected void setValue( int intValue, float floatValue )
     {
         this.intValue = intValue;
         this.floatValue = floatValue;
@@ -86,8 +86,8 @@ public class AnalogDeviceComponent extends DeviceComponent
         return( scale );
     }
     
-    protected AnalogDeviceComponent( Type type )
+    protected AnalogDeviceComponent( Type type, String name )
     {
-        super( type );
+        super( type, name );
     }
 }

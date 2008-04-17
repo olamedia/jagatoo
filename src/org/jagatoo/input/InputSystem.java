@@ -34,7 +34,7 @@ import org.jagatoo.input.devices.DeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 public abstract class InputSystem
 {
@@ -175,6 +175,9 @@ public abstract class InputSystem
         return( keyboards[ index ] );
     }
     
+    /**
+     * @return an array of all registered Keyboards in this InputSystem.
+     */
     public final Keyboard[] getKeyboards()
     {
         if ( ( keyboards_out == null ) || ( keyboards_out.length != keyboards.length ) )
@@ -184,6 +187,24 @@ public abstract class InputSystem
         }
         
         return( keyboards_out );
+    }
+    
+    /**
+     * Checks, wether the given Keyboard is already registered at this InputSystem.
+     * 
+     * @param keyboard
+     * 
+     * @return true, if the Keyboard is registered.
+     */
+    public final boolean isKeyboardRegistered( Keyboard keyboard )
+    {
+        for ( int i = 0; i < keyboards.length; i++ )
+        {
+            if ( keyboards[ i ] == keyboard )
+                return( true );
+        }
+        
+        return( false );
     }
     
     
@@ -312,6 +333,24 @@ public abstract class InputSystem
         return( mouses_out );
     }
     
+    /**
+     * Checks, wether the given Mouse is already registered at this InputSystem.
+     * 
+     * @param mouse
+     * 
+     * @return true, if the Mouse is registered.
+     */
+    public final boolean isMouseRegistered( Mouse mouse )
+    {
+        for ( int i = 0; i < mouses.length; i++ )
+        {
+            if ( mouses[ i ] == mouse )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
     
     public void registerController( Controller controller ) throws InputSystemException
     {
@@ -438,6 +477,24 @@ public abstract class InputSystem
         return( controllers_out );
     }
     
+    /**
+     * Checks, wether the given Controller is already registered at this InputSystem.
+     * 
+     * @param controller
+     * 
+     * @return true, if the Controller is registered.
+     */
+    public final boolean isControllerRegistered( Controller controller )
+    {
+        for ( int i = 0; i < controllers.length; i++ )
+        {
+            if ( controllers[ i ] == controller )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
     
     
     protected void collectKeyboardEvents( long nanoTime ) throws InputSystemException
@@ -548,11 +605,11 @@ public abstract class InputSystem
         }
     }
     
-    protected abstract DeviceFactory createDeviceFactory( Canvas canvas, EventQueue eventQueue );
+    protected abstract DeviceFactory createDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue );
     
-    public InputSystem( Canvas canvas )
+    public InputSystem( InputSourceWindow sourceWindow )
     {
         this.eventQueue = new EventQueue();
-        this.deviceFactory = createDeviceFactory( canvas, eventQueue );
+        this.deviceFactory = createDeviceFactory( sourceWindow, eventQueue );
     }
 }

@@ -41,7 +41,7 @@ import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
 import org.jagatoo.input.localization.KeyboardLocalizer;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * JInput implementation of the Keyboard class.
@@ -230,6 +230,9 @@ public class JInputKeyboard extends Keyboard
             
             while ( keyboard.getEventQueue().getNextEvent( event ) )
             {
+                if ( !getSourceWindow().receivsInputEvents() )
+                    continue;
+                
                 Key key = keyMap.get( event.getComponent() );
                 
                 if ( key == null )
@@ -340,9 +343,9 @@ public class JInputKeyboard extends Keyboard
         */
     }
     
-    protected JInputKeyboard( EventQueue eveneQueue, Canvas canvas, net.java.games.input.Keyboard keyboard ) throws InputSystemException
+    protected JInputKeyboard( InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Keyboard keyboard ) throws InputSystemException
     {
-        super( eveneQueue, canvas, keyboard.getName() );
+        super( sourceWindow, eveneQueue, keyboard.getName() );
         
         this.keyboard = keyboard;
         

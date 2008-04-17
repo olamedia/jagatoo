@@ -27,63 +27,53 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.devices.components;
+package org.jagatoo.input.misc;
 
 /**
- * Insert type comment here.
+ * This is an abstraction of the link between the input system
+ * and the render canvas.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class ControllerButton extends DigitalDeviceComponent
+public interface InputSourceWindow
 {
-    private final int index;
-    
-    private DigiState state = DigiState.UP;
+    /**
+     * @return the object to draw on and to attach the cursor to.
+     */
+    public Object getDrawable();
     
     /**
-     * @return the Button's index.
+     * @return must return <code>true</code>, for the InputSystem to
+     * accept events from this source.
      */
-    public final int getIndex()
-    {
-        return( index );
-    }
-    
-    public void setState( DigiState state )
-    {
-        this.state = state;
-    }
-    
-    public final void setState( boolean state )
-    {
-        if ( state )
-            setState( DigiState.DOWN );
-        else
-            setState( DigiState.UP );
-    }
-    
-    public final DigiState getState()
-    {
-        return( state );
-    }
-    
-    public final boolean getBooleanState()
-    {
-        return( state.getBooleanValue() );
-    }
+    public boolean receivsInputEvents();
     
     /**
-     * {@inheritDoc}
+     * @return the window's width.
      */
-    @Override
-    public String toString()
-    {
-        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", index = " + getIndex() + ", state = " + getState() + " }" );
-    }
+    public int getWidth();
     
-    public ControllerButton( int index, String name )
-    {
-        super( Type.CONTROLLER_BUTTON, name );
-        
-        this.index = index;
-    }
+    /**
+     * @return the window's height.
+     */
+    public int getHeight();
+    
+    /**
+     * Sets the new Cursor for this Mouse.
+     * Use <code>null</code> for an invisible Cursor.
+     * Use {@link Cursor#DEFAULT_CURSOR} for the system's default Cursor.
+     * 
+     * @param cursor
+     */
+    public void setCursor( Cursor cursor );
+    
+    /**
+     * Refreshes the Cursor on this window.
+     */
+    public void refreshCursor();
+    
+    /**
+     * @return the currently used Cursor.
+     */
+    public Cursor getCursor();
 }

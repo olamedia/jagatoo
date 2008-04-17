@@ -39,7 +39,7 @@ import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
 import org.jagatoo.input.localization.KeyboardLocalizer;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * LWJGL implementation of the Keyboard class.
@@ -195,6 +195,9 @@ public class LWJGLKeyboard extends Keyboard
             
             while ( org.lwjgl.input.Keyboard.next() )
             {
+                if ( !getSourceWindow().receivsInputEvents() )
+                    continue;
+                
                 final int keyCode = org.lwjgl.input.Keyboard.getEventKey();
                 char keyChar = org.lwjgl.input.Keyboard.getEventCharacter();
                 
@@ -294,9 +297,9 @@ public class LWJGLKeyboard extends Keyboard
         }
     }
     
-    protected LWJGLKeyboard( EventQueue eveneQueue, Canvas canvas ) throws InputSystemException
+    protected LWJGLKeyboard( InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
     {
-        super( eveneQueue, canvas, "Primary Keyboard" );
+        super( sourceWindow, eveneQueue, "Primary Keyboard" );
         
         try
         {

@@ -35,7 +35,7 @@ import org.jagatoo.input.devices.DeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * Insert type comment here.
@@ -56,7 +56,7 @@ public class AWTDeviceFactory extends DeviceFactory
     @Override
     protected AWTMouse[] initMouses() throws InputSystemException
     {
-        return( new AWTMouse[] { new AWTMouse( getEveneQueue(), getCanvas() ) } );
+        return( new AWTMouse[] { new AWTMouse( getSourceWindow(), getEveneQueue() ) } );
     }
     
     @Override
@@ -71,7 +71,7 @@ public class AWTDeviceFactory extends DeviceFactory
     @Override
     protected AWTKeyboard[] initKeyboards() throws InputSystemException
     {
-        return( new AWTKeyboard[] { new AWTKeyboard( getEveneQueue(), getCanvas() ) } );
+        return( new AWTKeyboard[] { new AWTKeyboard( getSourceWindow(), getEveneQueue() ) } );
     }
     
     @Override
@@ -89,8 +89,8 @@ public class AWTDeviceFactory extends DeviceFactory
         return( new Controller[ 0 ] );
     }
     
-    public AWTDeviceFactory( Canvas canvas, EventQueue eveneQueue )
+    public AWTDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
     {
-        super( canvas, eveneQueue );
+        super( sourceWindow, eveneQueue );
     }
 }

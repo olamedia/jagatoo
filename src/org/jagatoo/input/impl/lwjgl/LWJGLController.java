@@ -39,6 +39,7 @@ import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
 import org.jagatoo.input.events.ControllerButtonReleasedEvent;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * LWJGL implementation of a Controller.
@@ -61,6 +62,9 @@ public class LWJGLController extends Controller
     
     protected final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
+        if ( !getSourceWindow().receivsInputEvents() )
+            return;
+        
         final boolean isQueued = ( eventQueue != null );
         
         try
@@ -211,9 +215,9 @@ public class LWJGLController extends Controller
         return( buttons );
     }
     
-    protected LWJGLController( EventQueue eveneQueue, org.lwjgl.input.Controller controller ) throws InputSystemException
+    protected LWJGLController( InputSourceWindow sourceWindow, EventQueue eveneQueue, org.lwjgl.input.Controller controller ) throws InputSystemException
     {
-        super( eveneQueue, controller.getName(), createAxesArray( controller ), createButtonsArray( controller ) );
+        super( sourceWindow, eveneQueue, controller.getName(), createAxesArray( controller ), createButtonsArray( controller ) );
         
         this.controller = controller;
     }

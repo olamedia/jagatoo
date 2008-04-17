@@ -32,7 +32,7 @@ package org.jagatoo.input.impl.jinput;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * LWJGL implementation of the {@link InputSystem}.
@@ -51,13 +51,13 @@ public class JInputInputSystem extends InputSystem
     }
     
     @Override
-    protected JInputDeviceFactory createDeviceFactory( Canvas canvas, EventQueue eventQueue )
+    protected JInputDeviceFactory createDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
-        return( new JInputDeviceFactory( canvas, eventQueue ) );
+        return( new JInputDeviceFactory( sourceWindow, eventQueue ) );
     }
     
-    public JInputInputSystem( Canvas canvas )
+    public JInputInputSystem( InputSourceWindow sourceWindow )
     {
-        super( canvas );
+        super( sourceWindow );
     }
 }

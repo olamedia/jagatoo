@@ -42,6 +42,7 @@ public abstract class DeviceComponent
     public enum Type
     {
         KEY,
+        MOUSE_AXIS,
         MOUSE_BUTTON,
         MOUSE_WHEEL,
         CONTROLLER_BUTTON,
@@ -52,6 +53,8 @@ public abstract class DeviceComponent
     protected static int nextID = 1;
     
     private final int id = nextID++;
+    
+    private final String name;
     
     private final Type type;
     
@@ -64,6 +67,14 @@ public abstract class DeviceComponent
     public final int getDeviceComponentID()
     {
         return( id );
+    }
+    
+    /**
+     * @return this component's name.
+     */
+    public final String getName()
+    {
+        return( name );
     }
     
     /**
@@ -203,8 +214,9 @@ public abstract class DeviceComponent
         }
     }
     
-    protected DeviceComponent( Type type )
+    protected DeviceComponent( Type type, String name )
     {
         this.type = type;
+        this.name = name;
     }
 }

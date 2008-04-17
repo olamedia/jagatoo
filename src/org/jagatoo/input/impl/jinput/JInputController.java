@@ -40,6 +40,7 @@ import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
 import org.jagatoo.input.events.ControllerButtonReleasedEvent;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * JInput implementation of a Controller.
@@ -61,6 +62,9 @@ public class JInputController extends Controller
     
     protected final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
+        if ( !getSourceWindow().receivsInputEvents() )
+            return;
+        
         final boolean isQueued = ( eventQueue != null );
         
         try
@@ -216,9 +220,9 @@ public class JInputController extends Controller
         return( buttons1 );
     }
     
-    protected JInputController( EventQueue eveneQueue, net.java.games.input.Controller controller ) throws InputSystemException
+    protected JInputController( InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Controller controller ) throws InputSystemException
     {
-        super( eveneQueue, controller.getName(), createAxesArray( controller ), createButtonsArray( controller ) );
+        super( sourceWindow, eveneQueue, controller.getName(), createAxesArray( controller ), createButtonsArray( controller ) );
         
         this.controller = controller;
         

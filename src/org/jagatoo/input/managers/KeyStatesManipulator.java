@@ -27,63 +27,61 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.devices.components;
+package org.jagatoo.input.managers;
+
+import org.jagatoo.input.actions.InputActionInterface;
 
 /**
- * Insert type comment here.
+ * The {@link KeyStatesManipulator} provides a simple interface for
+ * key states manipulations.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class ControllerButton extends DigitalDeviceComponent
+public class KeyStatesManipulator
 {
-    private final int index;
-    
-    private DigiState state = DigiState.UP;
+    private final Boolean[] states;
     
     /**
-     * @return the Button's index.
+     * Sets the key-state for the given command.
+     * 
+     * @param command
+     * @param state the state. Use null to not override the real key-state.
      */
-    public final int getIndex()
+    public void setKeyState( InputActionInterface command, Boolean state )
     {
-        return( index );
-    }
-    
-    public void setState( DigiState state )
-    {
-        this.state = state;
-    }
-    
-    public final void setState( boolean state )
-    {
-        if ( state )
-            setState( DigiState.DOWN );
-        else
-            setState( DigiState.UP );
-    }
-    
-    public final DigiState getState()
-    {
-        return( state );
-    }
-    
-    public final boolean getBooleanState()
-    {
-        return( state.getBooleanValue() );
+        states[ command.ordinal() ] = state;
     }
     
     /**
-     * {@inheritDoc}
+     * @param command
+     * 
+     * @return the current state for the given command.
      */
-    @Override
-    public String toString()
+    public Boolean getKeyState( InputActionInterface command )
     {
-        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", index = " + getIndex() + ", state = " + getState() + " }" );
+        return( states[ command.ordinal() ] );
     }
     
-    public ControllerButton( int index, String name )
+    /**
+     * Applies the new key states to the {@link KeyStatesManager}.
+     */
+    protected void apply( boolean[] currStates )
     {
-        super( Type.CONTROLLER_BUTTON, name );
-        
-        this.index = index;
+        for ( int i = 0; i < this.states.length; i++ )
+        {
+            if ( this.states[ i ] != null )
+            {
+                currStates[ i ] = this.states[ i ].booleanValue();
+            }
+        }
+    }
+    
+    protected KeyStatesManipulator( KeyStatesManager keyStatesManager )
+    {
+        this.states = new Boolean[ keyStatesManager.getNumStates() ];
+        for ( int i = 0; i < states.length; i++ )
+        {
+            states[ i ] = null;
+        }
     }
 }

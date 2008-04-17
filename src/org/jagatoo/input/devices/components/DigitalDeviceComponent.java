@@ -39,7 +39,9 @@ public class DigitalDeviceComponent extends DeviceComponent
     public static enum DigiState
     {
         UP( false ),
-        DOWN( true );
+        DOWN( true ),
+        UPPED( false ),
+        DOWNED( true );
         
         private final boolean booleanValue;
         
@@ -54,8 +56,8 @@ public class DigitalDeviceComponent extends DeviceComponent
         }
     }
     
-    protected DigitalDeviceComponent( Type type )
+    protected DigitalDeviceComponent( Type type, String name )
     {
-        super( type );
+        super( type, name );
     }
 }

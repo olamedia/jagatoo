@@ -31,7 +31,7 @@ package org.jagatoo.input.impl.awt;
 
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
  * LWJGL implementation of the {@link InputSystem}.
@@ -41,13 +41,13 @@ import org.jagatoo.input.misc.Canvas;
 public class AWTInputSystem extends InputSystem
 {
     @Override
-    protected AWTDeviceFactory createDeviceFactory( Canvas canvas, EventQueue eventQueue )
+    protected AWTDeviceFactory createDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
-        return( new AWTDeviceFactory( canvas, eventQueue ) );
+        return( new AWTDeviceFactory( sourceWindow, eventQueue ) );
     }
     
-    public AWTInputSystem( Canvas canvas )
+    public AWTInputSystem( InputSourceWindow sourceWindow )
     {
-        super( canvas );
+        super( sourceWindow );
     }
 }

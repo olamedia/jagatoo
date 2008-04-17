@@ -31,21 +31,22 @@ package org.jagatoo.input.devices;
 
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.Canvas;
+import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
- * Insert type comment here.
+ * A DeviceFactory is a simple factory to access all input devices
+ * available on the system.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public abstract class DeviceFactory
+public abstract class DeviceFactory implements KeyboardFactory, MouseFactory, ControllerFactory
 {
     private final EventQueue eveneQueue;
-    private final Canvas canvas;
+    private final InputSourceWindow sourceWindow;
     
-    public final Canvas getCanvas()
+    public final InputSourceWindow getSourceWindow()
     {
-        return( canvas );
+        return( sourceWindow );
     }
     
     private Keyboard[] cachedKeyboards = null;
@@ -107,7 +108,7 @@ public abstract class DeviceFactory
     protected abstract Keyboard[] initKeyboards() throws InputSystemException;
     
     /**
-     * @return an array of all the installed Keyboards in the system.
+     * {@inheritDoc}
      */
     public Keyboard[] getKeyboards() throws InputSystemException
     {
@@ -127,7 +128,7 @@ public abstract class DeviceFactory
     protected abstract Mouse[] initMouses() throws InputSystemException;
     
     /**
-     * @return an array of all the installed Mouses in the system.
+     * {@inheritDoc}
      */
     public Mouse[] getMouses() throws InputSystemException
     {
@@ -147,7 +148,7 @@ public abstract class DeviceFactory
     protected abstract Controller[] initControllers() throws InputSystemException;
     
     /**
-     * @return an array of all the installed Controllers in the system.
+     * {@inheritDoc}
      */
     public Controller[] getControllers() throws InputSystemException
     {
@@ -159,9 +160,9 @@ public abstract class DeviceFactory
         return( getCachedControllers() );
     }
     
-    public DeviceFactory( Canvas canvas, EventQueue eveneQueue )
+    public DeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
     {
-        this.canvas = canvas;
+        this.sourceWindow = sourceWindow;
         this.eveneQueue = eveneQueue;
     }
 }
