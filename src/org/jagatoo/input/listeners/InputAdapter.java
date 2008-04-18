@@ -31,9 +31,9 @@ package org.jagatoo.input.listeners;
 
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
+import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.MouseButton;
-import org.jagatoo.input.devices.components.DigitalDeviceComponent.DigiState;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
@@ -43,9 +43,9 @@ import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyStateEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
 import org.jagatoo.input.events.MouseButtonEvent;
-import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
+import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseStoppedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
 

@@ -32,9 +32,9 @@ package org.jagatoo.input.devices;
 import java.util.ArrayList;
 
 import org.jagatoo.input.InputSystemException;
+import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
-import org.jagatoo.input.devices.components.DigitalDeviceComponent.DigiState;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
@@ -243,9 +243,9 @@ public abstract class Keyboard extends InputDevice
     public final DigiState getKeyState( Key key )
     {
         if ( isKeyPressed( key ) )
-            return( DigiState.DOWN );
+            return( DigiState.POSITIVE );
         else
-            return( DigiState.UP );
+            return( DigiState.NEGATIVE );
     }
     
     /**

@@ -27,47 +27,29 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.events;
-
-import org.jagatoo.input.devices.Keyboard;
-import org.jagatoo.input.devices.components.DigiState;
-import org.jagatoo.input.devices.components.Key;
+package org.jagatoo.input.devices.components;
 
 /**
- * This type of eevnt is fired when a key was pressed or released.
+ * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public abstract class KeyStateEvent extends KeyboardEvent
+public enum DigiState
 {
-    public final DigiState getKeyState()
+    NEGATIVE( false ),
+    POSITIVE( true ),
+    UPPED( false ),
+    DOWNED( true );
+    
+    private final boolean booleanValue;
+    
+    public final boolean getBooleanValue()
     {
-        return( getKeyboard().getKeyState( getKey() ) );
+        return( booleanValue );
     }
     
-    public final boolean getKeyBooleanState()
+    private DigiState( boolean booleanValue )
     {
-        return( getKeyboard().isKeyPressed( getKey() ) );
-    }
-    
-    /**
-     * Creates a new KeyboardEvent with the default settings
-     */
-    protected KeyStateEvent( SubType subType )
-    {
-        super( subType );
-    }
-    
-    /**
-     * Initialises the new KeyboardEvent using the given values.
-     * 
-     * @param keyCode the key-code whose state changed
-     * @param when the timestamp of the KeyboardEvent 
-     */
-    protected KeyStateEvent( Keyboard keyboard, SubType subType, Key key, int modifierMask, long when, long lastWhen )
-    {
-        this( subType );
-        
-        set( keyboard, key, modifierMask, when, lastWhen );
+        this.booleanValue = booleanValue;
     }
 }

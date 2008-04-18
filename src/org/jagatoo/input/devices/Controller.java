@@ -35,10 +35,10 @@ import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
-import org.jagatoo.input.events.ControllerEvent;
-import org.jagatoo.input.events.ControllerEventPool;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
 import org.jagatoo.input.events.ControllerButtonReleasedEvent;
+import org.jagatoo.input.events.ControllerEvent;
+import org.jagatoo.input.events.ControllerEventPool;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.listeners.ControllerListener;
 import org.jagatoo.input.misc.InputSourceWindow;
@@ -115,6 +115,11 @@ public abstract class Controller extends InputDevice
     {
         //return( ( buttonState & button.getMaskValue() ) != 0 );
         return( false );
+    }
+    
+    public final short getButtonState( ControllerButton button )
+    {
+        return( isButtonPressed( button ) ? (short)1 : (short)0 );
     }
     
     protected final ControllerButtonPressedEvent prepareControllerButtonPressed( ControllerButton button, long when )
@@ -229,6 +234,15 @@ public abstract class Controller extends InputDevice
                 fireOnControllerAxisChanged( (ControllerAxisChangedEvent)e, consumeEvent );
                 break;
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", numAxes = " + getAxesCount() + ", numButtons = " + getButtonsCount() + " }" );
     }
     
     /**

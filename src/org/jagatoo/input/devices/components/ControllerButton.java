@@ -38,7 +38,7 @@ public class ControllerButton extends DigitalDeviceComponent
 {
     private final int index;
     
-    private DigiState state = DigiState.UP;
+    private DigiState state = DigiState.NEGATIVE;
     
     /**
      * @return the Button's index.
@@ -56,9 +56,9 @@ public class ControllerButton extends DigitalDeviceComponent
     public final void setState( boolean state )
     {
         if ( state )
-            setState( DigiState.DOWN );
+            setState( DigiState.POSITIVE );
         else
-            setState( DigiState.UP );
+            setState( DigiState.NEGATIVE );
     }
     
     public final DigiState getState()

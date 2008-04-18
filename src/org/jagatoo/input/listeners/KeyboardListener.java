@@ -29,8 +29,8 @@
  */
 package org.jagatoo.input.listeners;
 
+import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.devices.components.Key;
-import org.jagatoo.input.devices.components.DigitalDeviceComponent.DigiState;
 import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyStateEvent;

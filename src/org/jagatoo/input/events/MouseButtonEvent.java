@@ -30,8 +30,8 @@
 package org.jagatoo.input.events;
 
 import org.jagatoo.input.devices.Mouse;
+import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.devices.components.MouseButton;
-import org.jagatoo.input.devices.components.DigitalDeviceComponent.DigiState;
 
 /**
  * Stores the details associated with a mouse event.

@@ -30,10 +30,15 @@
 package org.jagatoo.input.managers;
 
 import org.jagatoo.input.actions.InputActionInterface;
-import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
-import org.jagatoo.input.devices.components.DigitalDeviceComponent.DigiState;
+import org.jagatoo.input.devices.components.ControllerAxis;
+import org.jagatoo.input.devices.components.ControllerButton;
+import org.jagatoo.input.devices.components.DeviceComponent;
+import org.jagatoo.input.devices.components.DigiState;
+import org.jagatoo.input.devices.components.Key;
+import org.jagatoo.input.devices.components.MouseAxis;
+import org.jagatoo.input.devices.components.MouseButton;
 
 /**
  * Manages key states.
@@ -42,14 +47,12 @@ import org.jagatoo.input.devices.components.DigitalDeviceComponent.DigiState;
  */
 public class InputStatesManager
 {
-    private final InputBindingsManager< ? extends InputActionInterface > keyBindings;
-    
     private InputStatesManipulator manipulator = null;
     
-    protected final boolean[] states1;
-    protected final boolean[] states2;
+    protected final short[] states1;
+    protected final short[] states2;
     
-    protected boolean[] currStates;
+    protected short[] currStates;
     
     protected boolean swapper = false;
     
@@ -74,78 +77,60 @@ public class InputStatesManager
         return( states1.length );
     }
     
-    public final InputBindingsManager< ? extends InputActionInterface > getKeyBindings()
-    {
-        return( keyBindings );
-    }
-    
     /**
-     * @param command
+     * @param action
      * 
-     * @return the current key-state for the given command.
+     * @return the current key-state for the given action.
      */
-    public final DigiState getKeyState( InputActionInterface command )
+    public final DigiState getInputState( InputActionInterface action )
     {
-        final int ordinal = command.ordinal();
+        final int ordinal = action.ordinal();
         
-        if ( swapper )
+        if ( states1[ ordinal ] == states2[ ordinal ] )
         {
-            if ( states1[ ordinal ] )
-            {
-                if ( states2[ ordinal ] )
-                    return( DigiState.DOWN );
-                else
-                    return( DigiState.DOWNED );
-            }
+            if ( states1[ ordinal ] > 0 )
+                return( DigiState.POSITIVE );
             else
-            {
-                if ( states2[ ordinal ] )
-                    return( DigiState.UPPED );
-                else
-                    return( DigiState.UP );
-            }
+                return( DigiState.NEGATIVE );
+        }
+        else if ( swapper )
+        {
+            if ( states1[ ordinal ] > states2[ ordinal ] )
+                return( DigiState.DOWNED );
+            else
+                return( DigiState.UPPED );
         }
         else
         {
-            if ( states2[ ordinal ] )
-            {
-                if ( states1[ ordinal ] )
-                    return( DigiState.DOWN );
-                else
-                    return( DigiState.DOWNED );
-            }
+            if ( states2[ ordinal ] > states1[ ordinal ] )
+                return( DigiState.DOWNED );
             else
-            {
-                if ( states1[ ordinal ] )
-                    return( DigiState.UPPED );
-                else
-                    return( DigiState.UP );
-            }
+                return( DigiState.UPPED );
         }
     }
     
     /**
-     * @param command
+     * @param action
      * 
-     * @return the current key-state for the given command.
+     * @return the current key-state for the given action.
      */
-    public final boolean getSimpleKeyState( InputActionInterface command )
+    public final short getSimpleInputState( InputActionInterface action )
     {
-        return( currStates[ command.ordinal() ] );
+        return( currStates[ action.ordinal() ] );
     }
     
     /**
-     * @param command
+     * @param action
      * 
-     * @return whether the state for the given command's state has changed.
+     * @return whether the state for the given action's state has changed.
      */
-    public final boolean hasKeyStateChanged( InputActionInterface command )
+    public final boolean hasInputStateChanged( InputActionInterface action )
     {
-        return( states1[ command.ordinal() ] != states2[ command.ordinal() ] );
+        return( states1[ action.ordinal() ] != states2[ action.ordinal() ] );
     }
     
     /*
-    public void applyStates( boolean[] states )
+    public void applyStates( short[] states )
     {
         swapper = !swapper;
         
@@ -159,13 +144,69 @@ public class InputStatesManager
     */
     
     /**
-     * Updates the key-states array.
+     * Polls the key-states for all bound keys and writes them into the boolean array.
      * 
+     * @param boundKeys the input-bindings
      * @param keyboard the {@link Keyboard} to take the states from
      * @param mouse the {@link Mouse} to take the states from
-     * @param controllers the {@link Controller}s to take the states from
+     * @param states the target state-array. Must have at least the same length as the number of actions.
      */
-    public void update( final Keyboard keyboard, final Mouse mouse, final Controller[] controllers )
+    private final void pollInputStates( final DeviceComponent[][] boundKeys, final Keyboard keyboard, final Mouse mouse, final short[] states )
+    {
+        final int numActions = boundKeys.length;
+        final int numBindingSets = InputBindingsManager.NUM_KEY_SETS;
+        
+        boolean flag = false;
+        for ( int i = 0; i < numActions; i++ )
+        {
+            flag = false;
+            states[ i ] = 0;
+            for ( int j = 0; ( j < numBindingSets ) && !flag && ( boundKeys[ i ] != null ); j++ )
+            {
+                final DeviceComponent comp = boundKeys[ i ][ j ];
+                
+                switch ( comp.getType() )
+                {
+                    case KEY:
+                        states[ i ] = keyboard.isKeyPressed( (Key)comp ) ? (short)1 : (short)0;
+                        flag = true;
+                        break;
+                    case MOUSE_AXIS:
+                        final MouseAxis axis = (MouseAxis)comp;
+                        states[ i ] = (short)axis.getIntValue();
+                        flag = true;
+                        break;
+                    case MOUSE_BUTTON:
+                        states[ i ] = mouse.isButtonPressed( (MouseButton)comp ) ? (short)1 : (short)0;
+                        flag = true;
+                        break;
+                    case MOUSE_WHEEL:
+                        states[ i ] = (short)mouse.getWheel().getIntValue();
+                        flag = true;
+                        break;
+                    case CONTROLLER_AXIS:
+                        ControllerAxis cAxis = (ControllerAxis)comp;
+                        states[ i ] = (short)cAxis.getIntValue();
+                        flag = true;
+                        break;
+                    case CONTROLLER_BUTTON:
+                        ControllerButton cButton = (ControllerButton)comp;
+                        states[ i ] = cButton.getBooleanState() ? (short)1 : (short)0;
+                        flag = true;
+                        break;
+                }
+            }
+        }
+    }
+    
+    /**
+     * Updates the key-states array.
+     * 
+     * @param inputBindings the {@link InputBindingsManager} to use for input-bindings
+     * @param keyboard the {@link Keyboard} to take the states from
+     * @param mouse the {@link Mouse} to take the states from
+     */
+    public void update( final InputBindingsManager< ? extends InputActionInterface > inputBindings, final Keyboard keyboard, final Mouse mouse )
     {
         if ( keyboard == null )
         {
@@ -180,7 +221,7 @@ public class InputStatesManager
         else
             currStates = states2;
         
-        keyBindings.pollInputStates( keyboard, mouse, controllers, currStates );
+        pollInputStates( inputBindings.boundKeys, keyboard, mouse, currStates );
         
         if ( manipulator != null )
         {
@@ -188,19 +229,20 @@ public class InputStatesManager
         }
     }
     
-    public InputStatesManager( InputBindingsManager< ? extends InputActionInterface > keyBindings )
+    /**
+     * Creates a new {@link InputStatesManager}.
+     * 
+     * @param numActions the number of available (bindeable) actions.
+     */
+    public InputStatesManager( final int numActions )
     {
-        this.keyBindings = keyBindings;
-        
-        final int numActions = keyBindings.getNumActions();
-        
-        this.states1 = new boolean[ numActions ];
-        this.states2 = new boolean[ numActions ];
+        this.states1 = new short[ numActions ];
+        this.states2 = new short[ numActions ];
         
         for ( int i = 0; i < numActions; i++ )
         {
-            states1[ i ] = false;
-            states2[ i ] = false;
+            states1[ i ] = 0;
+            states2[ i ] = 0;
         }
         
         currStates = states2;

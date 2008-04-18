@@ -65,13 +65,14 @@ public class InputStatesManipulator
     /**
      * Applies the new key states to the {@link InputStatesManager}.
      */
-    protected void apply( boolean[] currStates )
+    protected void apply( final short[] currStates )
     {
         for ( int i = 0; i < this.states.length; i++ )
         {
             if ( this.states[ i ] != null )
             {
-                currStates[ i ] = this.states[ i ].booleanValue();
+                // TODO: implement correctly!!!
+                //currStates[ i ] = this.states[ i ].booleanValue();
             }
         }
     }

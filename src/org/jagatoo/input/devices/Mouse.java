@@ -32,17 +32,18 @@ package org.jagatoo.input.devices;
 import java.util.ArrayList;
 
 import org.jagatoo.input.InputSystemException;
+import org.jagatoo.input.devices.components.ControllerButton;
+import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.devices.components.MouseAxis;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
 import org.jagatoo.input.devices.components.MouseWheel;
-import org.jagatoo.input.devices.components.DigitalDeviceComponent.DigiState;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.events.MouseButtonPressedEvent;
+import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseEvent;
 import org.jagatoo.input.events.MouseEventPool;
 import org.jagatoo.input.events.MouseMovedEvent;
-import org.jagatoo.input.events.MouseButtonPressedEvent;
-import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseStoppedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
 import org.jagatoo.input.listeners.MouseListener;
@@ -269,9 +270,9 @@ public abstract class Mouse extends InputDevice
     public final DigiState getButtonState( MouseButton button )
     {
         if ( isButtonPressed( button ) )
-            return( DigiState.DOWN );
+            return( DigiState.POSITIVE );
         else
-            return( DigiState.UP );
+            return( DigiState.NEGATIVE );
     }
     
     public void addMouseStopListener( MouseStopListener l )
@@ -559,6 +560,15 @@ public abstract class Mouse extends InputDevice
     public final boolean isAbsolute()
     {
         return( isAbsolute );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", numButtons = " + getButtonsCount() + ", hasWheel = " + ( getWheel() != null ) + " }" );
     }
     
     /**

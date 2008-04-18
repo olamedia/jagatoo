@@ -36,26 +36,6 @@ package org.jagatoo.input.devices.components;
  */
 public class DigitalDeviceComponent extends DeviceComponent
 {
-    public static enum DigiState
-    {
-        UP( false ),
-        DOWN( true ),
-        UPPED( false ),
-        DOWNED( true );
-        
-        private final boolean booleanValue;
-        
-        public final boolean getBooleanValue()
-        {
-            return( booleanValue );
-        }
-        
-        private DigiState( boolean booleanValue )
-        {
-            this.booleanValue = booleanValue;
-        }
-    }
-    
     protected DigitalDeviceComponent( Type type, String name )
     {
         super( type, name );

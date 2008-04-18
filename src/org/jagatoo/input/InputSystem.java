@@ -495,8 +495,6 @@ public abstract class InputSystem
         return( false );
     }
     
-    
-    
     protected void collectKeyboardEvents( long nanoTime ) throws InputSystemException
     {
         for ( int i = 0; i < keyboards.length; i++ )

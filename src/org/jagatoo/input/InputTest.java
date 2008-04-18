@@ -32,13 +32,15 @@ package org.jagatoo.input;
 import javax.media.opengl.GL;
 
 import org.jagatoo.input.actions.InputAction;
+import org.jagatoo.input.actions.InputActionInterface;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
+import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.devices.components.Key;
+import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
-import org.jagatoo.input.devices.components.DigitalDeviceComponent.DigiState;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
@@ -48,18 +50,19 @@ import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyStateEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
 import org.jagatoo.input.events.MouseButtonEvent;
-import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
+import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseStoppedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
 import org.jagatoo.input.impl.awt.AWTInputSystem;
 import org.jagatoo.input.impl.jinput.JInputInputSystem;
 import org.jagatoo.input.impl.lwjgl.LWJGLInputSystem;
 import org.jagatoo.input.listeners.InputListener;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.managers.InputBindingsManager;
+import org.jagatoo.input.managers.InputStatesManager;
 import org.jagatoo.input.misc.Cursor;
-
+import org.jagatoo.input.misc.InputSourceWindow;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -70,19 +73,39 @@ import org.lwjgl.opengl.DisplayMode;
  */
 public class InputTest implements InputListener
 {
+    private static final int DEBUG_MASK_EVENTS = 1;
+    private static final int DEBUG_MASK_TEST_ACTION = 2;
+    private static final int DEBUG_MASK_MYACTION = 4;
+    
+    private static int debugMask = ~0;
+    static
+    {
+        debugMask &= ~DEBUG_MASK_EVENTS;
+        debugMask &= ~DEBUG_MASK_TEST_ACTION;
+        //debugMask &= ~DEBUG_MASK_MYACTION;
+    }
+    
+    private static final boolean isDebugFlagSet( int flag )
+    {
+        return( ( debugMask & flag ) != 0 );
+    }
+    
     public void onMouseButtonPressed( MouseButtonPressedEvent e, MouseButton button )
     {
-        System.out.println( "Button pressed: " + e.getButton() + ", " + e.getX() + ", " + e.getY() );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "Button pressed: " + e.getButton() + ", " + e.getX() + ", " + e.getY() );
     }
     
     public void onMouseButtonReleased( MouseButtonReleasedEvent e, MouseButton button )
     {
-        System.out.println( "Button released: " + e.getButton() + ", " + e.getX() + ", " + e.getY() );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "Button released: " + e.getButton() + ", " + e.getX() + ", " + e.getY() );
     }
     
     public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, DigiState state )
     {
-        //System.out.println( "mouse button state: " + e.getButton() + ", " + state );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "mouse button state: " + e.getButton() + ", " + state );
         
         try
         {
@@ -102,7 +125,8 @@ public class InputTest implements InputListener
     
     public void onMouseMoved( MouseMovedEvent e, int x, int y, int dx, int dy )
     {
-        System.out.println( "Mouse moved: " + x + ", " + y + ", " + dx + ", " + dy + ", " + e.getMouse().getButtonsState() );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "Mouse moved: " + x + ", " + y + ", " + dx + ", " + dy + ", " + e.getMouse().getButtonsState() );
         /*
         xxx += dx;
         System.out.println( xxx );
@@ -111,61 +135,99 @@ public class InputTest implements InputListener
     
     public void onMouseWheelMoved( MouseWheelEvent e, int wheelDelta )
     {
-        System.out.println( "Wheel moved: " + e.getWheelDelta() + ", " + e.isPageMove() + ", " + e.getMouse().getCurrentX() + ", " + e.getMouse().getCurrentY() + ", " + e.getMouse().getButtonsState() );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "Wheel moved: " + e.getWheelDelta() + ", " + e.isPageMove() + ", " + e.getMouse().getCurrentX() + ", " + e.getMouse().getCurrentY() + ", " + e.getMouse().getButtonsState() );
     }
     
     public void onMouseStopped( MouseStoppedEvent e, int x, int y )
     {
-        //System.out.println( "Mouse stopped: " + x + ", " + y );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "Mouse stopped: " + x + ", " + y );
     }
     
     public void onKeyPressed( KeyPressedEvent e, Key key )
     {
-        System.out.println( "key pressed: " + e.getKey() + ", " + e.getModifierMask() );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "key pressed: " + e.getKey() + ", " + e.getModifierMask() );
     }
     
     public void onKeyReleased( KeyReleasedEvent e, Key key )
     {
-        System.out.println( "key released: " + e.getKey() + ", " + e.getModifierMask() );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "key released: " + e.getKey() + ", " + e.getModifierMask() );
     }
     
     public void onKeyStateChanged( KeyStateEvent e, Key key, DigiState state )
     {
-        //System.out.println( "key state: " + e.getKey() + ", " + state );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "key state: " + e.getKey() + ", " + state );
     }
     
     public void onKeyTyped( KeyTypedEvent e, char keyChar )
     {
-        //System.out.println( "key typed: " + keyChar + ", " + (int)keyChar + ", " + e.getModifierMask() );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "key typed: " + keyChar + ", " + (int)keyChar + ", " + e.getModifierMask() );
     }
     
     public void onControllerAxisChanged( ControllerAxisChangedEvent e, ControllerAxis axis, float axisDelta )
     {
-        //System.out.println( "axis changed: " + axis.getName() + ", normValue = " + axis.getNormalizedValue() );
-        System.out.println( "axis changed: " + axis + ", normValue = " + axis.getNormalizedValue() + ", delta = " + axisDelta );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "axis changed: " + axis.getName() + ", normValue = " + axis.getNormalizedValue() );
+            //System.out.println( "axis changed: " + axis + ", normValue = " + axis.getNormalizedValue() + ", delta = " + axisDelta );
     }
     
     public void onControllerButtonPressed( ControllerButtonPressedEvent e, ControllerButton button )
     {
-        System.out.println( "controller-button pressed: " + button );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "controller-button pressed: " + button );
     }
     
     public void onControllerButtonReleased( ControllerButtonReleasedEvent e, ControllerButton button )
     {
-        System.out.println( "controller-button released: " + button );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "controller-button released: " + button );
     }
     
     public void onControllerButtonStateChanged( ControllerButtonEvent e, ControllerButton button, DigiState state )
     {
-        System.out.println( "controller-button state: " + button + ", " + state );
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "controller-button state: " + button + ", " + state );
     }
     
     private class TestAction implements InputAction
     {
         public void doAction( int delta, int state )
         {
+            if ( !isDebugFlagSet( DEBUG_MASK_TEST_ACTION ) )
+                return;
+            
             System.out.println( "TestAction: " + delta + ", " + state );
         }
+    }
+    
+    private static enum MyInputBinding implements InputActionInterface
+    {
+        ACTION1,
+        ACTION2,
+        ACTION3,
+        ACTION4,
+        ACTION5
+    }
+    
+    private InputBindingsManager< MyInputBinding > bindingsManager = null;
+    private InputStatesManager statesManager = null;
+    
+    private void setupInputBindings( InputSystem is ) throws Throwable
+    {
+        bindingsManager = new InputBindingsManager< MyInputBinding >( MyInputBinding.values().length );
+        
+        bindingsManager.bind( Keys.G, MyInputBinding.ACTION1 );
+        bindingsManager.bind( is.getMouse().getWheel(), MyInputBinding.ACTION2 );
+        bindingsManager.bind( is.getMouse().getXAxis(), MyInputBinding.ACTION3 );
+        bindingsManager.bind( is.getController().getButton( 0 ), MyInputBinding.ACTION4 );
+        bindingsManager.bind( is.getController().getAxis( 3 ), MyInputBinding.ACTION5 );
+        
+        statesManager = new InputStatesManager( MyInputBinding.values().length );
     }
     
     private void setupInputSystem( InputSystem is ) throws Throwable
@@ -208,6 +270,26 @@ public class InputTest implements InputListener
         catch ( InputSystemException ex )
         {
             ex.printStackTrace();
+        }
+        
+        setupInputBindings( is );
+    }
+    
+    private void iteration( InputSystem is, final long time ) throws Throwable
+    {
+        statesManager.update( bindingsManager, is.getKeyboard(), is.getMouse() );
+        
+        if ( isDebugFlagSet( DEBUG_MASK_MYACTION ) )
+        {
+            //System.out.println( statesManager.getInputState( MyInputBinding.ACTION1 ) );
+            
+            DigiState state = statesManager.getInputState( MyInputBinding.ACTION3 );
+            
+            if ( ( state == DigiState.DOWNED ) || ( state == DigiState.UPPED ) )
+                System.out.println( state );
+                //System.out.println( statesManager.getSimpleInputState( MyInputBinding.ACTION3 ) );
+            
+            //Thread.sleep( 1000L );
         }
     }
     
@@ -313,7 +395,11 @@ public class InputTest implements InputListener
             
             while ( !Display.isCloseRequested() )
             {
-                is.update( System.nanoTime() );
+                final long time = System.nanoTime();
+                
+                is.update( time );
+                
+                iteration( is, time );
             }
         }
         catch ( InputSystemException e )
@@ -344,7 +430,11 @@ public class InputTest implements InputListener
             
             while ( !Display.isCloseRequested() )
             {
-                is.update( System.nanoTime() );
+                final long time = System.nanoTime();
+                
+                is.update( time );
+                
+                iteration( is, time );
                 
                 Thread.yield();
             }
@@ -384,7 +474,11 @@ public class InputTest implements InputListener
             
             while ( jogl.getFrame().isDisplayable() )
             {
-                is.update( System.nanoTime() );
+                final long time = System.nanoTime();
+                
+                is.update( time );
+                
+                iteration( is, time );
                 
                 Thread.yield();
                 //Thread.sleep( 200L );
@@ -403,8 +497,8 @@ public class InputTest implements InputListener
     
     public InputTest() throws Throwable
     {
-        //startLWJGL();
-        startJInput();
+        startLWJGL();
+        //startJInput();
         //startAWT();
     }
     
