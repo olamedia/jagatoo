@@ -104,17 +104,19 @@ public abstract class DeviceFactory implements KeyboardFactory, MouseFactory, Co
     
     /**
      * @return an array of all the installed Keyboards in the system.
+     * 
+     * @param currentKeyboards the array of currently known Keyboards
      */
-    protected abstract Keyboard[] initKeyboards() throws InputSystemException;
+    protected abstract Keyboard[] initKeyboards( Keyboard[] currentKeyboards ) throws InputSystemException;
     
     /**
      * {@inheritDoc}
      */
-    public Keyboard[] getKeyboards() throws InputSystemException
+    public Keyboard[] getKeyboards( boolean forceRefresh ) throws InputSystemException
     {
-        if ( getCachedKeyboards() == null )
+        if ( ( getCachedKeyboards() == null ) || forceRefresh )
         {
-            setCachedKeyboards(  initKeyboards() );
+            setCachedKeyboards( initKeyboards( getCachedKeyboards() ) );
         }
         
         return( getCachedKeyboards() );
@@ -124,17 +126,19 @@ public abstract class DeviceFactory implements KeyboardFactory, MouseFactory, Co
     
     /**
      * @return an array of all the installed Mouses in the system.
+     * 
+     * @param currentMouses the array of currently known Mouses
      */
-    protected abstract Mouse[] initMouses() throws InputSystemException;
+    protected abstract Mouse[] initMouses( Mouse[] currentMouses ) throws InputSystemException;
     
     /**
      * {@inheritDoc}
      */
-    public Mouse[] getMouses() throws InputSystemException
+    public Mouse[] getMouses( boolean forceRefresh ) throws InputSystemException
     {
-        if ( getCachedMouses() == null )
+        if ( ( getCachedMouses() == null ) || forceRefresh )
         {
-            setCachedMouses( initMouses() );
+            setCachedMouses( initMouses( getCachedMouses() ) );
         }
         
         return( getCachedMouses() );
@@ -144,17 +148,19 @@ public abstract class DeviceFactory implements KeyboardFactory, MouseFactory, Co
     
     /**
      * @return an array of all the installed Controllers in the system.
+     * 
+     * @param currentControllers the array of currently known Controllers
      */
-    protected abstract Controller[] initControllers() throws InputSystemException;
+    protected abstract Controller[] initControllers( Controller[] currentControllers ) throws InputSystemException;
     
     /**
      * {@inheritDoc}
      */
-    public Controller[] getControllers() throws InputSystemException
+    public Controller[] getControllers( boolean forceRefresh ) throws InputSystemException
     {
-        if ( getCachedControllers() == null )
+        if ( ( getCachedControllers() == null ) || forceRefresh )
         {
-            setCachedControllers( initControllers() );
+            setCachedControllers( initControllers( getCachedControllers() ) );
         }
         
         return( getCachedControllers() );

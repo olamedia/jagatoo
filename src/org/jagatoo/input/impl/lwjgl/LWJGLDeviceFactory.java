@@ -54,8 +54,16 @@ public class LWJGLDeviceFactory extends DeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected LWJGLMouse[] initMouses() throws InputSystemException
+    protected LWJGLMouse[] initMouses( Mouse[] currentMouses ) throws InputSystemException
     {
+        if ( ( currentMouses != null ) && ( currentMouses.length == 1 ) )
+        {
+            if ( ( currentMouses[ 0 ] instanceof LWJGLMouse) && ( currentMouses[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
+            {
+                return( new LWJGLMouse[] { (LWJGLMouse)currentMouses[ 0 ] } );
+            }
+        }
+        
         return( new LWJGLMouse[] { new LWJGLMouse( getSourceWindow(), getEveneQueue() ) } );
     }
     
@@ -69,8 +77,16 @@ public class LWJGLDeviceFactory extends DeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected LWJGLKeyboard[] initKeyboards() throws InputSystemException
+    protected LWJGLKeyboard[] initKeyboards( Keyboard[] currentKeyboards ) throws InputSystemException
     {
+        if ( ( currentKeyboards != null ) && ( currentKeyboards.length == 1 ) )
+        {
+            if ( ( currentKeyboards[ 0 ] instanceof LWJGLKeyboard ) && ( currentKeyboards[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
+            {
+                return( new LWJGLKeyboard[] { (LWJGLKeyboard)currentKeyboards[ 0 ] } );
+            }
+        }
+        
         return( new LWJGLKeyboard[] { new LWJGLKeyboard( getSourceWindow(), getEveneQueue() ) } );
     }
     
@@ -84,7 +100,7 @@ public class LWJGLDeviceFactory extends DeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected LWJGLController[] initControllers() throws InputSystemException
+    protected LWJGLController[] initControllers( Controller[] currentControllers ) throws InputSystemException
     {
         try
         {
@@ -95,9 +111,27 @@ public class LWJGLDeviceFactory extends DeviceFactory
             
             LWJGLController[] controllers = new LWJGLController[ count ];
             
+            boolean alreadyexisting = false;
             for ( int i = 0; i < count; i++ )
             {
-                controllers[ i ] = new LWJGLController( getSourceWindow(), getEveneQueue(), org.lwjgl.input.Controllers.getController( i ) );
+                alreadyexisting = false;
+                if ( currentControllers != null )
+                {
+                    for ( int j = 0; j < currentControllers.length; j++ )
+                    {
+                        if ( ( currentControllers[ j ] instanceof LWJGLController ) && ( currentControllers[ j ].getName().equals( org.lwjgl.input.Controllers.getController( i ).getName() ) ) )
+                        {
+                            controllers[ i ] = (LWJGLController)currentControllers[ j ];
+                            alreadyexisting = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if ( !alreadyexisting )
+                {
+                    controllers[ i ] = new LWJGLController( getSourceWindow(), getEveneQueue(), org.lwjgl.input.Controllers.getController( i ) );
+                }
             }
             
             return( controllers );

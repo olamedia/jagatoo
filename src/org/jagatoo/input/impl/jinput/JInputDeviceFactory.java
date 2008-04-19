@@ -54,17 +54,35 @@ public class JInputDeviceFactory extends DeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected JInputMouse[] initMouses() throws InputSystemException
+    protected JInputMouse[] initMouses( Mouse[] currentMoues ) throws InputSystemException
     {
         net.java.games.input.Controller[] controllers = net.java.games.input.ControllerEnvironment.getDefaultEnvironment().getControllers();
         
         JInputMouse[] tmpMouses = new JInputMouse[ controllers.length ];
         int numMouses = 0;
+        boolean alreadyexisting = false;
         for ( int i = 0; i < controllers.length; i++ )
         {
             if ( controllers[ i ].getType() == net.java.games.input.Controller.Type.MOUSE )
             {
-                tmpMouses[ numMouses++ ] = new JInputMouse( getSourceWindow(), getEveneQueue(), (net.java.games.input.Mouse)controllers[ i ] );
+                alreadyexisting = false;
+                if ( currentMoues != null )
+                {
+                    for ( int j = 0; j < currentMoues.length; j++ )
+                    {
+                        if ( ( currentMoues[ j ] instanceof JInputMouse ) && ( currentMoues[ j ].getName().equals( controllers[ i ].getName() ) ) )
+                        {
+                            tmpMouses[ numMouses++ ] = (JInputMouse)currentMoues[ j ];
+                            alreadyexisting = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if ( !alreadyexisting )
+                {
+                    tmpMouses[ numMouses++ ] = new JInputMouse( getSourceWindow(), getEveneQueue(), (net.java.games.input.Mouse)controllers[ i ] );
+                }
             }
         }
         
@@ -84,19 +102,37 @@ public class JInputDeviceFactory extends DeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected JInputKeyboard[] initKeyboards() throws InputSystemException
+    protected JInputKeyboard[] initKeyboards( Keyboard[] currentKeyboards ) throws InputSystemException
     {
         net.java.games.input.Controller[] controllers = net.java.games.input.ControllerEnvironment.getDefaultEnvironment().getControllers();
         
         JInputKeyboard[] tmpKeyboards = new JInputKeyboard[ controllers.length ];
         int numKeyboards = 0;
+        boolean alreadyexisting = false;
         for ( int i = 0; i < controllers.length; i++ )
         {
             if ( controllers[ i ].getType() == net.java.games.input.Controller.Type.KEYBOARD )
             {
                 if ( controllers[ i ].getComponents().length > 10 )
                 {
-                    tmpKeyboards[ numKeyboards++ ] = new JInputKeyboard( getSourceWindow(), getEveneQueue(), (net.java.games.input.Keyboard)controllers[ i ] );
+                    alreadyexisting = false;
+                    if ( currentKeyboards != null )
+                    {
+                        for ( int j = 0; j < currentKeyboards.length; j++ )
+                        {
+                            if ( ( currentKeyboards[ j ] instanceof JInputKeyboard ) && ( currentKeyboards[ j ].getName().equals( controllers[ i ].getName() ) ) )
+                            {
+                                tmpKeyboards[ numKeyboards++ ] = (JInputKeyboard)currentKeyboards[ j ];
+                                alreadyexisting = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if ( !alreadyexisting )
+                    {
+                        tmpKeyboards[ numKeyboards++ ] = new JInputKeyboard( getSourceWindow(), getEveneQueue(), (net.java.games.input.Keyboard)controllers[ i ] );
+                    }
                 }
             }
         }
@@ -139,19 +175,37 @@ public class JInputDeviceFactory extends DeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected JInputController[] initControllers() throws InputSystemException
+    protected JInputController[] initControllers( Controller[] currentControllers ) throws InputSystemException
     {
         net.java.games.input.Controller[] controllers = net.java.games.input.ControllerEnvironment.getDefaultEnvironment().getControllers();
         
         JInputController[] tmpControllers = new JInputController[ controllers.length ];
         int numControllers = 0;
+        boolean alreadyexisting = false;
         for ( int i = 0; i < controllers.length; i++ )
         {
             if ( isController( controllers[ i ].getType() ) )
             {
                 if ( controllers[ i ].getComponents().length > 10 )
                 {
-                    tmpControllers[ numControllers++ ] = new JInputController( getSourceWindow(), getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
+                    alreadyexisting = false;
+                    if ( currentControllers != null )
+                    {
+                        for ( int j = 0; j < currentControllers.length; j++ )
+                        {
+                            if ( ( currentControllers[ j ] instanceof JInputController ) && ( currentControllers[ j ].getName().equals( controllers[ i ].getName() ) ) )
+                            {
+                                tmpControllers[ numControllers++ ] = (JInputController)currentControllers[ j ];
+                                alreadyexisting = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if ( !alreadyexisting )
+                    {
+                        tmpControllers[ numControllers++ ] = new JInputController( getSourceWindow(), getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
+                    }
                 }
             }
         }

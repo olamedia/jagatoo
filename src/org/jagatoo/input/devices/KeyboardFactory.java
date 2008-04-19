@@ -41,6 +41,8 @@ public interface KeyboardFactory
 {
     /**
      * @return an array of all the installed Keyboards in the system.
+     * 
+     * @param forceRefresh if true, the list of available devices is refreshed from the system.
      */
-    public Keyboard[] getKeyboards() throws InputSystemException;
+    public Keyboard[] getKeyboards( boolean forceRefresh ) throws InputSystemException;
 }

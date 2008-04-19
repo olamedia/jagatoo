@@ -72,6 +72,23 @@ public abstract class InputDevice implements Enableable
     /**
      * {@inheritDoc}
      */
+    @Override
+    public boolean equals( Object o )
+    {
+        if ( o == this )
+            return( true );
+        
+        if ( ( o.getClass() != this.getClass() ) || ( !((InputDevice)o).getName().equals( this.getName() ) ) )
+            return( false );
+        
+        final InputDevice idO = (InputDevice)o;
+        
+        return( idO.getSourceWindow() == this.getSourceWindow() );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void setEnabled( boolean enabled )
     {
         this.enabled = enabled;
@@ -156,5 +173,8 @@ public abstract class InputDevice implements Enableable
         this.sourceWindow = sourceWindow;
         this.eventQueue = eveneQueue;
         this.name = name;
+        
+        if ( name == null )
+            throw( new InputSystemException( "The name must not be null." ) );
     }
 }

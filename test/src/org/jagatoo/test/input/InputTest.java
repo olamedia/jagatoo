@@ -36,6 +36,7 @@ import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.actions.InputAction;
 import org.jagatoo.input.actions.InputActionInterface;
 import org.jagatoo.input.devices.Controller;
+import org.jagatoo.input.devices.InputDevice;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
 import org.jagatoo.input.devices.components.DigiState;
@@ -61,7 +62,9 @@ import org.jagatoo.input.impl.awt.AWTInputSystem;
 import org.jagatoo.input.impl.jinput.JInputInputSystem;
 import org.jagatoo.input.impl.lwjgl.LWJGLInputSystem;
 import org.jagatoo.input.listeners.InputListener;
+import org.jagatoo.input.managers.InputHotPlugListener;
 import org.jagatoo.input.managers.InputBindingsManager;
+import org.jagatoo.input.managers.InputHotPlugManager;
 import org.jagatoo.input.managers.InputStatesManager;
 import org.jagatoo.input.misc.Cursor;
 import org.jagatoo.input.misc.InputSourceWindow;
@@ -74,7 +77,7 @@ import org.lwjgl.opengl.DisplayMode;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class InputTest implements InputListener
+public class InputTest implements InputListener, InputHotPlugListener
 {
     private static final int DEBUG_MASK_EVENTS = 1;
     private static final int DEBUG_MASK_TEST_ACTION = 2;
@@ -85,8 +88,10 @@ public class InputTest implements InputListener
     {
         debugMask &= ~DEBUG_MASK_EVENTS;
         debugMask &= ~DEBUG_MASK_TEST_ACTION;
-        //debugMask &= ~DEBUG_MASK_MYACTION;
+        debugMask &= ~DEBUG_MASK_MYACTION;
     }
+    
+    private final InputHotPlugManager hotplugManager = new InputHotPlugManager();
     
     private static final boolean isDebugFlagSet( int flag )
     {
@@ -197,6 +202,16 @@ public class InputTest implements InputListener
             System.out.println( "controller-button state: " + button + ", " + state );
     }
     
+    public void onInputDevicePluggedIn( InputDevice device )
+    {
+        System.out.println( "plugged in: " + device );
+    }
+    
+    public void onInputDevicePluggedOut( InputDevice device )
+    {
+        System.out.println( "plugged out: " + device );
+    }
+    
     private class TestAction implements InputAction
     {
         public void doAction( int delta, int state )
@@ -229,8 +244,11 @@ public class InputTest implements InputListener
         bindingsManager.bind( is.getMouse().getButton( 0 ), MyInputBinding.ACTION2 );
         bindingsManager.bind( is.getMouse().getWheel(), MyInputBinding.ACTION3 );
         bindingsManager.bind( is.getMouse().getXAxis(), MyInputBinding.ACTION4 );
-        bindingsManager.bind( is.getController().getButton( 0 ), MyInputBinding.ACTION5 );
-        bindingsManager.bind( is.getController().getAxis( 3 ), MyInputBinding.ACTION6 );
+        if ( is.getController() != null )
+        {
+            bindingsManager.bind( is.getController().getButton( 0 ), MyInputBinding.ACTION5 );
+            bindingsManager.bind( is.getController().getAxis( 3 ), MyInputBinding.ACTION6 );
+        }
         
         statesManager = new InputStatesManager( MyInputBinding.values().length );
     }
@@ -263,7 +281,7 @@ public class InputTest implements InputListener
         
         try
         {
-            Controller[] controllers = is.getDeviceFactory().getControllers();
+            Controller[] controllers = is.getDeviceFactory().getControllers( false );
             if ( controllers.length > 0 )
             {
                 System.out.println( controllers[ 0 ].getName() );
@@ -278,6 +296,13 @@ public class InputTest implements InputListener
         }
         
         setupInputBindings( is );
+        
+        /*
+         * Listen for hot-plugged InputDevices.
+         */
+        hotplugManager.registerDeviceFactory( is.getDeviceFactory() );
+        hotplugManager.addHotPlugListener( this );
+        hotplugManager.start();
     }
     
     private void iteration( InputSystem is, final long time ) throws Throwable
@@ -399,6 +424,14 @@ public class InputTest implements InputListener
     };
     
     
+    private void prepareShutdown( InputSystem is ) throws InputSystemException
+    {
+        if ( is != null )
+            is.destroy();
+        
+        hotplugManager.stop( true );
+    }
+    
     @SuppressWarnings("unused")
     private void startLWJGL() throws Throwable
     {
@@ -427,8 +460,7 @@ public class InputTest implements InputListener
         }
         finally
         {
-            if ( is != null )
-                is.destroy();
+            prepareShutdown( is );
             
             Display.destroy();
         }
@@ -464,8 +496,7 @@ public class InputTest implements InputListener
         }
         finally
         {
-            if ( is != null )
-                is.destroy();
+            prepareShutdown( is );
             
             Display.destroy();
         }
@@ -509,15 +540,14 @@ public class InputTest implements InputListener
         }
         finally
         {
-            if ( is != null )
-                is.destroy();
+            prepareShutdown( is );
         }
     }
     
     public InputTest() throws Throwable
     {
-        startLWJGL();
-        //startJInput();
+        //startLWJGL();
+        startJInput();
         //startAWT();
     }
     

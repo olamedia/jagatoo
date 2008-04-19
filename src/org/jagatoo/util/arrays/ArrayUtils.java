@@ -273,6 +273,60 @@ public final class ArrayUtils
         return( array );
     }
     
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * @param strict if <code>true</code>, a == check is used to identify the element, otherwise, the equals method is used.
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( Object[] array, Object element, boolean strict )
+    {
+        for ( int i = 0; i < array.length; i++ )
+        {
+            if ( strict || ( array[ i ] == null ) )
+            {
+                if ( array[ i ] == element )
+                    return( true );
+            }
+            else if ( array[ i ].equals( element ) )
+            {
+                return( true );
+            }
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * @param strict if <code>true</code>, a == check is used to identify the element, otherwise, the equals method is used.
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( Object[] array, Object element, boolean strict )
+    {
+        for ( int i = 0; i < array.length; i++ )
+        {
+            if ( strict || ( array[ i ] == null ) )
+            {
+                if ( array[ i ] == element )
+                    return( i );
+            }
+            else if ( array[ i ].equals( element ) )
+            {
+                return( i );
+            }
+        }
+        
+        return( -1 );
+    }
+    
     private ArrayUtils()
     {
     }

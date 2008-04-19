@@ -41,6 +41,8 @@ public interface ControllerFactory
 {
     /**
      * @return an array of all the installed Controllers in the system.
+     * 
+     * @param forceRefresh if true, the list of available devices is refreshed from the system.
      */
-    public Controller[] getControllers() throws InputSystemException;
+    public Controller[] getControllers( boolean forceRefresh ) throws InputSystemException;
 }

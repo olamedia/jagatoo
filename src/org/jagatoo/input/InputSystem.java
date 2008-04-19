@@ -88,7 +88,7 @@ public abstract class InputSystem
      */
     public final Keyboard registerNewKeyboard() throws InputSystemException
     {
-        Keyboard[] allKeyboards = getDeviceFactory().getKeyboards();
+        Keyboard[] allKeyboards = getDeviceFactory().getKeyboards( false );
         Keyboard[] newKeyboards = new Keyboard[ allKeyboards.length ];
         int numNewKeyboards = 0;
         
@@ -235,7 +235,7 @@ public abstract class InputSystem
      */
     public final Mouse registerNewMouse() throws InputSystemException
     {
-        Mouse[] allMouses = getDeviceFactory().getMouses();
+        Mouse[] allMouses = getDeviceFactory().getMouses( false );
         Mouse[] newMouses = new Mouse[ allMouses.length ];
         int numNewMouses = 0;
         
@@ -379,7 +379,7 @@ public abstract class InputSystem
      */
     public final Controller registerNewController() throws InputSystemException
     {
-        Controller[] allControllers = getDeviceFactory().getControllers();
+        Controller[] allControllers = getDeviceFactory().getControllers( false );
         Controller[] newControllers = new Controller[ allControllers.length ];
         int numNewControllers = 0;
         

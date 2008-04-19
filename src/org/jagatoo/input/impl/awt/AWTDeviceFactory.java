@@ -54,8 +54,16 @@ public class AWTDeviceFactory extends DeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected AWTMouse[] initMouses() throws InputSystemException
+    protected AWTMouse[] initMouses( Mouse[] currentMouses ) throws InputSystemException
     {
+        if ( ( currentMouses != null ) && ( currentMouses.length == 1 ) )
+        {
+            if ( ( currentMouses[ 0 ] instanceof AWTMouse ) && ( currentMouses[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
+            {
+                return( new AWTMouse[] { (AWTMouse)currentMouses[ 0 ] } );
+            }
+        }
+        
         return( new AWTMouse[] { new AWTMouse( getSourceWindow(), getEveneQueue() ) } );
     }
     
@@ -69,8 +77,16 @@ public class AWTDeviceFactory extends DeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected AWTKeyboard[] initKeyboards() throws InputSystemException
+    protected AWTKeyboard[] initKeyboards( Keyboard[] currentKeyboards ) throws InputSystemException
     {
+        if ( ( currentKeyboards != null ) && ( currentKeyboards.length == 1 ) )
+        {
+            if ( ( currentKeyboards[ 0 ] instanceof AWTKeyboard ) && ( currentKeyboards[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
+            {
+                return( new AWTKeyboard[] { (AWTKeyboard)currentKeyboards[ 0 ] } );
+            }
+        }
+        
         return( new AWTKeyboard[] { new AWTKeyboard( getSourceWindow(), getEveneQueue() ) } );
     }
     
@@ -84,7 +100,7 @@ public class AWTDeviceFactory extends DeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected Controller[] initControllers() throws InputSystemException
+    protected Controller[] initControllers( Controller[] currentControllers ) throws InputSystemException
     {
         return( new Controller[ 0 ] );
     }

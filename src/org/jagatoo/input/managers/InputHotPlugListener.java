@@ -27,22 +27,28 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.devices;
+package org.jagatoo.input.managers;
 
-import org.jagatoo.input.InputSystemException;
+import org.jagatoo.input.devices.InputDevice;
 
 /**
- * A MouseFactory is a simple factory to access all {@link Mouse}s
- * available on the system.
+ * This listener is notified of hot-plugged {@link InputDevice}s.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface MouseFactory
+public interface InputHotPlugListener
 {
     /**
-     * @return an array of all the installed Mouses in the system.
+     * This event is triggered when an {@link InputDevice} is plugged in,
      * 
-     * @param forceRefresh if true, the list of available devices is refreshed from the system.
+     * @param device
      */
-    public Mouse[] getMouses( boolean forceRefresh ) throws InputSystemException;
+    public void onInputDevicePluggedIn( InputDevice device );
+    
+    /**
+     * This event is triggered when an {@link InputDevice} is plugged out,
+     * 
+     * @param device
+     */
+    public void onInputDevicePluggedOut( InputDevice device );
 }
