@@ -96,16 +96,16 @@ public class InputStatesManager
         else if ( swapper )
         {
             if ( states1[ ordinal ] > states2[ ordinal ] )
-                return( DigiState.DOWNED );
+                return( DigiState.MADE_POSITIVE );
             else
-                return( DigiState.UPPED );
+                return( DigiState.MADE_NEGATIVE );
         }
         else
         {
             if ( states2[ ordinal ] > states1[ ordinal ] )
-                return( DigiState.DOWNED );
+                return( DigiState.MADE_POSITIVE );
             else
-                return( DigiState.UPPED );
+                return( DigiState.MADE_NEGATIVE );
         }
     }
     

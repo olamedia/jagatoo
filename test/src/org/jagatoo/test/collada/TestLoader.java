@@ -1,4 +1,4 @@
-package collada;
+package org.jagatoo.test.collada;
 
 import org.jagatoo.loaders.models.collada.COLLADALoader;
 
@@ -10,7 +10,7 @@ public class TestLoader {
 	public static void main(String[] args) {
 
 		COLLADALoader loader = new COLLADALoader();
-		loader.load( "test\\collada\\fantassin_cape.dae" );
+		loader.load( "test/data/collada/fantassin_cape.dae" );
 
 	}
 

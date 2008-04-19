@@ -36,12 +36,17 @@ package org.jagatoo.input.devices.components;
  */
 public enum DigiState
 {
-    NEGATIVE( false ),
     POSITIVE( true ),
-    UPPED( false ),
-    DOWNED( true );
+    NEGATIVE( false ),
+    MADE_POSITIVE( true ),
+    MADE_NEGATIVE( false );
     
     private final boolean booleanValue;
+    
+    public final boolean isVolatile()
+    {
+        return( ( this == MADE_POSITIVE ) || ( this == MADE_NEGATIVE ) );
+    }
     
     public final boolean getBooleanValue()
     {

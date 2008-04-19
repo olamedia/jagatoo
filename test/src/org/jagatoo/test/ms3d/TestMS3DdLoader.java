@@ -1,4 +1,4 @@
-package ms3d;
+package org.jagatoo.test.ms3d;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,7 +13,7 @@ public class TestMS3DdLoader {
 	 * @throws FileNotFoundException
 	 */
 	public static void main(String[] args) throws FileNotFoundException {
-		MS3DPrototypeModel model = MS3DPrototypeLoader.load( new FileInputStream("test\\ms3d\\model.ms3d") );
+		MS3DPrototypeModel model = MS3DPrototypeLoader.load( new FileInputStream("test/data/ms3d/model.ms3d") );
 
 
 		model.initAnimation( 0 );

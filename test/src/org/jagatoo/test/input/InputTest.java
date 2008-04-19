@@ -27,10 +27,12 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input;
+package org.jagatoo.test.input;
 
 import javax.media.opengl.GL;
 
+import org.jagatoo.input.InputSystem;
+import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.actions.InputAction;
 import org.jagatoo.input.actions.InputActionInterface;
 import org.jagatoo.input.devices.Controller;
@@ -63,6 +65,7 @@ import org.jagatoo.input.managers.InputBindingsManager;
 import org.jagatoo.input.managers.InputStatesManager;
 import org.jagatoo.input.misc.Cursor;
 import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.test.util.JOGLBase;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -211,7 +214,8 @@ public class InputTest implements InputListener
         ACTION2,
         ACTION3,
         ACTION4,
-        ACTION5
+        ACTION5,
+        ACTION6
     }
     
     private InputBindingsManager< MyInputBinding > bindingsManager = null;
@@ -222,10 +226,11 @@ public class InputTest implements InputListener
         bindingsManager = new InputBindingsManager< MyInputBinding >( MyInputBinding.values().length );
         
         bindingsManager.bind( Keys.G, MyInputBinding.ACTION1 );
-        bindingsManager.bind( is.getMouse().getWheel(), MyInputBinding.ACTION2 );
-        bindingsManager.bind( is.getMouse().getXAxis(), MyInputBinding.ACTION3 );
-        bindingsManager.bind( is.getController().getButton( 0 ), MyInputBinding.ACTION4 );
-        bindingsManager.bind( is.getController().getAxis( 3 ), MyInputBinding.ACTION5 );
+        bindingsManager.bind( is.getMouse().getButton( 0 ), MyInputBinding.ACTION2 );
+        bindingsManager.bind( is.getMouse().getWheel(), MyInputBinding.ACTION3 );
+        bindingsManager.bind( is.getMouse().getXAxis(), MyInputBinding.ACTION4 );
+        bindingsManager.bind( is.getController().getButton( 0 ), MyInputBinding.ACTION5 );
+        bindingsManager.bind( is.getController().getAxis( 3 ), MyInputBinding.ACTION6 );
         
         statesManager = new InputStatesManager( MyInputBinding.values().length );
     }
@@ -281,13 +286,27 @@ public class InputTest implements InputListener
         
         if ( isDebugFlagSet( DEBUG_MASK_MYACTION ) )
         {
+            DigiState state = null;
+            
             //System.out.println( statesManager.getInputState( MyInputBinding.ACTION1 ) );
             
-            DigiState state = statesManager.getInputState( MyInputBinding.ACTION3 );
+            state = statesManager.getInputState( MyInputBinding.ACTION2 );
             
-            if ( ( state == DigiState.DOWNED ) || ( state == DigiState.UPPED ) )
-                System.out.println( state );
+            if ( state.isVolatile() )
+                System.out.println( state + ", " + is.getMouse().getButtonsState() );
+                //System.out.println( statesManager.getSimpleInputState( MyInputBinding.ACTION2 ) );
+            
+            state = statesManager.getInputState( MyInputBinding.ACTION3 );
+            
+            if ( state.isVolatile() )
+                System.out.println( state + ", " + is.getMouse().getWheel().getIntValue() );
                 //System.out.println( statesManager.getSimpleInputState( MyInputBinding.ACTION3 ) );
+            
+            state = statesManager.getInputState( MyInputBinding.ACTION4 );
+            
+            if ( state.isVolatile() )
+                System.out.println( state + ", " + is.getMouse().getXAxis().getIntValue() );
+                //System.out.println( statesManager.getSimpleInputState( MyInputBinding.ACTION4 ) );
             
             //Thread.sleep( 1000L );
         }
