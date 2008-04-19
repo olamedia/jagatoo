@@ -30,7 +30,6 @@
 package org.jagatoo.input.impl.jinput;
 
 import org.jagatoo.input.InputSystem;
-import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.misc.InputSourceWindow;
 
@@ -41,15 +40,6 @@ import org.jagatoo.input.misc.InputSourceWindow;
  */
 public class JInputInputSystem extends InputSystem
 {
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void destroy() throws InputSystemException
-    {
-        super.destroy();
-    }
-    
     @Override
     protected JInputDeviceFactory createDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {

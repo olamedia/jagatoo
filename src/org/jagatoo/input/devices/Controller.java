@@ -93,8 +93,11 @@ public abstract class Controller extends InputDevice
     
     public void addControllerListener( ControllerListener l )
     {
-        if ( listeners.contains( l ) )
-            return;
+        for ( int i = 0; i < listeners.size(); i++ )
+        {
+            if ( listeners.get( i ) == l )
+                return;
+        }
         
         listeners.add( l );
         numListeners = listeners.size();

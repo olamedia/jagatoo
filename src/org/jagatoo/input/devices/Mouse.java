@@ -277,7 +277,17 @@ public abstract class Mouse extends InputDevice
     
     public void addMouseStopListener( MouseStopListener l )
     {
-        if ( !stopListeners.contains( l ) )
+        boolean contains = false;
+        for ( int i = 0; i < stopListeners.size(); i++ )
+        {
+            if ( stopListeners.get( i ) == l )
+            {
+                contains = true;
+                break;
+            }
+        }
+        
+        if ( !contains )
             stopListeners.add( l );
         numStopListeners = stopListeners.size();
     }
@@ -290,7 +300,17 @@ public abstract class Mouse extends InputDevice
     
     public void addMouseListener( MouseListener l )
     {
-        if ( !listeners.contains( l ) )
+        boolean contains = false;
+        for ( int i = 0; i < listeners.size(); i++ )
+        {
+            if ( listeners.get( i ) == l )
+            {
+                contains = true;
+                break;
+            }
+        }
+        
+        if ( !contains )
             listeners.add( l );
         if ( l instanceof MouseStopListener )
             addMouseStopListener( (MouseStopListener)l );

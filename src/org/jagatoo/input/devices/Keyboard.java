@@ -54,6 +54,12 @@ public abstract class Keyboard extends InputDevice
     
     public void addKeyboardListener( KeyboardListener l )
     {
+        for ( int i = 0; i < listeners.size(); i++ )
+        {
+            if ( listeners.get( i ) == l )
+                return;
+        }
+        
         listeners.add( l );
     }
     
