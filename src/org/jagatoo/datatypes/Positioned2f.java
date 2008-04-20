@@ -36,7 +36,7 @@ import org.openmali.vecmath2.Tuple2f;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface Positioned2f
+public interface Positioned2f extends Positioned2fRO
 {
     /**
      * Sets the position.
@@ -56,19 +56,4 @@ public interface Positioned2f
      * @return true, if the location actually has changed
      */
     public boolean setLocation( Tuple2f location );
-    
-    /**
-     * @return the position
-     */
-    public Tuple2f getLocation();
-    
-    /**
-     * @return the left position
-     */
-    public float getLeft();
-    
-    /**
-     * @return the top position
-     */
-    public float getTop();
 }

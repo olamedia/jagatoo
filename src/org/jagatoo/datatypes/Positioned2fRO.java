@@ -27,34 +27,29 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo;
+package org.jagatoo.datatypes;
 
-import org.jagatoo.util.versioning.Version;
+import org.openmali.vecmath2.Tuple2f;
 
 /**
- * This class provides some static information about JAGaToo.
+ * A Sized2f class provides getters and setters for the size.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public final class JAGaToo
+public interface Positioned2fRO
 {
-    private static Version version = null;
+    /**
+     * @return the position
+     */
+    public Tuple2f getLocation();
     
     /**
-     * @return a version information object about JAGaToo.
+     * @return the left position
      */
-    public static Version getVersion()
-    {
-        if (version != null)
-            return( version );
-        
-        version = new Version( 0, 3, 1, "", 135 );
-        
-        return( version );
-    }
+    public float getLeft();
     
-    
-    private JAGaToo()
-    {
-    }
+    /**
+     * @return the top position
+     */
+    public float getTop();
 }

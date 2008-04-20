@@ -30,10 +30,8 @@
 package org.jagatoo.datatypes;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.jagatoo.datatypes.util.ResizeListener2i;
-import org.openmali.vecmath2.Point2i;
 import org.openmali.vecmath2.Tuple2i;
 
 
@@ -45,9 +43,10 @@ import org.openmali.vecmath2.Tuple2i;
  */
 public class Dim2i implements Sized2i
 {
-    private Tuple2i size;
-    private List<ResizeListener2i> resizeListeners = new ArrayList<ResizeListener2i>();
-    private boolean isDirty = true;
+    private int width, height;
+    protected boolean isDirty = true;
+    
+    private final ArrayList<ResizeListener2i> resizeListeners = new ArrayList<ResizeListener2i>();
     
     /**
      * {@inheritDoc}
@@ -107,9 +106,10 @@ public class Dim2i implements Sized2i
         
         if ( ( oldWidth != width ) || ( oldHeight != height ) )
         {
-            this.size.set( width, height );
+            this.width = width;
+            this.height = height;
             
-            isDirty = true;
+            this.isDirty = true;
             
             fireResizeEvent( oldWidth, oldHeight, width, height );
             
@@ -120,11 +120,15 @@ public class Dim2i implements Sized2i
     }
     
     /**
-     * Sets the rectangle's size.
-     * 
-     * @param size
-     * 
-     * @return true, if the size actually has changed
+     * {@inheritDoc}
+     */
+    public boolean setSize( Sized2iRO size )
+    {
+        return( setSize( size.getWidth(), size.getHeight() ) );
+    }
+    
+    /**
+     * {@inheritDoc}
      */
     public boolean setSize( Tuple2i size )
     {
@@ -136,7 +140,7 @@ public class Dim2i implements Sized2i
      */
     public Tuple2i getSize()
     {
-        return( size );
+        return( new Tuple2i( width, height ) );
     }
     
     /**
@@ -144,7 +148,7 @@ public class Dim2i implements Sized2i
      */
     public int getWidth()
     {
-        return( size.getX() );
+        return( width );
     }
     
     /**
@@ -152,7 +156,7 @@ public class Dim2i implements Sized2i
      */
     public int getHeight()
     {
-        return( size.getY() );
+        return( height );
     }
     
     /**
@@ -184,15 +188,18 @@ public class Dim2i implements Sized2i
      */
     public void set( Sized2i size )
     {
-        setSize( size.getSize() );
+        setSize( size.getWidth(), size.getHeight() );
     }
     
     public boolean equals( Sized2i rect )
     {
-        if ( size != rect.getSize() )
+        if ( rect == null )
             return( false );
         
-        return( true );
+        if ( rect == this )
+            return( true );
+        
+        return( ( rect.getWidth() == this.getWidth() ) && ( rect.getHeight() == this.getHeight() ) );
     }
     
     /**
@@ -201,13 +208,13 @@ public class Dim2i implements Sized2i
     @Override
     public boolean equals( Object o )
     {
-        if (o == null)
+        if ( o == null )
             return( false );
         
-        if ( !( o instanceof Sized2i ) )
+        if ( !( o instanceof Sized2iRO ) )
             return( false );
         
-        return( equals( (Sized2i)o ) );
+        return( equals( (Sized2iRO)o ) );
     }
     
     /**
@@ -227,7 +234,8 @@ public class Dim2i implements Sized2i
      */
     public Dim2i( int width, int height )
     {
-        this.size = new Point2i( width, height );
+        this.width = width;
+        this.height = height;
     }
     
     /**

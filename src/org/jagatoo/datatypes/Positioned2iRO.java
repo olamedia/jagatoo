@@ -27,34 +27,29 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo;
+package org.jagatoo.datatypes;
 
-import org.jagatoo.util.versioning.Version;
+import org.openmali.vecmath2.Tuple2i;
 
 /**
- * This class provides some static information about JAGaToo.
+ * A Positioned2i class provides getters and setters for the position.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public final class JAGaToo
+public interface Positioned2iRO
 {
-    private static Version version = null;
+    /**
+     * @return the position
+     */
+    public Tuple2i getLocation();
     
     /**
-     * @return a version information object about JAGaToo.
+     * @return the left position
      */
-    public static Version getVersion()
-    {
-        if (version != null)
-            return( version );
-        
-        version = new Version( 0, 3, 1, "", 135 );
-        
-        return( version );
-    }
+    public int getLeft();
     
-    
-    private JAGaToo()
-    {
-    }
+    /**
+     * @return the top position
+     */
+    public int getTop();
 }

@@ -38,7 +38,7 @@ import org.openmali.vecmath2.Tuple2i;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface Positioned2i
+public interface Positioned2i extends Positioned2iRO
 {
     /**
      * Adds a new RepositionListener2i. The event is fired from the rendering
@@ -73,19 +73,4 @@ public interface Positioned2i
      * @return true, if the location actually has changed
      */
     public boolean setLocation( Tuple2i location );
-    
-    /**
-     * @return the position
-     */
-    public Tuple2i getLocation();
-    
-    /**
-     * @return the left position
-     */
-    public int getLeft();
-    
-    /**
-     * @return the top position
-     */
-    public int getTop();
 }

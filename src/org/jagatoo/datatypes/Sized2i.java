@@ -72,5 +72,14 @@ public interface Sized2i extends Sized2iRO
      * 
      * @return true, if the size actually has changed
      */
+    public boolean setSize( Sized2iRO size );
+    
+    /**
+     * Sets the size.
+     * 
+     * @param size
+     * 
+     * @return true, if the size actually has changed
+     */
     public boolean setSize( Tuple2i size );
 }

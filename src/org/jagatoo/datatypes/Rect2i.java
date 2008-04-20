@@ -30,11 +30,8 @@
 package org.jagatoo.datatypes;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import org.jagatoo.datatypes.util.RepositionListener2i;
-import org.jagatoo.datatypes.util.ResizeListener2i;
-import org.openmali.vecmath2.Point2i;
 import org.openmali.vecmath2.Tuple2i;
 
 
@@ -44,13 +41,11 @@ import org.openmali.vecmath2.Tuple2i;
  * @author Marvin Froehlich (aka Qudus)
  * @author Kevin Finley (aka Horati)
  */
-public class Rect2i implements Positioned2i, Sized2i
+public class Rect2i extends Dim2i implements Positioned2i
 {
-    private Tuple2i upperLeft;
-    private Tuple2i size;
-    private List<RepositionListener2i> repositionListeners = new ArrayList<RepositionListener2i>();
-    private List<ResizeListener2i> resizeListeners = new ArrayList<ResizeListener2i>();
-    private boolean isDirty = true;
+    private int left, top;
+    
+    private final ArrayList<RepositionListener2i> repositionListeners = new ArrayList<RepositionListener2i>();
     
     /**
      * {@inheritDoc}
@@ -77,49 +72,6 @@ public class Rect2i implements Positioned2i, Sized2i
     }
     
     /**
-     * {@inheritDoc}
-     * Notification takes place in the thread that called this.setSize(...). 
-     */
-    public void addResizeListener( ResizeListener2i listener )
-    {
-        this.resizeListeners.add( listener );
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void removeResizeListener( ResizeListener2i listener )
-    {
-        this.resizeListeners.remove( listener );
-    }
-    
-    protected void fireResizeEvent(int oldWidth, int oldHeight, int newWidth, int newHeight)
-    {
-        for (int i = 0; i < resizeListeners.size(); i++)
-        {
-            resizeListeners.get( i ).onObjectResized( this, oldWidth, oldHeight, newWidth, newHeight );
-        }
-    }
-    
-    /**
-     * @return true, if this object has been modified since the last setClean() call.
-     * 
-     * @see #setClean()
-     */
-    public boolean isDirty()
-    {
-        return( isDirty );
-    }
-    
-    /**
-     * Marks this object as not dirty.
-     */
-    public void setClean()
-    {
-        this.isDirty = false;
-    }
-    
-    /**
      * Sets the upper-left corner's coordinates.
      * 
      * @param left
@@ -134,9 +86,10 @@ public class Rect2i implements Positioned2i, Sized2i
         
         if ( ( oldLeft != left ) || ( oldTop != top ) )
         {
-            this.upperLeft.set( left, top );
+            this.left = left;
+            this.top = top;
             
-            isDirty = true;
+            this.isDirty = true;
             
             fireRepositionEvent( oldLeft, oldTop, left, top );
             
@@ -153,7 +106,7 @@ public class Rect2i implements Positioned2i, Sized2i
      * 
      * @return true, if the location actually has changed
      */
-    public boolean setLocation(Tuple2i upperLeft)
+    public boolean setLocation( Tuple2i upperLeft )
     {
         return( setLocation( upperLeft.getX(), upperLeft.getY() ) );
     }
@@ -163,7 +116,7 @@ public class Rect2i implements Positioned2i, Sized2i
      */
     public Tuple2i getLocation()
     {
-        return( upperLeft );
+        return( new Tuple2i( left, top ) );
     }
     
     /**
@@ -171,7 +124,7 @@ public class Rect2i implements Positioned2i, Sized2i
      */
     public int getLeft()
     {
-        return( upperLeft.getX() );
+        return( left );
     }
     
     /**
@@ -179,81 +132,7 @@ public class Rect2i implements Positioned2i, Sized2i
      */
     public int getTop()
     {
-        return( upperLeft.getY() );
-    }
-    
-    /**
-     * Sets the rectangle's size.
-     * 
-     * @param width
-     * @param height
-     * 
-     * @return true, if the size actually has changed
-     */
-    public boolean setSize(int width, int height)
-    {
-        final int oldWidth = getWidth();
-        final int oldHeight = getHeight();
-        
-        if ( ( oldWidth != width ) || ( oldHeight != height ) )
-        {
-            this.size.set( width, height );
-            
-            isDirty = true;
-            
-            fireResizeEvent( oldWidth, oldHeight, width, height );
-            
-            return( true );
-        }
-        
-        return( false );
-    }
-    
-    /**
-     * Sets the rectangle's size.
-     * 
-     * @param size
-     * 
-     * @return true, if the size actually has changed
-     */
-    public boolean setSize(Tuple2i size)
-    {
-        return( setSize( size.getX(), size.getY() ) );
-    }
-    
-    /**
-     * @return the upper-left corner's coordinates
-     */
-    public Tuple2i getSize()
-    {
-        return( size );
-    }
-    
-    /**
-     * @return the rectangle's width
-     */
-    public int getWidth()
-    {
-        return( size.getX() );
-    }
-    
-    /**
-     * @return the rectangle's height
-     */
-    public int getHeight()
-    {
-        return( size.getY() );
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public float getAspect()
-    {
-        if (getHeight() != 0)
-            return( (float)getWidth() / (float)getHeight() );
-        
-        return( 0 );
+        return( top );
     }
     
     /**
@@ -264,7 +143,7 @@ public class Rect2i implements Positioned2i, Sized2i
      * @param width the rectangle's width
      * @param height the rectangle's height
      */
-    public void set(int left, int top, int width, int height)
+    public void set( int left, int top, int width, int height )
     {
         setLocation( left, top );
         setSize( width, height );
@@ -276,10 +155,10 @@ public class Rect2i implements Positioned2i, Sized2i
      * @param pos
      * @param size
      */
-    public void set(Positioned2i pos, Sized2i size)
+    public void set( Positioned2iRO pos, Sized2iRO size )
     {
-        setLocation( pos.getLocation() );
-        setSize( size.getSize() );
+        setLocation( pos.getLeft(), pos.getTop() );
+        setSize( size.getWidth(), size.getHeight() );
     }
     
     /**
@@ -287,19 +166,22 @@ public class Rect2i implements Positioned2i, Sized2i
      * 
      * @param rect
      */
-    public void set(Rect2i rect)
+    public void set( Rect2i rect )
     {
         set( rect, rect );
     }
     
-    public boolean equals(Rect2i rect)
+    public boolean equals( Rect2i rect )
     {
-        if (upperLeft != rect.getLocation())
-            return( false );
-        if (size != rect.getSize())
+        if ( rect == null )
             return( false );
         
-        return( true );
+        if ( rect == this )
+            return( true );
+        
+        return( ( rect.getLeft() == this.getLeft() ) && ( rect.getTop() == this.getTop() ) &&
+                ( rect.getWidth() == this.getWidth() ) && ( rect.getHeight() == this.getHeight() )
+              );
     }
     
     /**
@@ -308,10 +190,10 @@ public class Rect2i implements Positioned2i, Sized2i
     @Override
     public boolean equals(Object o)
     {
-        if (o == null)
+        if ( o == null )
             return( false );
         
-        if (!(o instanceof Rect2i))
+        if ( !( o instanceof Rect2i ) )
             return( false );
         
         return( equals( (Rect2i)o ) );
@@ -334,10 +216,12 @@ public class Rect2i implements Positioned2i, Sized2i
      * @param width the rectangle's width
      * @param height the rectangle's height
      */
-    public Rect2i(int left, int top, int width, int height)
+    public Rect2i( int left, int top, int width, int height )
     {
-        this.upperLeft = new Point2i( left, top );
-        this.size = new Point2i( width, height );
+        super( width, height );
+        
+        this.left = left;
+        this.top = top;
     }
     
     /**
@@ -345,7 +229,7 @@ public class Rect2i implements Positioned2i, Sized2i
      * 
      * @param template
      */
-    public Rect2i(Rect2i template)
+    public Rect2i( Rect2i template )
     {
         this( template.getLeft(), template.getTop(), template.getWidth(), template.getHeight() );
     }
