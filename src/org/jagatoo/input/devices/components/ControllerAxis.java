@@ -29,6 +29,8 @@
  */
 package org.jagatoo.input.devices.components;
 
+import org.jagatoo.input.devices.Controller;
+
 /**
  * Insert type comment here.
  * 
@@ -36,6 +38,7 @@ package org.jagatoo.input.devices.components;
  */
 public abstract class ControllerAxis extends AnalogDeviceComponent
 {
+    private final Controller controller;
     private final int index;
     
     private float minValue = -1f;
@@ -47,6 +50,11 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
     private float deadZone;
     private final float povX;
     private final float povY;
+    
+    public final Controller getController()
+    {
+        return( controller );
+    }
     
     /**
      * @return the Axis' index.
@@ -139,10 +147,11 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
         return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", index = " + getIndex() + ", value = " + getFloatValue() + " }" );
     }
     
-    public ControllerAxis( int index, String name, float deadZone, float povX, float povY )
+    public ControllerAxis( Controller controller, int index, String name, float deadZone, float povX, float povY )
     {
         super( Type.CONTROLLER_AXIS, name );
         
+        this.controller = controller;
         this.index = index;
         this.deadZone = deadZone;
         this.povX = povX;

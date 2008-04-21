@@ -29,6 +29,8 @@
  */
 package org.jagatoo.input.devices.components;
 
+import org.jagatoo.input.devices.Mouse;
+
 /**
  * Represents one axis of a mouse device.
  * 
@@ -36,7 +38,13 @@ package org.jagatoo.input.devices.components;
  */
 public final class MouseAxis extends AnalogDeviceComponent
 {
+    private final Mouse mouse;
     private final char id;
+    
+    public final Mouse getMouse()
+    {
+        return( mouse );
+    }
     
     public final char getID()
     {
@@ -52,9 +60,11 @@ public final class MouseAxis extends AnalogDeviceComponent
         return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", ID = " + getID() + ", value = " + getFloatValue() + " }" );
     }
     
-    public MouseAxis( char id, String name )
+    public MouseAxis( Mouse mouse, char id, String name )
     {
         super( Type.MOUSE_AXIS, name );
+        
+        this.mouse = mouse;
         
         this.id = id;
     }

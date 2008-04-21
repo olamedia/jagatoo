@@ -51,10 +51,10 @@ public class JInputControllerAxis extends ControllerAxis
     {
     }
     
-    public JInputControllerAxis( net.java.games.input.Controller controller, net.java.games.input.Component axis, int index )
+    public JInputControllerAxis( JInputController controller, net.java.games.input.Controller implController, net.java.games.input.Component axis, int index )
     {
         //super( index, axis.getName(), axis.getDeadZone(), axis.getPovX(), controller.getPovY() );
-        super( index, axis.getName(), axis.getDeadZone(), 0f, 0f );
+        super( controller, index, axis.getName(), axis.getDeadZone(), 0f, 0f );
         
         //this.controller = controller;
         this.axis = axis;

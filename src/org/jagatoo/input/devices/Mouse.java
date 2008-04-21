@@ -619,8 +619,8 @@ public abstract class Mouse extends InputDevice
     {
         super( sourceWindow, eveneQueue, name );
         
-        this.xAxis = new MouseAxis( 'X', "Mouse-X-Axis" );
-        this.yAxis = new MouseAxis( 'Y', "Mouse-Y-Axis" );
+        this.xAxis = new MouseAxis( this, 'X', "Mouse-X-Axis" );
+        this.yAxis = new MouseAxis( this, 'Y', "Mouse-Y-Axis" );
         this.buttons = new MouseButton[ numButtons ];
         
         for ( int i = 0; i < buttons.length; i++ )
@@ -629,7 +629,7 @@ public abstract class Mouse extends InputDevice
         }
         
         if ( hasWheel )
-            this.wheel = new MouseWheel();
+            this.wheel = new MouseWheel( this );
         else
             this.wheel = null;
     }

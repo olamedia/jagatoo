@@ -41,23 +41,23 @@ public class MouseMovedEvent extends MouseEvent
     /**
      * The X coordinate of the mouse when in non-exclusive mode.
      */
-    protected int x;
+    private int x;
     
     /**
      * The Y coordinate of the mouse when in non-exclusive mode.
      */
-    protected int y;
+    private int y;
     
     
     /**
      * The Delta X value (change in position on the X axis) of the mouse when in exclusive mode.
      */
-    protected int dx;
+    private int dx;
     
     /**
      * The Delta X value (change in position on the X axis) of the mouse when in exclusive mode.
      */
-    protected int dy;
+    private int dy;
     
     /**
      * {@inheritDoc}

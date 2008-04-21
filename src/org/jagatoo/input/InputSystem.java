@@ -29,11 +29,14 @@
  */
 package org.jagatoo.input;
 
+import java.util.ArrayList;
+
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.DeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.listeners.InputStateListener;
 import org.jagatoo.input.misc.InputSourceWindow;
 
 public abstract class InputSystem
@@ -50,6 +53,8 @@ public abstract class InputSystem
     
     private final EventQueue eventQueue;
     
+    private final ArrayList< InputStateListener > inputStateListeners = new ArrayList< InputStateListener >();
+    
     protected final void setDeviceFactory( DeviceFactory devFact )
     {
         this.deviceFactory = devFact;
@@ -60,6 +65,59 @@ public abstract class InputSystem
         return( deviceFactory );
     }
     
+    public void addInputStateListener( InputStateListener l )
+    {
+        boolean contains = false;
+        for ( int i = 0; i < inputStateListeners.size(); i++ )
+        {
+            if ( inputStateListeners.get( i ) == l )
+            {
+                contains = true;
+                break;
+            }
+        }
+        
+        if ( !contains )
+        {
+            for ( int i = 0; i < keyboards.length; i++ )
+            {
+                keyboards[ i ].addInputStateListener( l );
+            }
+            
+            for ( int i = 0; i < mouses.length; i++ )
+            {
+                mouses[ i ].addInputStateListener( l );
+            }
+            
+            for ( int i = 0; i < controllers.length; i++ )
+            {
+                controllers[ i ].addInputStateListener( l );
+            }
+            
+            inputStateListeners.add( l );
+        }
+    }
+    
+    public void removeInputStateListener( InputStateListener l )
+    {
+        if ( inputStateListeners.remove( l ) )
+        {
+            for ( int i = 0; i < keyboards.length; i++ )
+            {
+                keyboards[ i ].removeInputStateListener( l );
+            }
+            
+            for ( int i = 0; i < mouses.length; i++ )
+            {
+                mouses[ i ].removeInputStateListener( l );
+            }
+            
+            for ( int i = 0; i < controllers.length; i++ )
+            {
+                controllers[ i ].removeInputStateListener( l );
+            }
+        }
+    }
     
     public void registerKeyboard( Keyboard keyboard ) throws InputSystemException
     {

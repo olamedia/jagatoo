@@ -48,16 +48,16 @@ import org.jagatoo.input.misc.InputSourceWindow;
  */
 public class LWJGLController extends Controller
 {
-    private final org.lwjgl.input.Controller controller;
+    private final org.lwjgl.input.Controller implController;
     
     protected final org.lwjgl.input.Controller getController()
     {
-        return( controller );
+        return( implController );
     }
     
     protected final int getIndex()
     {
-        return( controller.getIndex() );
+        return( implController.getIndex() );
     }
     
     protected final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
@@ -75,7 +75,7 @@ public class LWJGLController extends Controller
             {
                 final ControllerAxis axis = getAxis( i );
                 final float oldValue = axis.getFloatValue();
-                final float newValue = controller.getAxisValue( i );
+                final float newValue = implController.getAxisValue( i );
                 
                 if ( newValue != oldValue )
                 {
@@ -94,7 +94,7 @@ public class LWJGLController extends Controller
             {
                 final ControllerButton button = getButton( i );
                 final boolean oldState = button.getBooleanState();
-                final boolean newState = controller.isButtonPressed( i );
+                final boolean newState = implController.isButtonPressed( i );
                 
                 if ( newState != oldState )
                 {
@@ -191,34 +191,40 @@ public class LWJGLController extends Controller
         */
     }
     
-    private static final LWJGLControllerAxis[] createAxesArray( org.lwjgl.input.Controller controller )
+    @Override
+    protected final LWJGLControllerAxis[] createAxesArray( Object implObj )
     {
+        final org.lwjgl.input.Controller controller = (org.lwjgl.input.Controller)implObj;
+        
         LWJGLControllerAxis[] axes = new LWJGLControllerAxis[ controller.getAxisCount() ];
         
         for ( int i = 0; i < controller.getAxisCount(); i++ )
         {
-            axes[ i ] = new LWJGLControllerAxis( controller, i );
+            axes[ i ] = new LWJGLControllerAxis( this, controller, i );
         }
         
         return( axes );
     }
     
-    private static final ControllerButton[] createButtonsArray( org.lwjgl.input.Controller controller )
+    @Override
+    protected final ControllerButton[] createButtonsArray( Object implObj )
     {
+        final org.lwjgl.input.Controller controller = (org.lwjgl.input.Controller)implObj;
+        
         ControllerButton[] buttons = new ControllerButton[ controller.getButtonCount() ];
         
         for ( int i = 0; i < controller.getButtonCount(); i++ )
         {
-            buttons[ i ] = new ControllerButton( i, controller.getButtonName( i ) );
+            buttons[ i ] = new ControllerButton( this, i, controller.getButtonName( i ) );
         }
         
         return( buttons );
     }
     
-    protected LWJGLController( InputSourceWindow sourceWindow, EventQueue eveneQueue, org.lwjgl.input.Controller controller ) throws InputSystemException
+    protected LWJGLController( InputSourceWindow sourceWindow, EventQueue eveneQueue, org.lwjgl.input.Controller implController ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, controller.getName(), createAxesArray( controller ), createButtonsArray( controller ) );
+        super( sourceWindow, eveneQueue, implController.getName(), implController );
         
-        this.controller = controller;
+        this.implController = implController;
     }
 }

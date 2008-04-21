@@ -29,6 +29,8 @@
  */
 package org.jagatoo.input.devices.components;
 
+import org.jagatoo.input.devices.Mouse;
+
 /**
  * Insert type comment here.
  * 
@@ -36,13 +38,22 @@ package org.jagatoo.input.devices.components;
  */
 public class MouseWheel extends AnalogDeviceComponent
 {
-    public MouseWheel( String name )
+    private final Mouse mouse;
+    
+    public final Mouse getMouse()
     {
-        super( Type.MOUSE_WHEEL, name );
+        return( mouse );
     }
     
-    public MouseWheel()
+    public MouseWheel( Mouse mouse, String name )
     {
-        this( "Mouse Wheel" );
+        super( Type.MOUSE_WHEEL, name );
+        
+        this.mouse = mouse;
+    }
+    
+    public MouseWheel( Mouse mouse )
+    {
+        this( mouse, "Mouse Wheel" );
     }
 }

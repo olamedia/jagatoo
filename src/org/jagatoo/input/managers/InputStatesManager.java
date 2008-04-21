@@ -29,7 +29,9 @@
  */
 package org.jagatoo.input.managers;
 
-import org.jagatoo.input.actions.InputActionInterface;
+import org.jagatoo.input.actions.InputAction;
+import org.jagatoo.input.actions.InvokableInputAction;
+import org.jagatoo.input.devices.InputDevice;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.devices.components.ControllerAxis;
@@ -39,9 +41,10 @@ import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.MouseAxis;
 import org.jagatoo.input.devices.components.MouseButton;
+import org.jagatoo.input.devices.components.MouseWheel;
 
 /**
- * Manages key states.
+ * Manages state-changes on any kind of {@link InputDevice}.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
@@ -82,7 +85,7 @@ public class InputStatesManager
      * 
      * @return the current key-state for the given action.
      */
-    public final DigiState getInputState( InputActionInterface action )
+    public final DigiState getInputState( InputAction action )
     {
         final int ordinal = action.ordinal();
         
@@ -114,7 +117,7 @@ public class InputStatesManager
      * 
      * @return the current key-state for the given action.
      */
-    public final short getSimpleInputState( InputActionInterface action )
+    public final short getSimpleInputState( InputAction action )
     {
         return( currStates[ action.ordinal() ] );
     }
@@ -124,7 +127,7 @@ public class InputStatesManager
      * 
      * @return whether the state for the given action's state has changed.
      */
-    public final boolean hasInputStateChanged( InputActionInterface action )
+    public final boolean hasInputStateChanged( InputAction action )
     {
         return( states1[ action.ordinal() ] != states2[ action.ordinal() ] );
     }
@@ -151,8 +154,10 @@ public class InputStatesManager
      * @param mouse the {@link Mouse} to take the states from
      * @param states the target state-array. Must have at least the same length as the number of actions.
      */
-    private final void pollInputStates( final DeviceComponent[][] boundKeys, final Keyboard keyboard, final Mouse mouse, final short[] states )
+    private final void pollInputStates( final InputBindingsManager< ? extends InputAction > inputBindings, final Keyboard keyboard, final Mouse mouse, final short[] states )
     {
+        InputDevice device = null;
+        final DeviceComponent[][] boundKeys = inputBindings.boundKeys;
         final int numActions = boundKeys.length;
         final int numBindingSets = InputBindingsManager.NUM_KEY_SETS;
         
@@ -168,32 +173,61 @@ public class InputStatesManager
                 switch ( comp.getType() )
                 {
                     case KEY:
+                        device = keyboard;
                         states[ i ] = keyboard.isKeyPressed( (Key)comp ) ? (short)1 : (short)0;
                         flag = true;
                         break;
                     case MOUSE_AXIS:
-                        final MouseAxis axis = (MouseAxis)comp;
-                        states[ i ] = (short)axis.getIntValue();
+                        final MouseAxis mAxis = (MouseAxis)comp;
+                        device = mAxis.getMouse();
+                        states[ i ] = (short)mAxis.getIntValue();
                         flag = true;
                         break;
                     case MOUSE_BUTTON:
                         states[ i ] = mouse.isButtonPressed( (MouseButton)comp ) ? (short)1 : (short)0;
+                        device = mouse;
                         flag = true;
                         break;
                     case MOUSE_WHEEL:
-                        states[ i ] = (short)mouse.getWheel().getIntValue();
+                        final MouseWheel mWheel = (MouseWheel)comp;
+                        device = mWheel.getMouse();
+                        states[ i ] = (short)mWheel.getIntValue();
                         flag = true;
                         break;
                     case CONTROLLER_AXIS:
                         ControllerAxis cAxis = (ControllerAxis)comp;
+                        device = cAxis.getController();
                         states[ i ] = (short)cAxis.getIntValue();
                         flag = true;
                         break;
                     case CONTROLLER_BUTTON:
                         ControllerButton cButton = (ControllerButton)comp;
+                        device = cButton.getController();
                         states[ i ] = cButton.getBooleanState() ? (short)1 : (short)0;
                         flag = true;
                         break;
+                }
+            }
+            
+            if ( states1[ i ] != states2[ i ] )
+            {
+                int j = 0;
+                DeviceComponent comp = boundKeys[ i ][ j ];
+                while ( comp == null )
+                {
+                    comp = boundKeys[ i ][ j++ ];
+                }
+                
+                final InputAction action = inputBindings.getBoundAction( comp );
+                
+                if ( action instanceof InvokableInputAction )
+                {
+                    final InvokableInputAction invAction = (InvokableInputAction)action;
+                    
+                    if ( states == states1 )
+                        invAction.invokeAction( device, comp, (short)( states1[ i ] - states2[ i ] ), states1[ i ] );
+                    else
+                        invAction.invokeAction( device, comp, (short)( states2[ i ] - states1[ i ] ), states2[ i ] );
                 }
             }
         }
@@ -206,7 +240,7 @@ public class InputStatesManager
      * @param keyboard the {@link Keyboard} to take the states from
      * @param mouse the {@link Mouse} to take the states from
      */
-    public void update( final InputBindingsManager< ? extends InputActionInterface > inputBindings, final Keyboard keyboard, final Mouse mouse )
+    public void update( final InputBindingsManager< ? extends InputAction > inputBindings, final Keyboard keyboard, final Mouse mouse )
     {
         if ( keyboard == null )
         {
@@ -221,7 +255,7 @@ public class InputStatesManager
         else
             currStates = states2;
         
-        pollInputStates( inputBindings.boundKeys, keyboard, mouse, currStates );
+        pollInputStates( inputBindings, keyboard, mouse, currStates );
         
         if ( manipulator != null )
         {

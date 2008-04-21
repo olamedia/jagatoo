@@ -35,7 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.jagatoo.input.actions.InputActionInterface;
+import org.jagatoo.input.actions.InputAction;
 import org.jagatoo.input.devices.components.DeviceComponent;
 
 /**
@@ -43,7 +43,7 @@ import org.jagatoo.input.devices.components.DeviceComponent;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class InputBindingsManager< A extends InputActionInterface >
+public class InputBindingsManager< A extends InputAction >
 {
     protected static final int NUM_KEY_SETS = InputBindingsSet.values().length;
     
@@ -98,7 +98,7 @@ public class InputBindingsManager< A extends InputActionInterface >
      * 
      * @param comp the component to unbind
      * 
-     * @return the {@link InputActionInterface}, this key was previously bound to
+     * @return the {@link InputAction}, this key was previously bound to
      */
     public final A unbind( DeviceComponent comp )
     {

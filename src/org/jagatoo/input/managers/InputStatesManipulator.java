@@ -29,7 +29,7 @@
  */
 package org.jagatoo.input.managers;
 
-import org.jagatoo.input.actions.InputActionInterface;
+import org.jagatoo.input.actions.InputAction;
 
 /**
  * The {@link InputStatesManipulator} provides a simple interface for
@@ -47,7 +47,7 @@ public class InputStatesManipulator
      * @param command
      * @param state the state. Use null to not override the real key-state.
      */
-    public void setKeyState( InputActionInterface command, Boolean state )
+    public void setKeyState( InputAction command, Boolean state )
     {
         states[ command.ordinal() ] = state;
     }
@@ -57,7 +57,7 @@ public class InputStatesManipulator
      * 
      * @return the current state for the given command.
      */
-    public Boolean getKeyState( InputActionInterface command )
+    public Boolean getKeyState( InputAction command )
     {
         return( states[ command.ordinal() ] );
     }

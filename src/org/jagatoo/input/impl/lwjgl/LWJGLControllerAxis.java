@@ -38,18 +38,18 @@ import org.jagatoo.input.devices.components.ControllerAxis;
  */
 public class LWJGLControllerAxis extends ControllerAxis
 {
-    private final org.lwjgl.input.Controller controller;
+    private final org.lwjgl.input.Controller implController;
     
     @Override
     protected void setDeadZoneImpl( float zone )
     {
-        controller.setDeadZone( this.getIndex(), zone );
+        implController.setDeadZone( this.getIndex(), zone );
     }
     
-    public LWJGLControllerAxis( org.lwjgl.input.Controller controller, int index )
+    public LWJGLControllerAxis( LWJGLController controller, org.lwjgl.input.Controller implController, int index )
     {
-        super( index, controller.getAxisName( index ), controller.getDeadZone( index ), controller.getPovX(), controller.getPovY() );
+        super( controller, index, implController.getAxisName( index ), implController.getDeadZone( index ), implController.getPovX(), implController.getPovY() );
         
-        this.controller = controller;
+        this.implController = implController;
     }
 }

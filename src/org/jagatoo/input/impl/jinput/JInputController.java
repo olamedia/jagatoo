@@ -178,8 +178,11 @@ public class JInputController extends Controller
     {
     }
     
-    private static final JInputControllerAxis[] createAxesArray( net.java.games.input.Controller controller )
+    @Override
+    protected final JInputControllerAxis[] createAxesArray( Object implObj )
     {
+        final net.java.games.input.Controller controller = (net.java.games.input.Controller)implObj;
+        
         JInputControllerAxis[] axes0 = new JInputControllerAxis[ controller.getComponents().length ];
         int numAxes = 0;
         
@@ -189,7 +192,7 @@ public class JInputController extends Controller
             if ( component.getIdentifier() instanceof net.java.games.input.Component.Identifier.Axis )
             {
                 int index = numAxes++;
-                axes0[ index ] = new JInputControllerAxis( controller, component, index );
+                axes0[ index ] = new JInputControllerAxis( this, controller, component, index );
             }
         }
         
@@ -199,8 +202,11 @@ public class JInputController extends Controller
         return( axes1 );
     }
     
-    private static final JInputControllerButton[] createButtonsArray( net.java.games.input.Controller controller )
+    @Override
+    protected final JInputControllerButton[] createButtonsArray( Object implObj )
     {
+        final net.java.games.input.Controller controller = (net.java.games.input.Controller)implObj;
+        
         JInputControllerButton[] buttons0 = new JInputControllerButton[ controller.getComponents().length ];
         int numButtons = 0;
         
@@ -210,7 +216,7 @@ public class JInputController extends Controller
             if ( component.getIdentifier() instanceof net.java.games.input.Component.Identifier.Button )
             {
                 int index = numButtons++;
-                buttons0[ index ] = new JInputControllerButton( controller, component, index );
+                buttons0[ index ] = new JInputControllerButton( this, controller, component, index );
             }
         }
         
@@ -222,7 +228,7 @@ public class JInputController extends Controller
     
     protected JInputController( InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Controller controller ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, controller.getName(), createAxesArray( controller ), createButtonsArray( controller ) );
+        super( sourceWindow, eveneQueue, controller.getName(), controller );
         
         this.controller = controller;
         

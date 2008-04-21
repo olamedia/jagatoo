@@ -29,7 +29,7 @@
  */
 package org.jagatoo.input.devices.components;
 
-import org.jagatoo.input.actions.InputAction;
+import org.jagatoo.input.actions.InvokableInputAction;
 import org.jagatoo.input.devices.InputDevice;
 
 /**
@@ -58,7 +58,7 @@ public abstract class DeviceComponent
     
     private final Type type;
     
-    private InputAction[] actions = null;
+    private InvokableInputAction[] actions = null;
     private InputDevice[] actionDevices = null;
     
     /**
@@ -92,16 +92,16 @@ public abstract class DeviceComponent
      * @param action the action to bind
      * @param device the InputDevice to use
      */
-    public void bindAction( InputAction action, InputDevice device )
+    public void bindAction( InvokableInputAction action, InputDevice device )
     {
         if ( actions == null )
         {
-            actions = new InputAction[ 1 ];
+            actions = new InvokableInputAction[ 1 ];
             actionDevices = new InputDevice[ 1 ];
         }
         else
         {
-            InputAction[] actions2 = new InputAction[ actions.length + 1 ];
+            InvokableInputAction[] actions2 = new InvokableInputAction[ actions.length + 1 ];
             InputDevice[] actionDevices2 = new InputDevice[ actionDevices.length + 1 ];
             
             System.arraycopy( actions, 0, actions2, 0, actions.length );
@@ -122,7 +122,7 @@ public abstract class DeviceComponent
      * @param action the action to bind
      * @param device the InputDevice to use
      */
-    public void bindAction( InputAction action )
+    public void bindAction( InvokableInputAction action )
     {
         bindAction( action, null );
     }
@@ -136,7 +136,7 @@ public abstract class DeviceComponent
             return;
         }
         
-        InputAction[] actions2 = new InputAction[ actions.length - 1 ];
+        InvokableInputAction[] actions2 = new InvokableInputAction[ actions.length - 1 ];
         InputDevice[] actionDevices2 = new InputDevice[ actionDevices.length - 1 ];
         
         if ( index > 0 )
@@ -154,7 +154,7 @@ public abstract class DeviceComponent
         actionDevices = actionDevices2;
     }
     
-    private final int findActionIndex( InputAction action, InputDevice device )
+    private final int findActionIndex( InvokableInputAction action, InputDevice device )
     {
         if ( actions == null )
             return( -1 );
@@ -174,7 +174,7 @@ public abstract class DeviceComponent
      * @param action the action to bind
      * @param device the InputDevice to use
      */
-    public void unbindAction( InputAction action, InputDevice device )
+    public void unbindAction( InvokableInputAction action, InputDevice device )
     {
         int index;
         while ( ( index = findActionIndex( action, device ) ) != -1 )
@@ -188,19 +188,19 @@ public abstract class DeviceComponent
      * 
      * @param action the action to bind
      */
-    public void unbindAction( InputAction action )
+    public void unbindAction( InvokableInputAction action )
     {
         unbindAction( action, null );
     }
     
     /**
-     * Notifies all bound {@link InputAction}s.
+     * Notifies all bound {@link InvokableInputAction}s.
      * 
+     * @param device
      * @param delta
      * @param state
-     * @param device
      */
-    public void notifyBoundActions( int delta, int state, InputDevice device )
+    public void notifyBoundActions( InputDevice device, short delta, short state )
     {
         if ( actions == null )
             return;
@@ -209,7 +209,7 @@ public abstract class DeviceComponent
         {
             if ( ( actionDevices[ i ] == null ) || ( actionDevices[ i ] == device ) )
             {
-                actions[ i ].doAction( delta, state );
+                actions[ i ].invokeAction( device, this, delta, state );
             }
         }
     }

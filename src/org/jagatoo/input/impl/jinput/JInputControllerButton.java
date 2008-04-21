@@ -46,9 +46,9 @@ public class JInputControllerButton extends ControllerButton
         return( button );
     }
     
-    public JInputControllerButton( net.java.games.input.Controller controller, net.java.games.input.Component button, int index )
+    public JInputControllerButton( JInputController controller, net.java.games.input.Controller implController, net.java.games.input.Component button, int index )
     {
-        super( index, button.getName() );
+        super( controller, index, button.getName() );
         
         //this.controller = controller;
         this.button = button;

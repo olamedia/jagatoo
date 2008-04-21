@@ -29,6 +29,8 @@
  */
 package org.jagatoo.input.devices.components;
 
+import org.jagatoo.input.devices.Controller;
+
 /**
  * Insert type comment here.
  * 
@@ -36,9 +38,15 @@ package org.jagatoo.input.devices.components;
  */
 public class ControllerButton extends DigitalDeviceComponent
 {
+    private final Controller controller;
     private final int index;
     
     private DigiState state = DigiState.NEGATIVE;
+    
+    public final Controller getController()
+    {
+        return( controller );
+    }
     
     /**
      * @return the Button's index.
@@ -80,10 +88,11 @@ public class ControllerButton extends DigitalDeviceComponent
         return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", index = " + getIndex() + ", state = " + getState() + " }" );
     }
     
-    public ControllerButton( int index, String name )
+    public ControllerButton( Controller controller, int index, String name )
     {
         super( Type.CONTROLLER_BUTTON, name );
         
+        this.controller = controller;
         this.index = index;
     }
 }

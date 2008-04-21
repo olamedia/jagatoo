@@ -29,15 +29,24 @@
  */
 package org.jagatoo.input.actions;
 
+import org.jagatoo.input.devices.InputDevice;
+import org.jagatoo.input.devices.components.DeviceComponent;
+
 /**
- * This interface provides the very most basic methods, a &quot;KeyCommand&quot; must have.
+ * An InputAction can be bound to an arbitrary InputDevice's component.
+ * It is executed on a state-change.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface InputActionInterface
+public interface InvokableInputAction extends InputAction
 {
     /**
-     * @return This InputAction's ordinal number, which must be zero-based for all actions.
+     * This method is invoked when the bound InputDevice changed its state.
+     * 
+     * @param device the bound device
+     * @param comp the bound device component
+     * @param delta the delta of the previous and current state
+     * @param state the current state
      */
-    public int ordinal();
+    public void invokeAction( InputDevice device, DeviceComponent comp, short delta, short state );
 }

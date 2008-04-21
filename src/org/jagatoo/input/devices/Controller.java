@@ -262,13 +262,17 @@ public abstract class Controller extends InputDevice
         destroyImpl();
     }
     
-    protected Controller( InputSourceWindow sourceWindow, EventQueue eveneQueue, String name, ControllerAxis[] axes, ControllerButton[] buttons ) throws InputSystemException
+    protected abstract ControllerAxis[] createAxesArray( Object implObj );
+    
+    protected abstract ControllerButton[] createButtonsArray( Object implObj );
+    
+    protected Controller( InputSourceWindow sourceWindow, EventQueue eveneQueue, String name, Object implObj ) throws InputSystemException
     {
         super( sourceWindow, eveneQueue, name );
         
-        this.axes = axes;
+        this.axes = createAxesArray( implObj );
         this.lastWhen_axisChanged = new long[ axes.length ];
-        this.buttons = buttons;
+        this.buttons = createButtonsArray( implObj );
         this.lastWhen_buttonPressed = new long[ buttons.length ];
         this.lastWhen_buttonReleased = new long[ buttons.length ];
         

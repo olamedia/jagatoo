@@ -33,12 +33,13 @@ import javax.media.opengl.GL;
 
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
+import org.jagatoo.input.actions.InvokableInputAction;
 import org.jagatoo.input.actions.InputAction;
-import org.jagatoo.input.actions.InputActionInterface;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.InputDevice;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
+import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
@@ -212,9 +213,24 @@ public class InputTest implements InputListener, InputHotPlugListener
         System.out.println( "plugged out: " + device );
     }
     
-    private class TestAction implements InputAction
+    private static enum MyInputBinding implements InputAction
     {
-        public void doAction( int delta, int state )
+        ACTION0,
+        ACTION1,
+        ACTION2,
+        ACTION3,
+        ACTION4,
+        ACTION5
+    }
+    
+    private static class TestAction implements InvokableInputAction
+    {
+        public final int ordinal()
+        {
+            return( MyInputBinding.values().length );
+        }
+        
+        public void invokeAction( InputDevice device, DeviceComponent comp, short delta, short state )
         {
             if ( !isDebugFlagSet( DEBUG_MASK_TEST_ACTION ) )
                 return;
@@ -223,34 +239,25 @@ public class InputTest implements InputListener, InputHotPlugListener
         }
     }
     
-    private static enum MyInputBinding implements InputActionInterface
-    {
-        ACTION1,
-        ACTION2,
-        ACTION3,
-        ACTION4,
-        ACTION5,
-        ACTION6
-    }
-    
-    private InputBindingsManager< MyInputBinding > bindingsManager = null;
+    private InputBindingsManager< InputAction > bindingsManager = null;
     private InputStatesManager statesManager = null;
     
     private void setupInputBindings( InputSystem is ) throws Throwable
     {
-        bindingsManager = new InputBindingsManager< MyInputBinding >( MyInputBinding.values().length );
+        bindingsManager = new InputBindingsManager< InputAction >( MyInputBinding.values().length + 1 );
         
-        bindingsManager.bind( Keys.G, MyInputBinding.ACTION1 );
-        bindingsManager.bind( is.getMouse().getButton( 0 ), MyInputBinding.ACTION2 );
-        bindingsManager.bind( is.getMouse().getWheel(), MyInputBinding.ACTION3 );
-        bindingsManager.bind( is.getMouse().getXAxis(), MyInputBinding.ACTION4 );
+        bindingsManager.bind( Keys.G, MyInputBinding.ACTION0 );
+        bindingsManager.bind( is.getMouse().getButton( 0 ), MyInputBinding.ACTION1 );
+        bindingsManager.bind( is.getMouse().getWheel(), MyInputBinding.ACTION2 );
+        bindingsManager.bind( is.getMouse().getXAxis(), MyInputBinding.ACTION3 );
         if ( is.getController() != null )
         {
-            bindingsManager.bind( is.getController().getButton( 0 ), MyInputBinding.ACTION5 );
-            bindingsManager.bind( is.getController().getAxis( 3 ), MyInputBinding.ACTION6 );
+            bindingsManager.bind( is.getController().getButton( 0 ), MyInputBinding.ACTION4 );
+            bindingsManager.bind( is.getController().getAxis( 3 ), MyInputBinding.ACTION5 );
         }
+        bindingsManager.bind( Keys.SPACE, new TestAction() );
         
-        statesManager = new InputStatesManager( MyInputBinding.values().length );
+        statesManager = new InputStatesManager( MyInputBinding.values().length + 1 );
     }
     
     private void setupInputSystem( InputSystem is ) throws Throwable
@@ -315,19 +322,19 @@ public class InputTest implements InputListener, InputHotPlugListener
             
             //System.out.println( statesManager.getInputState( MyInputBinding.ACTION1 ) );
             
-            state = statesManager.getInputState( MyInputBinding.ACTION2 );
+            state = statesManager.getInputState( MyInputBinding.ACTION1 );
             
             if ( state.isVolatile() )
                 System.out.println( state + ", " + is.getMouse().getButtonsState() );
                 //System.out.println( statesManager.getSimpleInputState( MyInputBinding.ACTION2 ) );
             
-            state = statesManager.getInputState( MyInputBinding.ACTION3 );
+            state = statesManager.getInputState( MyInputBinding.ACTION2 );
             
             if ( state.isVolatile() )
                 System.out.println( state + ", " + is.getMouse().getWheel().getIntValue() );
                 //System.out.println( statesManager.getSimpleInputState( MyInputBinding.ACTION3 ) );
             
-            state = statesManager.getInputState( MyInputBinding.ACTION4 );
+            state = statesManager.getInputState( MyInputBinding.ACTION3 );
             
             if ( state.isVolatile() )
                 System.out.println( state + ", " + is.getMouse().getXAxis().getIntValue() );
@@ -546,8 +553,8 @@ public class InputTest implements InputListener, InputHotPlugListener
     
     public InputTest() throws Throwable
     {
-        //startLWJGL();
-        startJInput();
+        startLWJGL();
+        //startJInput();
         //startAWT();
     }
     

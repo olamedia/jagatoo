@@ -102,12 +102,12 @@ public abstract class InputDevice implements Enableable
         return( enabled );
     }
     
-    public void addStateListener( InputStateListener l )
+    public void addInputStateListener( InputStateListener l )
     {
         stateListeners.add( l );
     }
     
-    public void removeStateListener( InputStateListener l )
+    public void removeInputStateListener( InputStateListener l )
     {
         stateListeners.remove( l );
     }
@@ -124,9 +124,8 @@ public abstract class InputDevice implements Enableable
             stateListeners.get( i ).onInputStateChanged( e, delta, state );
         }
         
-        // TODO: Implement MouseAxis class to avoid this selection!
         if ( e.getComponent() != null )
-            e.getComponent().notifyBoundActions( delta, state, this );
+            e.getComponent().notifyBoundActions( this, (short)delta, (short)state );
     }
     
     /**

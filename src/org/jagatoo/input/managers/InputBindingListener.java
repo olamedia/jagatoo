@@ -29,7 +29,7 @@
  */
 package org.jagatoo.input.managers;
 
-import org.jagatoo.input.actions.InputActionInterface;
+import org.jagatoo.input.actions.InputAction;
 import org.jagatoo.input.devices.components.DeviceComponent;
 
 /**
@@ -37,7 +37,7 @@ import org.jagatoo.input.devices.components.DeviceComponent;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface InputBindingListener< A extends InputActionInterface >
+public interface InputBindingListener< A extends InputAction >
 {
     /**
      * This event is fired, when a key is bound to a command.
