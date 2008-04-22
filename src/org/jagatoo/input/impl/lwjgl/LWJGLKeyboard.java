@@ -32,6 +32,7 @@ package org.jagatoo.input.impl.lwjgl;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Keyboard;
+import org.jagatoo.input.devices.KeyboardFactory;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.events.EventQueue;
@@ -191,6 +192,8 @@ public class LWJGLKeyboard extends Keyboard
         
         try
         {
+            LWJGLDeviceFactory.processMessages( nanoTime );
+            
             org.lwjgl.input.Keyboard.poll();
             
             while ( org.lwjgl.input.Keyboard.next() )
@@ -297,9 +300,9 @@ public class LWJGLKeyboard extends Keyboard
         }
     }
     
-    protected LWJGLKeyboard( InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
+    protected LWJGLKeyboard( KeyboardFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, "Primary Keyboard" );
+        super( factory, sourceWindow, eveneQueue, "Primary Keyboard" );
         
         try
         {

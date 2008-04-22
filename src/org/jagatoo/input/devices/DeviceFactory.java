@@ -29,6 +29,7 @@
  */
 package org.jagatoo.input.devices;
 
+import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.misc.InputSourceWindow;
@@ -100,8 +101,6 @@ public abstract class DeviceFactory implements KeyboardFactory, MouseFactory, Co
             this.cachedControllers = null;
     }
     
-    public abstract Class< ? extends Keyboard > getExpectedKeyboardClass();
-    
     /**
      * @return an array of all the installed Keyboards in the system.
      * 
@@ -121,8 +120,6 @@ public abstract class DeviceFactory implements KeyboardFactory, MouseFactory, Co
         
         return( getCachedKeyboards() );
     }
-    
-    public abstract Class< ? extends Mouse > getExpectedMouseClass();
     
     /**
      * @return an array of all the installed Mouses in the system.
@@ -144,8 +141,6 @@ public abstract class DeviceFactory implements KeyboardFactory, MouseFactory, Co
         return( getCachedMouses() );
     }
     
-    public abstract Class< ? extends Controller > getExpectedControllerClass();
-    
     /**
      * @return an array of all the installed Controllers in the system.
      * 
@@ -165,6 +160,15 @@ public abstract class DeviceFactory implements KeyboardFactory, MouseFactory, Co
         
         return( getCachedControllers() );
     }
+    
+    /**
+     * This method is called by the InputSystem when it gets destroyed.
+     * 
+     * @param inputSystem
+     * 
+     * @throws InputSystemException
+     */
+    public abstract void destroy( InputSystem inputSystem ) throws InputSystemException;
     
     public DeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
     {

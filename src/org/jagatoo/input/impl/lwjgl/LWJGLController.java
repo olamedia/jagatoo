@@ -32,6 +32,7 @@ package org.jagatoo.input.impl.lwjgl;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Controller;
+import org.jagatoo.input.devices.ControllerFactory;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
 import org.jagatoo.input.devices.components.DigiState;
@@ -49,6 +50,32 @@ import org.jagatoo.input.misc.InputSourceWindow;
 public class LWJGLController extends Controller
 {
     private final org.lwjgl.input.Controller implController;
+    
+    private static int[] indexMap = null;
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onDeviceRegistered( InputSystem inputSystem )
+    {
+        if ( indexMap == null )
+        {
+            indexMap = new int[ org.lwjgl.input.Controllers.getControllerCount() ];
+            java.util.Arrays.fill( indexMap, -1 );
+        }
+        
+        indexMap[ this.getIndex() ] = inputSystem.getControllersCount() - 1;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onDeviceUnregistered( InputSystem inputSystem )
+    {
+        indexMap[ this.getIndex() ] = -1;
+    }
     
     protected final org.lwjgl.input.Controller getController()
     {
@@ -150,13 +177,51 @@ public class LWJGLController extends Controller
         collectOrFireEvents( is, eventQueue, nanoTime );
     }
     
+    private static long lastUpdateTime = -1L;
+    
     /**
      * {@inheritDoc}
      */
     @Override
     public void update( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
-        collectOrFireEvents( is, null, nanoTime );
+        //collectOrFireEvents( is, null, nanoTime );
+        
+        if ( nanoTime > lastUpdateTime )
+        {
+            try
+            {
+                org.lwjgl.input.Controllers.poll();
+                
+                while ( org.lwjgl.input.Controllers.next() )
+                {
+                    final int controllerIndex = org.lwjgl.input.Controllers.getEventSource().getIndex();
+                    final int realIndex = indexMap[ controllerIndex ];
+                    
+                    if ( realIndex != -1 )
+                    {
+                        LWJGLController ctrl = (LWJGLController)is.getController( realIndex );
+                        
+                        ctrl.collectOrFireEvents( is, null, nanoTime );
+                    }
+                }
+            }
+            catch ( Throwable t )
+            {
+                if ( t instanceof InputSystemException )
+                    throw( (InputSystemException)t );
+                
+                if ( t instanceof Error )
+                    throw( (Error)t );
+                
+                if ( t instanceof RuntimeException )
+                    throw( (RuntimeException)t );
+                
+                throw( new InputSystemException( t ) );
+            }
+            
+            lastUpdateTime = nanoTime;
+        }
         
         getEventQueue().dequeueAndFire( is );
     }
@@ -221,9 +286,9 @@ public class LWJGLController extends Controller
         return( buttons );
     }
     
-    protected LWJGLController( InputSourceWindow sourceWindow, EventQueue eveneQueue, org.lwjgl.input.Controller implController ) throws InputSystemException
+    protected LWJGLController( ControllerFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue, org.lwjgl.input.Controller implController ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, implController.getName(), implController );
+        super( factory, sourceWindow, eveneQueue, implController.getName(), implController );
         
         this.implController = implController;
     }

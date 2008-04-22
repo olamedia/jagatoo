@@ -32,6 +32,7 @@ package org.jagatoo.input.impl.lwjgl;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Mouse;
+import org.jagatoo.input.devices.MouseFactory;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
 import org.jagatoo.input.events.EventQueue;
@@ -137,6 +138,8 @@ public class LWJGLMouse extends Mouse
         
         try
         {
+            LWJGLDeviceFactory.processMessages( nanoTime );
+            
             org.lwjgl.input.Mouse.poll();
             
             while ( org.lwjgl.input.Mouse.next() )
@@ -318,8 +321,8 @@ public class LWJGLMouse extends Mouse
         return( org.lwjgl.input.Mouse.hasWheel() );
     }
     
-    protected LWJGLMouse( InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
+    protected LWJGLMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, "Primary Mouse", init_getNumButtons(), init_hasWheel() );
+        super( factory, sourceWindow, eveneQueue, "Primary Mouse", init_getNumButtons(), init_hasWheel() );
     }
 }

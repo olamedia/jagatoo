@@ -29,6 +29,7 @@
  */
 package org.jagatoo.input.impl.awt;
 
+import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.DeviceFactory;
@@ -44,12 +45,6 @@ import org.jagatoo.input.misc.InputSourceWindow;
  */
 public class AWTDeviceFactory extends DeviceFactory
 {
-    @Override
-    public Class< ? extends Mouse > getExpectedMouseClass()
-    {
-        return( AWTMouse.class );
-    }
-    
     /**
      * {@inheritDoc}
      */
@@ -64,13 +59,7 @@ public class AWTDeviceFactory extends DeviceFactory
             }
         }
         
-        return( new AWTMouse[] { new AWTMouse( getSourceWindow(), getEveneQueue() ) } );
-    }
-    
-    @Override
-    public Class< ? extends Keyboard > getExpectedKeyboardClass()
-    {
-        return( AWTKeyboard.class );
+        return( new AWTMouse[] { new AWTMouse( this, getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -87,13 +76,7 @@ public class AWTDeviceFactory extends DeviceFactory
             }
         }
         
-        return( new AWTKeyboard[] { new AWTKeyboard( getSourceWindow(), getEveneQueue() ) } );
-    }
-    
-    @Override
-    public Class< ? extends Controller > getExpectedControllerClass()
-    {
-        return( Controller.class );
+        return( new AWTKeyboard[] { new AWTKeyboard( this, getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -103,6 +86,14 @@ public class AWTDeviceFactory extends DeviceFactory
     protected Controller[] initControllers( Controller[] currentControllers ) throws InputSystemException
     {
         return( new Controller[ 0 ] );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void destroy( InputSystem inputSystem ) throws InputSystemException
+    {
     }
     
     public AWTDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )

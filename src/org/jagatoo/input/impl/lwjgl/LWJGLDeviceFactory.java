@@ -29,6 +29,7 @@
  */
 package org.jagatoo.input.impl.lwjgl;
 
+import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.DeviceFactory;
@@ -44,10 +45,20 @@ import org.jagatoo.input.misc.InputSourceWindow;
  */
 public class LWJGLDeviceFactory extends DeviceFactory
 {
-    @Override
-    public Class< ? extends Mouse > getExpectedMouseClass()
+    private static long lastUpdateTime = -1L;
+    
+    /**
+     * This value is for LWJGLKeyboard, LWJGLMouse and LWJGLController.
+     * It is not used in this class at all.
+     */
+    static void processMessages( long nanoTime )
     {
-        return( LWJGLMouse.class );
+        if ( nanoTime > lastUpdateTime )
+        {
+            org.lwjgl.opengl.Display.processMessages();
+            
+            lastUpdateTime = nanoTime;
+        }
     }
     
     /**
@@ -64,13 +75,7 @@ public class LWJGLDeviceFactory extends DeviceFactory
             }
         }
         
-        return( new LWJGLMouse[] { new LWJGLMouse( getSourceWindow(), getEveneQueue() ) } );
-    }
-    
-    @Override
-    public Class< ? extends Keyboard > getExpectedKeyboardClass()
-    {
-        return( LWJGLKeyboard.class );
+        return( new LWJGLMouse[] { new LWJGLMouse( this, getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -87,13 +92,7 @@ public class LWJGLDeviceFactory extends DeviceFactory
             }
         }
         
-        return( new LWJGLKeyboard[] { new LWJGLKeyboard( getSourceWindow(), getEveneQueue() ) } );
-    }
-    
-    @Override
-    public Class< ? extends Controller > getExpectedControllerClass()
-    {
-        return( LWJGLController.class );
+        return( new LWJGLKeyboard[] { new LWJGLKeyboard( this, getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -130,7 +129,7 @@ public class LWJGLDeviceFactory extends DeviceFactory
                 
                 if ( !alreadyexisting )
                 {
-                    controllers[ i ] = new LWJGLController( getSourceWindow(), getEveneQueue(), org.lwjgl.input.Controllers.getController( i ) );
+                    controllers[ i ] = new LWJGLController( this, getSourceWindow(), getEveneQueue(), org.lwjgl.input.Controllers.getController( i ) );
                 }
             }
             
@@ -147,6 +146,23 @@ public class LWJGLDeviceFactory extends DeviceFactory
             if ( t instanceof RuntimeException )
                 throw( (RuntimeException)t );
             
+            throw( new InputSystemException( t ) );
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void destroy( InputSystem inputSystem ) throws InputSystemException
+    {
+        try
+        {
+            if ( org.lwjgl.input.Controllers.isCreated() )
+                org.lwjgl.input.Controllers.destroy();
+        }
+        catch ( Throwable t )
+        {
             throw( new InputSystemException( t ) );
         }
     }

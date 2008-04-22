@@ -34,6 +34,7 @@ import java.util.HashMap;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Mouse;
+import org.jagatoo.input.devices.MouseFactory;
 import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.devices.components.MouseAxis;
 import org.jagatoo.input.devices.components.MouseButton;
@@ -347,9 +348,9 @@ public class JInputMouse extends Mouse
         return( hasWheel );
     }
     
-    protected JInputMouse( InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Mouse mouse ) throws InputSystemException
+    protected JInputMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Mouse mouse ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, mouse.getName(), init_getNumButtons( mouse ), init_hasWheel( mouse ) );
+        super( factory, sourceWindow, eveneQueue, mouse.getName(), init_getNumButtons( mouse ), init_hasWheel( mouse ) );
         
         this.mouse = mouse;
         

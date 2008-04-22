@@ -29,6 +29,7 @@
  */
 package org.jagatoo.input.devices;
 
+import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 
 /**
@@ -45,4 +46,13 @@ public interface KeyboardFactory
      * @param forceRefresh if true, the list of available devices is refreshed from the system.
      */
     public Keyboard[] getKeyboards( boolean forceRefresh ) throws InputSystemException;
+    
+    /**
+     * This method is called by the InputSystem when it gets destroyed.
+     * 
+     * @param inputSystem
+     * 
+     * @throws InputSystemException
+     */
+    public void destroy( InputSystem inputSystem ) throws InputSystemException;
 }

@@ -29,6 +29,7 @@
  */
 package org.jagatoo.input.impl.jinput;
 
+import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.DeviceFactory;
@@ -44,12 +45,6 @@ import org.jagatoo.input.misc.InputSourceWindow;
  */
 public class JInputDeviceFactory extends DeviceFactory
 {
-    @Override
-    public Class< ? extends Mouse > getExpectedMouseClass()
-    {
-        return( JInputMouse.class );
-    }
-    
     /**
      * {@inheritDoc}
      */
@@ -81,7 +76,7 @@ public class JInputDeviceFactory extends DeviceFactory
                 
                 if ( !alreadyexisting )
                 {
-                    tmpMouses[ numMouses++ ] = new JInputMouse( getSourceWindow(), getEveneQueue(), (net.java.games.input.Mouse)controllers[ i ] );
+                    tmpMouses[ numMouses++ ] = new JInputMouse( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Mouse)controllers[ i ] );
                 }
             }
         }
@@ -90,12 +85,6 @@ public class JInputDeviceFactory extends DeviceFactory
         System.arraycopy( tmpMouses, 0, mouses, 0, numMouses );
         
         return( mouses );
-    }
-    
-    @Override
-    public Class< ? extends Keyboard > getExpectedKeyboardClass()
-    {
-        return( JInputKeyboard.class );
     }
     
     /**
@@ -131,7 +120,7 @@ public class JInputDeviceFactory extends DeviceFactory
                     
                     if ( !alreadyexisting )
                     {
-                        tmpKeyboards[ numKeyboards++ ] = new JInputKeyboard( getSourceWindow(), getEveneQueue(), (net.java.games.input.Keyboard)controllers[ i ] );
+                        tmpKeyboards[ numKeyboards++ ] = new JInputKeyboard( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Keyboard)controllers[ i ] );
                     }
                 }
             }
@@ -141,12 +130,6 @@ public class JInputDeviceFactory extends DeviceFactory
         System.arraycopy( tmpKeyboards, 0, keyboards, 0, numKeyboards );
         
         return( keyboards );
-    }
-    
-    @Override
-    public Class< ? extends Controller > getExpectedControllerClass()
-    {
-        return( JInputController.class );
     }
     
     private static final boolean isController( net.java.games.input.Controller.Type type )
@@ -204,7 +187,7 @@ public class JInputDeviceFactory extends DeviceFactory
                     
                     if ( !alreadyexisting )
                     {
-                        tmpControllers[ numControllers++ ] = new JInputController( getSourceWindow(), getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
+                        tmpControllers[ numControllers++ ] = new JInputController( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
                     }
                 }
             }
@@ -214,6 +197,14 @@ public class JInputDeviceFactory extends DeviceFactory
         System.arraycopy( tmpControllers, 0, controllers2, 0, numControllers );
         
         return( controllers2 );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void destroy( InputSystem inputSystem ) throws InputSystemException
+    {
     }
     
     public JInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )

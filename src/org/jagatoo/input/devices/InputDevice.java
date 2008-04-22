@@ -70,6 +70,26 @@ public abstract class InputDevice implements Enableable
     }
     
     /**
+     * This method is called by the InputSystem
+     * after the device has been completely and successfully registered.
+     * 
+     * @param inputSystem
+     */
+    public void onDeviceRegistered( InputSystem inputSystem )
+    {
+    }
+    
+    /**
+     * This method is called by the InputSystem
+     * after the device has been completely and successfully deregistered.
+     * 
+     * @param inputSystem
+     */
+    public void onDeviceUnregistered( InputSystem inputSystem )
+    {
+    }
+    
+    /**
      * {@inheritDoc}
      */
     @Override

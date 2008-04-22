@@ -30,19 +30,22 @@
 package org.jagatoo.input;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.jagatoo.input.devices.Controller;
-import org.jagatoo.input.devices.DeviceFactory;
+import org.jagatoo.input.devices.ControllerFactory;
 import org.jagatoo.input.devices.Keyboard;
+import org.jagatoo.input.devices.KeyboardFactory;
 import org.jagatoo.input.devices.Mouse;
+import org.jagatoo.input.devices.MouseFactory;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.handlers.InputHandler;
 import org.jagatoo.input.listeners.InputStateListener;
 import org.jagatoo.input.misc.InputSourceWindow;
 
-public abstract class InputSystem
+public class InputSystem
 {
-    private DeviceFactory deviceFactory;
+    private static InputSystem instance = null;
     
     private Keyboard[] keyboards = new Keyboard[ 0 ];
     private Mouse[] mouses = new Mouse[ 0 ];
@@ -58,14 +61,24 @@ public abstract class InputSystem
     
     private final ArrayList< InputHandler< ? > > inputHandlers = new ArrayList< InputHandler< ? > >();
     
-    protected final void setDeviceFactory( DeviceFactory devFact )
+    public static final void setInstance( InputSystem inputSystem )
     {
-        this.deviceFactory = devFact;
+        instance = inputSystem;
     }
     
-    public final DeviceFactory getDeviceFactory()
+    public static final InputSystem getInstance()
     {
-        return( deviceFactory );
+        if ( instance == null )
+        {
+            instance = new InputSystem();
+        }
+        
+        return( instance );
+    }
+    
+    public final EventQueue getEventQueue()
+    {
+        return( eventQueue );
     }
     
     public void addInputHandler( InputHandler< ? > inputHandler )
@@ -133,10 +146,19 @@ public abstract class InputSystem
         }
     }
     
+    /**
+     * Registers the given Keyboard at this InputSystem.
+     * 
+     * @param keyboard
+     * 
+     * @throws InputSystemException
+     */
     public void registerKeyboard( Keyboard keyboard ) throws InputSystemException
     {
-        if ( !keyboard.getClass().isAssignableFrom( getDeviceFactory().getExpectedKeyboardClass() ) )
+        /*
+        if ( !keyboard.getClass().isAssignableFrom( keyboard.getFactory().getExpectedKeyboardClass() ) )
             throw( new InputSystemException( "This Keyboard is not an instance of " + getDeviceFactory().getExpectedKeyboardClass() + "." ) );
+        */
         
         for ( int i = 0; i < keyboards.length; i++ )
         {
@@ -149,18 +171,22 @@ public abstract class InputSystem
         keyboards2[ keyboards.length ] = keyboard;
         
         this.keyboards = keyboards2;
+        
+        keyboard.onDeviceRegistered( this );
     }
     
     /**
      * Registers a new Keyboard.
      * 
+     * @param factory
+     * 
      * @return the registered Keyboard.
      * 
      * @throws InputSystemException
      */
-    public final Keyboard registerNewKeyboard() throws InputSystemException
+    public final Keyboard registerNewKeyboard( KeyboardFactory factory ) throws InputSystemException
     {
-        Keyboard[] allKeyboards = getDeviceFactory().getKeyboards( false );
+        Keyboard[] allKeyboards = factory.getKeyboards( false );
         Keyboard[] newKeyboards = new Keyboard[ allKeyboards.length ];
         int numNewKeyboards = 0;
         
@@ -192,6 +218,27 @@ public abstract class InputSystem
         return( newKeyboards[ 0 ] );
     }
     
+    /**
+     * Registers a new Keyboard.
+     * 
+     * @param sourceWindow
+     * 
+     * @return the registered Keyboard.
+     * 
+     * @throws InputSystemException
+     */
+    public final Keyboard registerNewKeyboard( InputSourceWindow sourceWindow ) throws InputSystemException
+    {
+        return( registerNewKeyboard( sourceWindow.getDeviceFactory( this ) ) );
+    }
+    
+    /**
+     * Deregisters the given Keyboard from this InputSystem.
+     * 
+     * @param keyboard
+     * 
+     * @throws InputSystemException
+     */
     public void deregisterKeyboard( Keyboard keyboard ) throws InputSystemException
     {
         if ( keyboards.length == 0 )
@@ -214,13 +261,21 @@ public abstract class InputSystem
         keyboard.destroy();
         
         this.keyboards = keyboards2;
+        
+        keyboard.onDeviceUnregistered( this );
     }
     
+    /**
+     * @return <code>true</code>, if at least one Keyboard is currently registered.
+     */
     public final boolean hasKeyboard()
     {
         return( keyboards.length > 0 );
     }
     
+    /**
+     * @return the number of currently registered Keyboards.
+     */
     public final int getKeyboardsCount()
     {
         return( keyboards.length );
@@ -280,10 +335,19 @@ public abstract class InputSystem
     }
     
     
+    /**
+     * Registers the given Mouse at this InputSystem.
+     * 
+     * @param mouse
+     * 
+     * @throws InputSystemException
+     */
     public void registerMouse( Mouse mouse ) throws InputSystemException
     {
-        if ( !mouse.getClass().isAssignableFrom( getDeviceFactory().getExpectedMouseClass() ) )
+        /*
+        if ( !mouse.getClass().isAssignableFrom( mouse.getFactory().getExpectedMouseClass() ) )
             throw( new InputSystemException( "This mouse is not an instance of " + getDeviceFactory().getExpectedMouseClass() + "." ) );
+        */
         
         for ( int i = 0; i < mouses.length; i++ )
         {
@@ -296,18 +360,22 @@ public abstract class InputSystem
         mouses2[ mouses.length ] = mouse;
         
         this.mouses = mouses2;
+        
+        mouse.onDeviceRegistered( this );
     }
     
     /**
      * Registers a new Mouse.
      * 
+     * @param factory
+     * 
      * @return the registered Mouse.
      * 
      * @throws InputSystemException
      */
-    public final Mouse registerNewMouse() throws InputSystemException
+    public final Mouse registerNewMouse( MouseFactory factory ) throws InputSystemException
     {
-        Mouse[] allMouses = getDeviceFactory().getMouses( false );
+        Mouse[] allMouses = factory.getMouses( false );
         Mouse[] newMouses = new Mouse[ allMouses.length ];
         int numNewMouses = 0;
         
@@ -339,6 +407,27 @@ public abstract class InputSystem
         return( newMouses[ 0 ] );
     }
     
+    /**
+     * Registers a new Mouse.
+     * 
+     * @param sourceWindow
+     * 
+     * @return the registered Mouse.
+     * 
+     * @throws InputSystemException
+     */
+    public final Mouse registerNewMouse( InputSourceWindow sourceWindow ) throws InputSystemException
+    {
+        return( registerNewMouse( sourceWindow.getDeviceFactory( this ) ) );
+    }
+    
+    /**
+     * Deregisters the given Mouse from this InputSystem.
+     * 
+     * @param mouse
+     * 
+     * @throws InputSystemException
+     */
     public void deregisterMouse( Mouse mouse ) throws InputSystemException
     {
         if ( mouses.length == 0 )
@@ -361,13 +450,21 @@ public abstract class InputSystem
         mouse.destroy();
         
         this.mouses = mouses2;
+        
+        mouse.onDeviceUnregistered( this );
     }
     
+    /**
+     * @return <code>true</code>, if at least one Mouse is currently registered at this InputSystem.
+     */
     public final boolean hasMouse()
     {
         return( mouses.length > 0 );
     }
     
+    /**
+     * @return the number of currently registered Mouses.
+     */
     public final int getMousesCount()
     {
         return( mouses.length );
@@ -394,6 +491,9 @@ public abstract class InputSystem
         return( mouses[ index ] );
     }
     
+    /**
+     * @return an array of all currently registered Mouses.
+     */
     public final Mouse[] getMouses()
     {
         if ( ( mouses_out == null ) || ( mouses_out.length != mouses.length ) )
@@ -424,10 +524,19 @@ public abstract class InputSystem
     }
     
     
+    /**
+     * Registers the given Controller at this InputSystem.
+     * 
+     * @param controller
+     * 
+     * @throws InputSystemException
+     */
     public void registerController( Controller controller ) throws InputSystemException
     {
-        if ( !controller.getClass().isAssignableFrom( getDeviceFactory().getExpectedControllerClass() ) )
+        /*
+        if ( !controller.getClass().isAssignableFrom( controller.getFactory().getExpectedControllerClass() ) )
             throw( new InputSystemException( "This controller is not an instance of " + getDeviceFactory().getExpectedControllerClass() + "." ) );
+        */
         
         for ( int i = 0; i < controllers.length; i++ )
         {
@@ -440,18 +549,22 @@ public abstract class InputSystem
         controllers2[ controllers.length ] = controller;
         
         this.controllers = controllers2;
+        
+        controller.onDeviceRegistered( this );
     }
     
     /**
      * Registers a new Controller.
      * 
+     * @param factory
+     * 
      * @return the registered Controller.
      * 
      * @throws InputSystemException
      */
-    public final Controller registerNewController() throws InputSystemException
+    public final Controller registerNewController( ControllerFactory factory ) throws InputSystemException
     {
-        Controller[] allControllers = getDeviceFactory().getControllers( false );
+        Controller[] allControllers = factory.getControllers( false );
         Controller[] newControllers = new Controller[ allControllers.length ];
         int numNewControllers = 0;
         
@@ -483,6 +596,27 @@ public abstract class InputSystem
         return( newControllers[ 0 ] );
     }
     
+    /**
+     * Registers a new Controller.
+     * 
+     * @param sourceWindow
+     * 
+     * @return the registered Controller.
+     * 
+     * @throws InputSystemException
+     */
+    public final Controller registerNewController( InputSourceWindow sourceWindow ) throws InputSystemException
+    {
+        return( registerNewController( sourceWindow.getDeviceFactory( this ) ) );
+    }
+    
+    /**
+     * Deregisters the given Controller from this InputSystem.
+     * 
+     * @param controller
+     * 
+     * @throws InputSystemException
+     */
     public void deregisterController( Controller controller ) throws InputSystemException
     {
         if ( controllers.length == 0 )
@@ -505,13 +639,21 @@ public abstract class InputSystem
         controller.destroy();
         
         this.controllers = controllers2;
+        
+        controller.onDeviceUnregistered( this );
     }
     
+    /**
+     * @return <code>true</code>, if at least one Controller is currently registered.
+     */
     public final boolean hasController()
     {
         return( controllers.length > 0 );
     }
     
+    /**
+     * @return the number of currently registered Controllers.
+     */
     public final int getControllersCount()
     {
         return( controllers.length );
@@ -538,6 +680,9 @@ public abstract class InputSystem
         return( controllers[ index ] );
     }
     
+    /**
+     * @return an array of all currently registered Controllers.
+     */
     public final Controller[] getControllers()
     {
         if ( ( controllers_out == null ) || ( controllers_out.length != controllers.length ) )
@@ -669,27 +814,42 @@ public abstract class InputSystem
     
     public void destroy() throws InputSystemException
     {
+        HashSet< Object > factories = new HashSet< Object >();
+        
         for ( int i = keyboards.length - 1; i >= 0; i-- )
         {
+            factories.add( keyboards[ i ].getFactory() );
+            
             deregisterKeyboard( keyboards[ i ] );
         }
         
         for ( int i = mouses.length - 1; i >= 0; i-- )
         {
+            factories.add( mouses[ i ].getFactory() );
+            
             deregisterMouse( mouses[ i ] );
         }
         
         for ( int i = controllers.length - 1; i >= 0; i-- )
         {
+            factories.add( controllers[ i ].getFactory() );
+            
             deregisterController( controllers[ i ] );
+        }
+        
+        for ( Object factory: factories )
+        {
+            if ( factory instanceof KeyboardFactory )
+                ((KeyboardFactory)factory).destroy( this );
+            else if ( factory instanceof MouseFactory )
+                ((MouseFactory)factory).destroy( this );
+            else if ( factory instanceof ControllerFactory )
+                ((ControllerFactory)factory).destroy( this );
         }
     }
     
-    protected abstract DeviceFactory createDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue );
-    
-    public InputSystem( InputSourceWindow sourceWindow )
+    public InputSystem()
     {
         this.eventQueue = new EventQueue();
-        this.deviceFactory = createDeviceFactory( sourceWindow, eventQueue );
     }
 }

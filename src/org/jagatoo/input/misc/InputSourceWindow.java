@@ -29,6 +29,9 @@
  */
 package org.jagatoo.input.misc;
 
+import org.jagatoo.input.InputSystem;
+import org.jagatoo.input.devices.DeviceFactory;
+
 /**
  * This is an abstraction of the link between the input system
  * and the render canvas.
@@ -41,6 +44,14 @@ public interface InputSourceWindow
      * @return the object to draw on and to attach the cursor to.
      */
     public Object getDrawable();
+    
+    /**
+     * @return the DeviceFactory, that provides methods to retrieve
+     * InputDevices for the specified implementation.
+     * 
+     * @param inputSystem
+     */
+    public DeviceFactory getDeviceFactory( InputSystem inputSystem );
     
     /**
      * @return must return <code>true</code>, for the InputSystem to

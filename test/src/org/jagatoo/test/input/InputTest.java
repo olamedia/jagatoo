@@ -59,9 +59,8 @@ import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseStoppedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
-import org.jagatoo.input.impl.awt.AWTInputSystem;
-import org.jagatoo.input.impl.jinput.JInputInputSystem;
-import org.jagatoo.input.impl.lwjgl.LWJGLInputSystem;
+import org.jagatoo.input.impl.awt.AWTDeviceFactory;
+import org.jagatoo.input.impl.lwjgl.LWJGLDeviceFactory;
 import org.jagatoo.input.listeners.InputListener;
 import org.jagatoo.input.managers.InputHotPlugListener;
 import org.jagatoo.input.managers.InputBindingsManager;
@@ -260,11 +259,11 @@ public class InputTest implements InputListener, InputHotPlugListener
         statesManager = new InputStatesManager( MyInputBinding.values().length + 1 );
     }
     
-    private void setupInputSystem( InputSystem is ) throws Throwable
+    private void setupInputSystem( InputSystem is, InputSourceWindow sourceWindow ) throws Throwable
     {
         try
         {
-            is.registerNewMouse();
+            is.registerNewMouse( sourceWindow );
             is.getMouse().addMouseListener( this );
             //is.getMouse().startMouseStopManager();
             
@@ -278,7 +277,7 @@ public class InputTest implements InputListener, InputHotPlugListener
         
         try
         {
-            is.registerNewKeyboard();
+            is.registerNewKeyboard( sourceWindow );
             is.getKeyboard().addKeyboardListener( this );
         }
         catch ( InputSystemException ex )
@@ -288,7 +287,7 @@ public class InputTest implements InputListener, InputHotPlugListener
         
         try
         {
-            Controller[] controllers = is.getDeviceFactory().getControllers( false );
+            Controller[] controllers = sourceWindow.getDeviceFactory( is ).getControllers( false );
             if ( controllers.length > 0 )
             {
                 System.out.println( controllers[ 0 ].getName() );
@@ -307,7 +306,7 @@ public class InputTest implements InputListener, InputHotPlugListener
         /*
          * Listen for hot-plugged InputDevices.
          */
-        hotplugManager.registerDeviceFactory( is.getDeviceFactory() );
+        hotplugManager.registerDeviceFactory( sourceWindow.getDeviceFactory( is ) );
         hotplugManager.addHotPlugListener( this );
         hotplugManager.start();
     }
@@ -348,10 +347,21 @@ public class InputTest implements InputListener, InputHotPlugListener
     private static class LWJGLSourceWindow implements InputSourceWindow
     {
         private Cursor cursor = Cursor.DEFAULT_CURSOR;
+        private static LWJGLDeviceFactory deviceFactory = null;
         
         public Object getDrawable()
         {
             return( null );
+        }
+        
+        public LWJGLDeviceFactory getDeviceFactory( InputSystem inputSystem )
+        {
+            if ( deviceFactory == null )
+            {
+                deviceFactory = new LWJGLDeviceFactory( this, inputSystem.getEventQueue() );
+            }
+            
+            return( deviceFactory );
         }
         
         public boolean receivesInputEvents()
@@ -388,11 +398,22 @@ public class InputTest implements InputListener, InputHotPlugListener
     {
         final java.awt.Component component;
         
+        private AWTDeviceFactory deviceFactory = null;
         private Cursor cursor = Cursor.DEFAULT_CURSOR;
         
         public Object getDrawable()
         {
             return( component );
+        }
+        
+        public AWTDeviceFactory getDeviceFactory( InputSystem inputSystem )
+        {
+            if ( deviceFactory == null )
+            {
+                deviceFactory = new AWTDeviceFactory( this, inputSystem.getEventQueue() );
+            }
+            
+            return( deviceFactory );
         }
         
         public boolean receivesInputEvents()
@@ -449,8 +470,10 @@ public class InputTest implements InputListener, InputHotPlugListener
         InputSystem is = null;
         try
         {
-            is = new LWJGLInputSystem( new LWJGLSourceWindow() );
-            setupInputSystem( is );
+            LWJGLSourceWindow sourceWindow = new LWJGLSourceWindow();
+            is = InputSystem.getInstance();
+            
+            setupInputSystem( is, sourceWindow );
             
             while ( !Display.isCloseRequested() )
             {
@@ -483,8 +506,10 @@ public class InputTest implements InputListener, InputHotPlugListener
         InputSystem is = null;
         try
         {
-            is = new JInputInputSystem( new LWJGLSourceWindow() );
-            setupInputSystem( is );
+            LWJGLSourceWindow sourceWindow = new LWJGLSourceWindow();
+            is = InputSystem.getInstance();
+            
+            setupInputSystem( is, sourceWindow );
             
             while ( !Display.isCloseRequested() )
             {
@@ -526,8 +551,10 @@ public class InputTest implements InputListener, InputHotPlugListener
         InputSystem is = null;
         try
         {
-            is = new AWTInputSystem( new AWTSourceWindow( jogl.getCanvas() ) );
-            setupInputSystem( is );
+            AWTSourceWindow sourceWindow = new AWTSourceWindow( jogl.getCanvas() );
+            is = InputSystem.getInstance();
+            
+            setupInputSystem( is, sourceWindow );
             
             while ( jogl.getFrame().isDisplayable() )
             {

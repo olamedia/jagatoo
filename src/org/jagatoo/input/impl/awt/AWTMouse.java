@@ -32,6 +32,7 @@ package org.jagatoo.input.impl.awt;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Mouse;
+import org.jagatoo.input.devices.MouseFactory;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
 import org.jagatoo.input.events.EventQueue;
@@ -381,9 +382,9 @@ public class AWTMouse extends Mouse
         }
     }
     
-    protected AWTMouse( InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
+    protected AWTMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, "Primary Mouse", 12, true );
+        super( factory, sourceWindow, eveneQueue, "Primary Mouse", 12, true );
         
         try
         {

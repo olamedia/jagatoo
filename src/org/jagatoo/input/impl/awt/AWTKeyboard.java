@@ -35,6 +35,7 @@ import java.util.HashMap;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Keyboard;
+import org.jagatoo.input.devices.KeyboardFactory;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.events.EventQueue;
@@ -471,9 +472,9 @@ public class AWTKeyboard extends Keyboard
         }
     }
     
-    protected AWTKeyboard( InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
+    protected AWTKeyboard( KeyboardFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, "Primary Keyboard" );
+        super( factory, sourceWindow, eveneQueue, "Primary Keyboard" );
         
         try
         {

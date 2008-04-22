@@ -34,6 +34,7 @@ import java.util.HashMap;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Controller;
+import org.jagatoo.input.devices.ControllerFactory;
 import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
@@ -226,9 +227,9 @@ public class JInputController extends Controller
         return( buttons1 );
     }
     
-    protected JInputController( InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Controller controller ) throws InputSystemException
+    protected JInputController( ControllerFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Controller controller ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, controller.getName(), controller );
+        super( factory, sourceWindow, eveneQueue, controller.getName(), controller );
         
         this.controller = controller;
         

@@ -34,6 +34,7 @@ import java.util.HashMap;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Keyboard;
+import org.jagatoo.input.devices.KeyboardFactory;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.events.EventQueue;
@@ -343,9 +344,9 @@ public class JInputKeyboard extends Keyboard
         */
     }
     
-    protected JInputKeyboard( InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Keyboard keyboard ) throws InputSystemException
+    protected JInputKeyboard( KeyboardFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Keyboard keyboard ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, keyboard.getName() );
+        super( factory, sourceWindow, eveneQueue, keyboard.getName() );
         
         this.keyboard = keyboard;
         
