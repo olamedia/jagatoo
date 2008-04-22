@@ -32,8 +32,10 @@ package org.jagatoo.loaders.models.collada.jibx;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import org.openmali.FastMath;
 import org.openmali.vecmath2.Matrix4f;
 import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.Tuple3f;
 import org.openmali.vecmath2.util.MatrixUtils;
 
 /**
@@ -91,12 +93,12 @@ public class XMLNode {
     
     public void applyRotate(String str) {
         StringTokenizer tknz = new StringTokenizer(str);
-        Point3f rotate = new Point3f(
+        Tuple3f rotate = new Tuple3f(
                 Float.parseFloat(tknz.nextToken()),
                 Float.parseFloat(tknz.nextToken()),
                 Float.parseFloat(tknz.nextToken())
         );
-        float angle = Float.parseFloat(tknz.nextToken());
+        float angle = FastMath.toRad( Float.parseFloat(tknz.nextToken()) );
         rotate.mul( angle );
         Matrix4f mat = MatrixUtils.eulerToMatrix4f(rotate);
         // System.out.println("Mat before rotate : \n"+matrix.matrix4f);
