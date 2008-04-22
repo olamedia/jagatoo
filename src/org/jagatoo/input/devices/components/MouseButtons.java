@@ -52,6 +52,9 @@ public class MouseButtons
     public static final MouseButton EXT_BUTTON_8 = new MouseButton( "Extension Button 8" );
     public static final MouseButton EXT_BUTTON_9 = new MouseButton( "Extension Button 9" );
     
+    public static final MouseWheel.WheelUpDownComponent WHEEL_UP = MouseWheel.GLOBAL_WHEEL.getUp();
+    public static final MouseWheel.WheelUpDownComponent WHEEL_DOWN = MouseWheel.GLOBAL_WHEEL.getDown();
+    
     public static final MouseButton getByIndex( int index )
     {
         return( buttonsMap[ index ] );

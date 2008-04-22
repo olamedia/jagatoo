@@ -42,6 +42,7 @@ import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.MouseAxis;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseWheel;
+import org.jagatoo.input.devices.components.MouseWheel.WheelUpDownComponent;
 
 /**
  * Manages state-changes on any kind of {@link InputDevice}.
@@ -190,9 +191,34 @@ public class InputStatesManager
                         flag = true;
                         break;
                     case MOUSE_WHEEL:
-                        final MouseWheel mWheel = (MouseWheel)comp;
-                        device = mWheel.getMouse();
-                        currStates[ i ] = (short)mWheel.getIntValue();
+                        if ( comp instanceof WheelUpDownComponent )
+                        {
+                            WheelUpDownComponent mWheelUD = (WheelUpDownComponent)comp;
+                            MouseWheel mWheel = (MouseWheel)comp;
+                            
+                            if ( mWheel == MouseWheel.GLOBAL_WHEEL )
+                            {
+                                mWheel = mouse.getWheel();
+                                mWheelUD = ( mWheelUD.getIntValue() > 0 ) ? mWheel.getUp() : mWheel.getDown();
+                            }
+                            
+                            device = mWheel.getMouse();
+                            
+                            prevStates[ i ] = (short)0;
+                            currStates[ i ] = (short)mWheelUD.getIntValue();
+                        }
+                        else
+                        {
+                            MouseWheel mWheel = (MouseWheel)comp;
+                            
+                            if ( mWheel == MouseWheel.GLOBAL_WHEEL )
+                            {
+                                mWheel = mouse.getWheel();
+                            }
+                            
+                            device = mWheel.getMouse();
+                            currStates[ i ] = (short)mWheel.getIntValue();
+                        }
                         flag = true;
                         break;
                     case CONTROLLER_AXIS:

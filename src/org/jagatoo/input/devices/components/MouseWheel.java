@@ -38,11 +38,51 @@ import org.jagatoo.input.devices.Mouse;
  */
 public class MouseWheel extends AnalogDeviceComponent
 {
+    public class WheelUpDownComponent extends DeviceComponent
+    {
+        private final MouseWheel wheel;
+        
+        private final int intValue;
+        
+        public final MouseWheel getWheel()
+        {
+            return( wheel );
+        }
+        
+        public final int getIntValue()
+        {
+            return( intValue );
+        }
+        
+        protected WheelUpDownComponent( Type type, String name, MouseWheel wheel, int intValue )
+        {
+            super( type, name );
+            
+            this.wheel = wheel;
+            this.intValue = intValue;
+        }
+    }
+    
+    public static final MouseWheel GLOBAL_WHEEL = new MouseWheel( (Mouse)null );
+    
+    private final WheelUpDownComponent up = new WheelUpDownComponent( Type.MOUSE_WHEEL, "Mouse Wheel UP", this, 1 );
+    private final WheelUpDownComponent down = new WheelUpDownComponent( Type.MOUSE_WHEEL, "Mouse Wheel DOWN", this, -1 );
+    
     private final Mouse mouse;
     
     public final Mouse getMouse()
     {
         return( mouse );
+    }
+    
+    public final WheelUpDownComponent getUp()
+    {
+        return( up );
+    }
+    
+    public final WheelUpDownComponent getDown()
+    {
+        return( down );
     }
     
     public MouseWheel( Mouse mouse, String name )
