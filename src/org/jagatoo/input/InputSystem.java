@@ -67,6 +67,11 @@ public class InputSystem
         instance = inputSystem;
     }
     
+    public static final boolean hasInstance()
+    {
+        return( instance != null );
+    }
+    
     public static final InputSystem getInstance()
     {
         if ( instance == null )
