@@ -200,7 +200,7 @@ public abstract class DeviceComponent
      * @param delta
      * @param state
      */
-    public void notifyBoundActions( InputDevice device, int delta, int state )
+    public void notifyBoundActions( InputDevice device, int delta, int state, long nanoTime )
     {
         if ( actions == null )
             return;
@@ -209,7 +209,7 @@ public abstract class DeviceComponent
         {
             if ( ( actionDevices[ i ] == null ) || ( actionDevices[ i ] == device ) )
             {
-                actions[ i ].invokeAction( device, this, delta, state );
+                actions[ i ].invokeAction( device, this, delta, state, nanoTime );
             }
         }
     }

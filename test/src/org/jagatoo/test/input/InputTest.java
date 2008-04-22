@@ -230,7 +230,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             return( MyInputBinding.values().length );
         }
         
-        public void invokeAction( InputDevice device, DeviceComponent comp, int delta, int state )
+        public void invokeAction( InputDevice device, DeviceComponent comp, int delta, int state, long nanoTime )
         {
             if ( !isDebugFlagSet( DEBUG_MASK_TEST_ACTION ) )
                 return;
@@ -314,7 +314,7 @@ public class InputTest implements InputListener, InputHotPlugListener
     
     private void iteration( InputSystem is, final long time ) throws Throwable
     {
-        statesManager.update( bindingsManager, is.getKeyboard(), is.getMouse() );
+        statesManager.update( bindingsManager, is.getKeyboard(), is.getMouse(), time );
         
         if ( isDebugFlagSet( DEBUG_MASK_MYACTION ) )
         {

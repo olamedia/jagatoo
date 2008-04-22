@@ -205,12 +205,12 @@ public abstract class InputHandler< A extends InputAction >
     /**
      * Must be invoked each frame (if not keyboard is suspended).
      */
-    protected void pollInputStates()
+    protected void pollInputStates( long nanoTime )
     {
         final Keyboard keyboard = isKeyboardSuspended() ? getInputSystem().getKeyboard() : null;
         final Mouse mouse = isMouseSuspended() ? getInputSystem().getMouse() : null;
         
-        statesManager.update( getBindingsManager(), keyboard, mouse );
+        statesManager.update( getBindingsManager(), keyboard, mouse, nanoTime );
     }
     
     /**

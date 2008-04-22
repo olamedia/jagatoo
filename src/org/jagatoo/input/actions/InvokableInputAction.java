@@ -47,6 +47,7 @@ public interface InvokableInputAction extends InputAction
      * @param comp the bound device component
      * @param delta the delta of the previous and current state
      * @param state the current state
+     * @param nanoTime
      */
-    public void invokeAction( InputDevice device, DeviceComponent comp, int delta, int state );
+    public void invokeAction( InputDevice device, DeviceComponent comp, int delta, int state, long nanoTime );
 }

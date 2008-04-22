@@ -151,12 +151,14 @@ public class InputStatesManager
     /**
      * Polls the key-states for all bound keys and writes them into the boolean array.
      * 
-     * @param boundKeys the input-bindings
+     * @param inputBindings the input-bindings
      * @param keyboard the {@link Keyboard} to take the states from
      * @param mouse the {@link Mouse} to take the states from
-     * @param states the target state-array. Must have at least the same length as the number of actions.
+     * @param prevStates
+     * @param currStates the target state-array. Must have at least the same length as the number of actions.
+     * @param nanoTime
      */
-    private final void pollInputStates( final InputBindingsManager< ? extends InputAction > inputBindings, final Keyboard keyboard, final Mouse mouse, final short[] prevStates, final short[] currStates )
+    private final void pollInputStates( final InputBindingsManager< ? extends InputAction > inputBindings, final Keyboard keyboard, final Mouse mouse, final short[] prevStates, final short[] currStates, long nanoTime )
     {
         InputDevice device = null;
         final DeviceComponent[][] boundKeys = inputBindings.boundKeys;
@@ -269,7 +271,7 @@ public class InputStatesManager
                 {
                     final InvokableInputAction invAction = (InvokableInputAction)action;
                     
-                    invAction.invokeAction( device, comp, ( currStates[ i ] - prevStates[ i ] ), currStates[ i ] );
+                    invAction.invokeAction( device, comp, ( currStates[ i ] - prevStates[ i ] ), currStates[ i ], nanoTime );
                 }
             }
         }
@@ -281,8 +283,9 @@ public class InputStatesManager
      * @param inputBindings the {@link InputBindingsManager} to use for input-bindings
      * @param keyboard the {@link Keyboard} to take the states from
      * @param mouse the {@link Mouse} to take the states from
+     * @param nanoTime
      */
-    public void update( final InputBindingsManager< ? extends InputAction > inputBindings, final Keyboard keyboard, final Mouse mouse )
+    public void update( final InputBindingsManager< ? extends InputAction > inputBindings, final Keyboard keyboard, final Mouse mouse, long nanoTime )
     {
         if ( keyboard == null )
         {
@@ -303,7 +306,7 @@ public class InputStatesManager
             prevStates = states1;
         }
         
-        pollInputStates( inputBindings, keyboard, mouse, prevStates, currStates );
+        pollInputStates( inputBindings, keyboard, mouse, prevStates, currStates, nanoTime );
         
         if ( manipulator != null )
         {
