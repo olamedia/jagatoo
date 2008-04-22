@@ -45,7 +45,7 @@ import org.jagatoo.input.misc.InputSourceWindow;
 
 public abstract class Controller extends InputDevice
 {
-    private final ControllerFactory factory;
+    private final ControllerFactory sourceFactory;
     
     private final ControllerAxis[] axes;
     private final ControllerButton[] buttons;
@@ -60,9 +60,9 @@ public abstract class Controller extends InputDevice
     /**
      * @return the {@link ControllerFactory}, that created this instance.
      */
-    public final ControllerFactory getFactory()
+    public final ControllerFactory getSourceFactory()
     {
-        return( factory );
+        return( sourceFactory );
     }
     
     /**
@@ -276,11 +276,11 @@ public abstract class Controller extends InputDevice
     
     protected abstract ControllerButton[] createButtonsArray( Object implObj );
     
-    protected Controller( ControllerFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue, String name, Object implObj ) throws InputSystemException
+    protected Controller( ControllerFactory sourceFactory, InputSourceWindow sourceWindow, EventQueue eveneQueue, String name, Object implObj ) throws InputSystemException
     {
         super( sourceWindow, eveneQueue, name );
         
-        this.factory = factory;
+        this.sourceFactory = sourceFactory;
         
         this.axes = createAxesArray( implObj );
         this.lastWhen_axisChanged = new long[ axes.length ];

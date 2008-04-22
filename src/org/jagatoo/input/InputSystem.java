@@ -34,6 +34,7 @@ import java.util.HashSet;
 
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.ControllerFactory;
+import org.jagatoo.input.devices.InputDeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.KeyboardFactory;
 import org.jagatoo.input.devices.Mouse;
@@ -818,21 +819,21 @@ public class InputSystem
         
         for ( int i = keyboards.length - 1; i >= 0; i-- )
         {
-            factories.add( keyboards[ i ].getFactory() );
+            factories.add( keyboards[ i ].getSourceFactory() );
             
             deregisterKeyboard( keyboards[ i ] );
         }
         
         for ( int i = mouses.length - 1; i >= 0; i-- )
         {
-            factories.add( mouses[ i ].getFactory() );
+            factories.add( mouses[ i ].getSourceFactory() );
             
             deregisterMouse( mouses[ i ] );
         }
         
         for ( int i = controllers.length - 1; i >= 0; i-- )
         {
-            factories.add( controllers[ i ].getFactory() );
+            factories.add( controllers[ i ].getSourceFactory() );
             
             deregisterController( controllers[ i ] );
         }
@@ -846,6 +847,51 @@ public class InputSystem
             else if ( factory instanceof ControllerFactory )
                 ((ControllerFactory)factory).destroy( this );
         }
+    }
+    
+    public void destroy( KeyboardFactory deviceFactory ) throws InputSystemException
+    {
+        for ( int i = keyboards.length - 1; i >= 0; i-- )
+        {
+            if ( keyboards[ i ].getSourceFactory() == deviceFactory )
+                deregisterKeyboard( keyboards[ i ] );
+        }
+        
+        deviceFactory.destroy( this );
+    }
+    
+    public void destroy( MouseFactory deviceFactory ) throws InputSystemException
+    {
+        for ( int i = mouses.length - 1; i >= 0; i-- )
+        {
+            if ( mouses[ i ].getSourceFactory() == deviceFactory )
+                deregisterMouse( mouses[ i ] );
+        }
+        
+        deviceFactory.destroy( this );
+    }
+    
+    public void destroy( ControllerFactory deviceFactory ) throws InputSystemException
+    {
+        for ( int i = controllers.length - 1; i >= 0; i-- )
+        {
+            if ( controllers[ i ].getSourceFactory() == deviceFactory )
+                deregisterController( controllers[ i ] );
+        }
+        
+        deviceFactory.destroy( this );
+    }
+    
+    public void destroy( InputDeviceFactory deviceFactory ) throws InputSystemException
+    {
+        destroy( (KeyboardFactory)deviceFactory );
+        destroy( (MouseFactory)deviceFactory );
+        destroy( (ControllerFactory)deviceFactory );
+    }
+    
+    public void destroy( InputSourceWindow sourceWindow ) throws InputSystemException
+    {
+        destroy( sourceWindow.getInputDeviceFactory( this ) );
     }
     
     public InputSystem()

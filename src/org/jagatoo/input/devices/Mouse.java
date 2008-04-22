@@ -53,7 +53,7 @@ import org.jagatoo.input.misc.InputSourceWindow;
 
 public abstract class Mouse extends InputDevice
 {
-    private final MouseFactory factory;
+    private final MouseFactory sourceFactory;
     
     private final MouseAxis xAxis, yAxis;
     private final MouseButton[] buttons;
@@ -79,9 +79,9 @@ public abstract class Mouse extends InputDevice
     /**
      * @return the {@link MouseFactory}, that created this instance.
      */
-    public final MouseFactory getFactory()
+    public final MouseFactory getSourceFactory()
     {
-        return( factory );
+        return( sourceFactory );
     }
     
     public final void startMouseStopManager() throws InputSystemException
@@ -625,11 +625,11 @@ public abstract class Mouse extends InputDevice
         destroyImpl();
     }
     
-    protected Mouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue, String name, int numButtons, boolean hasWheel ) throws InputSystemException
+    protected Mouse( MouseFactory sourceFactory, InputSourceWindow sourceWindow, EventQueue eveneQueue, String name, int numButtons, boolean hasWheel ) throws InputSystemException
     {
         super( sourceWindow, eveneQueue, name );
         
-        this.factory = factory;
+        this.sourceFactory = sourceFactory;
         
         this.xAxis = new MouseAxis( this, 'X', "Mouse-X-Axis" );
         this.yAxis = new MouseAxis( this, 'Y', "Mouse-Y-Axis" );

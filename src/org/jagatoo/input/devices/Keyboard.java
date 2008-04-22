@@ -46,7 +46,7 @@ import org.jagatoo.input.misc.InputSourceWindow;
 
 public abstract class Keyboard extends InputDevice
 {
-    private final KeyboardFactory factory;
+    private final KeyboardFactory sourceFactory;
     
     private final boolean[] keyStates;
     
@@ -57,9 +57,9 @@ public abstract class Keyboard extends InputDevice
     /**
      * @return the {@link KeyboardFactory}, that created this instance.
      */
-    public final KeyboardFactory getFactory()
+    public final KeyboardFactory getSourceFactory()
     {
-        return( factory );
+        return( sourceFactory );
     }
     
     public void addKeyboardListener( KeyboardListener l )
@@ -278,11 +278,11 @@ public abstract class Keyboard extends InputDevice
         destroyImpl();
     }
     
-    protected Keyboard( KeyboardFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue, String name ) throws InputSystemException
+    protected Keyboard( KeyboardFactory sourceFactory, InputSourceWindow sourceWindow, EventQueue eveneQueue, String name ) throws InputSystemException
     {
         super( sourceWindow, eveneQueue, name );
         
-        this.factory = factory;
+        this.sourceFactory = sourceFactory;
         
         this.keyStates = new boolean[ Keys.getNumKeys() ];
         java.util.Arrays.fill( keyStates, false );
