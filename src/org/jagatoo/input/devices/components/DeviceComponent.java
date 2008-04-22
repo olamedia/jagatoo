@@ -200,7 +200,7 @@ public abstract class DeviceComponent
      * @param delta
      * @param state
      */
-    public void notifyBoundActions( InputDevice device, short delta, short state )
+    public void notifyBoundActions( InputDevice device, int delta, int state )
     {
         if ( actions == null )
             return;

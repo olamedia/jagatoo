@@ -120,9 +120,9 @@ public abstract class Controller extends InputDevice
         return( false );
     }
     
-    public final short getButtonState( ControllerButton button )
+    public final int getButtonState( ControllerButton button )
     {
-        return( isButtonPressed( button ) ? (short)1 : (short)0 );
+        return( isButtonPressed( button ) ? 1 : 0 );
     }
     
     protected final ControllerButtonPressedEvent prepareControllerButtonPressed( ControllerButton button, long when )

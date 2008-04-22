@@ -48,5 +48,5 @@ public interface InvokableInputAction extends InputAction
      * @param delta the delta of the previous and current state
      * @param state the current state
      */
-    public void invokeAction( InputDevice device, DeviceComponent comp, short delta, short state );
+    public void invokeAction( InputDevice device, DeviceComponent comp, int delta, int state );
 }

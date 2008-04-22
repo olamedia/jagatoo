@@ -125,7 +125,7 @@ public abstract class InputDevice implements Enableable
         }
         
         if ( e.getComponent() != null )
-            e.getComponent().notifyBoundActions( this, (short)delta, (short)state );
+            e.getComponent().notifyBoundActions( this, delta, state );
     }
     
     /**

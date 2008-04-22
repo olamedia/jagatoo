@@ -55,6 +55,7 @@ public class InputStatesManager
     protected final short[] states1;
     protected final short[] states2;
     
+    protected short[] prevStates;
     protected short[] currStates;
     
     protected boolean swapper = false;
@@ -154,7 +155,7 @@ public class InputStatesManager
      * @param mouse the {@link Mouse} to take the states from
      * @param states the target state-array. Must have at least the same length as the number of actions.
      */
-    private final void pollInputStates( final InputBindingsManager< ? extends InputAction > inputBindings, final Keyboard keyboard, final Mouse mouse, final short[] states )
+    private final void pollInputStates( final InputBindingsManager< ? extends InputAction > inputBindings, final Keyboard keyboard, final Mouse mouse, final short[] prevStates, final short[] currStates )
     {
         InputDevice device = null;
         final DeviceComponent[][] boundKeys = inputBindings.boundKeys;
@@ -165,7 +166,7 @@ public class InputStatesManager
         for ( int i = 0; i < numActions; i++ )
         {
             flag = false;
-            states[ i ] = 0;
+            currStates[ i ] = 0;
             for ( int j = 0; ( j < numBindingSets ) && !flag && ( boundKeys[ i ] != null ); j++ )
             {
                 final DeviceComponent comp = boundKeys[ i ][ j ];
@@ -174,42 +175,42 @@ public class InputStatesManager
                 {
                     case KEY:
                         device = keyboard;
-                        states[ i ] = keyboard.isKeyPressed( (Key)comp ) ? (short)1 : (short)0;
+                        currStates[ i ] = keyboard.isKeyPressed( (Key)comp ) ? (short)1 : (short)0;
                         flag = true;
                         break;
                     case MOUSE_AXIS:
                         final MouseAxis mAxis = (MouseAxis)comp;
                         device = mAxis.getMouse();
-                        states[ i ] = (short)mAxis.getIntValue();
+                        currStates[ i ] = (short)mAxis.getIntValue();
                         flag = true;
                         break;
                     case MOUSE_BUTTON:
-                        states[ i ] = mouse.isButtonPressed( (MouseButton)comp ) ? (short)1 : (short)0;
+                        currStates[ i ] = mouse.isButtonPressed( (MouseButton)comp ) ? (short)1 : (short)0;
                         device = mouse;
                         flag = true;
                         break;
                     case MOUSE_WHEEL:
                         final MouseWheel mWheel = (MouseWheel)comp;
                         device = mWheel.getMouse();
-                        states[ i ] = (short)mWheel.getIntValue();
+                        currStates[ i ] = (short)mWheel.getIntValue();
                         flag = true;
                         break;
                     case CONTROLLER_AXIS:
                         ControllerAxis cAxis = (ControllerAxis)comp;
                         device = cAxis.getController();
-                        states[ i ] = (short)cAxis.getIntValue();
+                        currStates[ i ] = (short)cAxis.getIntValue();
                         flag = true;
                         break;
                     case CONTROLLER_BUTTON:
                         ControllerButton cButton = (ControllerButton)comp;
                         device = cButton.getController();
-                        states[ i ] = cButton.getBooleanState() ? (short)1 : (short)0;
+                        currStates[ i ] = cButton.getBooleanState() ? (short)1 : (short)0;
                         flag = true;
                         break;
                 }
             }
             
-            if ( states1[ i ] != states2[ i ] )
+            if ( currStates[ i ] != prevStates[ i ] )
             {
                 int j = 0;
                 DeviceComponent comp = boundKeys[ i ][ j ];
@@ -224,10 +225,7 @@ public class InputStatesManager
                 {
                     final InvokableInputAction invAction = (InvokableInputAction)action;
                     
-                    if ( states == states1 )
-                        invAction.invokeAction( device, comp, (short)( states1[ i ] - states2[ i ] ), states1[ i ] );
-                    else
-                        invAction.invokeAction( device, comp, (short)( states2[ i ] - states1[ i ] ), states2[ i ] );
+                    invAction.invokeAction( device, comp, ( currStates[ i ] - prevStates[ i ] ), currStates[ i ] );
                 }
             }
         }
@@ -251,11 +249,17 @@ public class InputStatesManager
         swapper = !swapper;
         
         if ( swapper )
+        {
             currStates = states1;
+            prevStates = states2;
+        }
         else
+        {
             currStates = states2;
+            prevStates = states1;
+        }
         
-        pollInputStates( inputBindings, keyboard, mouse, currStates );
+        pollInputStates( inputBindings, keyboard, mouse, prevStates, currStates );
         
         if ( manipulator != null )
         {

@@ -230,7 +230,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             return( MyInputBinding.values().length );
         }
         
-        public void invokeAction( InputDevice device, DeviceComponent comp, short delta, short state )
+        public void invokeAction( InputDevice device, DeviceComponent comp, int delta, int state )
         {
             if ( !isDebugFlagSet( DEBUG_MASK_TEST_ACTION ) )
                 return;
