@@ -119,7 +119,7 @@ public class InputStatesManager
      * 
      * @return the current key-state for the given action.
      */
-    public final short getSimpleInputState( InputAction action )
+    public final int getSimpleInputState( InputAction action )
     {
         return( currStates[ action.ordinal() ] );
     }
@@ -175,22 +175,35 @@ public class InputStatesManager
                 switch ( comp.getType() )
                 {
                     case KEY:
+                        flag = true;
+                        
+                        if ( keyboard == null )
+                            continue;
+                        
                         device = keyboard;
                         currStates[ i ] = keyboard.isKeyPressed( (Key)comp ) ? (short)1 : (short)0;
-                        flag = true;
                         break;
                     case MOUSE_AXIS:
+                        flag = true;
+                        
+                        if ( mouse == null )
+                            continue;
+                        
                         final MouseAxis mAxis = (MouseAxis)comp;
                         device = mAxis.getMouse();
                         currStates[ i ] = (short)mAxis.getIntValue();
-                        flag = true;
                         break;
                     case MOUSE_BUTTON:
+                        flag = true;
+                        
+                        if ( mouse == null )
+                            continue;
+                        
                         currStates[ i ] = mouse.isButtonPressed( (MouseButton)comp ) ? (short)1 : (short)0;
                         device = mouse;
-                        flag = true;
                         break;
                     case MOUSE_WHEEL:
+                        flag = true;
                         if ( comp instanceof WheelUpDownComponent )
                         {
                             WheelUpDownComponent mWheelUD = (WheelUpDownComponent)comp;
@@ -198,6 +211,9 @@ public class InputStatesManager
                             
                             if ( mWheel == MouseWheel.GLOBAL_WHEEL )
                             {
+                                if ( mouse == null )
+                                    continue;
+                                
                                 mWheel = mouse.getWheel();
                                 mWheelUD = ( mWheelUD.getIntValue() > 0 ) ? mWheel.getUp() : mWheel.getDown();
                             }
@@ -213,25 +229,27 @@ public class InputStatesManager
                             
                             if ( mWheel == MouseWheel.GLOBAL_WHEEL )
                             {
+                                if ( mouse == null )
+                                    continue;
+                                
                                 mWheel = mouse.getWheel();
                             }
                             
                             device = mWheel.getMouse();
                             currStates[ i ] = (short)mWheel.getIntValue();
                         }
-                        flag = true;
                         break;
                     case CONTROLLER_AXIS:
+                        flag = true;
                         ControllerAxis cAxis = (ControllerAxis)comp;
                         device = cAxis.getController();
                         currStates[ i ] = (short)cAxis.getIntValue();
-                        flag = true;
                         break;
                     case CONTROLLER_BUTTON:
+                        flag = true;
                         ControllerButton cButton = (ControllerButton)comp;
                         device = cButton.getController();
                         currStates[ i ] = cButton.getBooleanState() ? (short)1 : (short)0;
-                        flag = true;
                         break;
                 }
             }

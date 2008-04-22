@@ -36,6 +36,8 @@ package org.jagatoo.input.handlers;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.actions.InputAction;
+import org.jagatoo.input.devices.Keyboard;
+import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.managers.InputBindingsManager;
 import org.jagatoo.input.managers.InputStatesManager;
 
@@ -203,12 +205,12 @@ public abstract class InputHandler< A extends InputAction >
     /**
      * Must be invoked each frame (if not keyboard is suspended).
      */
-    protected void pollKeyStates()
+    protected void pollInputStates()
     {
-        if ( !isKeyboardSuspended() )
-        {
-            statesManager.update( getBindingsManager(), getInputSystem().getKeyboard(), getInputSystem().getMouse() );
-        }
+        final Keyboard keyboard = isKeyboardSuspended() ? getInputSystem().getKeyboard() : null;
+        final Mouse mouse = isMouseSuspended() ? getInputSystem().getMouse() : null;
+        
+        statesManager.update( getBindingsManager(), keyboard, mouse );
     }
     
     /**
