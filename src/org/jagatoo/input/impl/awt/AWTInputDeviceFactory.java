@@ -32,7 +32,7 @@ package org.jagatoo.input.impl.awt;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Controller;
-import org.jagatoo.input.devices.DeviceFactory;
+import org.jagatoo.input.devices.InputDeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.EventQueue;
@@ -43,7 +43,7 @@ import org.jagatoo.input.misc.InputSourceWindow;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class AWTDeviceFactory extends DeviceFactory
+public class AWTInputDeviceFactory extends InputDeviceFactory
 {
     /**
      * {@inheritDoc}
@@ -96,7 +96,7 @@ public class AWTDeviceFactory extends DeviceFactory
     {
     }
     
-    public AWTDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
+    public AWTInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
     {
         super( sourceWindow, eveneQueue );
     }

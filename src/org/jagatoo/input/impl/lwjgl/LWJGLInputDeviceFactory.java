@@ -32,7 +32,7 @@ package org.jagatoo.input.impl.lwjgl;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Controller;
-import org.jagatoo.input.devices.DeviceFactory;
+import org.jagatoo.input.devices.InputDeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.EventQueue;
@@ -43,7 +43,7 @@ import org.jagatoo.input.misc.InputSourceWindow;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class LWJGLDeviceFactory extends DeviceFactory
+public class LWJGLInputDeviceFactory extends InputDeviceFactory
 {
     private static long lastUpdateTime = -1L;
     
@@ -167,7 +167,7 @@ public class LWJGLDeviceFactory extends DeviceFactory
         }
     }
     
-    public LWJGLDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
+    public LWJGLInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
     {
         super( sourceWindow, eveneQueue );
     }

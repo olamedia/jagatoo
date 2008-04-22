@@ -192,7 +192,7 @@ public class LWJGLKeyboard extends Keyboard
         
         try
         {
-            LWJGLDeviceFactory.processMessages( nanoTime );
+            LWJGLInputDeviceFactory.processMessages( nanoTime );
             
             org.lwjgl.input.Keyboard.poll();
             

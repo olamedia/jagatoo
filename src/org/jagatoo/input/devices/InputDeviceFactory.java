@@ -40,7 +40,7 @@ import org.jagatoo.input.misc.InputSourceWindow;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public abstract class DeviceFactory implements KeyboardFactory, MouseFactory, ControllerFactory
+public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactory, ControllerFactory
 {
     private final EventQueue eveneQueue;
     private final InputSourceWindow sourceWindow;
@@ -170,7 +170,7 @@ public abstract class DeviceFactory implements KeyboardFactory, MouseFactory, Co
      */
     public abstract void destroy( InputSystem inputSystem ) throws InputSystemException;
     
-    public DeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
+    public InputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
     {
         this.sourceWindow = sourceWindow;
         this.eveneQueue = eveneQueue;

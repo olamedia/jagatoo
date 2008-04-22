@@ -59,8 +59,8 @@ import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseStoppedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
-import org.jagatoo.input.impl.awt.AWTDeviceFactory;
-import org.jagatoo.input.impl.lwjgl.LWJGLDeviceFactory;
+import org.jagatoo.input.impl.awt.AWTInputDeviceFactory;
+import org.jagatoo.input.impl.lwjgl.LWJGLInputDeviceFactory;
 import org.jagatoo.input.listeners.InputListener;
 import org.jagatoo.input.managers.InputHotPlugListener;
 import org.jagatoo.input.managers.InputBindingsManager;
@@ -287,7 +287,7 @@ public class InputTest implements InputListener, InputHotPlugListener
         
         try
         {
-            Controller[] controllers = sourceWindow.getDeviceFactory( is ).getControllers( false );
+            Controller[] controllers = sourceWindow.getInputDeviceFactory( is ).getControllers( false );
             if ( controllers.length > 0 )
             {
                 System.out.println( controllers[ 0 ].getName() );
@@ -306,7 +306,7 @@ public class InputTest implements InputListener, InputHotPlugListener
         /*
          * Listen for hot-plugged InputDevices.
          */
-        hotplugManager.registerDeviceFactory( sourceWindow.getDeviceFactory( is ) );
+        hotplugManager.registerDeviceFactory( sourceWindow.getInputDeviceFactory( is ) );
         hotplugManager.addHotPlugListener( this );
         hotplugManager.start();
     }
@@ -347,18 +347,18 @@ public class InputTest implements InputListener, InputHotPlugListener
     private static class LWJGLSourceWindow implements InputSourceWindow
     {
         private Cursor cursor = Cursor.DEFAULT_CURSOR;
-        private static LWJGLDeviceFactory deviceFactory = null;
+        private static LWJGLInputDeviceFactory deviceFactory = null;
         
         public Object getDrawable()
         {
             return( null );
         }
         
-        public LWJGLDeviceFactory getDeviceFactory( InputSystem inputSystem )
+        public LWJGLInputDeviceFactory getInputDeviceFactory( InputSystem inputSystem )
         {
             if ( deviceFactory == null )
             {
-                deviceFactory = new LWJGLDeviceFactory( this, inputSystem.getEventQueue() );
+                deviceFactory = new LWJGLInputDeviceFactory( this, inputSystem.getEventQueue() );
             }
             
             return( deviceFactory );
@@ -398,7 +398,7 @@ public class InputTest implements InputListener, InputHotPlugListener
     {
         final java.awt.Component component;
         
-        private AWTDeviceFactory deviceFactory = null;
+        private AWTInputDeviceFactory deviceFactory = null;
         private Cursor cursor = Cursor.DEFAULT_CURSOR;
         
         public Object getDrawable()
@@ -406,11 +406,11 @@ public class InputTest implements InputListener, InputHotPlugListener
             return( component );
         }
         
-        public AWTDeviceFactory getDeviceFactory( InputSystem inputSystem )
+        public AWTInputDeviceFactory getInputDeviceFactory( InputSystem inputSystem )
         {
             if ( deviceFactory == null )
             {
-                deviceFactory = new AWTDeviceFactory( this, inputSystem.getEventQueue() );
+                deviceFactory = new AWTInputDeviceFactory( this, inputSystem.getEventQueue() );
             }
             
             return( deviceFactory );

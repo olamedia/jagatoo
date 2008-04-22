@@ -229,7 +229,7 @@ public class InputSystem
      */
     public final Keyboard registerNewKeyboard( InputSourceWindow sourceWindow ) throws InputSystemException
     {
-        return( registerNewKeyboard( sourceWindow.getDeviceFactory( this ) ) );
+        return( registerNewKeyboard( sourceWindow.getInputDeviceFactory( this ) ) );
     }
     
     /**
@@ -418,7 +418,7 @@ public class InputSystem
      */
     public final Mouse registerNewMouse( InputSourceWindow sourceWindow ) throws InputSystemException
     {
-        return( registerNewMouse( sourceWindow.getDeviceFactory( this ) ) );
+        return( registerNewMouse( sourceWindow.getInputDeviceFactory( this ) ) );
     }
     
     /**
@@ -607,7 +607,7 @@ public class InputSystem
      */
     public final Controller registerNewController( InputSourceWindow sourceWindow ) throws InputSystemException
     {
-        return( registerNewController( sourceWindow.getDeviceFactory( this ) ) );
+        return( registerNewController( sourceWindow.getInputDeviceFactory( this ) ) );
     }
     
     /**

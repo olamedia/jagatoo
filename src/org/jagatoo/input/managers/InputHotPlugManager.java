@@ -35,7 +35,7 @@ import java.util.HashMap;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.ControllerFactory;
-import org.jagatoo.input.devices.DeviceFactory;
+import org.jagatoo.input.devices.InputDeviceFactory;
 import org.jagatoo.input.devices.InputDevice;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.KeyboardFactory;
@@ -237,7 +237,7 @@ public class InputHotPlugManager implements Runnable
     }
     
     /**
-     * Registers a {@link DeviceFactory} to be polled for hot-plugged devices.<br>
+     * Registers a {@link InputDeviceFactory} to be polled for hot-plugged devices.<br>
      * This simply calls {@link #registerKeyboardFactory(KeyboardFactory)},
      * {@link #registerMouseFactory(MouseFactory)} and {@link #registerControllerFactory(ControllerFactory)}.
      * 
@@ -245,7 +245,7 @@ public class InputHotPlugManager implements Runnable
      * 
      * @throws InputSystemException
      */
-    public void registerDeviceFactory( DeviceFactory factory ) throws InputSystemException
+    public void registerDeviceFactory( InputDeviceFactory factory ) throws InputSystemException
     {
         registerKeyboardFactory( factory );
         registerMouseFactory( factory );
@@ -253,7 +253,7 @@ public class InputHotPlugManager implements Runnable
     }
     
     /**
-     * Deregisters a {@link DeviceFactory}.<br>
+     * Deregisters a {@link InputDeviceFactory}.<br>
      * This simply calls {@link #deregisterKeyboardFactory(KeyboardFactory)},
      * {@link #deregisterMouseFactory(MouseFactory)} and {@link #deregisterControllerFactory(ControllerFactory)}.
      * 
@@ -261,7 +261,7 @@ public class InputHotPlugManager implements Runnable
      * 
      * @throws InputSystemException
      */
-    public void deregisterDeviceFactory( DeviceFactory factory ) throws InputSystemException
+    public void deregisterDeviceFactory( InputDeviceFactory factory ) throws InputSystemException
     {
         deregisterKeyboardFactory( factory );
         deregisterMouseFactory( factory );

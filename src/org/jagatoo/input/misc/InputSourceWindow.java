@@ -30,7 +30,7 @@
 package org.jagatoo.input.misc;
 
 import org.jagatoo.input.InputSystem;
-import org.jagatoo.input.devices.DeviceFactory;
+import org.jagatoo.input.devices.InputDeviceFactory;
 
 /**
  * This is an abstraction of the link between the input system
@@ -51,7 +51,7 @@ public interface InputSourceWindow
      * 
      * @param inputSystem
      */
-    public DeviceFactory getDeviceFactory( InputSystem inputSystem );
+    public InputDeviceFactory getInputDeviceFactory( InputSystem inputSystem );
     
     /**
      * @return must return <code>true</code>, for the InputSystem to
