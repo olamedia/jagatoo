@@ -238,12 +238,17 @@ public abstract class InputHandler< A extends InputAction >
         return( inputSystem );
     }
     
+    protected InputStatesManager createInputStatesManager( int numActions )
+    {
+        return( new InputStatesManager( numActions ) );
+    }
+    
     public InputHandler( InputBindingsManager< A > bindingsManager )
     {
         this.bindingsManager = bindingsManager;
         if ( bindingsManager == null )
             this.statesManager = null;
         else
-            this.statesManager = new InputStatesManager( bindingsManager.getNumActions() );
+            this.statesManager = createInputStatesManager( bindingsManager.getNumActions() );
     }
 }
