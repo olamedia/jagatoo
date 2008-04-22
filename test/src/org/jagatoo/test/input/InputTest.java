@@ -354,7 +354,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             return( null );
         }
         
-        public boolean receivsInputEvents()
+        public boolean receivesInputEvents()
         {
             return( true );
         }
@@ -395,7 +395,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             return( component );
         }
         
-        public boolean receivsInputEvents()
+        public boolean receivesInputEvents()
         {
             return( true );
         }

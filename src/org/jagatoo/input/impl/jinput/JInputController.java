@@ -62,7 +62,7 @@ public class JInputController extends Controller
     
     protected final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
-        if ( !getSourceWindow().receivsInputEvents() )
+        if ( !getSourceWindow().receivesInputEvents() )
             return;
         
         final boolean isQueued = ( eventQueue != null );

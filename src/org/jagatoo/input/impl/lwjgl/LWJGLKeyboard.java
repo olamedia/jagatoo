@@ -195,7 +195,7 @@ public class LWJGLKeyboard extends Keyboard
             
             while ( org.lwjgl.input.Keyboard.next() )
             {
-                if ( !getSourceWindow().receivsInputEvents() )
+                if ( !getSourceWindow().receivesInputEvents() )
                     continue;
                 
                 final int keyCode = org.lwjgl.input.Keyboard.getEventKey();

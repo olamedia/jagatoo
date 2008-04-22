@@ -415,7 +415,7 @@ public class AWTKeyboard extends Keyboard
         if ( !isEnabled() )
             return;
         
-        if ( !getSourceWindow().receivsInputEvents() )
+        if ( !getSourceWindow().receivesInputEvents() )
             return;
         
         switch ( _e.getID() )

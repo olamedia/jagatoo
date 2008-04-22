@@ -250,7 +250,7 @@ public class AWTMouse extends Mouse
         if ( !isEnabled() )
             return;
         
-        if ( !getSourceWindow().receivsInputEvents() )
+        if ( !getSourceWindow().receivesInputEvents() )
             return;
         
         switch ( _e.getID() )

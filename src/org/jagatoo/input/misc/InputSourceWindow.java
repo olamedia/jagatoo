@@ -46,7 +46,7 @@ public interface InputSourceWindow
      * @return must return <code>true</code>, for the InputSystem to
      * accept events from this source.
      */
-    public boolean receivsInputEvents();
+    public boolean receivesInputEvents();
     
     /**
      * @return the window's width.

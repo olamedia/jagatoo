@@ -36,6 +36,7 @@ import org.jagatoo.input.devices.DeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.handlers.InputHandler;
 import org.jagatoo.input.listeners.InputStateListener;
 import org.jagatoo.input.misc.InputSourceWindow;
 
@@ -55,6 +56,8 @@ public abstract class InputSystem
     
     private final ArrayList< InputStateListener > inputStateListeners = new ArrayList< InputStateListener >();
     
+    private final ArrayList< InputHandler< ? > > inputHandlers = new ArrayList< InputHandler< ? > >();
+    
     protected final void setDeviceFactory( DeviceFactory devFact )
     {
         this.deviceFactory = devFact;
@@ -63,6 +66,17 @@ public abstract class InputSystem
     public final DeviceFactory getDeviceFactory()
     {
         return( deviceFactory );
+    }
+    
+    public void addInputHandler( InputHandler< ? > inputHandler )
+    {
+        if ( !inputHandlers.contains( inputHandler ) )
+            inputHandlers.add( inputHandler );
+    }
+    
+    public void removeInputHandler( InputHandler< ? > inputHandler )
+    {
+        inputHandlers.remove( inputHandler );
     }
     
     public void addInputStateListener( InputStateListener l )
@@ -625,6 +639,14 @@ public abstract class InputSystem
         }
     }
     
+    protected void updateInputHandlers( long nanoTime ) throws InputSystemException
+    {
+        for ( int i = 0; i < inputHandlers.size(); i++ )
+        {
+            inputHandlers.get( i ).update( nanoTime );
+        }
+    }
+    
     /**
      * Processes pending events from the system
      * and directly fires them (notifes the listeners).<br>
@@ -641,6 +663,8 @@ public abstract class InputSystem
         updateKeyboards( nanoTime );
         updateMouses( nanoTime );
         updateControllers( eventQueue, nanoTime );
+        
+        updateInputHandlers( nanoTime );
     }
     
     public void destroy() throws InputSystemException

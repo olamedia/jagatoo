@@ -230,7 +230,7 @@ public class JInputKeyboard extends Keyboard
             
             while ( keyboard.getEventQueue().getNextEvent( event ) )
             {
-                if ( !getSourceWindow().receivsInputEvents() )
+                if ( !getSourceWindow().receivesInputEvents() )
                     continue;
                 
                 Key key = keyMap.get( event.getComponent() );

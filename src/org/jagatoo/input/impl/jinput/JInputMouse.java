@@ -138,7 +138,7 @@ public class JInputMouse extends Mouse
             
             while ( mouse.getEventQueue().getNextEvent( event ) )
             {
-                if ( !getSourceWindow().receivsInputEvents() )
+                if ( !getSourceWindow().receivesInputEvents() )
                     continue;
                 
                 final DeviceComponent comp = compMap.get( event.getComponent() );

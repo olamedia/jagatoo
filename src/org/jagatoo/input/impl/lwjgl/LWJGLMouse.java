@@ -141,7 +141,7 @@ public class LWJGLMouse extends Mouse
             
             while ( org.lwjgl.input.Mouse.next() )
             {
-                if ( !getSourceWindow().receivsInputEvents() )
+                if ( !getSourceWindow().receivesInputEvents() )
                     continue;
                 
                 final int x = org.lwjgl.input.Mouse.getEventX();
