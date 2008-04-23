@@ -35,10 +35,10 @@ package org.jagatoo.input.actions;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public abstract class AbstractInvokableInputAction extends AbstractInputAction implements InvokableInputAction
+public interface LabeledInputAction extends InputAction
 {
-    public AbstractInvokableInputAction( int ordinal )
-    {
-        super( ordinal );
-    }
+    /**
+     * @return a description-text for this InputAction.
+     */
+    public String getText();
 }
