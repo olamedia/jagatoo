@@ -184,13 +184,13 @@ public abstract class InputDevice implements Enableable
      */
     public abstract void destroy() throws InputSystemException;
     
-    public InputDevice( InputSourceWindow sourceWindow, EventQueue eveneQueue, String name ) throws InputSystemException
+    public InputDevice( InputSourceWindow sourceWindow, EventQueue eventQueue, String name ) throws InputSystemException
     {
         if ( sourceWindow == null )
             throw( new InputSystemException( "The InputSourceWindow must not be null." ) );
         
         this.sourceWindow = sourceWindow;
-        this.eventQueue = eveneQueue;
+        this.eventQueue = eventQueue;
         this.name = name;
         
         if ( name == null )

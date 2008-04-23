@@ -27,41 +27,47 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.impl.awt;
+package org.jagatoo.input.impl.mixed;
 
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
-import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.InputDeviceFactory;
-import org.jagatoo.input.devices.Keyboard;
-import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.impl.jinput.JInputController;
+import org.jagatoo.input.impl.jinput.JInputInputDeviceFactory;
+import org.jagatoo.input.impl.awt.AWTInputDeviceFactory;
+import org.jagatoo.input.impl.awt.AWTKeyboard;
+import org.jagatoo.input.impl.awt.AWTMouse;
 import org.jagatoo.input.misc.InputSourceWindow;
 
 /**
- * Insert type comment here.
+ * This {@link InputDeviceFactory} is backed by an {@link AWTInputDeviceFactory}
+ * for Keyboards and Mouses and a {@link JInputInputDeviceFactory} for Controllers.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class AWTInputDeviceFactory extends InputDeviceFactory
+public class AWTJInputInputDeviceFactory extends InputDeviceFactory
 {
+    private final AWTInputDeviceFactory awtFactory;
+    private final JInputInputDeviceFactory jInputFactory;
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected synchronized final void flushCache( boolean keyboards, boolean mouses, boolean controllers )
+    {
+        flushCache( awtFactory, keyboards, mouses, false );
+        flushCache( jInputFactory, false, false, controllers );
+    }
+    
     /**
      * {@inheritDoc}
      */
     @Override
     protected AWTMouse[] initMouses() throws InputSystemException
     {
-        Mouse[] currentMouses = getCachedMouses();
-        
-        if ( ( currentMouses != null ) && ( currentMouses.length == 1 ) )
-        {
-            if ( ( currentMouses[ 0 ] instanceof AWTMouse ) && ( currentMouses[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
-            {
-                return( new AWTMouse[] { (AWTMouse)currentMouses[ 0 ] } );
-            }
-        }
-        
-        return( new AWTMouse[] { new AWTMouse( this, getSourceWindow(), getEveneQueue() ) } );
+        return( (AWTMouse[])initMouses( awtFactory ) );
     }
     
     /**
@@ -70,26 +76,16 @@ public class AWTInputDeviceFactory extends InputDeviceFactory
     @Override
     protected AWTKeyboard[] initKeyboards() throws InputSystemException
     {
-        Keyboard[] currentKeyboards = getCachedKeyboards();
-        
-        if ( ( currentKeyboards != null ) && ( currentKeyboards.length == 1 ) )
-        {
-            if ( ( currentKeyboards[ 0 ] instanceof AWTKeyboard ) && ( currentKeyboards[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
-            {
-                return( new AWTKeyboard[] { (AWTKeyboard)currentKeyboards[ 0 ] } );
-            }
-        }
-        
-        return( new AWTKeyboard[] { new AWTKeyboard( this, getSourceWindow(), getEveneQueue() ) } );
+        return( (AWTKeyboard[])initKeyboards( awtFactory ) );
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    protected Controller[] initControllers() throws InputSystemException
+    protected JInputController[] initControllers() throws InputSystemException
     {
-        return( new Controller[ 0 ] );
+        return( (JInputController[])initControllers( jInputFactory ) );
     }
     
     /**
@@ -98,10 +94,15 @@ public class AWTInputDeviceFactory extends InputDeviceFactory
     @Override
     public void destroy( InputSystem inputSystem ) throws InputSystemException
     {
+        awtFactory.destroy( inputSystem );
+        jInputFactory.destroy( inputSystem );
     }
     
-    public AWTInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
+    public AWTJInputInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
-        super( false, sourceWindow, eventQueue );
+        super( true, sourceWindow, eventQueue );
+        
+        this.awtFactory = new AWTInputDeviceFactory( sourceWindow, eventQueue );
+        this.jInputFactory = new JInputInputDeviceFactory( sourceWindow, eventQueue );
     }
 }

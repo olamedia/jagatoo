@@ -625,9 +625,9 @@ public abstract class Mouse extends InputDevice
         destroyImpl();
     }
     
-    protected Mouse( MouseFactory sourceFactory, InputSourceWindow sourceWindow, EventQueue eveneQueue, String name, int numButtons, boolean hasWheel ) throws InputSystemException
+    protected Mouse( MouseFactory sourceFactory, InputSourceWindow sourceWindow, EventQueue eventQueue, String name, int numButtons, boolean hasWheel ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, name );
+        super( sourceWindow, eventQueue, name );
         
         this.sourceFactory = sourceFactory;
         

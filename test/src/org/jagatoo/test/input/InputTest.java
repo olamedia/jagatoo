@@ -33,10 +33,11 @@ import javax.media.opengl.GL;
 
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
-import org.jagatoo.input.actions.InvokableInputAction;
 import org.jagatoo.input.actions.InputAction;
+import org.jagatoo.input.actions.InvokableInputAction;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.InputDevice;
+import org.jagatoo.input.devices.InputDeviceFactory;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
 import org.jagatoo.input.devices.components.DeviceComponent;
@@ -59,11 +60,9 @@ import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseStoppedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
-import org.jagatoo.input.impl.awt.AWTInputDeviceFactory;
-import org.jagatoo.input.impl.lwjgl.LWJGLInputDeviceFactory;
 import org.jagatoo.input.listeners.InputListener;
-import org.jagatoo.input.managers.InputHotPlugListener;
 import org.jagatoo.input.managers.InputBindingsManager;
+import org.jagatoo.input.managers.InputHotPlugListener;
 import org.jagatoo.input.managers.InputHotPlugManager;
 import org.jagatoo.input.managers.InputStatesManager;
 import org.jagatoo.input.misc.Cursor;
@@ -86,9 +85,9 @@ public class InputTest implements InputListener, InputHotPlugListener
     private static int debugMask = ~0;
     static
     {
-        debugMask &= ~DEBUG_MASK_EVENTS;
-        debugMask &= ~DEBUG_MASK_TEST_ACTION;
-        debugMask &= ~DEBUG_MASK_MYACTION;
+        //debugMask &= ~DEBUG_MASK_EVENTS;
+        //debugMask &= ~DEBUG_MASK_TEST_ACTION;
+        //debugMask &= ~DEBUG_MASK_MYACTION;
     }
     
     private final InputHotPlugManager hotplugManager = new InputHotPlugManager();
@@ -303,6 +302,10 @@ public class InputTest implements InputListener, InputHotPlugListener
             ex.printStackTrace();
         }
         
+        System.out.println( is.getKeyboard() );
+        System.out.println( is.getMouse() );
+        System.out.println( is.getController() );
+        
         setupInputBindings( is );
         
         /*
@@ -349,18 +352,19 @@ public class InputTest implements InputListener, InputHotPlugListener
     private static class LWJGLSourceWindow implements InputSourceWindow
     {
         private Cursor cursor = Cursor.DEFAULT_CURSOR;
-        private static LWJGLInputDeviceFactory deviceFactory = null;
+        private static InputDeviceFactory deviceFactory = null;
         
         public Object getDrawable()
         {
             return( null );
         }
         
-        public LWJGLInputDeviceFactory getInputDeviceFactory( InputSystem inputSystem )
+        public InputDeviceFactory getInputDeviceFactory( InputSystem inputSystem )
         {
             if ( deviceFactory == null )
             {
-                deviceFactory = new LWJGLInputDeviceFactory( this, inputSystem.getEventQueue() );
+                deviceFactory = new org.jagatoo.input.impl.lwjgl.LWJGLInputDeviceFactory( this, inputSystem.getEventQueue() );
+                //deviceFactory = new org.jagatoo.input.impl.mixed.LWJGLJInputInputDeviceFactory( this, inputSystem.getEventQueue() );
             }
             
             return( deviceFactory );
@@ -400,7 +404,7 @@ public class InputTest implements InputListener, InputHotPlugListener
     {
         final java.awt.Component component;
         
-        private AWTInputDeviceFactory deviceFactory = null;
+        private InputDeviceFactory deviceFactory = null;
         private Cursor cursor = Cursor.DEFAULT_CURSOR;
         
         public Object getDrawable()
@@ -408,11 +412,12 @@ public class InputTest implements InputListener, InputHotPlugListener
             return( component );
         }
         
-        public AWTInputDeviceFactory getInputDeviceFactory( InputSystem inputSystem )
+        public InputDeviceFactory getInputDeviceFactory( InputSystem inputSystem )
         {
             if ( deviceFactory == null )
             {
-                deviceFactory = new AWTInputDeviceFactory( this, inputSystem.getEventQueue() );
+                deviceFactory = new org.jagatoo.input.impl.awt.AWTInputDeviceFactory( this, inputSystem.getEventQueue() );
+                //deviceFactory = new org.jagatoo.input.impl.mixed.AWTJInputInputDeviceFactory( this, inputSystem.getEventQueue() );
             }
             
             return( deviceFactory );

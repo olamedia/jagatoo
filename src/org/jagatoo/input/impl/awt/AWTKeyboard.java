@@ -472,9 +472,9 @@ public class AWTKeyboard extends Keyboard
         }
     }
     
-    protected AWTKeyboard( KeyboardFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
+    protected AWTKeyboard( KeyboardFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue ) throws InputSystemException
     {
-        super( factory, sourceWindow, eveneQueue, "Primary Keyboard" );
+        super( factory, sourceWindow, eventQueue, "Primary Keyboard" );
         
         try
         {

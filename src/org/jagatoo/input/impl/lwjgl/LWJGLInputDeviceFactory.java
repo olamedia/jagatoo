@@ -65,8 +65,10 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected LWJGLMouse[] initMouses( Mouse[] currentMouses ) throws InputSystemException
+    protected LWJGLMouse[] initMouses() throws InputSystemException
     {
+        Mouse[] currentMouses = getCachedMouses();
+        
         if ( ( currentMouses != null ) && ( currentMouses.length == 1 ) )
         {
             if ( ( currentMouses[ 0 ] instanceof LWJGLMouse) && ( currentMouses[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
@@ -82,8 +84,10 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected LWJGLKeyboard[] initKeyboards( Keyboard[] currentKeyboards ) throws InputSystemException
+    protected LWJGLKeyboard[] initKeyboards() throws InputSystemException
     {
+        Keyboard[] currentKeyboards = getCachedKeyboards();
+        
         if ( ( currentKeyboards != null ) && ( currentKeyboards.length == 1 ) )
         {
             if ( ( currentKeyboards[ 0 ] instanceof LWJGLKeyboard ) && ( currentKeyboards[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
@@ -99,8 +103,10 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected LWJGLController[] initControllers( Controller[] currentControllers ) throws InputSystemException
+    protected LWJGLController[] initControllers() throws InputSystemException
     {
+        Controller[] currentControllers = getCachedControllers();
+        
         try
         {
             if ( !org.lwjgl.input.Controllers.isCreated() )
@@ -167,8 +173,8 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
         }
     }
     
-    public LWJGLInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
+    public LWJGLInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
-        super( sourceWindow, eveneQueue );
+        super( true, sourceWindow, eventQueue );
     }
 }

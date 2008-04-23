@@ -382,9 +382,9 @@ public class AWTMouse extends Mouse
         }
     }
     
-    protected AWTMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
+    protected AWTMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue ) throws InputSystemException
     {
-        super( factory, sourceWindow, eveneQueue, "Primary Mouse", 12, true );
+        super( factory, sourceWindow, eventQueue, "Primary Mouse", 12, true );
         
         try
         {

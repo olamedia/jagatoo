@@ -286,9 +286,9 @@ public class LWJGLController extends Controller
         return( buttons );
     }
     
-    protected LWJGLController( ControllerFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue, org.lwjgl.input.Controller implController ) throws InputSystemException
+    protected LWJGLController( ControllerFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue, org.lwjgl.input.Controller implController ) throws InputSystemException
     {
-        super( factory, sourceWindow, eveneQueue, implController.getName(), implController );
+        super( factory, sourceWindow, eventQueue, implController.getName(), implController );
         
         this.implController = implController;
     }

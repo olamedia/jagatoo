@@ -49,8 +49,10 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected JInputMouse[] initMouses( Mouse[] currentMoues ) throws InputSystemException
+    protected JInputMouse[] initMouses() throws InputSystemException
     {
+        Mouse[] currentMoues = getCachedMouses();
+        
         net.java.games.input.Controller[] controllers = net.java.games.input.ControllerEnvironment.getDefaultEnvironment().getControllers();
         
         JInputMouse[] tmpMouses = new JInputMouse[ controllers.length ];
@@ -91,8 +93,10 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected JInputKeyboard[] initKeyboards( Keyboard[] currentKeyboards ) throws InputSystemException
+    protected JInputKeyboard[] initKeyboards() throws InputSystemException
     {
+        Keyboard[] currentKeyboards = getCachedKeyboards();
+        
         net.java.games.input.Controller[] controllers = net.java.games.input.ControllerEnvironment.getDefaultEnvironment().getControllers();
         
         JInputKeyboard[] tmpKeyboards = new JInputKeyboard[ controllers.length ];
@@ -158,8 +162,10 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
      * {@inheritDoc}
      */
     @Override
-    protected JInputController[] initControllers( Controller[] currentControllers ) throws InputSystemException
+    protected JInputController[] initControllers() throws InputSystemException
     {
+        Controller[] currentControllers = getCachedControllers();
+        
         net.java.games.input.Controller[] controllers = net.java.games.input.ControllerEnvironment.getDefaultEnvironment().getControllers();
         
         JInputController[] tmpControllers = new JInputController[ controllers.length ];
@@ -207,8 +213,8 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
     {
     }
     
-    public JInputInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
+    public JInputInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
-        super( sourceWindow, eveneQueue );
+        super( true, sourceWindow, eventQueue );
     }
 }

@@ -227,9 +227,9 @@ public class JInputController extends Controller
         return( buttons1 );
     }
     
-    protected JInputController( ControllerFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Controller controller ) throws InputSystemException
+    protected JInputController( ControllerFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue, net.java.games.input.Controller controller ) throws InputSystemException
     {
-        super( factory, sourceWindow, eveneQueue, controller.getName(), controller );
+        super( factory, sourceWindow, eventQueue, controller.getName(), controller );
         
         this.controller = controller;
         

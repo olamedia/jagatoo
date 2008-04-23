@@ -276,9 +276,9 @@ public abstract class Controller extends InputDevice
     
     protected abstract ControllerButton[] createButtonsArray( Object implObj );
     
-    protected Controller( ControllerFactory sourceFactory, InputSourceWindow sourceWindow, EventQueue eveneQueue, String name, Object implObj ) throws InputSystemException
+    protected Controller( ControllerFactory sourceFactory, InputSourceWindow sourceWindow, EventQueue eventQueue, String name, Object implObj ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, name );
+        super( sourceWindow, eventQueue, name );
         
         this.sourceFactory = sourceFactory;
         

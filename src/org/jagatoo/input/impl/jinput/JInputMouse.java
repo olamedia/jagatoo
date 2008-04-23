@@ -348,9 +348,9 @@ public class JInputMouse extends Mouse
         return( hasWheel );
     }
     
-    protected JInputMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Mouse mouse ) throws InputSystemException
+    protected JInputMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue, net.java.games.input.Mouse mouse ) throws InputSystemException
     {
-        super( factory, sourceWindow, eveneQueue, mouse.getName(), init_getNumButtons( mouse ), init_hasWheel( mouse ) );
+        super( factory, sourceWindow, eventQueue, mouse.getName(), init_getNumButtons( mouse ), init_hasWheel( mouse ) );
         
         this.mouse = mouse;
         

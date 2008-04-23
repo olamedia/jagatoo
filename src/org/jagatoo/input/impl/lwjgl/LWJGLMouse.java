@@ -321,8 +321,8 @@ public class LWJGLMouse extends Mouse
         return( org.lwjgl.input.Mouse.hasWheel() );
     }
     
-    protected LWJGLMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
+    protected LWJGLMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue ) throws InputSystemException
     {
-        super( factory, sourceWindow, eveneQueue, "Primary Mouse", init_getNumButtons(), init_hasWheel() );
+        super( factory, sourceWindow, eventQueue, "Primary Mouse", init_getNumButtons(), init_hasWheel() );
     }
 }

@@ -344,9 +344,9 @@ public class JInputKeyboard extends Keyboard
         */
     }
     
-    protected JInputKeyboard( KeyboardFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue, net.java.games.input.Keyboard keyboard ) throws InputSystemException
+    protected JInputKeyboard( KeyboardFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue, net.java.games.input.Keyboard keyboard ) throws InputSystemException
     {
-        super( factory, sourceWindow, eveneQueue, keyboard.getName() );
+        super( factory, sourceWindow, eventQueue, keyboard.getName() );
         
         this.keyboard = keyboard;
         

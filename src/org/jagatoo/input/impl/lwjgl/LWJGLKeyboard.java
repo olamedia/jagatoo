@@ -300,9 +300,9 @@ public class LWJGLKeyboard extends Keyboard
         }
     }
     
-    protected LWJGLKeyboard( KeyboardFactory factory, InputSourceWindow sourceWindow, EventQueue eveneQueue ) throws InputSystemException
+    protected LWJGLKeyboard( KeyboardFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue ) throws InputSystemException
     {
-        super( factory, sourceWindow, eveneQueue, "Primary Keyboard" );
+        super( factory, sourceWindow, eventQueue, "Primary Keyboard" );
         
         try
         {

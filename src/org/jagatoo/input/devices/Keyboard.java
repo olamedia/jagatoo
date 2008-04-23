@@ -42,6 +42,7 @@ import org.jagatoo.input.events.KeyTypedEvent;
 import org.jagatoo.input.events.KeyboardEvent;
 import org.jagatoo.input.events.KeyboardEventPool;
 import org.jagatoo.input.listeners.KeyboardListener;
+import org.jagatoo.input.localization.KeyboardLocalizer;
 import org.jagatoo.input.misc.InputSourceWindow;
 
 public abstract class Keyboard extends InputDevice
@@ -265,6 +266,15 @@ public abstract class Keyboard extends InputDevice
     }
     
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", localization-mapping = \"" + ( ( KeyboardLocalizer.getMapping() != null ) ? KeyboardLocalizer.getMapping().getClass().getName() : null ) + "\" }" );
+    }
+    
+    /**
      * Destroys the Keyboard.
      */
     protected abstract void destroyImpl() throws InputSystemException;
@@ -278,9 +288,9 @@ public abstract class Keyboard extends InputDevice
         destroyImpl();
     }
     
-    protected Keyboard( KeyboardFactory sourceFactory, InputSourceWindow sourceWindow, EventQueue eveneQueue, String name ) throws InputSystemException
+    protected Keyboard( KeyboardFactory sourceFactory, InputSourceWindow sourceWindow, EventQueue eventQueue, String name ) throws InputSystemException
     {
-        super( sourceWindow, eveneQueue, name );
+        super( sourceWindow, eventQueue, name );
         
         this.sourceFactory = sourceFactory;
         

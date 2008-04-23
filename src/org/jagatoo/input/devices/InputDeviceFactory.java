@@ -42,7 +42,7 @@ import org.jagatoo.input.misc.InputSourceWindow;
  */
 public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactory, ControllerFactory
 {
-    private final EventQueue eveneQueue;
+    private final EventQueue eventQueue;
     private final InputSourceWindow sourceWindow;
     
     public final InputSourceWindow getSourceWindow()
@@ -50,63 +50,114 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
         return( sourceWindow );
     }
     
+    private static Keyboard[] staticCachedKeyboards = null;
+    private static Mouse[] staticCachedMouses = null;
+    private static Controller[] staticCachedControllers = null;
+    
     private Keyboard[] cachedKeyboards = null;
     private Mouse[] cachedMouses = null;
     private Controller[] cachedControllers = null;
     
+    private final boolean useStaticArrays;
+    
     protected EventQueue getEveneQueue()
     {
-        return( eveneQueue );
+        return( eventQueue );
     }
     
     private synchronized final void setCachedKeyboards( Keyboard[] keyboards )
     {
-        this.cachedKeyboards = keyboards;
+        if ( useStaticArrays )
+            staticCachedKeyboards = keyboards;
+        else
+            this.cachedKeyboards = keyboards;
     }
     
-    private synchronized final Keyboard[] getCachedKeyboards()
+    protected synchronized final Keyboard[] getCachedKeyboards()
     {
-        return( cachedKeyboards );
+        if ( useStaticArrays )
+            return( staticCachedKeyboards );
+        else
+            return( cachedKeyboards );
     }
     
     private synchronized final void setCachedMouses( Mouse[] mouses )
     {
-        this.cachedMouses = mouses;
+        if ( useStaticArrays )
+            staticCachedMouses = mouses;
+        else
+            this.cachedMouses = mouses;
     }
     
-    private synchronized final Mouse[] getCachedMouses()
+    protected synchronized final Mouse[] getCachedMouses()
     {
-        return( cachedMouses );
+        if ( useStaticArrays )
+            return( staticCachedMouses );
+        else
+            return( cachedMouses );
     }
     
     private synchronized final void setCachedControllers( Controller[] controllers )
     {
-        this.cachedControllers = controllers;
+        if ( useStaticArrays )
+            staticCachedControllers = controllers;
+        else
+            this.cachedControllers = controllers;
     }
     
-    private synchronized final Controller[] getCachedControllers()
+    protected synchronized final Controller[] getCachedControllers()
     {
-        return( cachedControllers );
+        if ( useStaticArrays )
+            return( staticCachedControllers );
+        else
+            return( cachedControllers );
     }
     
-    protected synchronized final void flushCache( boolean keyboards, boolean mouses, boolean controllers )
+    protected synchronized void flushCache( boolean keyboards, boolean mouses, boolean controllers )
     {
-        if ( keyboards )
-            this.cachedKeyboards = null;
-        
-        if ( mouses )
-            this.cachedMouses = null;
-        
-        if ( controllers )
-            this.cachedControllers = null;
+        if ( useStaticArrays )
+        {
+            if ( keyboards )
+                staticCachedKeyboards = null;
+            
+            if ( mouses )
+                staticCachedMouses = null;
+            
+            if ( controllers )
+                staticCachedControllers = null;
+        }
+        else
+        {
+            if ( keyboards )
+                this.cachedKeyboards = null;
+            
+            if ( mouses )
+                this.cachedMouses = null;
+            
+            if ( controllers )
+                this.cachedControllers = null;
+        }
+    }
+    
+    protected static final void flushCache( InputDeviceFactory factory, boolean keyboards, boolean mouses, boolean controllers )
+    {
+        factory.flushCache( keyboards, mouses, controllers );
     }
     
     /**
      * @return an array of all the installed Keyboards in the system.
-     * 
-     * @param currentKeyboards the array of currently known Keyboards
      */
-    protected abstract Keyboard[] initKeyboards( Keyboard[] currentKeyboards ) throws InputSystemException;
+    protected abstract Keyboard[] initKeyboards() throws InputSystemException;
+    
+    /**
+     * @return an array of all the installed Keyboards in the system.
+     * 
+     * @param factory the factory to call {@link #initKeyboards()} on
+     */
+    protected static final Keyboard[] initKeyboards( InputDeviceFactory factory ) throws InputSystemException
+    {
+        return( factory.initKeyboards() );
+    }
     
     /**
      * {@inheritDoc}
@@ -115,7 +166,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     {
         if ( ( getCachedKeyboards() == null ) || forceRefresh )
         {
-            setCachedKeyboards( initKeyboards( getCachedKeyboards() ) );
+            setCachedKeyboards( initKeyboards() );
         }
         
         return( getCachedKeyboards() );
@@ -123,10 +174,18 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     
     /**
      * @return an array of all the installed Mouses in the system.
-     * 
-     * @param currentMouses the array of currently known Mouses
      */
-    protected abstract Mouse[] initMouses( Mouse[] currentMouses ) throws InputSystemException;
+    protected abstract Mouse[] initMouses() throws InputSystemException;
+    
+    /**
+     * @return an array of all the installed Mouses in the system.
+     * 
+     * @param factory the factory to call {@link #initMouses()} on
+     */
+    protected static final Mouse[] initMouses( InputDeviceFactory factory ) throws InputSystemException
+    {
+        return( factory.initMouses() );
+    }
     
     /**
      * {@inheritDoc}
@@ -135,7 +194,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     {
         if ( ( getCachedMouses() == null ) || forceRefresh )
         {
-            setCachedMouses( initMouses( getCachedMouses() ) );
+            setCachedMouses( initMouses() );
         }
         
         return( getCachedMouses() );
@@ -143,10 +202,18 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     
     /**
      * @return an array of all the installed Controllers in the system.
-     * 
-     * @param currentControllers the array of currently known Controllers
      */
-    protected abstract Controller[] initControllers( Controller[] currentControllers ) throws InputSystemException;
+    protected abstract Controller[] initControllers() throws InputSystemException;
+    
+    /**
+     * @return an array of all the installed Controllers in the system.
+     * 
+     * @param factory the factory to call {@link #initControllers()} on
+     */
+    protected static final Controller[] initControllers( InputDeviceFactory factory ) throws InputSystemException
+    {
+        return( factory.initControllers() );
+    }
     
     /**
      * {@inheritDoc}
@@ -155,7 +222,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     {
         if ( ( getCachedControllers() == null ) || forceRefresh )
         {
-            setCachedControllers( initControllers( getCachedControllers() ) );
+            setCachedControllers( initControllers() );
         }
         
         return( getCachedControllers() );
@@ -170,9 +237,11 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      */
     public abstract void destroy( InputSystem inputSystem ) throws InputSystemException;
     
-    public InputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eveneQueue )
+    public InputDeviceFactory( boolean useStaticArrays, InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
+        this.useStaticArrays = useStaticArrays;
+        
         this.sourceWindow = sourceWindow;
-        this.eveneQueue = eveneQueue;
+        this.eventQueue = eventQueue;
     }
 }
