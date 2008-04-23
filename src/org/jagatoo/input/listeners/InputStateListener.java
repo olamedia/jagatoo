@@ -29,6 +29,7 @@
  */
 package org.jagatoo.input.listeners;
 
+import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.events.InputEvent;
 
 /**
@@ -44,8 +45,9 @@ public interface InputStateListener
      * This event is fired, if an input device of any kind changed its state.
      * 
      * @param e the abstract event, that was triggered.
+     * @param comp the {@link DeviceComponent}, that is responsible for this event
      * @param delta the delta information
      * @param state the absolute state
      */
-    public void onInputStateChanged( InputEvent e, int delta, int state );
+    public void onInputStateChanged( InputEvent e, DeviceComponent comp, int delta, int state );
 }
