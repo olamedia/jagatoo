@@ -41,6 +41,7 @@ import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.devices.MouseFactory;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.handlers.InputHandler;
+import org.jagatoo.input.listeners.InputListener;
 import org.jagatoo.input.listeners.InputStateListener;
 import org.jagatoo.input.misc.InputSourceWindow;
 
@@ -58,6 +59,7 @@ public class InputSystem
     
     private final EventQueue eventQueue;
     
+    private final ArrayList< InputListener > inputListeners = new ArrayList< InputListener >();
     private final ArrayList< InputStateListener > inputStateListeners = new ArrayList< InputStateListener >();
     
     private final ArrayList< InputHandler< ? > > inputHandlers = new ArrayList< InputHandler< ? > >();
@@ -96,6 +98,60 @@ public class InputSystem
     public void removeInputHandler( InputHandler< ? > inputHandler )
     {
         inputHandlers.remove( inputHandler );
+    }
+    
+    public void addInputListener( InputListener l )
+    {
+        boolean contains = false;
+        for ( int i = 0; i < inputListeners.size(); i++ )
+        {
+            if ( inputListeners.get( i ) == l )
+            {
+                contains = true;
+                break;
+            }
+        }
+        
+        if ( !contains )
+        {
+            for ( int i = 0; i < keyboards.length; i++ )
+            {
+                keyboards[ i ].addKeyboardListener( l );
+            }
+            
+            for ( int i = 0; i < mouses.length; i++ )
+            {
+                mouses[ i ].addMouseListener( l );
+            }
+            
+            for ( int i = 0; i < controllers.length; i++ )
+            {
+                controllers[ i ].addControllerListener( l );
+            }
+            
+            inputListeners.add( l );
+        }
+    }
+    
+    public void removeInputListener( InputListener l )
+    {
+        if ( inputListeners.remove( l ) )
+        {
+            for ( int i = 0; i < keyboards.length; i++ )
+            {
+                keyboards[ i ].removeKeyboardListener( l );
+            }
+            
+            for ( int i = 0; i < mouses.length; i++ )
+            {
+                mouses[ i ].removeMouseListener( l );
+            }
+            
+            for ( int i = 0; i < controllers.length; i++ )
+            {
+                controllers[ i ].removeControllerListener( l );
+            }
+        }
     }
     
     public void addInputStateListener( InputStateListener l )
@@ -179,6 +235,16 @@ public class InputSystem
         this.keyboards = keyboards2;
         
         keyboard.onDeviceRegistered( this );
+        
+        for ( int i = 0; i < inputListeners.size(); i++ )
+        {
+            keyboard.addKeyboardListener( inputListeners.get( i ) );
+        }
+        
+        for ( int i = 0; i < inputStateListeners.size(); i++ )
+        {
+            keyboard.addInputStateListener( inputStateListeners.get( i ) );
+        }
     }
     
     /**
@@ -263,6 +329,16 @@ public class InputSystem
         
         if ( !found )
             throw( new InputSystemException( "This Keyboard is not registered at this InputSystem." ) );
+        
+        for ( int i = 0; i < inputListeners.size(); i++ )
+        {
+            keyboard.removeKeyboardListener( inputListeners.get( i ) );
+        }
+        
+        for ( int i = 0; i < inputStateListeners.size(); i++ )
+        {
+            keyboard.removeInputStateListener( inputStateListeners.get( i ) );
+        }
         
         keyboard.destroy();
         
@@ -368,6 +444,16 @@ public class InputSystem
         this.mouses = mouses2;
         
         mouse.onDeviceRegistered( this );
+        
+        for ( int i = 0; i < inputListeners.size(); i++ )
+        {
+            mouse.addMouseListener( inputListeners.get( i ) );
+        }
+        
+        for ( int i = 0; i < inputStateListeners.size(); i++ )
+        {
+            mouse.addInputStateListener( inputStateListeners.get( i ) );
+        }
     }
     
     /**
@@ -452,6 +538,16 @@ public class InputSystem
         
         if ( !found )
             throw( new InputSystemException( "This Mouse is not registered at this InputSystem." ) );
+        
+        for ( int i = 0; i < inputListeners.size(); i++ )
+        {
+            mouse.removeMouseListener( inputListeners.get( i ) );
+        }
+        
+        for ( int i = 0; i < inputStateListeners.size(); i++ )
+        {
+            mouse.removeInputStateListener( inputStateListeners.get( i ) );
+        }
         
         mouse.destroy();
         
@@ -583,6 +679,16 @@ public class InputSystem
         this.controllers = controllers2;
         
         controller.onDeviceRegistered( this );
+        
+        for ( int i = 0; i < inputListeners.size(); i++ )
+        {
+            controller.addControllerListener( inputListeners.get( i ) );
+        }
+        
+        for ( int i = 0; i < inputStateListeners.size(); i++ )
+        {
+            controller.addInputStateListener( inputStateListeners.get( i ) );
+        }
     }
     
     /**
@@ -667,6 +773,16 @@ public class InputSystem
         
         if ( !found )
             throw( new InputSystemException( "This Controller is not registered at this InputSystem." ) );
+        
+        for ( int i = 0; i < inputListeners.size(); i++ )
+        {
+            controller.removeControllerListener( inputListeners.get( i ) );
+        }
+        
+        for ( int i = 0; i < inputStateListeners.size(); i++ )
+        {
+            controller.removeInputStateListener( inputStateListeners.get( i ) );
+        }
         
         controller.destroy();
         
