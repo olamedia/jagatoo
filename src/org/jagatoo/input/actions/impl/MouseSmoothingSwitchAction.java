@@ -27,30 +27,42 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.actions;
+package org.jagatoo.input.actions.impl;
 
-import org.jagatoo.input.InputSystemException;
+import org.jagatoo.input.actions.AbstractLabeledInvokableInputAction;
 import org.jagatoo.input.devices.InputDevice;
 import org.jagatoo.input.devices.components.DeviceComponent;
+import org.jagatoo.input.handlers.InputHandler;
 
 /**
- * An InputAction can be bound to an arbitrary InputDevice's component.
- * It is executed on a state-change.
+ * This {@link LabeledInvokableInputAction} handles disabling and enabling of an
+ * {@link InputHandler}'s mouse smoothing flag.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface InvokableInputAction extends InputAction
+public class MouseSmoothingSwitchAction extends AbstractLabeledInvokableInputAction
 {
-    /**
-     * This method is invoked when the bound InputDevice changed its state.
-     * 
-     * @param device the bound device
-     * @param comp the bound device component
-     * @param delta the delta of the previous and current state
-     * @param state the current state
-     * @param nanoTime
-     * 
-     * @return a success message (implementation dependent)
-     */
-    public String invokeAction( InputDevice device, DeviceComponent comp, int delta, int state, long nanoTime ) throws InputSystemException;
+    public static final String SUCCESS = "ok";
+    
+    private final InputHandler< ? > ih;
+    
+    public String invokeAction( InputDevice device, DeviceComponent comp, int delta, int state, long nanoTime )
+    {
+        ih.setMouseSmoothingEnabled( !ih.isMouseSmoothingEnabled() );
+        //System.out.println( ih.isMouseSmoothingEnabled() );
+        
+        return( SUCCESS );
+    }
+    
+    public MouseSmoothingSwitchAction( int ordinal, String text, InputHandler< ? > ih )
+    {
+        super( ordinal, text );
+        
+        this.ih = ih;
+    }
+    
+    public MouseSmoothingSwitchAction( int ordinal, InputHandler< ? > ih )
+    {
+        this( ordinal, "Switch mouse smoothing", ih );
+    }
 }

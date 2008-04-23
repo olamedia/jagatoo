@@ -29,6 +29,7 @@
  */
 package org.jagatoo.input.managers;
 
+import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.actions.InputAction;
 import org.jagatoo.input.actions.InvokableInputAction;
 import org.jagatoo.input.devices.InputDevice;
@@ -271,7 +272,14 @@ public class InputStatesManager
                 {
                     final InvokableInputAction invAction = (InvokableInputAction)action;
                     
-                    invAction.invokeAction( device, comp, ( currStates[ i ] - prevStates[ i ] ), currStates[ i ], nanoTime );
+                    try
+                    {
+                        invAction.invokeAction( device, comp, ( currStates[ i ] - prevStates[ i ] ), currStates[ i ], nanoTime );
+                    }
+                    catch ( InputSystemException ex )
+                    {
+                        ex.printStackTrace();
+                    }
                 }
             }
         }

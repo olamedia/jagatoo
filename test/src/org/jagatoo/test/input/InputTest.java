@@ -229,12 +229,14 @@ public class InputTest implements InputListener, InputHotPlugListener
             return( MyInputBinding.values().length );
         }
         
-        public void invokeAction( InputDevice device, DeviceComponent comp, int delta, int state, long nanoTime )
+        public String invokeAction( InputDevice device, DeviceComponent comp, int delta, int state, long nanoTime )
         {
             if ( !isDebugFlagSet( DEBUG_MASK_TEST_ACTION ) )
-                return;
+                return( null );
             
             System.out.println( "TestAction: " + delta + ", " + state );
+            
+            return( "ok" );
         }
     }
     

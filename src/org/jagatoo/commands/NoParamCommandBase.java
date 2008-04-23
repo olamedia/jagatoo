@@ -27,30 +27,41 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.actions;
-
-import org.jagatoo.input.InputSystemException;
-import org.jagatoo.input.devices.InputDevice;
-import org.jagatoo.input.devices.components.DeviceComponent;
+package org.jagatoo.commands;
 
 /**
- * An InputAction can be bound to an arbitrary InputDevice's component.
- * It is executed on a state-change.
+ * This abstract base class for the Command interface correctly overrides
+ * the {@link #hashCode()} and {@link #equals(Object)} methods.
+ * This implementation is especially menat for Commands without any
+ * parameters.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface InvokableInputAction extends InputAction
+public abstract class NoParamCommandBase extends CommandBase implements NoParamCommand
 {
     /**
-     * This method is invoked when the bound InputDevice changed its state.
-     * 
-     * @param device the bound device
-     * @param comp the bound device component
-     * @param delta the delta of the previous and current state
-     * @param state the current state
-     * @param nanoTime
-     * 
-     * @return a success message (implementation dependent)
+     * {@inheritDoc}
      */
-    public String invokeAction( InputDevice device, DeviceComponent comp, int delta, int state, long nanoTime ) throws InputSystemException;
+    public String[] getParameterTypes()
+    {
+        return( null );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public String execute( Boolean inputInfo, Object[] parameters ) throws CommandException
+    {
+        return( execute( inputInfo ) );
+    }
+    
+    public NoParamCommandBase( final String key )
+    {
+        super( key, 0 );
+    }
+    
+    protected NoParamCommandBase( final String key, int numParams )
+    {
+        super( key, numParams );
+    }
 }

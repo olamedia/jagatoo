@@ -27,30 +27,31 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.actions;
-
-import org.jagatoo.input.InputSystemException;
-import org.jagatoo.input.devices.InputDevice;
-import org.jagatoo.input.devices.components.DeviceComponent;
+package org.jagatoo.commands;
 
 /**
- * An InputAction can be bound to an arbitrary InputDevice's component.
- * It is executed on a state-change.
+ * A CommandException is a simple Exception, that is handled a little differently.
+ * If a CommandException is thrown by the {@link Command#execute(Boolean, Object[])} method,
+ * then only its info text is displayed instead of the whole stack trace.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface InvokableInputAction extends InputAction
+public class CommandException extends Exception
 {
-    /**
-     * This method is invoked when the bound InputDevice changed its state.
-     * 
-     * @param device the bound device
-     * @param comp the bound device component
-     * @param delta the delta of the previous and current state
-     * @param state the current state
-     * @param nanoTime
-     * 
-     * @return a success message (implementation dependent)
-     */
-    public String invokeAction( InputDevice device, DeviceComponent comp, int delta, int state, long nanoTime ) throws InputSystemException;
+    private static final long serialVersionUID = -8809791951561358374L;
+    
+    public CommandException( String message, Throwable cause )
+    {
+        super( message, cause );
+    }
+    
+    public CommandException( String message )
+    {
+        super( message );
+    }
+    
+    public CommandException( Throwable cause )
+    {
+        super( cause );
+    }
 }

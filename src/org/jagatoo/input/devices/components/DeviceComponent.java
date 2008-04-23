@@ -29,6 +29,7 @@
  */
 package org.jagatoo.input.devices.components;
 
+import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.actions.InvokableInputAction;
 import org.jagatoo.input.devices.InputDevice;
 
@@ -209,7 +210,14 @@ public abstract class DeviceComponent
         {
             if ( ( actionDevices[ i ] == null ) || ( actionDevices[ i ] == device ) )
             {
-                actions[ i ].invokeAction( device, this, delta, state, nanoTime );
+                try
+                {
+                    actions[ i ].invokeAction( device, this, delta, state, nanoTime );
+                }
+                catch ( InputSystemException ex )
+                {
+                    ex.printStackTrace();
+                }
             }
         }
     }

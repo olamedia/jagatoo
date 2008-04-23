@@ -27,30 +27,29 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.actions;
-
-import org.jagatoo.input.InputSystemException;
-import org.jagatoo.input.devices.InputDevice;
-import org.jagatoo.input.devices.components.DeviceComponent;
+package org.jagatoo.commands;
 
 /**
- * An InputAction can be bound to an arbitrary InputDevice's component.
- * It is executed on a state-change.
+ * This abstract base class for the Command interface correctly overrides
+ * the hashCode() and equals(Object) methods.
+ * This implementation is especially menat for Commands without any
+ * parameters.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface InvokableInputAction extends InputAction
+public interface NoParamCommand extends Command
 {
     /**
-     * This method is invoked when the bound InputDevice changed its state.
+     * Executes this command.<br>
+     * If a CommandException is thrown, then only its info text is displayed.
      * 
-     * @param device the bound device
-     * @param comp the bound device component
-     * @param delta the delta of the previous and current state
-     * @param state the current state
-     * @param nanoTime
+     * @param inputInfo this Boolean is true for a key-down or wheel-up and false for a key-up or wheel-down.
+     *                  The Command implementation must be aware of the fact, that this Boolean can be null.
+     * @return this command's result if successful.
+     *         Used to give the user a textual response to the command execution.
+     *         May be null for simple commands.
      * 
-     * @return a success message (implementation dependent)
+     * @throws CommandException
      */
-    public String invokeAction( InputDevice device, DeviceComponent comp, int delta, int state, long nanoTime ) throws InputSystemException;
+    public String execute( Boolean inputInfo ) throws CommandException;
 }
