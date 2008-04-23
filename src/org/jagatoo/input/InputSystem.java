@@ -531,6 +531,32 @@ public class InputSystem
     
     
     /**
+     * Registers a new Keyboard and Mouse.
+     * 
+     * @param factory
+     * 
+     * @throws InputSystemException
+     */
+    public final void registerNewKeyboardAndMouse( InputDeviceFactory factory ) throws InputSystemException
+    {
+        registerNewKeyboard( factory );
+        registerNewMouse( factory );
+    }
+    
+    /**
+     * Registers a new Keyboard and Mouse.
+     * 
+     * @param sourceWindow
+     * 
+     * @throws InputSystemException
+     */
+    public final void registerNewKeyboardMouse( InputSourceWindow sourceWindow ) throws InputSystemException
+    {
+        registerNewKeyboardAndMouse( sourceWindow.getInputDeviceFactory( this ) );
+    }
+    
+    
+    /**
      * Registers the given Controller at this InputSystem.
      * 
      * @param controller
