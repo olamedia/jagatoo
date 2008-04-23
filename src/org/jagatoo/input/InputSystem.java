@@ -646,7 +646,7 @@ public class InputSystem
      * 
      * @throws InputSystemException
      */
-    public final void registerNewKeyboardMouse( InputSourceWindow sourceWindow ) throws InputSystemException
+    public final void registerNewKeyboardAndMouse( InputSourceWindow sourceWindow ) throws InputSystemException
     {
         registerNewKeyboardAndMouse( sourceWindow.getInputDeviceFactory( this ) );
     }
