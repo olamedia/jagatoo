@@ -32,6 +32,7 @@ package org.jagatoo.input.managers;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.ControllerFactory;
@@ -41,7 +42,7 @@ import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.KeyboardFactory;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.devices.MouseFactory;
-import org.jagatoo.logging.JAGTLog;
+import org.jagatoo.logging.Log;
 import org.jagatoo.util.arrays.ArrayUtils;
 
 /**
@@ -389,7 +390,7 @@ public class InputHotPlugManager implements Runnable
             }
             catch ( InputSystemException e )
             {
-                JAGTLog.print( e );
+                Log.print( InputSystem.LOG_CHANNEL, e );
                 e.printStackTrace();
             }
             
@@ -400,7 +401,7 @@ public class InputHotPlugManager implements Runnable
             }
             catch ( InterruptedException e )
             {
-                JAGTLog.print( e );
+                Log.print( InputSystem.LOG_CHANNEL, e );
                 e.printStackTrace();
             }
         }
@@ -443,7 +444,7 @@ public class InputHotPlugManager implements Runnable
                 }
                 catch ( InterruptedException e )
                 {
-                    JAGTLog.print( e );
+                    Log.print( InputSystem.LOG_CHANNEL, e );
                     e.printStackTrace();
                 }
             }

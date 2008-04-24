@@ -29,6 +29,7 @@
  */
 package org.jagatoo.input.managers;
 
+import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.actions.InputAction;
 import org.jagatoo.input.actions.InvokableInputAction;
@@ -44,6 +45,7 @@ import org.jagatoo.input.devices.components.MouseAxis;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseWheel;
 import org.jagatoo.input.devices.components.MouseWheel.WheelUpDownComponent;
+import org.jagatoo.logging.Log;
 
 /**
  * Manages state-changes on any kind of {@link InputDevice}.
@@ -278,6 +280,7 @@ public class InputStatesManager
                     }
                     catch ( InputSystemException ex )
                     {
+                        Log.print( InputSystem.LOG_CHANNEL, ex );
                         ex.printStackTrace();
                     }
                 }

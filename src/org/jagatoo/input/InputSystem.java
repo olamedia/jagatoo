@@ -44,9 +44,12 @@ import org.jagatoo.input.handlers.InputHandler;
 import org.jagatoo.input.listeners.InputListener;
 import org.jagatoo.input.listeners.InputStateListener;
 import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.logging.LogChannel;
 
 public class InputSystem
 {
+    public static final LogChannel LOG_CHANNEL = new LogChannel( "JAGaToo.InputSystem" );
+    
     private static InputSystem instance = null;
     
     private Keyboard[] keyboards = new Keyboard[ 0 ];

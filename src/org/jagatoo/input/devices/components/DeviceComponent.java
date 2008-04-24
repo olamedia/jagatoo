@@ -29,9 +29,11 @@
  */
 package org.jagatoo.input.devices.components;
 
+import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.actions.InvokableInputAction;
 import org.jagatoo.input.devices.InputDevice;
+import org.jagatoo.logging.Log;
 
 /**
  * {@link DeviceComponent}s can be keys, buttons, axes, etc.
@@ -216,6 +218,7 @@ public abstract class DeviceComponent
                 }
                 catch ( InputSystemException ex )
                 {
+                    Log.print( InputSystem.LOG_CHANNEL, ex );
                     ex.printStackTrace();
                 }
             }

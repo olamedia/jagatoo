@@ -46,6 +46,7 @@ import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
+import org.jagatoo.input.devices.components.MouseWheel;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
@@ -61,6 +62,7 @@ import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseStoppedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
 import org.jagatoo.input.listeners.InputListener;
+import org.jagatoo.input.managers.InputBindingsAdapter;
 import org.jagatoo.input.managers.InputBindingsManager;
 import org.jagatoo.input.managers.InputHotPlugListener;
 import org.jagatoo.input.managers.InputHotPlugManager;
@@ -80,14 +82,16 @@ public class InputTest implements InputListener, InputHotPlugListener
 {
     private static final int DEBUG_MASK_EVENTS = 1;
     private static final int DEBUG_MASK_TEST_ACTION = 2;
-    private static final int DEBUG_MASK_MYACTION = 4;
+    private static final int DEBUG_MASK_MYBINDING = 4;
+    private static final int DEBUG_MASK_MYACTION = 8;
     
     private static int debugMask = ~0;
     static
     {
-        //debugMask &= ~DEBUG_MASK_EVENTS;
-        //debugMask &= ~DEBUG_MASK_TEST_ACTION;
-        //debugMask &= ~DEBUG_MASK_MYACTION;
+        debugMask &= ~DEBUG_MASK_EVENTS;
+        debugMask &= ~DEBUG_MASK_TEST_ACTION;
+        debugMask &= ~DEBUG_MASK_MYBINDING;
+        debugMask &= ~DEBUG_MASK_MYACTION;
     }
     
     private final InputHotPlugManager hotplugManager = new InputHotPlugManager();
@@ -239,6 +243,24 @@ public class InputTest implements InputListener, InputHotPlugListener
         }
     }
     
+    private static enum MyInputAction implements InvokableInputAction
+    {
+        ACTION0,
+        ACTION1,
+        ACTION2,
+        ACTION3,
+        ACTION4,
+        ACTION5;
+        
+        public String invokeAction( InputDevice device, DeviceComponent comp, int delta, int state, long nanoTime ) throws InputSystemException
+        {
+            if ( isDebugFlagSet( DEBUG_MASK_MYACTION ) )
+                System.out.println( "Invoked action: " + this );
+            
+            return( "ok" );
+        }
+    }
+    
     private InputBindingsManager< InputAction > bindingsManager = null;
     private InputStatesManager statesManager = null;
     
@@ -258,6 +280,18 @@ public class InputTest implements InputListener, InputHotPlugListener
         bindingsManager.bind( Keys.SPACE, new TestAction() );
         
         statesManager = new InputStatesManager( MyInputBinding.values().length + 1 );
+        
+        InputBindingsAdapter< MyInputAction > bindingsAdapter = new InputBindingsAdapter< MyInputAction >( MyInputAction.values().length );
+        
+        bindingsAdapter.bind( MouseButtons.LEFT_BUTTON, MyInputAction.ACTION0 );
+        bindingsAdapter.bind( Keys._1, MyInputAction.ACTION1 );
+        bindingsAdapter.bind( MouseWheel.GLOBAL_WHEEL, MyInputAction.ACTION2 );
+        if ( is.getController() != null )
+        {
+            bindingsAdapter.bind( is.getController().getButton( 0 ), MyInputAction.ACTION3 );
+        }
+        
+        is.addInputStateListener( bindingsAdapter );
     }
     
     private void setupInputSystem( InputSystem is, InputSourceWindow sourceWindow ) throws Throwable
@@ -320,7 +354,7 @@ public class InputTest implements InputListener, InputHotPlugListener
     {
         statesManager.update( bindingsManager, is.getKeyboard(), is.getMouse(), time );
         
-        if ( isDebugFlagSet( DEBUG_MASK_MYACTION ) )
+        if ( isDebugFlagSet( DEBUG_MASK_MYBINDING ) )
         {
             DigiState state = null;
             
