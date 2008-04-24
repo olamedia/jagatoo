@@ -32,23 +32,44 @@ package org.jagatoo.input.managers;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.jagatoo.input.InputSystem;
+import org.jagatoo.input.devices.InputDevice;
 import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.devices.components.MouseWheel;
 import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.listeners.InputStateListener;
 
 /**
- * Insert type comment here.
+ * The {@link SimpleInputActionManager} can be used to bind
+ * input {@link DeviceComponent}s to simple input-actions (like Strings).<br>
+ * <br>
+ * You need to add it to the {@link InputSystem} or one of its registered
+ * {@link InputDevice}s as an {@link InputStateListener} to make it work.<br>
+ * <br>
+ * You can use it as a singleton. The singleton instance is always automatically
+ * added to the InputSystem as a listener.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class StringInputActionMapper implements InputStateListener
+public class SimpleInputActionManager implements InputStateListener
 {
-    private final HashMap< DeviceComponent, String > actionMap = new HashMap< DeviceComponent, String >();
+    private static SimpleInputActionManager instance = null;
     
-    private final ArrayList< StringInputActionListener > listeners = new ArrayList< StringInputActionListener >();
+    private final HashMap< DeviceComponent, Object > actionMap = new HashMap< DeviceComponent, Object >();
     
-    public void addActionListener( StringInputActionListener l )
+    private final ArrayList< SimpleInputActionListener > listeners = new ArrayList< SimpleInputActionListener >();
+    
+    public static final SimpleInputActionManager getInstance()
+    {
+        if ( instance == null )
+        {
+            instance = new SimpleInputActionManager();
+        }
+        
+        return( instance );
+    }
+    
+    public void addActionListener( SimpleInputActionListener l )
     {
         if ( listeners.contains( l ) )
             return;
@@ -56,17 +77,17 @@ public class StringInputActionMapper implements InputStateListener
         listeners.add( l );
     }
     
-    public void removeActionListener( StringInputActionListener l )
+    public void removeActionListener( SimpleInputActionListener l )
     {
         listeners.remove( l );
     }
     
-    public final int getNumMappedActions()
+    public final int getNumBoundActions()
     {
         return( actionMap.size() );
     }
     
-    public void mapAction( DeviceComponent comp, String action )
+    public void bindAction( DeviceComponent comp, Object action )
     {
         if ( comp == null )
             throw( new IllegalArgumentException( "comp must not be null" ) );
@@ -75,17 +96,33 @@ public class StringInputActionMapper implements InputStateListener
             throw( new IllegalArgumentException( "action must not be null" ) );
         
         actionMap.put( comp, action );
+        
+        if ( this == instance )
+        {
+            if ( this.getNumBoundActions() == 1 )
+            {
+                InputSystem.getInstance().addInputStateListener( this );
+            }
+        }
     }
     
-    public void unmapAction( DeviceComponent comp )
+    public void unbindAction( DeviceComponent comp )
     {
         if ( comp == null )
             throw( new IllegalArgumentException( "comp must not be null" ) );
         
         actionMap.remove( comp );
+        
+        if ( this == instance )
+        {
+            if ( this.getNumBoundActions() == 0 )
+            {
+                InputSystem.getInstance().removeInputStateListener( this );
+            }
+        }
     }
     
-    public void unmapAction( String action )
+    public void unbindAction( Object action )
     {
         if ( action == null )
             throw( new IllegalArgumentException( "action must not be null" ) );
@@ -94,7 +131,7 @@ public class StringInputActionMapper implements InputStateListener
         
         for ( DeviceComponent comp: actionMap.keySet() )
         {
-            String mappedAction = actionMap.get( comp );
+            Object mappedAction = actionMap.get( comp );
             
             if ( mappedAction != null )
             {
@@ -105,40 +142,69 @@ public class StringInputActionMapper implements InputStateListener
         
         if ( mappedComp != null )
         {
-            unmapAction( mappedComp );
+            unbindAction( mappedComp );
         }
     }
     
-    public final String getMappedAction( DeviceComponent comp )
+    public final Object getBoundAction( DeviceComponent comp )
     {
         return( actionMap.get( comp ) );
     }
     
-    private final String checkMouseWheel( DeviceComponent comp, int delta )
+    protected void notifyListeners( Object action, int delta, int state )
+    {
+        if ( action == null )
+            return;
+        
+        for ( int i = 0; i < listeners.size(); i++ )
+        {
+            listeners.get( i ).onActionInvoked( action, delta, state );
+        }
+    }
+    
+    private final boolean checkMouseWheel( DeviceComponent comp, int delta, int state )
     {
         final MouseWheel wheel = (MouseWheel)comp;
         
-        String action = getMappedAction( MouseWheel.GLOBAL_WHEEL );
+        Object action = getBoundAction( MouseWheel.GLOBAL_WHEEL );
         
-        if ( action == null )
+        if ( action != null )
         {
-            if ( delta > 0 )
+            notifyListeners( action, delta, state );
+            
+            return( true );
+        }
+        
+        if ( delta > 0 )
+        {
+            action = getBoundAction( MouseWheel.GLOBAL_WHEEL.getUp() );
+            
+            if ( action == null )
+                action = getBoundAction( wheel.getUp() );
+            
+            if ( action != null )
             {
-                action = getMappedAction( MouseWheel.GLOBAL_WHEEL.getUp() );
+                notifyListeners( action, 1, 1 );
                 
-                if ( action == null )
-                    action = getMappedAction( wheel.getUp() );
+                return( true );
             }
-            else
+        }
+        else
+        {
+            action = getBoundAction( MouseWheel.GLOBAL_WHEEL.getDown() );
+            
+            if ( action == null )
+                action = getBoundAction( wheel.getDown() );
+            
+            if ( action != null )
             {
-                action = getMappedAction( MouseWheel.GLOBAL_WHEEL.getDown() );
+                notifyListeners( action, 1, 1 );
                 
-                if ( action == null )
-                    action = getMappedAction( wheel.getDown() );
+                return( true );
             }
         }
         
-        return( action );
+        return( false );
     }
     
     public void onInputStateChanged( InputEvent e, DeviceComponent comp, int delta, int state )
@@ -146,19 +212,17 @@ public class StringInputActionMapper implements InputStateListener
         if ( comp == null )
             return;
         
-        String action = getMappedAction( comp );
+        Object action = getBoundAction( comp );
         
         if ( ( action == null ) && ( comp != null ) && ( comp.getType() == DeviceComponent.Type.MOUSE_WHEEL ) )
         {
-            action = checkMouseWheel( comp, delta );
+            if ( checkMouseWheel( comp, delta, state ) )
+                return;
         }
         
         if ( action != null )
         {
-            for ( int i = 0; i < listeners.size(); i++ )
-            {
-                listeners.get( i ).onActionInvoked( action, delta, state );
-            }
+            notifyListeners( action, delta, state );
         }
     }
 }

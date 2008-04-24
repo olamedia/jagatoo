@@ -34,7 +34,17 @@ package org.jagatoo.input.managers;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface StringInputActionListener
+public interface SimpleInputActionListener
 {
-    public void onActionInvoked( String action, int delta, int state );
+    /**
+     * This event is fired when an InputDevice, which has been bound
+     * to this action, changed its state.<br>
+     * The {@link SimpleInputActionManager} guarantees, that the action
+     * object is never <code>null</code>.
+     * 
+     * @param action the action object (never <code>null</code>)
+     * @param delta the input-state-delta
+     * @param state the current input state
+     */
+    public void onActionInvoked( Object action, int delta, int state );
 }

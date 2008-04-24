@@ -66,7 +66,8 @@ import org.jagatoo.input.managers.InputBindingsManager;
 import org.jagatoo.input.managers.InputHotPlugListener;
 import org.jagatoo.input.managers.InputHotPlugManager;
 import org.jagatoo.input.managers.InputStatesManager;
-import org.jagatoo.input.managers.StringInputActionListener;
+import org.jagatoo.input.managers.SimpleInputActionListener;
+import org.jagatoo.input.managers.SimpleInputActionManager;
 import org.jagatoo.input.misc.Cursor;
 import org.jagatoo.input.misc.InputSourceWindow;
 import org.jagatoo.test.util.JOGLBase;
@@ -303,19 +304,27 @@ public class InputTest implements InputListener, InputHotPlugListener
         is.addInputStateListener( bindingsAdapter );
         
         
-        is.mapStringAction( MouseButtons.LEFT_BUTTON, "My sample String action 0" );
-        is.mapStringAction( Keys._1, "My sample String action 1" );
-        //is.mapStringAction( MouseWheel.GLOBAL_WHEEL, "My sample String action 2" );
-        is.mapStringAction( MouseButtons.WHEEL_UP, "My sample String action 3" );
-        is.mapStringAction( MouseButtons.WHEEL_DOWN, "My sample String action 4" );
+        SimpleInputActionManager siam = SimpleInputActionManager.getInstance();
+        
+        /*
+         * We don't need to add it as a listener, since we're using
+         * the singleton-instance, which is automatically added/removed.
+         */
+        //is.addInputStateListener( siam );
+        
+        siam.bindAction( MouseButtons.LEFT_BUTTON, "My sample String action 0" );
+        siam.bindAction( Keys._1, "My sample String action 1" );
+        //siam.bindAction( MouseWheel.GLOBAL_WHEEL, "My sample String action 2" );
+        siam.bindAction( MouseButtons.WHEEL_UP, "My sample String action 3" );
+        siam.bindAction( MouseButtons.WHEEL_DOWN, "My sample String action 4" );
         if ( is.getController() != null )
         {
-            is.mapStringAction( is.getController().getButton( 0 ), "My sample String action 5" );
+            siam.bindAction( is.getController().getButton( 0 ), "My sample String action 5" );
         }
         
-        is.addStringActionListener( new StringInputActionListener()
+        siam.addActionListener( new SimpleInputActionListener()
         {
-            public void onActionInvoked( String action, int delta, int state )
+            public void onActionInvoked( Object action, int delta, int state )
             {
                 if ( !isDebugFlagSet( DEBUG_MASK_STRING_ACTION ) )
                     return;
