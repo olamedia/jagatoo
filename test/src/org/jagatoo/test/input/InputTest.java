@@ -46,7 +46,6 @@ import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
-import org.jagatoo.input.devices.components.MouseWheel;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
@@ -67,6 +66,7 @@ import org.jagatoo.input.managers.InputBindingsManager;
 import org.jagatoo.input.managers.InputHotPlugListener;
 import org.jagatoo.input.managers.InputHotPlugManager;
 import org.jagatoo.input.managers.InputStatesManager;
+import org.jagatoo.input.managers.StringInputActionListener;
 import org.jagatoo.input.misc.Cursor;
 import org.jagatoo.input.misc.InputSourceWindow;
 import org.jagatoo.test.util.JOGLBase;
@@ -84,14 +84,20 @@ public class InputTest implements InputListener, InputHotPlugListener
     private static final int DEBUG_MASK_TEST_ACTION = 2;
     private static final int DEBUG_MASK_MYBINDING = 4;
     private static final int DEBUG_MASK_MYACTION = 8;
+    private static final int DEBUG_MASK_STRING_ACTION = 16;
     
     private static int debugMask = ~0;
     static
     {
+        /*
+         * Disable particular debugging outputs...
+         */
+        
         debugMask &= ~DEBUG_MASK_EVENTS;
         debugMask &= ~DEBUG_MASK_TEST_ACTION;
         debugMask &= ~DEBUG_MASK_MYBINDING;
         debugMask &= ~DEBUG_MASK_MYACTION;
+        debugMask &= ~DEBUG_MASK_STRING_ACTION;
     }
     
     private final InputHotPlugManager hotplugManager = new InputHotPlugManager();
@@ -281,17 +287,43 @@ public class InputTest implements InputListener, InputHotPlugListener
         
         statesManager = new InputStatesManager( MyInputBinding.values().length + 1 );
         
+        
         InputBindingsAdapter< MyInputAction > bindingsAdapter = new InputBindingsAdapter< MyInputAction >( MyInputAction.values().length );
         
         bindingsAdapter.bind( MouseButtons.LEFT_BUTTON, MyInputAction.ACTION0 );
         bindingsAdapter.bind( Keys._1, MyInputAction.ACTION1 );
-        bindingsAdapter.bind( MouseWheel.GLOBAL_WHEEL, MyInputAction.ACTION2 );
+        //bindingsAdapter.bind( MouseWheel.GLOBAL_WHEEL, MyInputAction.ACTION2 );
+        bindingsAdapter.bind( MouseButtons.WHEEL_UP, MyInputAction.ACTION3 );
+        bindingsAdapter.bind( MouseButtons.WHEEL_DOWN, MyInputAction.ACTION4 );
         if ( is.getController() != null )
         {
-            bindingsAdapter.bind( is.getController().getButton( 0 ), MyInputAction.ACTION3 );
+            bindingsAdapter.bind( is.getController().getButton( 0 ), MyInputAction.ACTION5 );
         }
         
         is.addInputStateListener( bindingsAdapter );
+        
+        
+        is.mapStringAction( MouseButtons.LEFT_BUTTON, "My sample String action 0" );
+        is.mapStringAction( Keys._1, "My sample String action 1" );
+        //is.mapStringAction( MouseWheel.GLOBAL_WHEEL, "My sample String action 2" );
+        is.mapStringAction( MouseButtons.WHEEL_UP, "My sample String action 3" );
+        is.mapStringAction( MouseButtons.WHEEL_DOWN, "My sample String action 4" );
+        if ( is.getController() != null )
+        {
+            is.mapStringAction( is.getController().getButton( 0 ), "My sample String action 5" );
+        }
+        
+        is.addStringActionListener( new StringInputActionListener()
+        {
+            public void onActionInvoked( String action, int delta, int state )
+            {
+                if ( !isDebugFlagSet( DEBUG_MASK_STRING_ACTION ) )
+                    return;
+                
+                if ( delta > 0 )
+                    System.out.println( "String action invoked: \"" + action + "\"" );
+            }
+        } );
     }
     
     private void setupInputSystem( InputSystem is, InputSourceWindow sourceWindow ) throws Throwable

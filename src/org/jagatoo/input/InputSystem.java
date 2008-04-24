@@ -39,10 +39,13 @@ import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.KeyboardFactory;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.devices.MouseFactory;
+import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.handlers.InputHandler;
 import org.jagatoo.input.listeners.InputListener;
 import org.jagatoo.input.listeners.InputStateListener;
+import org.jagatoo.input.managers.StringInputActionMapper;
+import org.jagatoo.input.managers.StringInputActionListener;
 import org.jagatoo.input.misc.InputSourceWindow;
 import org.jagatoo.logging.LogChannel;
 
@@ -66,6 +69,8 @@ public class InputSystem
     private final ArrayList< InputStateListener > inputStateListeners = new ArrayList< InputStateListener >();
     
     private final ArrayList< InputHandler< ? > > inputHandlers = new ArrayList< InputHandler< ? > >();
+    
+    private StringInputActionMapper stringActionMapper = null;
     
     public static final void setInstance( InputSystem inputSystem )
     {
@@ -862,6 +867,93 @@ public class InputSystem
         
         return( false );
     }
+    
+    
+    public final StringInputActionMapper getStringActionMapper()
+    {
+        if ( stringActionMapper == null )
+        {
+            stringActionMapper = new StringInputActionMapper();
+        }
+        
+        return( stringActionMapper );
+    }
+    
+    /**
+     * Maps a DeviceComponent to a String action.
+     * 
+     * @param comp
+     * @param action
+     */
+    public void mapStringAction( DeviceComponent comp, String action )
+    {
+        final StringInputActionMapper actionMapper = getStringActionMapper();
+        
+        actionMapper.mapAction( comp, action );
+        
+        if ( actionMapper.getNumMappedActions() == 1 )
+        {
+            addInputStateListener( actionMapper );
+        }
+    }
+    
+    /**
+     * Unmaps a String action.
+     * 
+     * @param comp
+     */
+    public void unmapStringAction( DeviceComponent comp )
+    {
+        final StringInputActionMapper actionMapper = getStringActionMapper();
+        
+        actionMapper.unmapAction( comp );
+        
+        if ( actionMapper.getNumMappedActions() == 0 )
+        {
+            removeInputStateListener( actionMapper );
+        }
+    }
+    
+    /**
+     * Unmaps a String action.
+     * 
+     * @param action
+     */
+    public void unmapStringAction( String action )
+    {
+        final StringInputActionMapper actionMapper = getStringActionMapper();
+        
+        actionMapper.unmapAction( action );
+        
+        if ( actionMapper.getNumMappedActions() == 0 )
+        {
+            removeInputStateListener( actionMapper );
+        }
+    }
+    
+    /**
+     * Registers a {@link StringInputActionListener} to be notifed of String input actions.
+     * 
+     * @param l
+     */
+    public void addStringActionListener( StringInputActionListener l )
+    {
+        getStringActionMapper().addActionListener( l );
+    }
+    
+    /**
+     * Deregisters a {@link StringInputActionListener}.
+     * 
+     * @param l
+     */
+    public void removeStringActionListener( StringInputActionListener l )
+    {
+        if ( stringActionMapper == null )
+            return;
+        
+        getStringActionMapper().removeActionListener( l );
+    }
+    
     
     protected void collectKeyboardEvents( long nanoTime ) throws InputSystemException
     {

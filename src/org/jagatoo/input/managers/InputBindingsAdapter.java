@@ -49,6 +49,33 @@ import org.jagatoo.logging.Log;
  */
 public class InputBindingsAdapter< A extends InvokableInputAction > extends InputBindingsManager< A > implements InputStateListener
 {
+    private final InvokableInputAction checkMouseWheel( DeviceComponent comp, int delta )
+    {
+        final MouseWheel wheel = (MouseWheel)comp;
+        
+        InvokableInputAction action = getBoundAction( MouseWheel.GLOBAL_WHEEL );
+        
+        if ( action == null )
+        {
+            if ( delta > 0 )
+            {
+                action = getBoundAction( MouseWheel.GLOBAL_WHEEL.getUp() );
+                
+                if ( action == null )
+                    action = getBoundAction( wheel.getUp() );
+            }
+            else
+            {
+                action = getBoundAction( MouseWheel.GLOBAL_WHEEL.getDown() );
+                
+                if ( action == null )
+                    action = getBoundAction( wheel.getDown() );
+            }
+        }
+        
+        return( action );
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -58,7 +85,7 @@ public class InputBindingsAdapter< A extends InvokableInputAction > extends Inpu
         
         if ( ( action == null ) && ( comp != null ) && ( comp.getType() == DeviceComponent.Type.MOUSE_WHEEL ) )
         {
-            action = getBoundAction( MouseWheel.GLOBAL_WHEEL );
+            action = checkMouseWheel( comp, delta );
         }
         
         if ( action != null )
