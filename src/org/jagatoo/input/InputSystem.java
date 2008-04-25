@@ -95,12 +95,19 @@ public class InputSystem
     public void addInputHandler( InputHandler< ? > inputHandler )
     {
         if ( !inputHandlers.contains( inputHandler ) )
+        {
+            inputHandler.setInputSystem( this );
+            
             inputHandlers.add( inputHandler );
+        }
     }
     
     public void removeInputHandler( InputHandler< ? > inputHandler )
     {
-        inputHandlers.remove( inputHandler );
+        if ( inputHandlers.remove( inputHandler ) )
+        {
+            inputHandler.setInputSystem( null );
+        }
     }
     
     public void addInputListener( InputListener l )
