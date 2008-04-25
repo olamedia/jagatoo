@@ -298,12 +298,6 @@ public class InputStatesManager
      */
     public void update( final InputBindingsManager< ? extends InputAction > inputBindings, final Keyboard keyboard, final Mouse mouse, long nanoTime )
     {
-        if ( keyboard == null )
-        {
-            System.err.println( "null keyboard" );
-            return;
-        }
-        
         swapper = !swapper;
         
         if ( swapper )
