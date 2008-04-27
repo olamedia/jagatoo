@@ -308,6 +308,22 @@ public abstract class Mouse extends InputDevice
         numStopListeners = stopListeners.size();
     }
     
+    /**
+     * @return true, of at least one {@link MouseListener} is currently registered.
+     */
+    public final boolean hasMouseListener()
+    {
+        return( numListeners > 0 );
+    }
+    
+    /**
+     * @return true, if one of {@link #hasInputStateListener()} or {@link #hasMouseListener()} return true.
+     */
+    public final boolean hasListener()
+    {
+        return( hasInputStateListener() || hasMouseListener() );
+    }
+    
     public void addMouseListener( MouseListener l )
     {
         boolean contains = false;
@@ -339,7 +355,7 @@ public abstract class Mouse extends InputDevice
     {
         addButtonsState( button );
         
-        if ( !isEnabled() || ( numListeners == 0 ) )
+        if ( !isEnabled() || !hasListener() )
             return( null );
         
         MouseButtonPressedEvent e = MouseEventPool.allocPressed( this, button, when, lastWhen_buttonPressed );
@@ -351,7 +367,7 @@ public abstract class Mouse extends InputDevice
     
     public final void fireOnMouseButtonPressed( MouseButtonPressedEvent e, boolean consumeEvent )
     {
-        if ( !isEnabled() || ( numListeners == 0 ) )
+        if ( !isEnabled() || !hasListener() )
         {
             if ( consumeEvent )
                 MouseEventPool.freePressed( e );
@@ -374,7 +390,7 @@ public abstract class Mouse extends InputDevice
     {
         removeButtonsState( button );
         
-        if ( !isEnabled() || ( numListeners == 0 ) )
+        if ( !isEnabled() || !hasListener() )
             return( null );
         
         MouseButtonReleasedEvent e = MouseEventPool.allocReleased( this, button, when, lastWhen_buttonReleased );
@@ -386,7 +402,7 @@ public abstract class Mouse extends InputDevice
     
     public final void fireOnMouseButtonReleased( MouseButtonReleasedEvent e, boolean consumeEvent )
     {
-        if ( !isEnabled() || ( numListeners == 0 ) )
+        if ( !isEnabled() || !hasListener() )
         {
             if ( consumeEvent )
                 MouseEventPool.freeReleased( e );
@@ -407,7 +423,7 @@ public abstract class Mouse extends InputDevice
     
     protected final MouseMovedEvent prepareMouseMovedEvent( int x, int y, int dx, int dy, long when )
     {
-        if ( !isEnabled() )
+        if ( !isEnabled() || !hasListener() )
             return( null );
         
         notifyMouseStopManager( when );
@@ -461,7 +477,7 @@ public abstract class Mouse extends InputDevice
         
         wheel.addValue( wheelDelta );
         
-        if ( !isEnabled() || ( numListeners == 0 ) )
+        if ( !isEnabled() || !hasListener() )
             return( null );
         
         MouseWheelEvent e = MouseEventPool.allocWheel( this, wheel, wheelDelta, isPageMove, when, lastWhen_wheelMoved );

@@ -124,7 +124,7 @@ public class JInputMouse extends Mouse
     
     private net.java.games.input.Event event = new net.java.games.input.Event();
     
-    private final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    private final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime, boolean acceptsEvents ) throws InputSystemException
     {
         final boolean isQueued = ( eventQueue != null );
         
@@ -139,7 +139,7 @@ public class JInputMouse extends Mouse
             
             while ( mouse.getEventQueue().getNextEvent( event ) )
             {
-                if ( !getSourceWindow().receivesInputEvents() )
+                if ( !acceptsEvents )
                     continue;
                 
                 final DeviceComponent comp = compMap.get( event.getComponent() );
@@ -174,6 +174,9 @@ public class JInputMouse extends Mouse
                         {
                             final MouseButtonPressedEvent pressedEv = prepareMouseButtonPressedEvent( button, nanoTime );
                             
+                            if ( pressedEv == null )
+                                continue;
+                            
                             if ( isQueued )
                                 eventQueue.enqueue( pressedEv );
                             else
@@ -182,6 +185,9 @@ public class JInputMouse extends Mouse
                         else
                         {
                             final MouseButtonReleasedEvent releasedEv = prepareMouseButtonReleasedEvent( button, nanoTime );
+                            
+                            if ( releasedEv == null )
+                                continue;
                             
                             if ( isQueued )
                                 eventQueue.enqueue( releasedEv );
@@ -195,6 +201,9 @@ public class JInputMouse extends Mouse
                         
                         final MouseWheelEvent wheelEv = prepareMouseWheelMovedEvent( wheelDelta, false, nanoTime );
                         
+                        if ( wheelEv == null )
+                            continue;
+                        
                         if ( isQueued )
                             eventQueue.enqueue( wheelEv );
                         else
@@ -207,10 +216,13 @@ public class JInputMouse extends Mouse
             {
                 final MouseMovedEvent movedEv = prepareMouseMovedEvent( getCurrentX(), getCurrentY(), dx, dy, nanoTime );
                 
-                if ( isQueued )
-                    eventQueue.enqueue( movedEv );
-                else
-                    fireOnMouseMoved( movedEv, true );
+                if ( movedEv != null )
+                {
+                    if ( isQueued )
+                        eventQueue.enqueue( movedEv );
+                    else
+                        fireOnMouseMoved( movedEv, true );
+                }
             }
         }
         catch ( Throwable t )
@@ -232,12 +244,23 @@ public class JInputMouse extends Mouse
      * {@inheritDoc}
      */
     @Override
+    public void consumePendingEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    {
+        collectOrFireEvents( is, null, nanoTime, false );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void collectEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
         if ( eventQueue == null )
             throw( new InputSystemException( "EventQueue must not be null here!" ) );
         
-        collectOrFireEvents( is, eventQueue, nanoTime );
+        final boolean acceptEvents = ( isEnabled() && getSourceWindow().receivesInputEvents() );
+        
+        collectOrFireEvents( is, eventQueue, nanoTime, acceptEvents );
     }
     
     /**
@@ -246,7 +269,7 @@ public class JInputMouse extends Mouse
     @Override
     public void update( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
-        collectOrFireEvents( is, null, nanoTime );
+        collectOrFireEvents( is, null, nanoTime, true );
         
         getEventQueue().dequeueAndFire( is );
     }
@@ -281,6 +304,15 @@ public class JInputMouse extends Mouse
             
             throw( new InputSystemException( t ) );
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onDeviceRegistered( InputSystem inputSystem ) throws InputSystemException
+    {
+        consumePendingEvents( inputSystem, null, -1L );
     }
     
     /**

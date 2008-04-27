@@ -61,7 +61,7 @@ public class JInputController extends Controller
     
     final net.java.games.input.Event event = new net.java.games.input.Event();
     
-    protected final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    protected final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime, boolean acceptsEvents ) throws InputSystemException
     {
         if ( !getSourceWindow().receivesInputEvents() )
             return;
@@ -74,6 +74,9 @@ public class JInputController extends Controller
             
             while( controller.getEventQueue().getNextEvent( event ) )
             {
+                if ( !acceptsEvents )
+                    continue;
+                
                 final DeviceComponent devComp = deviceMap.get( event.getComponent() );
                 if ( devComp == null )
                     continue;
@@ -152,12 +155,23 @@ public class JInputController extends Controller
      * {@inheritDoc}
      */
     @Override
+    public void consumePendingEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    {
+        collectOrFireEvents( is, null, nanoTime, false );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void collectEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
         if ( eventQueue == null )
             throw( new InputSystemException( "EventQueue must not be null here!" ) );
         
-        collectOrFireEvents( is, eventQueue, nanoTime );
+        final boolean acceptEvents = ( isEnabled() && getSourceWindow().receivesInputEvents() );
+        
+        collectOrFireEvents( is, eventQueue, nanoTime, acceptEvents );
     }
     
     /**
@@ -166,9 +180,18 @@ public class JInputController extends Controller
     @Override
     public void update( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
-        collectOrFireEvents( is, null, nanoTime );
+        collectOrFireEvents( is, null, nanoTime, true );
         
         getEventQueue().dequeueAndFire( is );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onDeviceRegistered( InputSystem inputSystem ) throws InputSystemException
+    {
+        consumePendingEvents( inputSystem, null, -1L );
     }
     
     /**

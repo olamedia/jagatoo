@@ -186,6 +186,14 @@ public class AWTMouse extends Mouse
      * {@inheritDoc}
      */
     @Override
+    public void consumePendingEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    {
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void collectEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
     }
@@ -248,10 +256,7 @@ public class AWTMouse extends Mouse
     
     private void processMouseEvent( java.awt.event.MouseEvent _e )
     {
-        if ( !isEnabled() )
-            return;
-        
-        if ( !getSourceWindow().receivesInputEvents() )
+        if ( !isEnabled() || !getSourceWindow().receivesInputEvents() )
             return;
         
         switch ( _e.getID() )
@@ -262,6 +267,9 @@ public class AWTMouse extends Mouse
                 if ( button != null )
                 {
                     MouseButtonPressedEvent e = prepareMouseButtonPressedEvent( button, 0L );
+                    
+                    if ( e == null )
+                        return;
                     
                     getEventQueue().enqueue( e );
                 }
@@ -274,6 +282,9 @@ public class AWTMouse extends Mouse
                 if ( button != null )
                 {
                     MouseButtonReleasedEvent e = prepareMouseButtonReleasedEvent( button, 0L );
+                    
+                    if ( e == null )
+                        return;
                     
                     getEventQueue().enqueue( e );
                 }
@@ -294,6 +305,9 @@ public class AWTMouse extends Mouse
                     
                     MouseMovedEvent e = prepareMouseMovedEvent( x, y, dx, dy, 0L );
                     
+                    if ( e == null )
+                        return;
+                    
                     getEventQueue().enqueue( e );
                     
                     lastAbsoluteX = x;
@@ -310,6 +324,9 @@ public class AWTMouse extends Mouse
                         lastRelY = _e.getY();
                         
                         MouseMovedEvent e = prepareMouseMovedEvent( lastAbsoluteX, lastAbsoluteY, dx, dy, 0L );
+                        
+                        if ( e == null )
+                            return;
                         
                         getEventQueue().enqueue( e );
                     }

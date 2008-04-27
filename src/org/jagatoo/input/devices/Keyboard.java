@@ -63,6 +63,22 @@ public abstract class Keyboard extends InputDevice
         return( sourceFactory );
     }
     
+    /**
+     * @return true, of at least one {@link KeyboardListener} is currently registered.
+     */
+    public final boolean hasKeyboardListener()
+    {
+        return( listeners.size() > 0 );
+    }
+    
+    /**
+     * @return true, if one of {@link #hasInputStateListener()} or {@link #hasKeyboardListener()} return true.
+     */
+    public final boolean hasListener()
+    {
+        return( hasInputStateListener() || hasKeyboardListener() );
+    }
+    
     public void addKeyboardListener( KeyboardListener l )
     {
         for ( int i = 0; i < listeners.size(); i++ )
@@ -136,7 +152,7 @@ public abstract class Keyboard extends InputDevice
     
     protected final KeyPressedEvent prepareKeyPressedEvent( Key key, int modifierMask, long when, long lastWhen )
     {
-        if ( !isEnabled() )
+        if ( !isEnabled() || !hasListener() )
             return( null );
         
         keyStates[ key.getKeyCode() - 1 ] = true;
@@ -150,7 +166,7 @@ public abstract class Keyboard extends InputDevice
     
     public final void fireOnKeyPressed( KeyPressedEvent e, boolean consumeEvent )
     {
-        if ( !isEnabled() )
+        if ( !isEnabled() || !hasListener() )
         {
             if ( consumeEvent )
                 KeyboardEventPool.freePressed( e );
@@ -174,7 +190,7 @@ public abstract class Keyboard extends InputDevice
     
     protected final KeyReleasedEvent prepareKeyReleasedEvent( Key key, int modifierMask, long when, long lastWhen )
     {
-        if ( !isEnabled() )
+        if ( !isEnabled() || !hasListener() )
             return( null );
         
         keyStates[ key.getKeyCode() - 1 ] = false;
@@ -186,7 +202,7 @@ public abstract class Keyboard extends InputDevice
     
     public final void fireOnKeyReleased( KeyReleasedEvent e, boolean consumeEvent )
     {
-        if ( !isEnabled() )
+        if ( !isEnabled() || !hasListener() )
         {
             if ( consumeEvent )
                 KeyboardEventPool.freeReleased( e );
@@ -210,7 +226,7 @@ public abstract class Keyboard extends InputDevice
     
     protected final KeyTypedEvent prepareKeyTypedEvent( char keyChar, int modifierMask, long when, long lastWhen )
     {
-        if ( !isEnabled() )
+        if ( !isEnabled() || !hasListener() )
             return( null );
         
         KeyTypedEvent e = KeyboardEventPool.allocTyped( this, keyChar, modifierMask, when, lastWhen );
@@ -220,7 +236,7 @@ public abstract class Keyboard extends InputDevice
     
     public final void fireOnKeyTyped( KeyTypedEvent e, boolean consumeEvent )
     {
-        if ( !isEnabled() )
+        if ( !isEnabled() || !hasListener() )
         {
             if ( consumeEvent )
                 KeyboardEventPool.freeTyped( e );

@@ -45,7 +45,7 @@ import org.jagatoo.input.misc.InputSourceWindow;
  */
 public class LWJGLInputDeviceFactory extends InputDeviceFactory
 {
-    private static long lastUpdateTime = -1L;
+    private static long lastUpdateTime = -2L;
     
     /**
      * This value is for LWJGLKeyboard, LWJGLMouse and LWJGLController.

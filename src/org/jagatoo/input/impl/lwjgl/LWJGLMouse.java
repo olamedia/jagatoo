@@ -126,7 +126,7 @@ public class LWJGLMouse extends Mouse
         setPosition( centerX, centerY );
     }
     
-    protected final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    protected final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime, boolean acceptEvents ) throws InputSystemException
     {
         final boolean isQueued = ( eventQueue != null );
         
@@ -144,7 +144,7 @@ public class LWJGLMouse extends Mouse
             
             while ( org.lwjgl.input.Mouse.next() )
             {
-                if ( !getSourceWindow().receivesInputEvents() )
+                if ( !acceptEvents )
                     continue;
                 
                 final int x = org.lwjgl.input.Mouse.getEventX();
@@ -165,6 +165,9 @@ public class LWJGLMouse extends Mouse
                 {
                     final MouseMovedEvent movEv = prepareMouseMovedEvent( getCurrentX(), getCurrentY(), dx, dy, nanoTime );
                     
+                    if ( movEv == null )
+                        continue;
+                    
                     if ( isQueued )
                         eventQueue.enqueue( movEv );
                     else
@@ -177,6 +180,9 @@ public class LWJGLMouse extends Mouse
                     {
                         final MouseButtonPressedEvent pressedEv = prepareMouseButtonPressedEvent( convertButton( button ), nanoTime );
                         
+                        if ( pressedEv == null )
+                            continue;
+                        
                         if ( isQueued )
                             eventQueue.enqueue( pressedEv );
                         else
@@ -185,6 +191,9 @@ public class LWJGLMouse extends Mouse
                     else
                     {
                         final MouseButtonReleasedEvent releasedEv = prepareMouseButtonReleasedEvent( convertButton( button ), nanoTime );
+                        
+                        if ( releasedEv == null )
+                            continue;
                         
                         if ( isQueued )
                             eventQueue.enqueue( releasedEv );
@@ -196,6 +205,9 @@ public class LWJGLMouse extends Mouse
                 if ( wheelDelta != 0 )
                 {
                     final MouseWheelEvent wheelEv = prepareMouseWheelMovedEvent( wheelDelta, false, nanoTime );
+                    
+                    if ( wheelEv == null )
+                        continue;
                     
                     if ( isQueued )
                         eventQueue.enqueue( wheelEv );
@@ -223,12 +235,23 @@ public class LWJGLMouse extends Mouse
      * {@inheritDoc}
      */
     @Override
+    public void consumePendingEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    {
+        collectOrFireEvents( is, null, nanoTime, false );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void collectEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
         if ( eventQueue == null )
             throw( new InputSystemException( "EventQueue must not be null here!" ) );
         
-        collectOrFireEvents( is, eventQueue, nanoTime );
+        final boolean acceptEvents = ( isEnabled() && getSourceWindow().receivesInputEvents() );
+        
+        collectOrFireEvents( is, eventQueue, nanoTime, acceptEvents );
     }
     
     /**
@@ -237,7 +260,7 @@ public class LWJGLMouse extends Mouse
     @Override
     public void update( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
-        collectOrFireEvents( is, null, nanoTime );
+        collectOrFireEvents( is, null, nanoTime, true );
         
         getEventQueue().dequeueAndFire( is );
     }
@@ -319,6 +342,15 @@ public class LWJGLMouse extends Mouse
         }
         
         return( org.lwjgl.input.Mouse.hasWheel() );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onDeviceRegistered( InputSystem inputSystem ) throws InputSystemException
+    {
+        consumePendingEvents( inputSystem, null, -1L );
     }
     
     protected LWJGLMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue ) throws InputSystemException

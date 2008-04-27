@@ -74,8 +74,10 @@ public abstract class InputDevice implements Enableable
      * after the device has been completely and successfully registered.
      * 
      * @param inputSystem
+     * 
+     * @throws InputSystemException
      */
-    public void onDeviceRegistered( InputSystem inputSystem )
+    public void onDeviceRegistered( InputSystem inputSystem ) throws InputSystemException
     {
     }
     
@@ -84,8 +86,10 @@ public abstract class InputDevice implements Enableable
      * after the device has been completely and successfully deregistered.
      * 
      * @param inputSystem
+     * 
+     * @throws InputSystemException
      */
-    public void onDeviceUnregistered( InputSystem inputSystem )
+    public void onDeviceUnregistered( InputSystem inputSystem ) throws InputSystemException
     {
     }
     
@@ -122,8 +126,19 @@ public abstract class InputDevice implements Enableable
         return( enabled );
     }
     
+    /**
+     * @return true, of at least one {@link InputStateListener} is currently registered.
+     */
+    public final boolean hasInputStateListener()
+    {
+        return( stateListeners.size() > 0 );
+    }
+    
     public void addInputStateListener( InputStateListener l )
     {
+        if ( stateListeners.contains( l ) )
+            return;
+        
         stateListeners.add( l );
     }
     
@@ -147,6 +162,22 @@ public abstract class InputDevice implements Enableable
         if ( e.getComponent() != null )
             e.getComponent().notifyBoundActions( this, delta, state, e.getWhen() );
     }
+    
+    /**
+     * Processes pending events from the system
+     * and simply wastes them.<br>
+     * This method is invoked by the InputSystem when a new InputDevice
+     * is registered and instead of the {@link #update(InputSystem, EventQueue, long)} method,
+     * if the device is disabled or its InputSourceWindow doesn't currently
+     * receive input events.
+     * 
+     * @param is
+     * @param eventQueue
+     * @param nanoTime
+     * 
+     * @throws InputSystemException
+     */
+    public abstract void consumePendingEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException;
     
     /**
      * Processes pending events from the system

@@ -180,7 +180,7 @@ public class LWJGLKeyboard extends Keyboard
         return( true );
     }
     
-    protected final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    protected final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime, boolean acceptsEvents ) throws InputSystemException
     {
         final boolean isQueued = ( eventQueue != null );
         
@@ -198,7 +198,7 @@ public class LWJGLKeyboard extends Keyboard
             
             while ( org.lwjgl.input.Keyboard.next() )
             {
-                if ( !getSourceWindow().receivesInputEvents() )
+                if ( !acceptsEvents )
                     continue;
                 
                 final int keyCode = org.lwjgl.input.Keyboard.getEventKey();
@@ -214,6 +214,9 @@ public class LWJGLKeyboard extends Keyboard
                 {
                     final KeyPressedEvent pressedEv = prepareKeyPressedEvent( key, modifierMask, nanoTime, 0L );
                     
+                    if ( pressedEv == null )
+                        continue;
+                    
                     if ( isQueued )
                         eventQueue.enqueue( pressedEv );
                     else
@@ -226,6 +229,9 @@ public class LWJGLKeyboard extends Keyboard
                     {
                         final KeyTypedEvent typedEv = prepareKeyTypedEvent( keyChar, modifierMask, nanoTime, 0L );
                         
+                        if ( typedEv == null )
+                            continue;
+                        
                         if ( isQueued )
                             eventQueue.enqueue( typedEv );
                         else
@@ -235,6 +241,9 @@ public class LWJGLKeyboard extends Keyboard
                 else
                 {
                     final KeyReleasedEvent releasedEv = prepareKeyReleasedEvent( key, modifierMask, nanoTime, 0L );
+                    
+                    if ( releasedEv == null )
+                        continue;
                     
                     if ( isQueued )
                         eventQueue.enqueue( releasedEv );
@@ -262,12 +271,23 @@ public class LWJGLKeyboard extends Keyboard
      * {@inheritDoc}
      */
     @Override
+    public void consumePendingEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    {
+        collectOrFireEvents( is, null, nanoTime, false );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void collectEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
         if ( eventQueue == null )
             throw( new InputSystemException( "EventQueue must not be null here!" ) );
         
-        collectOrFireEvents( is, eventQueue, nanoTime );
+        final boolean acceptEvents = ( isEnabled() && getSourceWindow().receivesInputEvents() );
+        
+        collectOrFireEvents( is, eventQueue, nanoTime, acceptEvents );
     }
     
     /**
@@ -276,9 +296,18 @@ public class LWJGLKeyboard extends Keyboard
     @Override
     public void update( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
-        collectOrFireEvents( is, null, nanoTime );
+        collectOrFireEvents( is, null, nanoTime, true );
         
         getEventQueue().dequeueAndFire( is );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void onDeviceRegistered( InputSystem inputSystem ) throws InputSystemException
+    {
+        consumePendingEvents( inputSystem, null, -1L );
     }
     
     /**

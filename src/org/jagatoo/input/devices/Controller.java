@@ -101,6 +101,22 @@ public abstract class Controller extends InputDevice
         return( buttons[ index ] );
     }
     
+    /**
+     * @return true, of at least one {@link ControllerListener} is currently registered.
+     */
+    public final boolean hasControllerListener()
+    {
+        return( numListeners > 0 );
+    }
+    
+    /**
+     * @return true, if one of {@link #hasInputStateListener()} or {@link #hasControllerListener()} return true.
+     */
+    public final boolean hasListener()
+    {
+        return( hasInputStateListener() || hasControllerListener() );
+    }
+    
     public void addControllerListener( ControllerListener l )
     {
         for ( int i = 0; i < listeners.size(); i++ )
@@ -137,7 +153,7 @@ public abstract class Controller extends InputDevice
     
     protected final ControllerButtonPressedEvent prepareControllerButtonPressed( ControllerButton button, long when )
     {
-        if ( !isEnabled() || ( numListeners == 0 ) )
+        if ( !isEnabled() || !hasListener() )
             return( null );
         
         ControllerButtonPressedEvent e = ControllerEventPool.allocPressed( this, button, when, lastWhen_buttonPressed[ button.getIndex() ] );
@@ -149,7 +165,7 @@ public abstract class Controller extends InputDevice
     
     public final void fireOnControllerButtonPressed( ControllerButtonPressedEvent e, boolean consumeEvent )
     {
-        if ( !isEnabled() || ( numListeners == 0 ) )
+        if ( !isEnabled() || !hasListener() )
         {
             if ( consumeEvent )
                 ControllerEventPool.freePressed( e );
@@ -170,7 +186,7 @@ public abstract class Controller extends InputDevice
     
     public final ControllerButtonReleasedEvent prepareControllerButtonReleased( ControllerButton button, long when )
     {
-        if ( !isEnabled() || ( numListeners == 0 ) )
+        if ( !isEnabled() || !hasListener() )
             return( null );
         
         ControllerButtonReleasedEvent e = ControllerEventPool.allocReleased( this, button, when, lastWhen_buttonReleased[ button.getIndex() ] );
@@ -182,7 +198,7 @@ public abstract class Controller extends InputDevice
     
     public final void fireOnControllerButtonReleased( ControllerButtonReleasedEvent e, boolean consumeEvent )
     {
-        if ( !isEnabled() || ( numListeners == 0 ) )
+        if ( !isEnabled() || !hasListener() )
         {
             if ( consumeEvent )
                 ControllerEventPool.freeReleased( e );
@@ -203,7 +219,7 @@ public abstract class Controller extends InputDevice
     
     public final ControllerAxisChangedEvent prepareControllerAxisChanged( ControllerAxis axis, float delta, long when )
     {
-        if ( !isEnabled() || ( numListeners == 0 ) )
+        if ( !isEnabled() || !hasListener() )
             return( null );
         
         ControllerAxisChangedEvent e = ControllerEventPool.allocAxis( this, axis, delta, when, lastWhen_axisChanged[ axis.getIndex() ] );
@@ -215,7 +231,7 @@ public abstract class Controller extends InputDevice
     
     public final void fireOnControllerAxisChanged( ControllerAxisChangedEvent e, boolean consumeEvent )
     {
-        if ( !isEnabled() || ( numListeners == 0 ) )
+        if ( !isEnabled() || !hasListener() )
         {
             if ( consumeEvent )
                 ControllerEventPool.freeAxis( e );

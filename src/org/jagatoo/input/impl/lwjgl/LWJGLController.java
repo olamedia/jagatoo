@@ -57,7 +57,7 @@ public class LWJGLController extends Controller
      * {@inheritDoc}
      */
     @Override
-    public void onDeviceRegistered( InputSystem inputSystem )
+    public void onDeviceRegistered( InputSystem inputSystem ) throws InputSystemException
     {
         if ( indexMap == null )
         {
@@ -66,13 +66,15 @@ public class LWJGLController extends Controller
         }
         
         indexMap[ this.getIndex() ] = inputSystem.getControllersCount() - 1;
+        
+        consumePendingEvents( inputSystem, null, -1 );
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public void onDeviceUnregistered( InputSystem inputSystem )
+    public void onDeviceUnregistered( InputSystem inputSystem ) throws InputSystemException
     {
         indexMap[ this.getIndex() ] = -1;
     }
@@ -110,6 +112,9 @@ public class LWJGLController extends Controller
                     
                     final ControllerAxisChangedEvent axisEv = prepareControllerAxisChanged( axis, newValue - oldValue, nanoTime );
                     
+                    if ( axisEv == null )
+                        continue;
+                    
                     if ( isQueued )
                         eventQueue.enqueue( axisEv );
                     else
@@ -131,6 +136,9 @@ public class LWJGLController extends Controller
                         
                         final ControllerButtonPressedEvent pressedEv = prepareControllerButtonPressed( button, nanoTime );
                         
+                        if ( pressedEv == null )
+                            continue;
+                        
                         if ( isQueued )
                             eventQueue.enqueue( pressedEv );
                         else
@@ -141,6 +149,9 @@ public class LWJGLController extends Controller
                         button.setState( DigiState.NEGATIVE );
                         
                         final ControllerButtonReleasedEvent releasedEv = prepareControllerButtonReleased( button, nanoTime );
+                        
+                        if ( releasedEv == null )
+                            continue;
                         
                         if ( isQueued )
                             eventQueue.enqueue( releasedEv );
@@ -163,6 +174,15 @@ public class LWJGLController extends Controller
             
             throw( new InputSystemException( t ) );
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void consumePendingEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    {
+        //collectOrFireEvents( is, null, nanoTime );
     }
     
     /**

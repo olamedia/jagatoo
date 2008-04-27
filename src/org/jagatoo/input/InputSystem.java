@@ -875,8 +875,12 @@ public class InputSystem
     {
         for ( int i = 0; i < keyboards.length; i++ )
         {
-            if ( keyboards[ i ].isEnabled() )
-                keyboards[ i ].collectEvents( this, eventQueue, nanoTime );
+            final Keyboard keyboard = keyboards[ i ];
+            
+            final boolean acceptEvents = ( keyboard.isEnabled() && keyboard.getSourceWindow().receivesInputEvents() );
+            
+            if ( acceptEvents )
+                keyboard.collectEvents( this, eventQueue, nanoTime );
         }
     }
     
@@ -884,8 +888,12 @@ public class InputSystem
     {
         for ( int i = 0; i < mouses.length; i++ )
         {
-            if ( mouses[ i ].isEnabled() )
-                mouses[ i ].collectEvents( this, eventQueue, nanoTime );
+            final Mouse mouse = mouses[ i ];
+            
+            final boolean acceptEvents = ( mouse.isEnabled() && mouse.getSourceWindow().receivesInputEvents() );
+            
+            if ( acceptEvents )
+                mouse.collectEvents( this, eventQueue, nanoTime );
         }
     }
     
@@ -893,8 +901,12 @@ public class InputSystem
     {
         for ( int i = 0; i < controllers.length; i++ )
         {
-            if ( controllers[ i ].isEnabled() )
-                controllers[ i ].collectEvents( this, eventQueue, nanoTime );
+            final Controller controller = controllers[ i ];
+            
+            final boolean acceptEvents = ( controller.isEnabled() && controller.getSourceWindow().receivesInputEvents() );
+            
+            if ( acceptEvents )
+                controller.collectEvents( this, eventQueue, nanoTime );
         }
     }
     
@@ -920,8 +932,14 @@ public class InputSystem
     {
         for ( int i = 0; i < keyboards.length; i++ )
         {
-            if ( keyboards[ i ].isEnabled() )
-                keyboards[ i ].update( this, eventQueue, nanoTime );
+            final Keyboard keyboard = keyboards[ i ];
+            
+            final boolean acceptEvents = ( keyboard.isEnabled() && keyboard.getSourceWindow().receivesInputEvents() );
+            
+            if ( acceptEvents )
+                keyboard.update( this, eventQueue, nanoTime );
+            else
+                keyboard.consumePendingEvents( this, eventQueue, nanoTime );
         }
     }
     
@@ -929,8 +947,14 @@ public class InputSystem
     {
         for ( int i = 0; i < mouses.length; i++ )
         {
-            if ( mouses[ i ].isEnabled() )
-                mouses[ i ].update( this, eventQueue, nanoTime );
+            final Mouse mouse = mouses[ i ];
+            
+            final boolean acceptEvents = ( mouse.isEnabled() && mouse.getSourceWindow().receivesInputEvents() );
+            
+            if ( acceptEvents )
+                mouse.update( this, eventQueue, nanoTime );
+            else
+                mouse.consumePendingEvents( this, eventQueue, nanoTime );
         }
     }
     
@@ -938,8 +962,14 @@ public class InputSystem
     {
         for ( int i = 0; i < controllers.length; i++ )
         {
-            if ( controllers[ i ].isEnabled() )
-                controllers[ i ].update( this, eventQueue, nanoTime );
+            final Controller controller = controllers[ i ];
+            
+            final boolean acceptEvents = ( controller.isEnabled() && controller.getSourceWindow().receivesInputEvents() );
+            
+            if ( acceptEvents )
+                controller.update( this, eventQueue, nanoTime );
+            else
+                controller.consumePendingEvents( this, eventQueue, nanoTime );
         }
     }
     

@@ -258,6 +258,14 @@ public class AWTKeyboard extends Keyboard
      * {@inheritDoc}
      */
     @Override
+    public void consumePendingEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    {
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void collectEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
     }
@@ -361,6 +369,9 @@ public class AWTKeyboard extends Keyboard
                                 
                                 KeyPressedEvent e = prepareKeyPressedEvent( key, modifierMask, 0L, 0L );
                                 
+                                if ( e == null )
+                                    return;
+                                
                                 lastPressedEvent = e;
                             }
                             
@@ -375,6 +386,9 @@ public class AWTKeyboard extends Keyboard
                                 final int modifierMask = applyModifier( key, false );
                                 
                                 KeyReleasedEvent e = prepareKeyReleasedEvent( key, modifierMask, 0L, 0L );
+                                
+                                if ( e == null )
+                                    return;
                                 
                                 lastReleasedEvent = e;
                             }
@@ -413,10 +427,7 @@ public class AWTKeyboard extends Keyboard
     
     private void processKeyEvent( java.awt.event.KeyEvent _e )
     {
-        if ( !isEnabled() )
-            return;
-        
-        if ( !getSourceWindow().receivesInputEvents() )
+        if ( !isEnabled() || !getSourceWindow().receivesInputEvents() )
             return;
         
         switch ( _e.getID() )
