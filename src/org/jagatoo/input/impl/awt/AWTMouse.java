@@ -35,9 +35,12 @@ import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.devices.MouseFactory;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
+import org.jagatoo.input.devices.components.MouseWheel;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
+import org.jagatoo.input.events.MouseEvent;
 import org.jagatoo.input.events.MouseEventPool;
 import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
@@ -198,6 +201,48 @@ public class AWTMouse extends Mouse
     {
     }
     
+    private final void notifyStatesManagersFromQueue( InputSystem is, EventQueue eventQueue, long nanoTime )
+    {
+        if ( eventQueue.getNumEvents() == 0 )
+            return;
+        
+        synchronized ( EventQueue.LOCK )
+        {
+            for ( int i = 0; i < eventQueue.getNumEvents(); i++ )
+            {
+                final InputEvent event = eventQueue.getEvent( i );
+                
+                if ( event.getType() == InputEvent.Type.MOUSE_EVENT )
+                {
+                    final MouseEvent moEvent = (MouseEvent)event;
+                    
+                    switch( moEvent.getSubType() )
+                    {
+                        case BUTTON_PRESSED:
+                            is.notifyInputStatesManagers( this, moEvent.getComponent(), 1, +1, nanoTime );
+                            break;
+                        case BUTTON_RELEASED:
+                            is.notifyInputStatesManagers( this, moEvent.getComponent(), 0, -1, nanoTime );
+                            break;
+                        case WHEEL_MOVED:
+                            final MouseWheelEvent mwEvent = (MouseWheelEvent)moEvent;
+                            final MouseWheel wheel = (MouseWheel)mwEvent.getComponent();
+                            is.notifyInputStatesManagers( this, wheel, wheel.getIntValue(), mwEvent.getWheelDelta(), nanoTime );
+                            break;
+                        case MOVED:
+                            final MouseMovedEvent mmEvent = (MouseMovedEvent)moEvent;
+                            if ( mmEvent.getDX() != 0 )
+                                is.notifyInputStatesManagers( this, mmEvent.getMouse().getXAxis(), mmEvent.getX(), mmEvent.getDX(), nanoTime );
+                            
+                            if ( mmEvent.getDY() != 0 )
+                                is.notifyInputStatesManagers( this, mmEvent.getMouse().getYAxis(), mmEvent.getY(), mmEvent.getDY(), nanoTime );
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -206,6 +251,8 @@ public class AWTMouse extends Mouse
     {
         try
         {
+            notifyStatesManagersFromQueue( is, eventQueue, nanoTime );
+            
             getEventQueue().dequeueAndFire( is );
             
             if ( !isAbsolute() )

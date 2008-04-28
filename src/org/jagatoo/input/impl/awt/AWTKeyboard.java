@@ -39,6 +39,7 @@ import org.jagatoo.input.devices.KeyboardFactory;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
@@ -270,6 +271,35 @@ public class AWTKeyboard extends Keyboard
     {
     }
     
+    private final void notifyStatesManagersFromQueue( InputSystem is, EventQueue eventQueue, long nanoTime )
+    {
+        if ( eventQueue.getNumEvents() == 0 )
+            return;
+        
+        synchronized ( EventQueue.LOCK )
+        {
+            for ( int i = 0; i < eventQueue.getNumEvents(); i++ )
+            {
+                final InputEvent event = eventQueue.getEvent( i );
+                
+                if ( event.getType() == InputEvent.Type.KEYBOARD_EVENT )
+                {
+                    final KeyboardEvent kbEvent = (KeyboardEvent)event;
+                    
+                    switch( kbEvent.getSubType() )
+                    {
+                        case PRESSED:
+                            is.notifyInputStatesManagers( this, kbEvent.getComponent(), 1, +1, nanoTime );
+                            break;
+                        case RELEASED:
+                            is.notifyInputStatesManagers( this, kbEvent.getComponent(), 0, -1, nanoTime );
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -278,6 +308,8 @@ public class AWTKeyboard extends Keyboard
     {
         try
         {
+            notifyStatesManagersFromQueue( is, eventQueue, nanoTime );
+            
             getEventQueue().dequeueAndFire( is );
             
             keyEventFixThread.fireEvents();

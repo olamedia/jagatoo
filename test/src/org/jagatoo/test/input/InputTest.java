@@ -38,6 +38,7 @@ import org.jagatoo.input.actions.InvokableInputAction;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.InputDevice;
 import org.jagatoo.input.devices.InputDeviceFactory;
+import org.jagatoo.input.devices.components.AnalogDeviceComponent;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
 import org.jagatoo.input.devices.components.DeviceComponent;
@@ -268,12 +269,11 @@ public class InputTest implements InputListener, InputHotPlugListener
         }
     }
     
-    private InputBindingsManager< InputAction > bindingsManager = null;
     private InputStatesManager statesManager = null;
     
     private void setupInputBindings( InputSystem is ) throws Throwable
     {
-        bindingsManager = new InputBindingsManager< InputAction >( MyInputBinding.values().length + 1 );
+        InputBindingsManager< InputAction > bindingsManager = new InputBindingsManager< InputAction >( MyInputBinding.values().length + 1 );
         
         bindingsManager.bind( Keys.G, MyInputBinding.ACTION0 );
         bindingsManager.bind( is.getMouse().getButton( 0 ), MyInputBinding.ACTION1 );
@@ -285,8 +285,17 @@ public class InputTest implements InputListener, InputHotPlugListener
             bindingsManager.bind( is.getController().getAxis( 3 ), MyInputBinding.ACTION5 );
         }
         bindingsManager.bind( Keys.SPACE, new TestAction() );
+        /*
+        //bindingsManager.bind( is.getMouse().getWheel().getUp(), MyInputBinding.ACTION0 );
+        //bindingsManager.bind( is.getMouse().getWheel().getDown(), MyInputBinding.ACTION1 );
+        bindingsManager.bind( MouseWheel.GLOBAL_WHEEL.getUp(), MyInputBinding.ACTION0 );
+        bindingsManager.bind( MouseWheel.GLOBAL_WHEEL.getDown(), MyInputBinding.ACTION1 );
+        bindingsManager.bind( is.getMouse().getWheel(), MyInputBinding.ACTION2 );
+        bindingsManager.bind( MouseWheel.GLOBAL_WHEEL, MyInputBinding.ACTION3 );
+        */
         
-        statesManager = new InputStatesManager( MyInputBinding.values().length + 1 );
+        statesManager = new InputStatesManager( bindingsManager );
+        is.registerInputStatesManager( statesManager );
         
         
         InputBindingsAdapter< MyInputAction > bindingsAdapter = new InputBindingsAdapter< MyInputAction >( MyInputAction.values().length );
@@ -391,36 +400,31 @@ public class InputTest implements InputListener, InputHotPlugListener
         hotplugManager.start();
     }
     
+    private void check( InputAction action, AnalogDeviceComponent comp )
+    {
+        /*
+        if ( !isDebugFlagSet( DEBUG_MASK_MYBINDING ) )
+            return;
+        */
+        
+        DigiState state = statesManager.getInputState( action );
+        
+        if ( state.isVolatile() )
+            System.out.println( action + ": " + state + ", " + comp.getIntValue() );
+    }
+    
     private void iteration( InputSystem is, final long time ) throws Throwable
     {
-        statesManager.update( bindingsManager, is.getKeyboard(), is.getMouse(), time );
+        statesManager.update( time );
         
-        if ( isDebugFlagSet( DEBUG_MASK_MYBINDING ) )
-        {
-            DigiState state = null;
-            
-            //System.out.println( statesManager.getInputState( MyInputBinding.ACTION1 ) );
-            
-            state = statesManager.getInputState( MyInputBinding.ACTION1 );
-            
-            if ( state.isVolatile() )
-                System.out.println( state + ", " + is.getMouse().getButtonsState() );
-                //System.out.println( statesManager.getSimpleInputState( MyInputBinding.ACTION2 ) );
-            
-            state = statesManager.getInputState( MyInputBinding.ACTION2 );
-            
-            if ( state.isVolatile() )
-                System.out.println( state + ", " + is.getMouse().getWheel().getIntValue() );
-                //System.out.println( statesManager.getSimpleInputState( MyInputBinding.ACTION3 ) );
-            
-            state = statesManager.getInputState( MyInputBinding.ACTION3 );
-            
-            if ( state.isVolatile() )
-                System.out.println( state + ", " + is.getMouse().getXAxis().getIntValue() );
-                //System.out.println( statesManager.getSimpleInputState( MyInputBinding.ACTION4 ) );
-            
-            //Thread.sleep( 1000L );
-        }
+        check( MyInputBinding.ACTION0, is.getMouse().getWheel() );
+        check( MyInputBinding.ACTION1, is.getMouse().getWheel() );
+        check( MyInputBinding.ACTION2, is.getMouse().getWheel() );
+        check( MyInputBinding.ACTION3, is.getMouse().getWheel() );
+        check( MyInputBinding.ACTION4, is.getMouse().getWheel() );
+        check( MyInputBinding.ACTION5, is.getMouse().getWheel() );
+        
+        //Thread.sleep( 1000L );
     }
     
     

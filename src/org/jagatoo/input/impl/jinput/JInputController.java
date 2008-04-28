@@ -91,9 +91,12 @@ public class JInputController extends Controller
                     
                     if ( value != oldValue )
                     {
+                        final int oldIntValue = axis.getIntValue();
                         axis.setValue( value );
                         
                         final ControllerAxisChangedEvent axisEv = prepareControllerAxisChanged( axis, value - oldValue, nanoTime );
+                        
+                        is.notifyInputStatesManagers( this, axis, axis.getIntValue(), axis.getIntValue() - oldIntValue, nanoTime );
                         
                         if ( isQueued )
                             eventQueue.enqueue( axisEv );
@@ -114,6 +117,8 @@ public class JInputController extends Controller
                         {
                             button.setState( DigiState.POSITIVE );
                             
+                            is.notifyInputStatesManagers( this, button, 1, +1, nanoTime );
+                            
                             final ControllerButtonPressedEvent pressedEv = prepareControllerButtonPressed( button, nanoTime );
                             
                             if ( isQueued )
@@ -124,6 +129,8 @@ public class JInputController extends Controller
                         else
                         {
                             button.setState( DigiState.NEGATIVE );
+                            
+                            is.notifyInputStatesManagers( this, button, 0, -1, nanoTime );
                             
                             final ControllerButtonReleasedEvent releasedEv = prepareControllerButtonReleased( button, nanoTime );
                             

@@ -214,6 +214,8 @@ public class LWJGLKeyboard extends Keyboard
                 {
                     final KeyPressedEvent pressedEv = prepareKeyPressedEvent( key, modifierMask, nanoTime, 0L );
                     
+                    is.notifyInputStatesManagers( this, key, 1, +1, nanoTime );
+                    
                     if ( pressedEv == null )
                         continue;
                     
@@ -241,6 +243,8 @@ public class LWJGLKeyboard extends Keyboard
                 else
                 {
                     final KeyReleasedEvent releasedEv = prepareKeyReleasedEvent( key, modifierMask, nanoTime, 0L );
+                    
+                    is.notifyInputStatesManagers( this, key, 0, -1, nanoTime );
                     
                     if ( releasedEv == null )
                         continue;

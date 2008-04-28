@@ -34,17 +34,21 @@ import java.util.HashSet;
 
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.ControllerFactory;
+import org.jagatoo.input.devices.InputDevice;
 import org.jagatoo.input.devices.InputDeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.KeyboardFactory;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.devices.MouseFactory;
+import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.handlers.InputHandler;
 import org.jagatoo.input.listeners.InputListener;
 import org.jagatoo.input.listeners.InputStateListener;
+import org.jagatoo.input.managers.InputStatesManager;
 import org.jagatoo.input.misc.InputSourceWindow;
 import org.jagatoo.logging.LogChannel;
+import org.jagatoo.util.arrays.ArrayUtils;
 
 public class InputSystem
 {
@@ -65,6 +69,7 @@ public class InputSystem
     private final ArrayList< InputListener > inputListeners = new ArrayList< InputListener >();
     private final ArrayList< InputStateListener > inputStateListeners = new ArrayList< InputStateListener >();
     
+    private InputStatesManager[] statesManagers = null;
     private final ArrayList< InputHandler< ? > > inputHandlers = new ArrayList< InputHandler< ? > >();
     
     public static final void setInstance( InputSystem inputSystem )
@@ -92,8 +97,63 @@ public class InputSystem
         return( eventQueue );
     }
     
+    public void registerInputStatesManager( InputStatesManager mgr )
+    {
+        if ( mgr == null )
+            throw( new NullPointerException( "mgr must not be null." ) );
+        
+        if ( ( statesManagers == null ) || ( statesManagers.length == 0 ) )
+        {
+            statesManagers = new InputStatesManager[] { mgr };
+        }
+        else if ( !ArrayUtils.contains( statesManagers, mgr, true ) )
+        {
+            InputStatesManager[] newArray = new InputStatesManager[ statesManagers.length + 1 ];
+            System.arraycopy( statesManagers, 0, newArray, 0, statesManagers.length );
+            newArray[ newArray.length - 1 ] = mgr;
+            statesManagers = newArray;
+        }
+    }
+    
+    public void deregisterInputStatesManager( InputStatesManager mgr )
+    {
+        if ( mgr == null )
+            throw( new NullPointerException( "mgr must not be null." ) );
+        
+        if ( ( statesManagers == null ) || ( statesManagers.length == 0 ) )
+        {
+            return;
+        }
+        else
+        {
+            final int index = ArrayUtils.indexOf( statesManagers, mgr, true );
+            
+            if ( index >= 0 )
+            {
+                InputStatesManager[] newArray = new InputStatesManager[ statesManagers.length - 1 ];
+                System.arraycopy( statesManagers, 0, newArray, 0, index );
+                System.arraycopy( statesManagers, index + 1, newArray, index, statesManagers.length - index - 1 );
+                statesManagers = newArray;
+            }
+        }
+    }
+    
+    public final void notifyInputStatesManagers( final InputDevice device, DeviceComponent comp, int state, final int delta, long nanoTime )
+    {
+        if ( ( statesManagers == null ) || ( statesManagers.length == 0 ) )
+            return;
+        
+        for ( int i = 0; i < statesManagers.length; i++ )
+        {
+            statesManagers[ i ].internalUpdateState( device, comp, state, delta, nanoTime );
+        }
+    }
+    
     public void addInputHandler( InputHandler< ? > inputHandler )
     {
+        if ( inputHandler == null )
+            throw( new NullPointerException( "inputHandler must not be null." ) );
+        
         if ( !inputHandlers.contains( inputHandler ) )
         {
             inputHandler.setInputSystem( this );
@@ -104,6 +164,9 @@ public class InputSystem
     
     public void removeInputHandler( InputHandler< ? > inputHandler )
     {
+        if ( inputHandler == null )
+            throw( new NullPointerException( "inputHandler must not be null." ) );
+        
         if ( inputHandlers.remove( inputHandler ) )
         {
             inputHandler.setInputSystem( null );

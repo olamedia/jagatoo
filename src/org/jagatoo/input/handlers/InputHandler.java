@@ -36,14 +36,18 @@ package org.jagatoo.input.handlers;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.actions.InputAction;
-import org.jagatoo.input.devices.Keyboard;
-import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.managers.InputBindingsManager;
 import org.jagatoo.input.managers.InputStatesManager;
 
 /**
- * This is a basic abstract implementation of the InputHandler interface.
- * It has implementations for the most basic methods of InputHandler.
+ * This is the abstract base class for all InputHandlers.<br>
+ * <br>
+ * And InputHandler should be used instead of simple input-listener-code,
+ * if continous movements are to be applied to objects, that obviously
+ * need the current input-state, but not reactions of state-changes.<br>
+ * <br>
+ * The InputHandler keeps instances of {@link InputBindingsManager} and
+ * {@link InputStatesManager} and uses them to manage input-states.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
@@ -207,10 +211,7 @@ public abstract class InputHandler< A extends InputAction >
      */
     protected void pollInputStates( long nanoTime )
     {
-        final Keyboard keyboard = isKeyboardSuspended() ? getInputSystem().getKeyboard() : null;
-        final Mouse mouse = isMouseSuspended() ? getInputSystem().getMouse() : null;
-        
-        statesManager.update( getBindingsManager(), keyboard, mouse, nanoTime );
+        statesManager.update( nanoTime );
     }
     
     /**
@@ -227,7 +228,20 @@ public abstract class InputHandler< A extends InputAction >
      */
     public void setInputSystem( InputSystem inputSystem )
     {
+        if ( inputSystem == this.inputSystem )
+            return;
+        
+        if ( ( this.inputSystem != null ) && ( this.statesManager != null ) )
+        {
+            this.inputSystem.deregisterInputStatesManager( this.statesManager );
+        }
+        
         this.inputSystem = inputSystem;
+        
+        if ( ( inputSystem != null ) && ( this.statesManager != null ) )
+        {
+            inputSystem.registerInputStatesManager( this.statesManager );
+        }
     }
     
     /**
@@ -238,9 +252,9 @@ public abstract class InputHandler< A extends InputAction >
         return( inputSystem );
     }
     
-    protected InputStatesManager createInputStatesManager( int numActions )
+    protected InputStatesManager createInputStatesManager( InputBindingsManager< A > bindingsManager )
     {
-        return( new InputStatesManager( numActions ) );
+        return( new InputStatesManager( bindingsManager ) );
     }
     
     public InputHandler( InputBindingsManager< A > bindingsManager )
@@ -249,6 +263,6 @@ public abstract class InputHandler< A extends InputAction >
         if ( bindingsManager == null )
             this.statesManager = null;
         else
-            this.statesManager = createInputStatesManager( bindingsManager.getNumActions() );
+            this.statesManager = createInputStatesManager( bindingsManager );
     }
 }

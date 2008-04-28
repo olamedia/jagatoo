@@ -48,6 +48,11 @@ public class EventQueue
         return( numEvents );
     }
     
+    public final InputEvent getEvent( int index )
+    {
+        return( events[ index ] );
+    }
+    
     public final void enqueue( InputEvent event )
     {
         synchronized ( LOCK )

@@ -174,6 +174,8 @@ public class JInputMouse extends Mouse
                         {
                             final MouseButtonPressedEvent pressedEv = prepareMouseButtonPressedEvent( button, nanoTime );
                             
+                            is.notifyInputStatesManagers( this, button, 1, +1, nanoTime );
+                            
                             if ( pressedEv == null )
                                 continue;
                             
@@ -185,6 +187,8 @@ public class JInputMouse extends Mouse
                         else
                         {
                             final MouseButtonReleasedEvent releasedEv = prepareMouseButtonReleasedEvent( button, nanoTime );
+                            
+                            is.notifyInputStatesManagers( this, button, 0, -1, nanoTime );
                             
                             if ( releasedEv == null )
                                 continue;
@@ -201,6 +205,8 @@ public class JInputMouse extends Mouse
                         
                         final MouseWheelEvent wheelEv = prepareMouseWheelMovedEvent( wheelDelta, false, nanoTime );
                         
+                        is.notifyInputStatesManagers( this, this.getWheel(), this.getWheel().getIntValue(), wheelDelta, nanoTime );
+                        
                         if ( wheelEv == null )
                             continue;
                         
@@ -215,6 +221,12 @@ public class JInputMouse extends Mouse
             if ( ( dx != 0 ) || ( dy != 0 ) )
             {
                 final MouseMovedEvent movedEv = prepareMouseMovedEvent( getCurrentX(), getCurrentY(), dx, dy, nanoTime );
+                
+                if ( dx != 0 )
+                    is.notifyInputStatesManagers( this, this.getXAxis(), getCurrentX(), dx, nanoTime );
+                
+                if ( dy != 0 )
+                    is.notifyInputStatesManagers( this, this.getYAxis(), getCurrentY(), dy, nanoTime );
                 
                 if ( movedEv != null )
                 {

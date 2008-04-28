@@ -108,9 +108,12 @@ public class LWJGLController extends Controller
                 
                 if ( newValue != oldValue )
                 {
+                    final int oldIntValue = axis.getIntValue();
                     axis.setValue( newValue );
                     
                     final ControllerAxisChangedEvent axisEv = prepareControllerAxisChanged( axis, newValue - oldValue, nanoTime );
+                    
+                    is.notifyInputStatesManagers( this, axis, axis.getIntValue(), axis.getIntValue() - oldIntValue, nanoTime );
                     
                     if ( axisEv == null )
                         continue;
@@ -136,6 +139,8 @@ public class LWJGLController extends Controller
                         
                         final ControllerButtonPressedEvent pressedEv = prepareControllerButtonPressed( button, nanoTime );
                         
+                        is.notifyInputStatesManagers( this, button, 1, +1, nanoTime );
+                        
                         if ( pressedEv == null )
                             continue;
                         
@@ -149,6 +154,8 @@ public class LWJGLController extends Controller
                         button.setState( DigiState.NEGATIVE );
                         
                         final ControllerButtonReleasedEvent releasedEv = prepareControllerButtonReleased( button, nanoTime );
+                        
+                        is.notifyInputStatesManagers( this, button, 0, -1, nanoTime );
                         
                         if ( releasedEv == null )
                             continue;

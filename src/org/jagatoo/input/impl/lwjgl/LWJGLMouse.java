@@ -153,7 +153,7 @@ public class LWJGLMouse extends Mouse
                 final int dx = org.lwjgl.input.Mouse.getEventDX();
                 final int dy = -org.lwjgl.input.Mouse.getEventDY();
                 
-                final int button = org.lwjgl.input.Mouse.getEventButton();
+                final int buttonIdx = org.lwjgl.input.Mouse.getEventButton();
                 final boolean buttonState = org.lwjgl.input.Mouse.getEventButtonState();
                 
                 final int wheelDelta = org.lwjgl.input.Mouse.getEventDWheel() / 120;
@@ -165,6 +165,11 @@ public class LWJGLMouse extends Mouse
                 {
                     final MouseMovedEvent movEv = prepareMouseMovedEvent( getCurrentX(), getCurrentY(), dx, dy, nanoTime );
                     
+                    if ( dx != 0 )
+                        is.notifyInputStatesManagers( this, getXAxis(), x, dx, nanoTime );
+                    if ( dy != 0 )
+                        is.notifyInputStatesManagers( this, getYAxis(), y, dy, nanoTime );
+                    
                     if ( movEv == null )
                         continue;
                     
@@ -174,11 +179,15 @@ public class LWJGLMouse extends Mouse
                         fireOnMouseMoved( movEv, true );
                 }
                 
-                if ( button != -1 )
+                if ( buttonIdx != -1 )
                 {
+                    final MouseButton button = convertButton( buttonIdx );
+                    
                     if ( buttonState )
                     {
-                        final MouseButtonPressedEvent pressedEv = prepareMouseButtonPressedEvent( convertButton( button ), nanoTime );
+                        final MouseButtonPressedEvent pressedEv = prepareMouseButtonPressedEvent( button, nanoTime );
+                        
+                        is.notifyInputStatesManagers( this, button, 1, +1, nanoTime );
                         
                         if ( pressedEv == null )
                             continue;
@@ -190,7 +199,9 @@ public class LWJGLMouse extends Mouse
                     }
                     else
                     {
-                        final MouseButtonReleasedEvent releasedEv = prepareMouseButtonReleasedEvent( convertButton( button ), nanoTime );
+                        final MouseButtonReleasedEvent releasedEv = prepareMouseButtonReleasedEvent( button, nanoTime );
+                        
+                        is.notifyInputStatesManagers( this, button, 0, -1, nanoTime );
                         
                         if ( releasedEv == null )
                             continue;
@@ -205,6 +216,8 @@ public class LWJGLMouse extends Mouse
                 if ( wheelDelta != 0 )
                 {
                     final MouseWheelEvent wheelEv = prepareMouseWheelMovedEvent( wheelDelta, false, nanoTime );
+                    
+                    is.notifyInputStatesManagers( this, getWheel(), getWheel().getIntValue(), wheelDelta, nanoTime );
                     
                     if ( wheelEv == null )
                         continue;
