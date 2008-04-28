@@ -36,7 +36,7 @@ import org.jagatoo.input.devices.InputDeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * Insert type comment here.

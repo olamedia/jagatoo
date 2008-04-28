@@ -45,7 +45,7 @@ import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
 import org.jagatoo.input.events.KeyboardEvent;
 import org.jagatoo.input.localization.KeyboardLocalizer;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * AWT implementation of the Keyboard class.

@@ -44,7 +44,7 @@ import org.jagatoo.input.events.MouseEvent;
 import org.jagatoo.input.events.MouseEventPool;
 import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * AWT implementation of the Mouse class.

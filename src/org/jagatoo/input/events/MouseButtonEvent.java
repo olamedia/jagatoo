@@ -30,7 +30,7 @@
 package org.jagatoo.input.events;
 
 import org.jagatoo.input.devices.Mouse;
-import org.jagatoo.input.misc.InputState;
+import org.jagatoo.input.devices.components.InputState;
 import org.jagatoo.input.devices.components.MouseButton;
 
 /**

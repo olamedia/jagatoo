@@ -36,12 +36,12 @@ import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.ControllerFactory;
 import org.jagatoo.input.devices.components.DeviceComponent;
-import org.jagatoo.input.misc.InputState;
+import org.jagatoo.input.devices.components.InputState;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
 import org.jagatoo.input.events.ControllerButtonReleasedEvent;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * JInput implementation of a Controller.

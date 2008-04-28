@@ -36,7 +36,7 @@ import org.jagatoo.input.actions.InvokableInputAction;
 import org.jagatoo.input.devices.InputDevice;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.devices.components.DeviceComponent;
-import org.jagatoo.input.misc.InputState;
+import org.jagatoo.input.devices.components.InputState;
 import org.jagatoo.input.devices.components.MouseWheel;
 import org.jagatoo.logging.Log;
 

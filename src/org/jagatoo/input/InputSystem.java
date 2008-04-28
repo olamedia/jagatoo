@@ -46,7 +46,7 @@ import org.jagatoo.input.handlers.InputHandler;
 import org.jagatoo.input.listeners.InputListener;
 import org.jagatoo.input.listeners.InputStateListener;
 import org.jagatoo.input.managers.InputStatesManager;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 import org.jagatoo.logging.LogChannel;
 import org.jagatoo.util.arrays.ArrayUtils;
 

@@ -35,12 +35,12 @@ import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.ControllerFactory;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
-import org.jagatoo.input.misc.InputState;
+import org.jagatoo.input.devices.components.InputState;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
 import org.jagatoo.input.events.ControllerButtonReleasedEvent;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * LWJGL implementation of a Controller.

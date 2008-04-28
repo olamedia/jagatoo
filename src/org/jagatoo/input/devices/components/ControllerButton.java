@@ -30,7 +30,6 @@
 package org.jagatoo.input.devices.components;
 
 import org.jagatoo.input.devices.Controller;
-import org.jagatoo.input.misc.InputState;
 
 /**
  * Insert type comment here.

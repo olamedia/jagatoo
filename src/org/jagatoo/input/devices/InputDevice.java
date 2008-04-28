@@ -37,7 +37,7 @@ import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.listeners.InputStateListener;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 
 public abstract class InputDevice implements Enableable
 {

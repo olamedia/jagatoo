@@ -38,7 +38,7 @@ import org.jagatoo.input.impl.jinput.JInputInputDeviceFactory;
 import org.jagatoo.input.impl.lwjgl.LWJGLInputDeviceFactory;
 import org.jagatoo.input.impl.lwjgl.LWJGLKeyboard;
 import org.jagatoo.input.impl.lwjgl.LWJGLMouse;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * This {@link InputDeviceFactory} is backed by an {@link LWJGLInputDeviceFactory}

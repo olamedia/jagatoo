@@ -32,7 +32,7 @@ package org.jagatoo.input.devices;
 import java.util.ArrayList;
 
 import org.jagatoo.input.InputSystemException;
-import org.jagatoo.input.misc.InputState;
+import org.jagatoo.input.devices.components.InputState;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.events.EventQueue;
@@ -43,7 +43,7 @@ import org.jagatoo.input.events.KeyboardEvent;
 import org.jagatoo.input.events.KeyboardEventPool;
 import org.jagatoo.input.listeners.KeyboardListener;
 import org.jagatoo.input.localization.KeyboardLocalizer;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 
 public abstract class Keyboard extends InputDevice
 {

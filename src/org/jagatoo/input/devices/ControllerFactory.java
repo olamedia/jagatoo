@@ -48,6 +48,11 @@ public interface ControllerFactory
     public Controller[] getControllers( boolean forceRefresh ) throws InputSystemException;
     
     /**
+     * @return an array of all the installed Controllers in the system. (This method doesn't force a refresh!)
+     */
+    public Controller[] getControllers() throws InputSystemException;
+    
+    /**
      * This method is called by the InputSystem when it gets destroyed.
      * 
      * @param inputSystem

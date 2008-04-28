@@ -27,7 +27,7 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.misc;
+package org.jagatoo.input.devices.components;
 
 /**
  * An input-state is a state, that is similar to a digital state.

@@ -36,7 +36,8 @@ import org.jagatoo.input.devices.InputDeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
+import org.jagatoo.logging.Log;
 
 /**
  * Insert type comment here.
@@ -124,6 +125,21 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
             }
             
             return( controllers );
+        }
+        catch ( org.lwjgl.LWJGLException lwjglEx )
+        {
+            if ( ( lwjglEx.getCause() != null ) && ( lwjglEx.getCause() instanceof NoClassDefFoundError ) )
+            {
+                final NoClassDefFoundError ncdfe = (NoClassDefFoundError)lwjglEx.getCause();
+                
+                String message = "Error retrieving Controllers. JInput doesn't seem to be installed.";
+                
+                Log.error( InputSystem.LOG_CHANNEL, message );
+                
+                throw( new InputSystemException( message, ncdfe ) );
+            }
+            
+            throw( new InputSystemException( lwjglEx ) );
         }
         catch ( Throwable t )
         {

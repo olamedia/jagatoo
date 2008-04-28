@@ -31,7 +31,7 @@ package org.jagatoo.input.events;
 
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.components.ControllerButton;
-import org.jagatoo.input.misc.InputState;
+import org.jagatoo.input.devices.components.InputState;
 
 /**
  * Stores the details associated with a controller event.

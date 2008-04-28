@@ -48,6 +48,11 @@ public interface MouseFactory
     public Mouse[] getMouses( boolean forceRefresh ) throws InputSystemException;
     
     /**
+     * @return an array of all the installed Mouses in the system. (This method doesn't force a refresh!)
+     */
+    public Mouse[] getMouses() throws InputSystemException;
+    
+    /**
      * This method is called by the InputSystem when it gets destroyed.
      * 
      * @param inputSystem

@@ -41,7 +41,7 @@ import org.jagatoo.input.events.ControllerEvent;
 import org.jagatoo.input.events.ControllerEventPool;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.listeners.ControllerListener;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 
 public abstract class Controller extends InputDevice
 {

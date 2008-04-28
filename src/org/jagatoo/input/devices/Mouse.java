@@ -33,7 +33,7 @@ import java.util.ArrayList;
 
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.components.ControllerButton;
-import org.jagatoo.input.misc.InputState;
+import org.jagatoo.input.devices.components.InputState;
 import org.jagatoo.input.devices.components.MouseAxis;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
@@ -49,7 +49,7 @@ import org.jagatoo.input.events.MouseWheelEvent;
 import org.jagatoo.input.listeners.MouseListener;
 import org.jagatoo.input.listeners.MouseStopListener;
 import org.jagatoo.input.managers.MouseStopManager;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 
 public abstract class Mouse extends InputDevice
 {

@@ -36,7 +36,8 @@ import org.jagatoo.input.devices.InputDeviceFactory;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
+import org.jagatoo.logging.Log;
 
 /**
  * Insert type comment here.
@@ -51,71 +52,27 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
     @Override
     protected JInputMouse[] initMouses() throws InputSystemException
     {
-        Mouse[] currentMoues = getCachedMouses();
-        
-        net.java.games.input.Controller[] controllers = net.java.games.input.ControllerEnvironment.getDefaultEnvironment().getControllers();
-        
-        JInputMouse[] tmpMouses = new JInputMouse[ controllers.length ];
-        int numMouses = 0;
-        boolean alreadyexisting = false;
-        for ( int i = 0; i < controllers.length; i++ )
+        try
         {
-            if ( controllers[ i ].getType() == net.java.games.input.Controller.Type.MOUSE )
+            Mouse[] currentMoues = getCachedMouses();
+            
+            net.java.games.input.Controller[] controllers = net.java.games.input.ControllerEnvironment.getDefaultEnvironment().getControllers();
+            
+            JInputMouse[] tmpMouses = new JInputMouse[ controllers.length ];
+            int numMouses = 0;
+            boolean alreadyexisting = false;
+            for ( int i = 0; i < controllers.length; i++ )
             {
-                alreadyexisting = false;
-                if ( currentMoues != null )
-                {
-                    for ( int j = 0; j < currentMoues.length; j++ )
-                    {
-                        if ( ( currentMoues[ j ] instanceof JInputMouse ) && ( currentMoues[ j ].getName().equals( controllers[ i ].getName() ) ) )
-                        {
-                            tmpMouses[ numMouses++ ] = (JInputMouse)currentMoues[ j ];
-                            alreadyexisting = true;
-                            break;
-                        }
-                    }
-                }
-                
-                if ( !alreadyexisting )
-                {
-                    tmpMouses[ numMouses++ ] = new JInputMouse( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Mouse)controllers[ i ] );
-                }
-            }
-        }
-        
-        JInputMouse[] mouses = new JInputMouse[ numMouses ];
-        System.arraycopy( tmpMouses, 0, mouses, 0, numMouses );
-        
-        return( mouses );
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    protected JInputKeyboard[] initKeyboards() throws InputSystemException
-    {
-        Keyboard[] currentKeyboards = getCachedKeyboards();
-        
-        net.java.games.input.Controller[] controllers = net.java.games.input.ControllerEnvironment.getDefaultEnvironment().getControllers();
-        
-        JInputKeyboard[] tmpKeyboards = new JInputKeyboard[ controllers.length ];
-        int numKeyboards = 0;
-        boolean alreadyexisting = false;
-        for ( int i = 0; i < controllers.length; i++ )
-        {
-            if ( controllers[ i ].getType() == net.java.games.input.Controller.Type.KEYBOARD )
-            {
-                if ( controllers[ i ].getComponents().length > 10 )
+                if ( controllers[ i ].getType() == net.java.games.input.Controller.Type.MOUSE )
                 {
                     alreadyexisting = false;
-                    if ( currentKeyboards != null )
+                    if ( currentMoues != null )
                     {
-                        for ( int j = 0; j < currentKeyboards.length; j++ )
+                        for ( int j = 0; j < currentMoues.length; j++ )
                         {
-                            if ( ( currentKeyboards[ j ] instanceof JInputKeyboard ) && ( currentKeyboards[ j ].getName().equals( controllers[ i ].getName() ) ) )
+                            if ( ( currentMoues[ j ] instanceof JInputMouse ) && ( currentMoues[ j ].getName().equals( controllers[ i ].getName() ) ) )
                             {
-                                tmpKeyboards[ numKeyboards++ ] = (JInputKeyboard)currentKeyboards[ j ];
+                                tmpMouses[ numMouses++ ] = (JInputMouse)currentMoues[ j ];
                                 alreadyexisting = true;
                                 break;
                             }
@@ -124,16 +81,84 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
                     
                     if ( !alreadyexisting )
                     {
-                        tmpKeyboards[ numKeyboards++ ] = new JInputKeyboard( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Keyboard)controllers[ i ] );
+                        tmpMouses[ numMouses++ ] = new JInputMouse( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Mouse)controllers[ i ] );
                     }
                 }
             }
+            
+            JInputMouse[] mouses = new JInputMouse[ numMouses ];
+            System.arraycopy( tmpMouses, 0, mouses, 0, numMouses );
+            
+            return( mouses );
         }
-        
-        JInputKeyboard[] keyboards = new JInputKeyboard[ numKeyboards ];
-        System.arraycopy( tmpKeyboards, 0, keyboards, 0, numKeyboards );
-        
-        return( keyboards );
+        catch ( NoClassDefFoundError ncdfe )
+        {
+            String message = "Error retrieving Mouses. JInput doesn't seem to be installed.";
+            
+            Log.error( InputSystem.LOG_CHANNEL, message );
+            
+            throw( new InputSystemException( message, ncdfe ) );
+            //return( new JInputMouse[ 0 ] );
+        }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected JInputKeyboard[] initKeyboards() throws InputSystemException
+    {
+        try
+        {
+            Keyboard[] currentKeyboards = getCachedKeyboards();
+            
+            net.java.games.input.Controller[] controllers = net.java.games.input.ControllerEnvironment.getDefaultEnvironment().getControllers();
+            
+            JInputKeyboard[] tmpKeyboards = new JInputKeyboard[ controllers.length ];
+            int numKeyboards = 0;
+            boolean alreadyexisting = false;
+            for ( int i = 0; i < controllers.length; i++ )
+            {
+                if ( controllers[ i ].getType() == net.java.games.input.Controller.Type.KEYBOARD )
+                {
+                    if ( controllers[ i ].getComponents().length > 10 )
+                    {
+                        alreadyexisting = false;
+                        if ( currentKeyboards != null )
+                        {
+                            for ( int j = 0; j < currentKeyboards.length; j++ )
+                            {
+                                if ( ( currentKeyboards[ j ] instanceof JInputKeyboard ) && ( currentKeyboards[ j ].getName().equals( controllers[ i ].getName() ) ) )
+                                {
+                                    tmpKeyboards[ numKeyboards++ ] = (JInputKeyboard)currentKeyboards[ j ];
+                                    alreadyexisting = true;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        if ( !alreadyexisting )
+                        {
+                            tmpKeyboards[ numKeyboards++ ] = new JInputKeyboard( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Keyboard)controllers[ i ] );
+                        }
+                    }
+                }
+            }
+            
+            JInputKeyboard[] keyboards = new JInputKeyboard[ numKeyboards ];
+            System.arraycopy( tmpKeyboards, 0, keyboards, 0, numKeyboards );
+            
+            return( keyboards );
+        }
+        catch ( NoClassDefFoundError ncdfe )
+        {
+            String message = "Error retrieving Keyboards. JInput doesn't seem to be installed.";
+            
+            Log.error( InputSystem.LOG_CHANNEL, message );
+            
+            throw( new InputSystemException( message, ncdfe ) );
+            //return( new JInputKeyboard[ 0 ] );
+        }
     }
     
     private static final boolean isController( net.java.games.input.Controller.Type type )
@@ -164,45 +189,57 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
     @Override
     protected JInputController[] initControllers() throws InputSystemException
     {
-        Controller[] currentControllers = getCachedControllers();
-        
-        net.java.games.input.Controller[] controllers = net.java.games.input.ControllerEnvironment.getDefaultEnvironment().getControllers();
-        
-        JInputController[] tmpControllers = new JInputController[ controllers.length ];
-        int numControllers = 0;
-        boolean alreadyexisting = false;
-        for ( int i = 0; i < controllers.length; i++ )
+        try
         {
-            if ( isController( controllers[ i ].getType() ) )
+            Controller[] currentControllers = getCachedControllers();
+            
+            net.java.games.input.Controller[] controllers = net.java.games.input.ControllerEnvironment.getDefaultEnvironment().getControllers();
+            
+            JInputController[] tmpControllers = new JInputController[ controllers.length ];
+            int numControllers = 0;
+            boolean alreadyexisting = false;
+            for ( int i = 0; i < controllers.length; i++ )
             {
-                if ( controllers[ i ].getComponents().length > 10 )
+                if ( isController( controllers[ i ].getType() ) )
                 {
-                    alreadyexisting = false;
-                    if ( currentControllers != null )
+                    if ( controllers[ i ].getComponents().length > 10 )
                     {
-                        for ( int j = 0; j < currentControllers.length; j++ )
+                        alreadyexisting = false;
+                        if ( currentControllers != null )
                         {
-                            if ( ( currentControllers[ j ] instanceof JInputController ) && ( currentControllers[ j ].getName().equals( controllers[ i ].getName() ) ) )
+                            for ( int j = 0; j < currentControllers.length; j++ )
                             {
-                                tmpControllers[ numControllers++ ] = (JInputController)currentControllers[ j ];
-                                alreadyexisting = true;
-                                break;
+                                if ( ( currentControllers[ j ] instanceof JInputController ) && ( currentControllers[ j ].getName().equals( controllers[ i ].getName() ) ) )
+                                {
+                                    tmpControllers[ numControllers++ ] = (JInputController)currentControllers[ j ];
+                                    alreadyexisting = true;
+                                    break;
+                                }
                             }
                         }
-                    }
-                    
-                    if ( !alreadyexisting )
-                    {
-                        tmpControllers[ numControllers++ ] = new JInputController( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
+                        
+                        if ( !alreadyexisting )
+                        {
+                            tmpControllers[ numControllers++ ] = new JInputController( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
+                        }
                     }
                 }
             }
+            
+            JInputController[] controllers2 = new JInputController[ numControllers ];
+            System.arraycopy( tmpControllers, 0, controllers2, 0, numControllers );
+            
+            return( controllers2 );
         }
-        
-        JInputController[] controllers2 = new JInputController[ numControllers ];
-        System.arraycopy( tmpControllers, 0, controllers2, 0, numControllers );
-        
-        return( controllers2 );
+        catch ( NoClassDefFoundError ncdfe )
+        {
+            String message = "Error retrieving Controllers. JInput doesn't seem to be installed.";
+            
+            Log.error( InputSystem.LOG_CHANNEL, message );
+            
+            throw( new InputSystemException( message, ncdfe ) );
+            //return( new JInputController[ 0 ] );
+        }
     }
     
     /**

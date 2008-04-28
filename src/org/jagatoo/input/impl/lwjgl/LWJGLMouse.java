@@ -40,7 +40,7 @@ import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * LWJGL implementation of the Mouse class.

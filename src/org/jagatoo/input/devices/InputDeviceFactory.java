@@ -32,7 +32,7 @@ package org.jagatoo.input.devices;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.misc.InputSourceWindow;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * A DeviceFactory is a simple factory to access all input devices
@@ -173,6 +173,14 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     }
     
     /**
+     * {@inheritDoc}
+     */
+    public final Keyboard[] getKeyboards() throws InputSystemException
+    {
+        return( getKeyboards( false ) );
+    }
+    
+    /**
      * @return an array of all the installed Mouses in the system.
      */
     protected abstract Mouse[] initMouses() throws InputSystemException;
@@ -201,6 +209,14 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     }
     
     /**
+     * {@inheritDoc}
+     */
+    public final Mouse[] getMouses() throws InputSystemException
+    {
+        return( getMouses( false ) );
+    }
+    
+    /**
      * @return an array of all the installed Controllers in the system.
      */
     protected abstract Controller[] initControllers() throws InputSystemException;
@@ -226,6 +242,14 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
         }
         
         return( getCachedControllers() );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public final Controller[] getControllers() throws InputSystemException
+    {
+        return( getControllers( false ) );
     }
     
     /**

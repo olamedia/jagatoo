@@ -48,6 +48,11 @@ public interface KeyboardFactory
     public Keyboard[] getKeyboards( boolean forceRefresh ) throws InputSystemException;
     
     /**
+     * @return an array of all the installed Keyboards in the system. (This method doesn't force a refresh!)
+     */
+    public Keyboard[] getKeyboards() throws InputSystemException;
+    
+    /**
      * This method is called by the InputSystem when it gets destroyed.
      * 
      * @param inputSystem
