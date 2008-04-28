@@ -34,6 +34,8 @@ import java.util.List;
 
 import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.listeners.InputListener;
+import org.jagatoo.input.managers.InputBindingsManager;
+import org.jagatoo.input.managers.InputBindingsSet;
 import org.jagatoo.logging.Log;
 import org.jagatoo.logging.LogChannel;
 
@@ -140,7 +142,30 @@ public class CommandProcessor
     {
         dispatcher.bindCommand( comp, command );
     }
-    
+
+    /**
+     * Binds all {@link InputActionCommand}s to a keyboard-key or mouse-button action.
+     * 
+     * @param bindingsManager
+     */
+    public < C extends InputActionCommand > void bindCommands( InputBindingsManager< C > bindingsManager )
+    {
+        for ( C command: bindingsManager.getBoundActions() )
+        {
+            DeviceComponent comp = bindingsManager.getBoundComponent( command, InputBindingsSet.PRIMARY );
+            if ( comp != null )
+            {
+                bindCommand( comp, command );
+            }
+            
+            comp = bindingsManager.getBoundComponent( command, InputBindingsSet.SECONDARY );
+            if ( comp != null )
+            {
+                bindCommand( comp, command );
+            }
+        }
+    }
+         
     /**
      * Unbinds a Command from a keyboard-key or mouse-button action.
      * 
