@@ -27,11 +27,18 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.localization.mappings;
+package org.jagatoo.input.localization.mappings.german;
 
+import java.net.URL;
+import java.util.HashMap;
+
+import org.jagatoo.input.InputSystem;
+import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
-import org.jagatoo.input.localization.Mapping;
+import org.jagatoo.input.localization.mappings.KeyLocalizationParser;
+import org.jagatoo.input.localization.mappings.Mapping;
+import org.jagatoo.logging.Log;
 
 /**
  * This the {@link Mapping} implementation for germany.
@@ -40,6 +47,8 @@ import org.jagatoo.input.localization.Mapping;
  */
 public class MappingGermany implements Mapping
 {
+    private HashMap< String, String > localizedKeyNamesMap = null;
+    
     /**
      * {@inheritDoc}
      */
@@ -375,6 +384,40 @@ public class MappingGermany implements Mapping
         }
         
         return( null );
+    }
+    
+    public String getLocalizedKeyName( DeviceComponent key )
+    {
+        if ( localizedKeyNamesMap == null )
+        {
+            localizedKeyNamesMap = new HashMap< String, String >();
+            
+            try
+            {
+                String packageName = this.getClass().getPackage().getName().replace( '.', '/' );
+                final String filename = "/" + packageName + "/keynames.german";
+                
+                URL resource = this.getClass().getResource( filename );
+                if ( resource != null )
+                {
+                    Log.debug( InputSystem.LOG_CHANNEL, "Parsing key-localization file ", filename, "..." );
+                    int numValidLines = KeyLocalizationParser.parse( resource, localizedKeyNamesMap );
+                    Log.debug( InputSystem.LOG_CHANNEL, "parsing done. Found ", numValidLines, " valid lines." );
+                }
+            }
+            catch ( Throwable t )
+            {
+                Log.print( InputSystem.LOG_CHANNEL, t );
+                t.printStackTrace();
+            }
+        }
+        
+        String locName = localizedKeyNamesMap.get( key.getName() );
+        
+        if ( locName == null )
+            return( key.getName() );
+        
+        return( locName );
     }
     
     public MappingGermany()

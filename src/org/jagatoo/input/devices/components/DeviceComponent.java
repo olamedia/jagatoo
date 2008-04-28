@@ -33,6 +33,7 @@ import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.actions.InvokableInputAction;
 import org.jagatoo.input.devices.InputDevice;
+import org.jagatoo.input.localization.KeyboardLocalizer;
 import org.jagatoo.logging.Log;
 
 /**
@@ -78,6 +79,14 @@ public abstract class DeviceComponent
     public final String getName()
     {
         return( name );
+    }
+    
+    /**
+     * @return this component's localized (translated) name.
+     */
+    public String getLocalizedName()
+    {
+        return( KeyboardLocalizer.getMapping().getLocalizedKeyName( this ) );
     }
     
     /**

@@ -674,5 +674,14 @@ public class InputTest implements InputListener, InputHotPlugListener
     public static void main( String[] args ) throws Throwable
     {
         new InputTest();
+        
+        /*
+        for ( KeyID kid : KeyID.values() )
+        {
+            final Key key = kid.getKey();
+            
+            System.out.println( kid + ", " + key + ", " + key.getName() + ": " + key.getLocalizedName() );
+        }
+        */
     }
 }

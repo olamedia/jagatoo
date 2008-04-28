@@ -27,8 +27,9 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.localization;
+package org.jagatoo.input.localization.mappings;
 
+import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.devices.components.Key;
 
 /**
@@ -65,4 +66,14 @@ public interface Mapping
     public abstract char getModifiedChar( Key key, char unmodChar, int modifierMask );
     
     public abstract Key getLocalizedKey( char keyChar );
+    
+    /**
+     * Searches for a localized name for the given Key.<br>
+     * If none was found, the result of key.getName() is returned.
+     * 
+     * @param key
+     * 
+     * @return the localized key-name.
+     */
+    public abstract String getLocalizedKeyName( DeviceComponent key );
 }

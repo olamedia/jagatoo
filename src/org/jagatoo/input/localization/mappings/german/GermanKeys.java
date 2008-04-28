@@ -27,7 +27,7 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.localization.mappings;
+package org.jagatoo.input.localization.mappings.german;
 
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
