@@ -35,7 +35,6 @@ import java.util.HashMap;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
 import org.jagatoo.input.devices.components.DeviceComponent;
-import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
@@ -170,7 +169,7 @@ class CommandDispatcher implements InputListener
         processInputEvent( Boolean.FALSE, key );
     }
     
-    public void onKeyStateChanged( KeyStateEvent e, Key key, DigiState state )
+    public void onKeyStateChanged( KeyStateEvent e, Key key, boolean state )
     {
     }
     
@@ -197,7 +196,7 @@ class CommandDispatcher implements InputListener
         processInputEvent( Boolean.FALSE, button );
     }
     
-    public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, DigiState state )
+    public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, boolean state )
     {
     }
     
@@ -224,19 +223,20 @@ class CommandDispatcher implements InputListener
     
     public void onControllerButtonPressed( ControllerButtonPressedEvent e, ControllerButton button )
     {
+        processInputEvent( Boolean.TRUE, button );
     }
     
     public void onControllerButtonReleased( ControllerButtonReleasedEvent e, ControllerButton button )
     {
+        processInputEvent( Boolean.FALSE, button );
     }
     
-    public void onControllerButtonStateChanged( ControllerButtonEvent e, ControllerButton button, DigiState state )
+    public void onControllerButtonStateChanged( ControllerButtonEvent e, ControllerButton button, boolean state )
     {
     }
     
     public void onControllerAxisChanged( ControllerAxisChangedEvent e, ControllerAxis axis, float axisDelta )
     {
-        // TODO Auto-generated method stub
     }
     
     /**

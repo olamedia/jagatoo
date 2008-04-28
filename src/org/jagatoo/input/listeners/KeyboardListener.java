@@ -29,7 +29,6 @@
  */
 package org.jagatoo.input.listeners;
 
-import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
@@ -75,7 +74,7 @@ public interface KeyboardListener
      * @param key
      * @param state
      */
-    public void onKeyStateChanged( KeyStateEvent e, Key key, DigiState state );
+    public void onKeyStateChanged( KeyStateEvent e, Key key, boolean state );
     
     /**
      * Used by implementing input classes to process a key typed event.

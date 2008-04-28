@@ -31,7 +31,7 @@ package org.jagatoo.input.events;
 
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.components.ControllerButton;
-import org.jagatoo.input.devices.components.DigiState;
+import org.jagatoo.input.misc.InputState;
 
 /**
  * Stores the details associated with a controller event.
@@ -47,7 +47,7 @@ public abstract class ControllerButtonEvent extends ControllerEvent
         return( button );
     }
     
-    public final DigiState getButtonState()
+    public final InputState getButtonState()
     {
         return( getButton().getState() );
     }

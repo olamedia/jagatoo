@@ -42,7 +42,7 @@ import org.jagatoo.input.devices.components.AnalogDeviceComponent;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
 import org.jagatoo.input.devices.components.DeviceComponent;
-import org.jagatoo.input.devices.components.DigiState;
+import org.jagatoo.input.misc.InputState;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.devices.components.MouseButton;
@@ -121,16 +121,16 @@ public class InputTest implements InputListener, InputHotPlugListener
             System.out.println( "Button released: " + e.getButton() + ", " + e.getX() + ", " + e.getY() );
     }
     
-    public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, DigiState state )
+    public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, boolean state )
     {
         if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
-            System.out.println( "mouse button state: " + e.getButton() + ", " + state );
+            System.out.println( "mouse button state: " + e.getButton() + ", state: " + state );
         
         try
         {
             if ( e.getButton() == MouseButtons.RIGHT_BUTTON )
             {
-                e.getMouse().setAbsolute( !state.getBooleanValue() );
+                e.getMouse().setAbsolute( !state );
             }
         }
         catch ( InputSystemException ex )
@@ -176,10 +176,10 @@ public class InputTest implements InputListener, InputHotPlugListener
             System.out.println( "key released: " + e.getKey() + ", " + e.getModifierMask() );
     }
     
-    public void onKeyStateChanged( KeyStateEvent e, Key key, DigiState state )
+    public void onKeyStateChanged( KeyStateEvent e, Key key, boolean state )
     {
         if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
-            System.out.println( "key state: " + e.getKey() + ", " + state );
+            System.out.println( "key state: " + e.getKey() + ", state: " + state );
     }
     
     public void onKeyTyped( KeyTypedEvent e, char keyChar )
@@ -207,10 +207,10 @@ public class InputTest implements InputListener, InputHotPlugListener
             System.out.println( "controller-button released: " + button );
     }
     
-    public void onControllerButtonStateChanged( ControllerButtonEvent e, ControllerButton button, DigiState state )
+    public void onControllerButtonStateChanged( ControllerButtonEvent e, ControllerButton button, boolean state )
     {
         if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
-            System.out.println( "controller-button state: " + button + ", " + state );
+            System.out.println( "controller-button state: " + button + ", state: " + state );
     }
     
     public void onInputDevicePluggedIn( InputDevice device )
@@ -407,7 +407,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             return;
         */
         
-        DigiState state = statesManager.getInputState( action );
+        InputState state = statesManager.getInputState( action );
         
         if ( state.isVolatile() )
             System.out.println( action + ": " + state + ", " + comp.getIntValue() );

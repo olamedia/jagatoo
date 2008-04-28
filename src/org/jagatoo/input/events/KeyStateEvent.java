@@ -30,7 +30,7 @@
 package org.jagatoo.input.events;
 
 import org.jagatoo.input.devices.Keyboard;
-import org.jagatoo.input.devices.components.DigiState;
+import org.jagatoo.input.misc.InputState;
 import org.jagatoo.input.devices.components.Key;
 
 /**
@@ -40,7 +40,7 @@ import org.jagatoo.input.devices.components.Key;
  */
 public abstract class KeyStateEvent extends KeyboardEvent
 {
-    public final DigiState getKeyState()
+    public final InputState getKeyState()
     {
         return( getKeyboard().getKeyState( getKey() ) );
     }

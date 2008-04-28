@@ -138,7 +138,7 @@ public class LWJGLMouse extends Mouse
         
         try
         {
-            LWJGLInputDeviceFactory.processMessages( nanoTime );
+            LWJGLMessageProcessor.processMessages( nanoTime );
             
             org.lwjgl.input.Mouse.poll();
             

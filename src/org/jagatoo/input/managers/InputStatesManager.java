@@ -36,7 +36,7 @@ import org.jagatoo.input.actions.InvokableInputAction;
 import org.jagatoo.input.devices.InputDevice;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.devices.components.DeviceComponent;
-import org.jagatoo.input.devices.components.DigiState;
+import org.jagatoo.input.misc.InputState;
 import org.jagatoo.input.devices.components.MouseWheel;
 import org.jagatoo.logging.Log;
 
@@ -88,30 +88,30 @@ public class InputStatesManager
      * 
      * @return the current key-state for the given action.
      */
-    public final DigiState getInputState( InputAction action )
+    public final InputState getInputState( InputAction action )
     {
         final int ordinal = action.ordinal();
         
         if ( states1[ ordinal ] == states2[ ordinal ] )
         {
             if ( states1[ ordinal ] > 0 )
-                return( DigiState.POSITIVE );
+                return( InputState.POSITIVE );
             else
-                return( DigiState.NEGATIVE );
+                return( InputState.NEGATIVE );
         }
         else if ( swapper )
         {
             if ( states1[ ordinal ] > states2[ ordinal ] )
-                return( DigiState.MADE_POSITIVE );
+                return( InputState.MADE_POSITIVE );
             else
-                return( DigiState.MADE_NEGATIVE );
+                return( InputState.MADE_NEGATIVE );
         }
         else
         {
             if ( states2[ ordinal ] > states1[ ordinal ] )
-                return( DigiState.MADE_POSITIVE );
+                return( InputState.MADE_POSITIVE );
             else
-                return( DigiState.MADE_NEGATIVE );
+                return( InputState.MADE_NEGATIVE );
         }
     }
     

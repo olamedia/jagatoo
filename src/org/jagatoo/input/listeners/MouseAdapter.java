@@ -29,7 +29,6 @@
  */
 package org.jagatoo.input.listeners;
 
-import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.events.MouseButtonEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
@@ -58,7 +57,7 @@ public abstract class MouseAdapter implements MouseListener, MouseStopListener
     /**
      * {@inheritDoc}
      */
-    public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, DigiState state ) {}
+    public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, boolean state ) {}
     
     /**
      * {@inheritDoc}

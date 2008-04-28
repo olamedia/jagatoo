@@ -30,6 +30,7 @@
 package org.jagatoo.input.devices.components;
 
 import org.jagatoo.input.devices.Controller;
+import org.jagatoo.input.misc.InputState;
 
 /**
  * Insert type comment here.
@@ -41,7 +42,7 @@ public class ControllerButton extends DigitalDeviceComponent
     private final Controller controller;
     private final int index;
     
-    private DigiState state = DigiState.NEGATIVE;
+    private InputState state = InputState.NEGATIVE;
     
     public final Controller getController()
     {
@@ -56,7 +57,7 @@ public class ControllerButton extends DigitalDeviceComponent
         return( index );
     }
     
-    public void setState( DigiState state )
+    public void setState( InputState state )
     {
         this.state = state;
     }
@@ -64,12 +65,12 @@ public class ControllerButton extends DigitalDeviceComponent
     public final void setState( boolean state )
     {
         if ( state )
-            setState( DigiState.POSITIVE );
+            setState( InputState.POSITIVE );
         else
-            setState( DigiState.NEGATIVE );
+            setState( InputState.NEGATIVE );
     }
     
-    public final DigiState getState()
+    public final InputState getState()
     {
         return( state );
     }

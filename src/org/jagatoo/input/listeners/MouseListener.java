@@ -29,7 +29,6 @@
  */
 package org.jagatoo.input.listeners;
 
-import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.events.MouseButtonEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
@@ -70,7 +69,7 @@ public interface MouseListener
      * @param button
      * @param state
      */
-    public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, DigiState state );
+    public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, boolean state );
     
     /**
      * Invoked when a change of the mouse's position was registered by the mouse device

@@ -35,7 +35,7 @@ import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.ControllerFactory;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
-import org.jagatoo.input.devices.components.DigiState;
+import org.jagatoo.input.misc.InputState;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
 import org.jagatoo.input.events.ControllerButtonReleasedEvent;
@@ -135,7 +135,7 @@ public class LWJGLController extends Controller
                 {
                     if ( newState )
                     {
-                        button.setState( DigiState.POSITIVE );
+                        button.setState( InputState.POSITIVE );
                         
                         final ControllerButtonPressedEvent pressedEv = prepareControllerButtonPressed( button, nanoTime );
                         
@@ -151,7 +151,7 @@ public class LWJGLController extends Controller
                     }
                     else
                     {
-                        button.setState( DigiState.NEGATIVE );
+                        button.setState( InputState.NEGATIVE );
                         
                         final ControllerButtonReleasedEvent releasedEv = prepareControllerButtonReleased( button, nanoTime );
                         

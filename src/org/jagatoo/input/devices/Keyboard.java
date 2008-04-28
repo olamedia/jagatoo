@@ -32,7 +32,7 @@ package org.jagatoo.input.devices;
 import java.util.ArrayList;
 
 import org.jagatoo.input.InputSystemException;
-import org.jagatoo.input.devices.components.DigiState;
+import org.jagatoo.input.misc.InputState;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.events.EventQueue;
@@ -177,7 +177,7 @@ public abstract class Keyboard extends InputDevice
         {
             for ( int i = 0; i < listeners.size(); i++ )
             {
-                listeners.get( i ).onKeyStateChanged( e, e.getKey(), e.getKeyState() );
+                listeners.get( i ).onKeyStateChanged( e, e.getKey(), e.getKeyBooleanState() );
                 listeners.get( i ).onKeyPressed( e, e.getKey() );
             }
         }
@@ -213,7 +213,7 @@ public abstract class Keyboard extends InputDevice
         {
             for ( int i = 0; i < listeners.size(); i++ )
             {
-                listeners.get( i ).onKeyStateChanged( e, e.getKey(), e.getKeyState() );
+                listeners.get( i ).onKeyStateChanged( e, e.getKey(), e.getKeyBooleanState() );
                 listeners.get( i ).onKeyReleased( e, e.getKey() );
             }
         }
@@ -273,12 +273,12 @@ public abstract class Keyboard extends InputDevice
         return( keyStates[ key.getKeyCode() - 1 ] );
     }
     
-    public final DigiState getKeyState( Key key )
+    public final InputState getKeyState( Key key )
     {
         if ( isKeyPressed( key ) )
-            return( DigiState.POSITIVE );
+            return( InputState.POSITIVE );
         else
-            return( DigiState.NEGATIVE );
+            return( InputState.NEGATIVE );
     }
     
     /**

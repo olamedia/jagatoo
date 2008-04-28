@@ -31,7 +31,6 @@ package org.jagatoo.input.listeners;
 
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
-import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
@@ -62,5 +61,5 @@ public abstract class ControllerAdapter implements ControllerListener
     /**
      * {@inheritDoc}
      */
-    public void onControllerButtonStateChanged( ControllerButtonEvent e, ControllerButton button, DigiState state ) {}
+    public void onControllerButtonStateChanged( ControllerButtonEvent e, ControllerButton button, boolean state ) {}
 }

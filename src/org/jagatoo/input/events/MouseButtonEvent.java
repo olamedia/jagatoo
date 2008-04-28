@@ -30,7 +30,7 @@
 package org.jagatoo.input.events;
 
 import org.jagatoo.input.devices.Mouse;
-import org.jagatoo.input.devices.components.DigiState;
+import org.jagatoo.input.misc.InputState;
 import org.jagatoo.input.devices.components.MouseButton;
 
 /**
@@ -65,12 +65,12 @@ public abstract class MouseButtonEvent extends MouseEvent
         return( (MouseButton)getComponent() );
     }
     
-    public final DigiState getButtonState()
+    public final InputState getButtonState()
     {
         return( getMouse().getButtonState( getButton() ) );
     }
     
-    public final boolean getKeyBooleanState()
+    public final boolean getButtonBooleanState()
     {
         return( getMouse().isButtonPressed( getButton() ) );
     }

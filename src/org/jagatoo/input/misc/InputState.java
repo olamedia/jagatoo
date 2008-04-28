@@ -27,14 +27,16 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.devices.components;
+package org.jagatoo.input.misc;
 
 /**
- * Insert type comment here.
+ * An input-state is a state, that is similar to a digital state.
+ * It additionally allows for volatile states, that only survive
+ * one frame.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public enum DigiState
+public enum InputState
 {
     POSITIVE( false, true ),
     NEGATIVE( false, false ),
@@ -58,7 +60,7 @@ public enum DigiState
         return( booleanValue );
     }
     
-    private DigiState( boolean isVolatile, boolean booleanValue )
+    private InputState( boolean isVolatile, boolean booleanValue )
     {
         this.isVolatile = isVolatile;
         this.booleanValue = booleanValue;

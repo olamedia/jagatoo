@@ -36,7 +36,7 @@ import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.ControllerFactory;
 import org.jagatoo.input.devices.components.DeviceComponent;
-import org.jagatoo.input.devices.components.DigiState;
+import org.jagatoo.input.misc.InputState;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
 import org.jagatoo.input.events.ControllerButtonReleasedEvent;
@@ -115,7 +115,7 @@ public class JInputController extends Controller
                     {
                         if ( newState )
                         {
-                            button.setState( DigiState.POSITIVE );
+                            button.setState( InputState.POSITIVE );
                             
                             is.notifyInputStatesManagers( this, button, 1, +1, nanoTime );
                             
@@ -128,7 +128,7 @@ public class JInputController extends Controller
                         }
                         else
                         {
-                            button.setState( DigiState.NEGATIVE );
+                            button.setState( InputState.NEGATIVE );
                             
                             is.notifyInputStatesManagers( this, button, 0, -1, nanoTime );
                             

@@ -32,7 +32,6 @@ package org.jagatoo.input.util;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
-import org.jagatoo.input.devices.components.DigiState;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
@@ -69,7 +68,7 @@ public class ControllerCalibrator
         {
         }
         
-        public void onControllerButtonStateChanged( ControllerButtonEvent e, ControllerButton button, DigiState state )
+        public void onControllerButtonStateChanged( ControllerButtonEvent e, ControllerButton button, boolean state )
         {
         }
     }

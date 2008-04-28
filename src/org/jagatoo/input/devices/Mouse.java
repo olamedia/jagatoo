@@ -33,7 +33,7 @@ import java.util.ArrayList;
 
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.components.ControllerButton;
-import org.jagatoo.input.devices.components.DigiState;
+import org.jagatoo.input.misc.InputState;
 import org.jagatoo.input.devices.components.MouseAxis;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
@@ -277,12 +277,12 @@ public abstract class Mouse extends InputDevice
      * 
      * @return the appropriate state.
      */
-    public final DigiState getButtonState( MouseButton button )
+    public final InputState getButtonState( MouseButton button )
     {
         if ( isButtonPressed( button ) )
-            return( DigiState.POSITIVE );
+            return( InputState.POSITIVE );
         else
-            return( DigiState.NEGATIVE );
+            return( InputState.NEGATIVE );
     }
     
     public void addMouseStopListener( MouseStopListener l )
@@ -376,7 +376,7 @@ public abstract class Mouse extends InputDevice
         
         for ( int i = 0; i < listeners.size(); i++ )
         {
-            listeners.get( i ).onMouseButtonStateChanged( e, e.getButton(), e.getButtonState() );
+            listeners.get( i ).onMouseButtonStateChanged( e, e.getButton(), e.getButtonBooleanState() );
             listeners.get( i ).onMouseButtonPressed( e, e.getButton() );
         }
         
@@ -411,7 +411,7 @@ public abstract class Mouse extends InputDevice
         
         for ( int i = 0; i < listeners.size(); i++ )
         {
-            listeners.get( i ).onMouseButtonStateChanged( e, e.getButton(), e.getButtonState() );
+            listeners.get( i ).onMouseButtonStateChanged( e, e.getButton(), e.getButtonBooleanState() );
             listeners.get( i ).onMouseButtonReleased( e, e.getButton() );
         }
         

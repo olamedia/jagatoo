@@ -174,7 +174,7 @@ public abstract class Controller extends InputDevice
         
         for ( int i = 0; i < listeners.size(); i++ )
         {
-            listeners.get( i ).onControllerButtonStateChanged( e, e.getButton(), e.getButtonState() );
+            listeners.get( i ).onControllerButtonStateChanged( e, e.getButton(), e.getButtonBooleanState() );
             listeners.get( i ).onControllerButtonPressed( e, e.getButton() );
         }
         
@@ -207,7 +207,7 @@ public abstract class Controller extends InputDevice
         
         for ( int i = 0; i < listeners.size(); i++ )
         {
-            listeners.get( i ).onControllerButtonStateChanged( e, e.getButton(), e.getButtonState() );
+            listeners.get( i ).onControllerButtonStateChanged( e, e.getButton(), e.getButtonBooleanState() );
             listeners.get( i ).onControllerButtonReleased( e, e.getButton() );
         }
         
