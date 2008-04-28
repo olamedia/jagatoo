@@ -209,10 +209,27 @@ public abstract class InputHandler< A extends InputAction >
     /**
      * Must be invoked each frame (if not keyboard is suspended).
      */
-    protected void pollInputStates( long nanoTime )
+    protected void updateInputStates( long nanoTime )
     {
-        statesManager.update( nanoTime );
+        if ( statesManager != null )
+        {
+            statesManager.update( nanoTime );
+        }
     }
+    
+    /**
+     * This method is called by the InputSystem (each frame) to update the InputHandler.
+     * 
+     * @param nanoSeconds
+     * @param seconds
+     * @param nanoFrame
+     * @param frameSeconds
+     * 
+     * @throws InputSystemException
+     */
+    public abstract void update( long nanoSeconds, float seconds, long nanoFrame, float frameSeconds ) throws InputSystemException;
+    
+    private long oldNanoTime = -1L;
     
     /**
      * This method is called by the InputSystem (each frame) to update the InputHandler.
@@ -221,7 +238,17 @@ public abstract class InputHandler< A extends InputAction >
      * 
      * @throws InputSystemException
      */
-    public abstract void update( long nanoTime ) throws InputSystemException;
+    public final void update( long nanoTime ) throws InputSystemException
+    {
+        updateInputStates( nanoTime );
+        
+        if ( oldNanoTime == -1L )
+            oldNanoTime = nanoTime;
+        
+        final long nanoFrame = ( nanoTime - oldNanoTime );
+        
+        update( nanoTime, (float)nanoTime / 1000000000f, nanoFrame, (float)nanoFrame / 1000000000f );
+    }
     
     /**
      * {@inheritDoc}
