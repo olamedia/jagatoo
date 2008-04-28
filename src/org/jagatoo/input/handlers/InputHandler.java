@@ -246,6 +246,7 @@ public abstract class InputHandler< A extends InputAction >
             oldNanoTime = nanoTime;
         
         final long nanoFrame = ( nanoTime - oldNanoTime );
+        oldNanoTime = nanoTime;
         
         update( nanoTime, (float)nanoTime / 1000000000f, nanoFrame, (float)nanoFrame / 1000000000f );
     }
