@@ -35,6 +35,26 @@ package org.jagatoo.input.handlers;
 
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.actions.InputAction;
+import org.jagatoo.input.devices.components.ControllerAxis;
+import org.jagatoo.input.devices.components.ControllerButton;
+import org.jagatoo.input.devices.components.DeviceComponent;
+import org.jagatoo.input.devices.components.Key;
+import org.jagatoo.input.devices.components.MouseButton;
+import org.jagatoo.input.events.ControllerAxisChangedEvent;
+import org.jagatoo.input.events.ControllerButtonEvent;
+import org.jagatoo.input.events.ControllerButtonPressedEvent;
+import org.jagatoo.input.events.ControllerButtonReleasedEvent;
+import org.jagatoo.input.events.InputEvent;
+import org.jagatoo.input.events.KeyPressedEvent;
+import org.jagatoo.input.events.KeyReleasedEvent;
+import org.jagatoo.input.events.KeyStateEvent;
+import org.jagatoo.input.events.KeyTypedEvent;
+import org.jagatoo.input.events.MouseButtonEvent;
+import org.jagatoo.input.events.MouseButtonPressedEvent;
+import org.jagatoo.input.events.MouseButtonReleasedEvent;
+import org.jagatoo.input.events.MouseMovedEvent;
+import org.jagatoo.input.events.MouseStoppedEvent;
+import org.jagatoo.input.events.MouseWheelEvent;
 import org.jagatoo.input.listeners.InputListener;
 import org.jagatoo.input.listeners.InputStateListener;
 import org.jagatoo.input.managers.InputBindingsManager;
@@ -51,6 +71,81 @@ import org.jagatoo.input.managers.InputBindingsManager;
  */
 public abstract class ListeningInputHandler< A extends InputAction > extends InputHandler< A > implements InputListener, InputStateListener
 {
+    /**
+     * {@inheritDoc}
+     */
+    public void onKeyPressed( KeyPressedEvent e, Key key ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onKeyReleased( KeyReleasedEvent e, Key key ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onKeyStateChanged( KeyStateEvent e, Key key, boolean state ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onKeyTyped( KeyTypedEvent e, char keyChar ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onMouseButtonPressed( MouseButtonPressedEvent e, MouseButton button ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onMouseButtonReleased( MouseButtonReleasedEvent e, MouseButton button ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, boolean state ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onMouseMoved( MouseMovedEvent e, int x, int y, int dx, int dy ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onMouseWheelMoved( MouseWheelEvent e, int wheelDelta ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onMouseStopped( MouseStoppedEvent e, int x, int y ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onControllerAxisChanged( ControllerAxisChangedEvent e, ControllerAxis axis, float axisDelta ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onControllerButtonPressed( ControllerButtonPressedEvent e, ControllerButton button ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onControllerButtonReleased( ControllerButtonReleasedEvent e, ControllerButton button ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onControllerButtonStateChanged( ControllerButtonEvent e, ControllerButton button, boolean state ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onInputStateChanged( InputEvent e, DeviceComponent comp, int delta, int state ) {}
+    
     /**
      * {@inheritDoc}
      */
