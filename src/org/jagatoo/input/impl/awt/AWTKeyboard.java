@@ -402,7 +402,10 @@ public class AWTKeyboard extends Keyboard
                 
                 KeyTypedEvent e = prepareKeyTypedEvent( keyChar, modifierMask, lastUpdateTime, 0L );
                 
-                getEventQueue().enqueue( e );
+                if ( e != null )
+                {
+                    getEventQueue().enqueue( e );
+                }
                 
                 break;
             }

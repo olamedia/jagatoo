@@ -83,10 +83,13 @@ import org.lwjgl.opengl.DisplayMode;
 public class InputTest implements InputListener, InputHotPlugListener
 {
     private static final int DEBUG_MASK_EVENTS = 1;
-    private static final int DEBUG_MASK_TEST_ACTION = 2;
-    private static final int DEBUG_MASK_MYBINDING = 4;
-    private static final int DEBUG_MASK_MYACTION = 8;
-    private static final int DEBUG_MASK_STRING_ACTION = 16;
+    private static final int DEBUG_MASK_KEYBOARD_EVENTS = 2;
+    private static final int DEBUG_MASK_MOUSE_EVENTS = 3;
+    private static final int DEBUG_MASK_CONTROLLER_EVENTS = 4;
+    private static final int DEBUG_MASK_TEST_ACTION = 16;
+    private static final int DEBUG_MASK_MYBINDING = 32;
+    private static final int DEBUG_MASK_MYACTION = 64;
+    private static final int DEBUG_MASK_STRING_ACTION = 128;
     
     private static int debugMask = ~0;
     static
@@ -96,6 +99,9 @@ public class InputTest implements InputListener, InputHotPlugListener
          */
         
         debugMask &= ~DEBUG_MASK_EVENTS;
+        debugMask &= ~DEBUG_MASK_KEYBOARD_EVENTS;
+        debugMask &= ~DEBUG_MASK_MOUSE_EVENTS;
+        debugMask &= ~DEBUG_MASK_CONTROLLER_EVENTS;
         debugMask &= ~DEBUG_MASK_TEST_ACTION;
         debugMask &= ~DEBUG_MASK_MYBINDING;
         debugMask &= ~DEBUG_MASK_MYACTION;
@@ -111,43 +117,43 @@ public class InputTest implements InputListener, InputHotPlugListener
     
     public void onKeyPressed( KeyPressedEvent e, Key key )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_KEYBOARD_EVENTS ) )
             System.out.println( "key pressed: " + e.getKey() + ", " + e.getModifierMask() );
     }
     
     public void onKeyReleased( KeyReleasedEvent e, Key key )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_KEYBOARD_EVENTS ) )
             System.out.println( "key released: " + e.getKey() + ", " + e.getModifierMask() );
     }
     
     public void onKeyStateChanged( KeyStateEvent e, Key key, boolean state )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_KEYBOARD_EVENTS ) )
             System.out.println( "key state: " + e.getKey() + ", state: " + state );
     }
     
     public void onKeyTyped( KeyTypedEvent e, char keyChar )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_KEYBOARD_EVENTS ) )
             System.out.println( "key typed: " + keyChar + ", " + (int)keyChar + ", " + e.getModifierMask() );
     }
     
     public void onMouseButtonPressed( MouseButtonPressedEvent e, MouseButton button )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_MOUSE_EVENTS ) )
             System.out.println( "Button pressed: " + e.getButton() + ", " + e.getX() + ", " + e.getY() );
     }
     
     public void onMouseButtonReleased( MouseButtonReleasedEvent e, MouseButton button )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_MOUSE_EVENTS ) )
             System.out.println( "Button released: " + e.getButton() + ", " + e.getX() + ", " + e.getY() );
     }
     
     public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, boolean state )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_MOUSE_EVENTS ) )
             System.out.println( "mouse button state: " + e.getButton() + ", state: " + state );
         
         try
@@ -168,7 +174,7 @@ public class InputTest implements InputListener, InputHotPlugListener
     
     public void onMouseMoved( MouseMovedEvent e, int x, int y, int dx, int dy )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_MOUSE_EVENTS ) )
             System.out.println( "Mouse moved: " + x + ", " + y + ", " + dx + ", " + dy + ", " + e.getMouse().getButtonsState() );
         /*
         xxx += dx;
@@ -178,38 +184,38 @@ public class InputTest implements InputListener, InputHotPlugListener
     
     public void onMouseWheelMoved( MouseWheelEvent e, int wheelDelta )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_MOUSE_EVENTS ) )
             System.out.println( "Wheel moved: " + e.getWheelDelta() + ", " + e.isPageMove() + ", " + e.getMouse().getCurrentX() + ", " + e.getMouse().getCurrentY() + ", " + e.getMouse().getButtonsState() );
     }
     
     public void onMouseStopped( MouseStoppedEvent e, int x, int y )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_MOUSE_EVENTS ) )
             System.out.println( "Mouse stopped: " + x + ", " + y );
     }
     
     public void onControllerAxisChanged( ControllerAxisChangedEvent e, ControllerAxis axis, float axisDelta )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_CONTROLLER_EVENTS ) )
             System.out.println( "axis changed: " + axis.getName() + ", normValue = " + axis.getNormalizedValue() );
             //System.out.println( "axis changed: " + axis + ", normValue = " + axis.getNormalizedValue() + ", delta = " + axisDelta );
     }
     
     public void onControllerButtonPressed( ControllerButtonPressedEvent e, ControllerButton button )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_CONTROLLER_EVENTS ) )
             System.out.println( "controller-button pressed: " + button );
     }
     
     public void onControllerButtonReleased( ControllerButtonReleasedEvent e, ControllerButton button )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_CONTROLLER_EVENTS ) )
             System.out.println( "controller-button released: " + button );
     }
     
     public void onControllerButtonStateChanged( ControllerButtonEvent e, ControllerButton button, boolean state )
     {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_CONTROLLER_EVENTS ) )
             System.out.println( "controller-button state: " + button + ", state: " + state );
     }
     

@@ -27,8 +27,10 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.impl.awt;
+package org.jagatoo.input.impl.swt;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Mouse;
@@ -47,63 +49,34 @@ import org.jagatoo.input.events.MouseWheelEvent;
 import org.jagatoo.input.render.InputSourceWindow;
 
 /**
- * AWT implementation of the Mouse class.
+ * SWT implementation of the Mouse class.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class AWTMouse extends Mouse
+public class SWTMouse extends Mouse
 {
-    private static final MouseButton[] buttonMap = new MouseButton[ 12 ];
-    static
+    private int calibrationStep = -1;
+    
+    private final org.eclipse.swt.widgets.Control control;
+    private final java.awt.Point centerControl = new java.awt.Point( 0, 0 );
+    private final java.awt.Point los = new java.awt.Point( 0, 0 );
+    private int calibX, calibY;
+    
+    private long lastGameTimeDelta = System.nanoTime();
+    
+    private static MouseButton convertButton( int swtButton )
     {
-        buttonMap[ 1 ] = MouseButtons.LEFT_BUTTON;
-        buttonMap[ 3 ] = MouseButtons.RIGHT_BUTTON;
-        buttonMap[ 2 ] = MouseButtons.MIDDLE_BUTTON;
-        buttonMap[ 0 ] = MouseButtons.EXT_BUTTON_1;
-        buttonMap[ 4 ] = MouseButtons.EXT_BUTTON_2;
-        buttonMap[ 5 ] = MouseButtons.EXT_BUTTON_3;
-        buttonMap[ 6 ] = MouseButtons.EXT_BUTTON_4;
-        buttonMap[ 7 ] = MouseButtons.EXT_BUTTON_5;
-        buttonMap[ 8 ] = MouseButtons.EXT_BUTTON_6;
-        buttonMap[ 9 ] = MouseButtons.EXT_BUTTON_7;
-        buttonMap[ 10 ] = MouseButtons.EXT_BUTTON_8;
-        buttonMap[ 11 ] = MouseButtons.EXT_BUTTON_9;
-    }
-    
-    public static final MouseButton convertButton( int awtButton )
-    {
-        return( buttonMap[ awtButton ] );
-    }
-    
-    private java.awt.Component usedComponent;
-    private final java.awt.Point centerComponent = new java.awt.Point();
-    private java.awt.Point los = null;
-    
-    private java.awt.Robot robot = null;
-    private boolean needsRecenter = false;
-    
-    private int lastAbsoluteX = 0;
-    private int lastAbsoluteY = 0;
-    
-    private int lastRelX = -1;
-    private int lastRelY = -1;
-    
-    private int nextIgnoredX = -1;
-    private int nextIgnoredY = -1;
-    
-    private final void ensureRobot() throws InputSystemException
-    {
-        if ( robot == null )
+        switch ( swtButton )
         {
-            try
-            {
-                robot = new java.awt.Robot();
-            }
-            catch ( java.awt.AWTException e )
-            {
-                throw( new InputSystemException( e ) );
-            }
+            case 1:
+                return MouseButtons.LEFT_BUTTON;
+            case 2:
+                return MouseButtons.MIDDLE_BUTTON;
+            case 3:
+                return MouseButtons.RIGHT_BUTTON;
         }
+        
+        return( null );
     }
     
     /**
@@ -118,13 +91,17 @@ public class AWTMouse extends Mouse
         {
             if ( isAbsolute() )
             {
+                /*
                 ensureRobot();
                 robot.mouseMove( los.x + x, los.y + y );
+                */
             }
             else
             {
+                /*
                 lastAbsoluteX = x;
                 lastAbsoluteY = y;
+                */
             }
         }
         catch ( Throwable t )
@@ -148,19 +125,18 @@ public class AWTMouse extends Mouse
     @Override
     public void centerMouse() throws InputSystemException
     {
-        int centerX = 0;
-        int centerY = 0;
         try
         {
-            centerX = getSourceWindow().getWidth() / 2;
-            centerY = getSourceWindow().getHeight() / 2;
+            control.getDisplay().setCursorLocation( los.x + calibX + centerControl.x,
+                                                    los.y + calibY + centerControl.y
+                                                  );
         }
         catch ( Throwable t )
         {
             throw( new InputSystemException( t ) );
         }
         
-        setPosition( centerX, centerY );
+        //setPosition( centerX, centerY );
     }
     
     /**
@@ -170,10 +146,23 @@ public class AWTMouse extends Mouse
     private void updateCenters()
     {
         // calculate center-of-component (in absolute sizes)
-        los = usedComponent.getLocationOnScreen();
-        final int centerX = los.x + ( usedComponent.getWidth() / 2) + 1;
-        final int centerY = los.y + ( usedComponent.getHeight() / 2 ) + 1;
-        centerComponent.setLocation( centerX, centerY );
+        
+        los.x = control.getLocation().x;
+        los.y = control.getLocation().y;
+        
+        Composite parent = control.getParent();
+        while ( parent != null )
+        {
+            los.x += parent.getLocation().x;
+            los.y += parent.getLocation().y;
+            
+            parent = parent.getParent();
+        }
+        
+        centerControl.x = ( control.getSize().x / 2 ) + 1;
+        centerControl.y = ( control.getSize().y / 2 ) + 1;
+        
+        calibrationStep = 0;
     }
     
     /**
@@ -181,17 +170,40 @@ public class AWTMouse extends Mouse
      */
     private void recenter() throws InputSystemException
     {
-        ensureRobot();
+        control.getDisplay().setCursorLocation( los.x + calibX + centerControl.x,
+                                                los.y + calibY + centerControl.y
+                                              );
+    }
+    
+    /**
+     * Calibrates the mouse to calculate Window-Decoration size.
+     * 
+     * @param mouseX
+     * @param mouseY
+     */
+    private void calibrate( int mouseX, int mouseY )
+    {
+        if ( ( getCurrentX() == -1 ) || ( getCurrentY() == -1  ))
+            return;
         
-        nextIgnoredX = centerComponent.x - los.x;
-        nextIgnoredY = centerComponent.y - los.y;
-        
-        lastRelX = nextIgnoredX;
-        lastRelY = nextIgnoredY;
-        
-        needsRecenter = false;
-        
-        robot.mouseMove( centerComponent.x, centerComponent.y );
+        switch ( calibrationStep )
+        {
+            case 0:
+                control.getDisplay().setCursorLocation( los.x + mouseX, los.y + mouseY );
+                calibX = mouseX;
+                calibY = mouseY;
+                
+                calibrationStep = 1;
+                break;
+                
+            case 1:
+                calibX = ( calibX - mouseX );
+                calibY = ( calibY - mouseY );
+                //System.out.println( calibX + ", " + calibY );
+                
+                calibrationStep = -1;
+                break;
+        }
     }
     
     /**
@@ -263,11 +275,6 @@ public class AWTMouse extends Mouse
             notifyStatesManagersFromQueue( is, eventQueue, nanoTime );
             
             getEventQueue().dequeueAndFire( is );
-            
-            if ( !isAbsolute() && needsRecenter )
-            {
-                recenter();
-            }
         }
         catch ( Throwable t )
         {
@@ -282,6 +289,8 @@ public class AWTMouse extends Mouse
             
             throw( new InputSystemException( t ) );
         }
+        
+        lastGameTimeDelta = System.currentTimeMillis() - nanoTime;
     }
     
     /**
@@ -310,122 +319,6 @@ public class AWTMouse extends Mouse
         }
     }
     
-    private void processMouseEvent( java.awt.event.MouseEvent _e )
-    {
-        if ( !isEnabled() || !getSourceWindow().receivesInputEvents() )
-            return;
-        
-        switch ( _e.getID() )
-        {
-            case java.awt.event.MouseEvent.MOUSE_PRESSED:
-            {
-                final MouseButton button = convertButton( _e.getButton() );
-                if ( button != null )
-                {
-                    MouseButtonPressedEvent e = prepareMouseButtonPressedEvent( button, 0L );
-                    
-                    if ( e == null )
-                        return;
-                    
-                    getEventQueue().enqueue( e );
-                }
-                
-                break;
-            }
-            case java.awt.event.MouseEvent.MOUSE_RELEASED:
-            {
-                final MouseButton button = convertButton( _e.getButton() );
-                if ( button != null )
-                {
-                    MouseButtonReleasedEvent e = prepareMouseButtonReleasedEvent( button, 0L );
-                    
-                    if ( e == null )
-                        return;
-                    
-                    getEventQueue().enqueue( e );
-                }
-                
-                break;
-            }
-            case java.awt.event.MouseEvent.MOUSE_MOVED:
-            case java.awt.event.MouseEvent.MOUSE_DRAGGED:
-            {
-                if ( isAbsolute() )
-                {
-                    final int x = _e.getX();
-                    final int y = _e.getY();
-                    final int dx = x - getCurrentX();
-                    final int dy = y - getCurrentY();
-                    
-                    storePosition( x, y );
-                    
-                    MouseMovedEvent e = prepareMouseMovedEvent( x, y, dx, dy, 0L );
-                    
-                    if ( e == null )
-                        return;
-                    
-                    getEventQueue().enqueue( e );
-                    
-                    lastAbsoluteX = x;
-                    lastAbsoluteY = y;
-                }
-                else
-                {
-                    if ( ( _e.getX() != lastRelX ) && ( _e.getY() != lastRelY ) && ( _e.getX() != nextIgnoredX ) && ( _e.getY() != nextIgnoredY ) )
-                    {
-                        final int dx = _e.getX() - lastRelX;
-                        final int dy = _e.getY() - lastRelY;
-                        
-                        lastRelX = _e.getX();
-                        lastRelY = _e.getY();
-                        
-                        nextIgnoredX = -1;
-                        nextIgnoredY = -1;
-                        
-                        MouseMovedEvent e = prepareMouseMovedEvent( lastAbsoluteX, lastAbsoluteY, dx, dy, 0L );
-                        
-                        if ( e == null )
-                            return;
-                        
-                        getEventQueue().enqueue( e );
-                        
-                        needsRecenter = true;
-                    }
-                }
-                
-                break;
-            }
-        }
-    }
-    
-    private void processMouseEvent( java.awt.event.MouseWheelEvent _e )
-    {
-        if ( !isEnabled() )
-            return;
-        
-        java.awt.event.MouseWheelEvent __e = (java.awt.event.MouseWheelEvent)_e;
-        final boolean isPageMove = __e.getScrollType() == java.awt.event.MouseWheelEvent.WHEEL_BLOCK_SCROLL;
-        
-        MouseWheelEvent e = MouseEventPool.allocWheel( this, getWheel(), -__e.getWheelRotation(), isPageMove, 0L, 0L );
-        
-        if ( e != null )
-            getEventQueue().enqueue( e );
-    }
-    
-    private final java.awt.event.AWTEventListener eventListener = new java.awt.event.AWTEventListener()
-    {
-        public void eventDispatched( java.awt.AWTEvent event )
-        {
-            if ( event instanceof java.awt.event.MouseEvent )
-                processMouseEvent( (java.awt.event.MouseEvent)event );
-            /*
-            else if ( event instanceof java.awt.event.MouseWheelEvent )
-                processMouseEvent( (java.awt.event.MouseWheelEvent)event );
-            */
-        }
-        
-    };
-    
     /**
      * {@inheritDoc}
      */
@@ -434,7 +327,7 @@ public class AWTMouse extends Mouse
     {
         try
         {
-            java.awt.Toolkit.getDefaultToolkit().removeAWTEventListener( eventListener );
+            //java.awt.Toolkit.getDefaultToolkit().removeAWTEventListener( eventListener );
         }
         catch ( Throwable t )
         {
@@ -442,45 +335,105 @@ public class AWTMouse extends Mouse
         }
     }
     
-    private final void trapInitialLocationOnScreen( final java.awt.Component component )
-    {
-        if ( component.isDisplayable() )
-        {
-            this.los = component.getLocationOnScreen();
-        }
-        else
-        {
-            component.addComponentListener( new java.awt.event.ComponentAdapter()
-            {
-                @Override
-                public void componentShown( java.awt.event.ComponentEvent e )
-                {
-                    AWTMouse.this.los = component.getLocationOnScreen();
-                    component.removeComponentListener( this );
-                }
-            } );
-        }
-    }
-    
-    protected AWTMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue ) throws InputSystemException
+    protected SWTMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue ) throws InputSystemException
     {
         super( factory, sourceWindow, eventQueue, "Primary Mouse", 12, true );
         
         try
         {
-            java.awt.Toolkit.getDefaultToolkit().addAWTEventListener( eventListener, java.awt.AWTEvent.MOUSE_EVENT_MASK | java.awt.AWTEvent.MOUSE_MOTION_EVENT_MASK/* | java.awt.AWTEvent.MOUSE_WHEEL_EVENT_MASK*/ );
+            this.control = (org.eclipse.swt.widgets.Control)sourceWindow.getDrawable();
             
-            java.awt.Component component = (java.awt.Component)sourceWindow.getDrawable();
-            component.addMouseWheelListener( new java.awt.event.MouseWheelListener()
+            //final org.eclipse.swt.widgets.Display display = control.getDisplay();
+            
+            control.addMouseListener( new org.eclipse.swt.events.MouseListener()
             {
-                public void mouseWheelMoved( java.awt.event.MouseWheelEvent e )
+                public void mouseDoubleClick( org.eclipse.swt.events.MouseEvent _e ) {}
+                
+                public void mouseDown( org.eclipse.swt.events.MouseEvent _e )
                 {
-                    processMouseEvent( e );
+                    final MouseButton button = convertButton( _e.button );
+                    if ( button != null )
+                    {
+                        MouseButtonPressedEvent e = prepareMouseButtonPressedEvent( button, ( (long)_e.time * 1000000L ) - lastGameTimeDelta );
+                        
+                        if ( e == null )
+                            return;
+                        
+                        getEventQueue().enqueue( e );
+                    }
+                }
+                
+                public void mouseUp( org.eclipse.swt.events.MouseEvent _e )
+                {
+                    final MouseButton button = convertButton( _e.button );
+                    if ( button != null )
+                    {
+                        MouseButtonReleasedEvent e = prepareMouseButtonReleasedEvent( button, ( (long)_e.time * 1000000L ) - lastGameTimeDelta );
+                        
+                        if ( e == null )
+                            return;
+                        
+                        getEventQueue().enqueue( e );
+                    }
                 }
             } );
             
-            this.usedComponent = component;
-            trapInitialLocationOnScreen( component );
+            control.addMouseMoveListener( new org.eclipse.swt.events.MouseMoveListener()
+            {
+                public void mouseMove( org.eclipse.swt.events.MouseEvent _e )
+                {
+                    final int mouseX = _e.x;
+                    final int mouseY = _e.y;
+                    final int dX = ( mouseX - centerControl.x );
+                    final int dY = -( mouseY - centerControl.y );
+                    final long when = ( (long)_e.time * 1000000L ) - lastGameTimeDelta;
+                    
+                    boolean doEvent = true;
+                    if ( !isAbsolute() )
+                    {
+                        if ( calibrationStep != -1 )
+                        {
+                            calibrate( mouseX, mouseY );
+                            doEvent = false;
+                        }
+                    }
+                    
+                    if ( ( getCurrentX() != mouseX ) || ( getCurrentY() != mouseY ) )
+                    {
+                        MouseMovedEvent e = prepareMouseMovedEvent( mouseX, mouseY, dX, dY, when );
+                        
+                        if ( e == null )
+                            return;
+                        
+                        getEventQueue().enqueue( e );
+                    }
+                    
+                    if ( !isAbsolute() && doEvent )
+                    {
+                        try
+                        {
+                            recenter();
+                        }
+                        catch ( InputSystemException ise )
+                        {
+                            ise.printStackTrace();
+                        }
+                    }
+                    
+                    storePosition( mouseX, mouseY );
+                }
+            } );
+            
+            control.addListener( SWT.MouseWheel, new org.eclipse.swt.widgets.Listener()
+            {
+                public void handleEvent( org.eclipse.swt.widgets.Event _e )
+                {
+                    MouseWheelEvent e = MouseEventPool.allocWheel( SWTMouse.this, getWheel(), -_e.count, false, ( (long)_e.time * 1000000L ) - lastGameTimeDelta, 0L );
+                    
+                    if ( e != null )
+                        getEventQueue().enqueue( e );
+                }
+            } );
         }
         catch ( Throwable e )
         {
