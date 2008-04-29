@@ -80,12 +80,16 @@ public class AWTMouse extends Mouse
     private java.awt.Point los = null;
     
     private java.awt.Robot robot = null;
+    private boolean needsRecenter = false;
     
     private int lastAbsoluteX = 0;
     private int lastAbsoluteY = 0;
     
     private int lastRelX = -1;
     private int lastRelY = -1;
+    
+    private int nextIgnoredX = -1;
+    private int nextIgnoredY = -1;
     
     private final void ensureRobot() throws InputSystemException
     {
@@ -179,8 +183,13 @@ public class AWTMouse extends Mouse
     {
         ensureRobot();
         
-        lastRelX = centerComponent.x - los.x;
-        lastRelY = centerComponent.y - los.y;
+        nextIgnoredX = centerComponent.x - los.x;
+        nextIgnoredY = centerComponent.y - los.y;
+        
+        lastRelX = nextIgnoredX;
+        lastRelY = nextIgnoredY;
+        
+        needsRecenter = false;
         
         robot.mouseMove( centerComponent.x, centerComponent.y );
     }
@@ -255,7 +264,7 @@ public class AWTMouse extends Mouse
             
             getEventQueue().dequeueAndFire( is );
             
-            if ( !isAbsolute() )
+            if ( !isAbsolute() && needsRecenter )
             {
                 recenter();
             }
@@ -362,7 +371,7 @@ public class AWTMouse extends Mouse
                 }
                 else
                 {
-                    if ( ( _e.getX() != lastRelX ) && ( _e.getY() != lastRelY ) )
+                    if ( ( _e.getX() != lastRelX ) && ( _e.getY() != lastRelY ) && ( _e.getX() != nextIgnoredX ) && ( _e.getY() != nextIgnoredY ) )
                     {
                         final int dx = _e.getX() - lastRelX;
                         final int dy = _e.getY() - lastRelY;
@@ -370,12 +379,17 @@ public class AWTMouse extends Mouse
                         lastRelX = _e.getX();
                         lastRelY = _e.getY();
                         
+                        nextIgnoredX = -1;
+                        nextIgnoredY = -1;
+                        
                         MouseMovedEvent e = prepareMouseMovedEvent( lastAbsoluteX, lastAbsoluteY, dx, dy, 0L );
                         
                         if ( e == null )
                             return;
                         
                         getEventQueue().enqueue( e );
+                        
+                        needsRecenter = true;
                     }
                 }
                 
