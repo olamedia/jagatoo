@@ -109,6 +109,30 @@ public class InputTest implements InputListener, InputHotPlugListener
         return( ( debugMask & flag ) != 0 );
     }
     
+    public void onKeyPressed( KeyPressedEvent e, Key key )
+    {
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "key pressed: " + e.getKey() + ", " + e.getModifierMask() );
+    }
+    
+    public void onKeyReleased( KeyReleasedEvent e, Key key )
+    {
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "key released: " + e.getKey() + ", " + e.getModifierMask() );
+    }
+    
+    public void onKeyStateChanged( KeyStateEvent e, Key key, boolean state )
+    {
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "key state: " + e.getKey() + ", state: " + state );
+    }
+    
+    public void onKeyTyped( KeyTypedEvent e, char keyChar )
+    {
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
+            System.out.println( "key typed: " + keyChar + ", " + (int)keyChar + ", " + e.getModifierMask() );
+    }
+    
     public void onMouseButtonPressed( MouseButtonPressedEvent e, MouseButton button )
     {
         if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
@@ -162,30 +186,6 @@ public class InputTest implements InputListener, InputHotPlugListener
     {
         if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
             System.out.println( "Mouse stopped: " + x + ", " + y );
-    }
-    
-    public void onKeyPressed( KeyPressedEvent e, Key key )
-    {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
-            System.out.println( "key pressed: " + e.getKey() + ", " + e.getModifierMask() );
-    }
-    
-    public void onKeyReleased( KeyReleasedEvent e, Key key )
-    {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
-            System.out.println( "key released: " + e.getKey() + ", " + e.getModifierMask() );
-    }
-    
-    public void onKeyStateChanged( KeyStateEvent e, Key key, boolean state )
-    {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
-            System.out.println( "key state: " + e.getKey() + ", state: " + state );
-    }
-    
-    public void onKeyTyped( KeyTypedEvent e, char keyChar )
-    {
-        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) )
-            System.out.println( "key typed: " + keyChar + ", " + (int)keyChar + ", " + e.getModifierMask() );
     }
     
     public void onControllerAxisChanged( ControllerAxisChangedEvent e, ControllerAxis axis, float axisDelta )
@@ -410,7 +410,10 @@ public class InputTest implements InputListener, InputHotPlugListener
         InputState state = statesManager.getInputState( action );
         
         if ( state.isVolatile() )
-            System.out.println( action + ": " + state + ", " + comp.getIntValue() );
+        {
+            if ( isDebugFlagSet( DEBUG_MASK_MYACTION ) )
+                System.out.println( action + ": " + state + ", " + comp.getIntValue() );
+        }
     }
     
     private void iteration( InputSystem is, final long time ) throws Throwable
@@ -486,7 +489,7 @@ public class InputTest implements InputListener, InputHotPlugListener
         private InputDeviceFactory deviceFactory = null;
         private Cursor cursor = Cursor.DEFAULT_CURSOR;
         
-        public Object getDrawable()
+        public java.awt.Component getDrawable()
         {
             return( component );
         }
@@ -666,9 +669,9 @@ public class InputTest implements InputListener, InputHotPlugListener
     
     public InputTest() throws Throwable
     {
-        startLWJGL();
+        //startLWJGL();
         //startJInput();
-        //startAWT();
+        startAWT();
     }
     
     public static void main( String[] args ) throws Throwable

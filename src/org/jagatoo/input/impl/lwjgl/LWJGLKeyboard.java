@@ -171,12 +171,36 @@ public class LWJGLKeyboard extends Keyboard
         return( key );
     }
     
+    /*
+     * Support for continuous key-typed events!
+     */
+    private Key lastPressedKey = null;
+    private char typedChar = '\0';
+    private long nextContTypedTime = -1L;
+    private static final long CONTINUOUS_TYPED_GAP = 200000000L;
+    private static final long CONTINUOUS_TYPED_DELTA = 50000000L;
+    
     /**
      * {@inheritDoc}
      */
     @Override
     protected boolean hasKeyStateChanged( Key key, boolean keyState )
     {
+        return( true );
+    }
+    
+    private boolean triggerTyped( char keyChar, int modifierMask, long nanoTime, long lastNanoTime, EventQueue eventQueue )
+    {
+        final KeyTypedEvent typedEv = prepareKeyTypedEvent( keyChar, modifierMask, nanoTime, lastNanoTime );
+        
+        if ( typedEv == null )
+            return( false );
+        
+        if ( eventQueue != null )
+            eventQueue.enqueue( typedEv );
+        else
+            fireOnKeyTyped( typedEv, true );
+        
         return( true );
     }
     
@@ -219,6 +243,9 @@ public class LWJGLKeyboard extends Keyboard
                     if ( pressedEv == null )
                         continue;
                     
+                    lastPressedKey = key;
+                    nextContTypedTime = nanoTime + CONTINUOUS_TYPED_GAP;
+                    
                     if ( isQueued )
                         eventQueue.enqueue( pressedEv );
                     else
@@ -227,17 +254,15 @@ public class LWJGLKeyboard extends Keyboard
                     if ( key == Keys.DELETE )
                         keyChar = (char)127;
                     
+                    typedChar = keyChar;
+                    
                     if ( keyChar != '\0' )
                     {
-                        final KeyTypedEvent typedEv = prepareKeyTypedEvent( keyChar, modifierMask, nanoTime, 0L );
-                        
-                        if ( typedEv == null )
-                            continue;
-                        
-                        if ( isQueued )
-                            eventQueue.enqueue( typedEv );
-                        else
-                            fireOnKeyTyped( typedEv, true );
+                        triggerTyped( keyChar, modifierMask, nanoTime, 0L, eventQueue );
+                    }
+                    else
+                    {
+                        lastPressedKey = null;
                     }
                 }
                 else
@@ -249,11 +274,21 @@ public class LWJGLKeyboard extends Keyboard
                     if ( releasedEv == null )
                         continue;
                     
+                    lastPressedKey = null;
+                    typedChar = '\0';
+                    
                     if ( isQueued )
                         eventQueue.enqueue( releasedEv );
                     else
                         fireOnKeyReleased( releasedEv, true );
                 }
+            }
+            
+            if ( ( lastPressedKey != null ) && ( nanoTime >= nextContTypedTime ) )
+            {
+                triggerTyped( typedChar, getModifierMask(), nanoTime, 0L, eventQueue );
+                
+                nextContTypedTime += CONTINUOUS_TYPED_DELTA;
             }
         }
         catch ( Throwable t )

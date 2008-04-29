@@ -202,6 +202,7 @@ public abstract class JOGLBase implements GLEventListener
         // Center frame
         frame.setLocationRelativeTo( null );
         frame.setVisible( true );
+        canvas.requestFocus();
         animator.start();
         
         Toolkit.getDefaultToolkit().addAWTEventListener( new AWTEventListener()
