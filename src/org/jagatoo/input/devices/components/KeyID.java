@@ -31,7 +31,7 @@ package org.jagatoo.input.devices.components;
 
 /**
  * This class provides a static final access to the standard
- * keys' key-codes.
+ * keys' key-IDs.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
@@ -143,20 +143,66 @@ public enum KeyID
     NUMPAD8,
     NUMPAD9,
     
+    /**
+     * @see Keys#LOCAL_KEY1
+     */
     LOCAL_KEY1,
+    
+    /**
+     * @see Keys#LOCAL_KEY2
+     */
     LOCAL_KEY2,
+    
+    /**
+     * @see Keys#LOCAL_KEY3
+     */
     LOCAL_KEY3,
+    
+    /**
+     * @see Keys#LOCAL_KEY4
+     */
     LOCAL_KEY4,
+    
+    /**
+     * @see Keys#LOCAL_KEY5
+     */
     LOCAL_KEY5,
+    
+    /**
+     * @see Keys#LOCAL_KEY6
+     */
     LOCAL_KEY6,
+    
+    /**
+     * @see Keys#LOCAL_KEY7
+     */
     LOCAL_KEY7,
+    
+    /**
+     * @see Keys#LOCAL_KEY8
+     */
     LOCAL_KEY8,
+    
+    /**
+     * @see Keys#LOCAL_KEY9
+     */
     LOCAL_KEY9,
+    
+    /**
+     * @see Keys#LOCAL_KEY10
+     */
     LOCAL_KEY10,
+    
+    /**
+     * @see Keys#LOCAL_KEY11
+     */
     LOCAL_KEY11,
     ;
     
     
+    /**
+     * @return the corresponding {@link Key}.
+     */
     public final Key getKey()
     {
         switch ( this )
@@ -387,6 +433,11 @@ public enum KeyID
         return( null );
     }
     
+    /**
+     * @param key
+     * 
+     * @return the KeyID, that corresponds to the given Key.
+     */
     public static final KeyID valueOf( Key key )
     {
         final String keyName = key.getName();

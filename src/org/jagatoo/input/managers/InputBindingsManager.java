@@ -39,7 +39,7 @@ import org.jagatoo.input.actions.InputAction;
 import org.jagatoo.input.devices.components.DeviceComponent;
 
 /**
- * This is a generic KeyBindings handler.
+ * This is a generic input-bindings manager.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */

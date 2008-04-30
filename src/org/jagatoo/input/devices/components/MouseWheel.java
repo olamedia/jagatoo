@@ -32,23 +32,35 @@ package org.jagatoo.input.devices.components;
 import org.jagatoo.input.devices.Mouse;
 
 /**
- * Insert type comment here.
+ * This is a simple abstaction of a mouse-wheel.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
 public class MouseWheel extends AnalogDeviceComponent
 {
+    /**
+     * To allow for using the MouseWheel's up/down state-changes
+     * like Key/Button events we need this simple {@link DeviceComponent}.
+     * 
+     * @author Marvin Froehlich (aka Qudus)
+     */
     public class WheelUpDownComponent extends DeviceComponent
     {
         private final MouseWheel wheel;
         
         private final int intValue;
         
+        /**
+         * @return the {@link MouseWheel}, this component belongs to.
+         */
         public final MouseWheel getWheel()
         {
             return( wheel );
         }
         
+        /**
+         * @return the value, this component forwards to input-events and -actions.
+         */
         public final int getIntValue()
         {
             return( intValue );
@@ -70,21 +82,39 @@ public class MouseWheel extends AnalogDeviceComponent
     
     private final Mouse mouse;
     
+    /**
+     * @return the Mouse, this wheel belongs to.
+     * This can be <code>null</code> for the global mouse-wheel.
+     */
     public final Mouse getMouse()
     {
         return( mouse );
     }
     
+    /**
+     * @return the special {@link DeviceComponent}, that can be used
+     * like a key/button for input bindings.
+     */
     public final WheelUpDownComponent getUp()
     {
         return( up );
     }
     
+    /**
+     * @return the special {@link DeviceComponent}, that can be used
+     * like a key/button for input bindings.
+     */
     public final WheelUpDownComponent getDown()
     {
         return( down );
     }
     
+    /**
+     * Creates a new MouseWheel instance.
+     * 
+     * @param mouse the mouse, this wheel belongs to
+     * @param name the wheel's name
+     */
     public MouseWheel( Mouse mouse, String name )
     {
         super( Type.MOUSE_WHEEL, name );
@@ -92,6 +122,11 @@ public class MouseWheel extends AnalogDeviceComponent
         this.mouse = mouse;
     }
     
+    /**
+     * Creates a new MouseWheel instance.
+     * 
+     * @param mouse the mouse, this wheel belongs to
+     */
     public MouseWheel( Mouse mouse )
     {
         this( mouse, "Mouse Wheel" );

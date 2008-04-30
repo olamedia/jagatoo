@@ -30,7 +30,8 @@
 package org.jagatoo.input.managers;
 
 /**
- * A Key bindings set.
+ * Many binding implementations allow for multiple bindings for the same action.
+ * This bindinds-set lets you select primary or secondary binding.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */

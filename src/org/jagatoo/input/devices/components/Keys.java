@@ -159,15 +159,69 @@ public class Keys
     public static final Key NUMPAD8         = new Key( "NUMPAD8", true );
     public static final Key NUMPAD9         = new Key( "NUMPAD9", true );
     
-    public static final Key LOCAL_KEY1    = new Key( "LOCAL_KEY1", true ); // two keys left to the back-space
-    public static final Key LOCAL_KEY2    = new Key( "LOCAL_KEY2", true ); // one key left to the back-space
-    public static final Key LOCAL_KEY3    = new Key( "LOCAL_KEY3", true ); // one key right to P
-    public static final Key LOCAL_KEY4    = new Key( "LOCAL_KEY4", true ); // two key right to P
-    public static final Key LOCAL_KEY5    = new Key( "LOCAL_KEY5", true ); // one key right to L
-    public static final Key LOCAL_KEY6    = new Key( "LOCAL_KEY6", true ); // two keys right to L
-    public static final Key LOCAL_KEY7    = new Key( "LOCAL_KEY7", true ); // three keys right to L
-    public static final Key LOCAL_KEY8    = new Key( "LOCAL_KEY8", true ); // one key right to M
-    public static final Key LOCAL_KEY9    = new Key( "LOCAL_KEY9", true ); // two keys right to M
-    public static final Key LOCAL_KEY10   = new Key( "LOCAL_KEY10", true ); // three keys right to M
-    public static final Key LOCAL_KEY11   = new Key( "LOCAL_KEY11", true ); // two keys left to the X
+    /**
+     * Localized key:<br>
+     * two keys left to the back-space
+     */
+    public static final Key LOCAL_KEY1    = new Key( "LOCAL_KEY1", true );
+    
+    /**
+     * Localized key:<br>
+     * one key left to the back-space
+     */
+    public static final Key LOCAL_KEY2    = new Key( "LOCAL_KEY2", true );
+    
+    /**
+     * Localized key:<br>
+     * one key right to P
+     */
+    public static final Key LOCAL_KEY3    = new Key( "LOCAL_KEY3", true );
+    
+    /**
+     * Localized key:<br>
+     * two key right to P
+     */
+    public static final Key LOCAL_KEY4    = new Key( "LOCAL_KEY4", true );
+    
+    /**
+     * Localized key:<br>
+     * one key right to L
+     */
+    public static final Key LOCAL_KEY5    = new Key( "LOCAL_KEY5", true );
+    
+    /**
+     * Localized key:<br>
+     * two keys right to L
+     */
+    public static final Key LOCAL_KEY6    = new Key( "LOCAL_KEY6", true );
+    
+    /**
+     * Localized key:<br>
+     * three keys right to L
+     */
+    public static final Key LOCAL_KEY7    = new Key( "LOCAL_KEY7", true );
+    
+    /**
+     * Localized key:<br>
+     * one key right to M
+     */
+    public static final Key LOCAL_KEY8    = new Key( "LOCAL_KEY8", true );
+    
+    /**
+     * Localized key:<br>
+     * two keys right to M
+     */
+    public static final Key LOCAL_KEY9    = new Key( "LOCAL_KEY9", true );
+    
+    /**
+     * Localized key:<br>
+     * three keys right to M
+     */
+    public static final Key LOCAL_KEY10   = new Key( "LOCAL_KEY10", true );
+    
+    /**
+     * Localized key:<br>
+     * two keys left to the X
+     */
+    public static final Key LOCAL_KEY11   = new Key( "LOCAL_KEY11", true );
 }

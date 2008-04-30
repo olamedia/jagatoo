@@ -100,6 +100,12 @@ public class KeyboardLocalizer
         KeyboardLocalizer.mapping = mapping;
     }
     
+    /**
+     * Selects a Mapping, if none is currently selected.<br>
+     * This will select the mapping from the System's default Locale.
+     * 
+     * @return the currently selected Mapping (never <code>null</code>).
+     */
     public static final Mapping getMapping()
     {
         if ( mapping == null )

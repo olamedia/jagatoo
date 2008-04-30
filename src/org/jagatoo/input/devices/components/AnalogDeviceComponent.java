@@ -30,7 +30,7 @@
 package org.jagatoo.input.devices.components;
 
 /**
- * Insert type comment here.
+ * Abstraction of all {@link DeviceComponent}s, that can have values in a range.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
@@ -66,26 +66,48 @@ public class AnalogDeviceComponent extends DeviceComponent
         setValue( floatValue + deltaValue );
     }
     
+    /**
+     * @return the current value as an int.
+     * This is always scale * floatValue.
+     */
     public final int getIntValue()
     {
         return( intValue );
     }
     
+    /**
+     * @return the current value as a float.
+     * This is always intValue / scale.
+     */
     public final float getFloatValue()
     {
         return( floatValue );
     }
     
+    /**
+     * Sets the scale factor to convert the int- and float-values.
+     * 
+     * @param scale
+     */
     public void setScale( float scale )
     {
         this.scale = scale;
     }
     
+    /**
+     * @return the scale factor to convert the int- and float-values.
+     */
     public final float getScale()
     {
         return( scale );
     }
     
+    /**
+     * Creates a new {@link AnalogDeviceComponent}.
+     * 
+     * @param type the type
+     * @param name the component's name
+     */
     protected AnalogDeviceComponent( Type type, String name )
     {
         super( type, name );

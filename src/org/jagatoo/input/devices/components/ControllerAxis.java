@@ -32,7 +32,7 @@ package org.jagatoo.input.devices.components;
 import org.jagatoo.input.devices.Controller;
 
 /**
- * Insert type comment here.
+ * This is a simple abstraction of a {@link Controller}'s axis.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
@@ -51,6 +51,9 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
     private final float povX;
     private final float povY;
     
+    /**
+     * @return the {@link Controller}, this axis belongs to.
+     */
     public final Controller getController()
     {
         return( controller );
@@ -69,6 +72,11 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
         this.normValue = ( ( getFloatValue() - getMinValue() ) * invMinMaxSpan ) - 1f;
     }
     
+    /**
+     * Sets the minimum value, the normalized value can take.
+     * 
+     * @param minValue
+     */
     public void setMinValue( float minValue )
     {
         this.minValue = minValue;
@@ -77,11 +85,19 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
         updateNormValue();
     }
     
+    /**
+     * @return the minimum value, the normalized value can take.
+     */
     public final float getMinValue()
     {
         return( minValue );
     }
     
+    /**
+     * Sets the maximum value, the normalized value can take.
+     * 
+     * @param minValue
+     */
     public void setMaxValue( float maxValue )
     {
         this.maxValue = maxValue;
@@ -90,6 +106,9 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
         updateNormValue();
     }
     
+    /**
+     * @return the maximum value, the normalized value can take.
+     */
     public final float getMaxValue()
     {
         return( maxValue );

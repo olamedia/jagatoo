@@ -39,6 +39,12 @@ import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.listeners.InputStateListener;
 import org.jagatoo.input.render.InputSourceWindow;
 
+/**
+ * This is the (very) base-class for all input device implementations.<br>
+ * Instances can only be created/retrieved through an {@link InputDeviceFactory}.
+ * 
+ * @author Marvin Froehlich (aka Qudus)
+ */
 public abstract class InputDevice implements Enableable
 {
     private final InputSourceWindow sourceWindow;
@@ -51,6 +57,9 @@ public abstract class InputDevice implements Enableable
     
     private final ArrayList< InputStateListener > stateListeners = new ArrayList< InputStateListener >();
     
+    /**
+     * @return the {@link InputSourceWindow}, this device is bound to.
+     */
     public final InputSourceWindow getSourceWindow()
     {
         return( sourceWindow );
@@ -134,6 +143,11 @@ public abstract class InputDevice implements Enableable
         return( stateListeners.size() > 0 );
     }
     
+    /**
+     * Adds a new {@link InputStateListener} to the list of notified instances.
+     * 
+     * @param l
+     */
     public void addInputStateListener( InputStateListener l )
     {
         if ( stateListeners.contains( l ) )
@@ -142,6 +156,11 @@ public abstract class InputDevice implements Enableable
         stateListeners.add( l );
     }
     
+    /**
+     * Removes an {@link InputStateListener} from the list of notified instances.
+     * 
+     * @param l
+     */
     public void removeInputStateListener( InputStateListener l )
     {
         stateListeners.remove( l );

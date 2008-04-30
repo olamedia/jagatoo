@@ -49,6 +49,10 @@ public class InputHandlerSuspendAction extends AbstractLabeledInvokableInputActi
     
     private final int suspendMask;
     
+    /**
+     * @return the suspend-maks to apply to the InputHandler
+     * when the action is invoked.
+     */
     public final int getSuspendMask()
     {
         return( suspendMask );

@@ -41,11 +41,17 @@ public final class MouseAxis extends AnalogDeviceComponent
     private final Mouse mouse;
     private final char id;
     
+    /**
+     * @return the {@link Mouse}, this axis belongs to.
+     */
     public final Mouse getMouse()
     {
         return( mouse );
     }
     
+    /**
+     * @return a simple char-id, that identifies this axis.
+     */
     public final char getID()
     {
         return( id );
@@ -60,6 +66,13 @@ public final class MouseAxis extends AnalogDeviceComponent
         return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", ID = " + getID() + ", value = " + getFloatValue() + " }" );
     }
     
+    /**
+     * Create a new {@link MouseAxis}.
+     * 
+     * @param mouse the {@link Mouse}, this axis belongs to
+     * @param id the simple char-id, that identifies this axis
+     * @param name the Axis' name
+     */
     public MouseAxis( Mouse mouse, char id, String name )
     {
         super( Type.MOUSE_AXIS, name );

@@ -45,6 +45,14 @@ import org.jagatoo.input.listeners.KeyboardListener;
 import org.jagatoo.input.localization.KeyboardLocalizer;
 import org.jagatoo.input.render.InputSourceWindow;
 
+/**
+ * This is the base-class for all Keyboard implementations.<br>
+ * Applications should always use instances as Keyboard, but never cast them to
+ * the concrete implementation.<br>
+ * Instances can only be created/retrieved through an {@link InputDeviceFactory}.
+ * 
+ * @author Marvin Froehlich (aka Qudus)
+ */
 public abstract class Keyboard extends InputDevice
 {
     private final KeyboardFactory sourceFactory;
@@ -79,6 +87,11 @@ public abstract class Keyboard extends InputDevice
         return( hasInputStateListener() || hasKeyboardListener() );
     }
     
+    /**
+     * Adds a {@link KeyboardListener} to the list of notified instances.
+     * 
+     * @param l
+     */
     public void addKeyboardListener( KeyboardListener l )
     {
         for ( int i = 0; i < listeners.size(); i++ )
@@ -90,11 +103,25 @@ public abstract class Keyboard extends InputDevice
         listeners.add( l );
     }
     
+    /**
+     * Removes a {@link KeyboardListener} from the list of notified instances.
+     * 
+     * @param l
+     */
     public void removeKeyboardListener( KeyboardListener l )
     {
         listeners.remove( l );
     }
     
+    /**
+     * Combines the given key's maks-value to the modifier-mask,
+     * if the Key is a modifier.
+     * 
+     * @param key
+     * @param isKeyDown
+     * 
+     * @return the new modifier-mask.
+     */
     protected int applyModifier( Key key, boolean isKeyDown )
     {
         if ( key == null )
@@ -145,11 +172,26 @@ public abstract class Keyboard extends InputDevice
         return( modifierMask );
     }
     
+    /**
+     * @return the current modifier-mask.
+     */
     public final int getModifierMask()
     {
         return( modifierMask );
     }
     
+    /**
+     * Prepares a {@link KeyPressedEvent} for being fired.<br>
+     * The event is not fired from this method.<br>
+     * This method cares about the current key-state.
+     * 
+     * @param key
+     * @param modifierMask
+     * @param when
+     * @param lastWhen
+     * 
+     * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
+     */
     protected final KeyPressedEvent prepareKeyPressedEvent( Key key, int modifierMask, long when, long lastWhen )
     {
         if ( !isEnabled() || !hasListener() )
@@ -162,8 +204,23 @@ public abstract class Keyboard extends InputDevice
         return( e );
     }
     
+    /**
+     * This method is asked by the {@link #fireOnKeyPressed(KeyPressedEvent, boolean)}
+     * and {@link #fireOnKeyReleased(KeyReleasedEvent, boolean)} methods
+     * and listeners are not notified, if this method returns false.
+     * 
+     * @param key
+     * @param keyState
+     */
     protected abstract boolean hasKeyStateChanged( Key key, boolean keyState );
     
+    /**
+     * Fires a {@link KeyPressedEvent} and pushes it back to the pool,
+     * if consumeEvent is true.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireOnKeyPressed( KeyPressedEvent e, boolean consumeEvent )
     {
         if ( !isEnabled() || !hasListener() )
@@ -188,6 +245,18 @@ public abstract class Keyboard extends InputDevice
             KeyboardEventPool.freePressed( e );
     }
     
+    /**
+     * Prepares a {@link KeyReleasedEvent} for being fired.<br>
+     * The event is not fired from this method.<br>
+     * This method cares about the current key-state.
+     * 
+     * @param key
+     * @param modifierMask
+     * @param when
+     * @param lastWhen
+     * 
+     * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
+     */
     protected final KeyReleasedEvent prepareKeyReleasedEvent( Key key, int modifierMask, long when, long lastWhen )
     {
         if ( !isEnabled() || !hasListener() )
@@ -200,6 +269,13 @@ public abstract class Keyboard extends InputDevice
         return( e );
     }
     
+    /**
+     * Fires a {@link KeyReleasedEvent} and pushes it back to the pool,
+     * if consumeEvent is true.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireOnKeyReleased( KeyReleasedEvent e, boolean consumeEvent )
     {
         if ( !isEnabled() || !hasListener() )
@@ -224,6 +300,17 @@ public abstract class Keyboard extends InputDevice
             KeyboardEventPool.freeReleased( e );
     }
     
+    /**
+     * Prepares a {@link KeyTypedEvent} for being fired.<br>
+     * The event is not fired from this method.<br>
+     * 
+     * @param keyChar
+     * @param modifierMask
+     * @param when
+     * @param lastWhen
+     * 
+     * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
+     */
     protected final KeyTypedEvent prepareKeyTypedEvent( char keyChar, int modifierMask, long when, long lastWhen )
     {
         if ( !isEnabled() || !hasListener() )
@@ -234,6 +321,13 @@ public abstract class Keyboard extends InputDevice
         return( e );
     }
     
+    /**
+     * Fires a {@link KeyTypedEvent} and pushes it back to the pool,
+     * if consumeEvent is true.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireOnKeyTyped( KeyTypedEvent e, boolean consumeEvent )
     {
         if ( !isEnabled() || !hasListener() )
@@ -252,6 +346,12 @@ public abstract class Keyboard extends InputDevice
             KeyboardEventPool.freeTyped( e );
     }
     
+    /**
+     * this method simply forwards to the concrete fire* methods.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireKeyboardEvent( KeyboardEvent e, boolean consumeEvent )
     {
         switch ( e.getSubType() )
@@ -268,11 +368,21 @@ public abstract class Keyboard extends InputDevice
         }
     }
     
+    /**
+     * @param key
+     * 
+     * @return true, if the given Key is currently pressed on this Keyboard.
+     */
     public final boolean isKeyPressed( Key key )
     {
         return( keyStates[ key.getKeyCode() - 1 ] );
     }
     
+    /**
+     * @param key
+     * 
+     * @return The given Key's state on this Keyboard.
+     */
     public final InputState getKeyState( Key key )
     {
         if ( isKeyPressed( key ) )

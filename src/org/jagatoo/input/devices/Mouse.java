@@ -51,6 +51,14 @@ import org.jagatoo.input.listeners.MouseStopListener;
 import org.jagatoo.input.managers.MouseStopManager;
 import org.jagatoo.input.render.InputSourceWindow;
 
+/**
+ * This is the base-class for all Mouse implementations.<br>
+ * Applications should always use instances as Mouse, but never cast them to
+ * the concrete implementation.<br>
+ * Instances can only be created/retrieved through an {@link InputDeviceFactory}.
+ * 
+ * @author Marvin Froehlich (aka Qudus)
+ */
 public abstract class Mouse extends InputDevice
 {
     private final MouseFactory sourceFactory;
@@ -84,6 +92,12 @@ public abstract class Mouse extends InputDevice
         return( sourceFactory );
     }
     
+    /**
+     * Starts the {@link MouseStopManager}'s thread.<br>
+     * mouse-stop-events are generated.
+     * 
+     * @throws InputSystemException
+     */
     public final void startMouseStopManager() throws InputSystemException
     {
         if ( stopManager == null )
@@ -92,6 +106,11 @@ public abstract class Mouse extends InputDevice
         stopManager.start();
     }
     
+    /**
+     * Stops the {@link MouseStopManager}'s thread.
+     * 
+     * @throws InputSystemException
+     */
     public final void stopMouseStopManager() throws InputSystemException
     {
         if ( stopManager == null )
@@ -100,6 +119,9 @@ public abstract class Mouse extends InputDevice
         stopManager.stopMe();
     }
     
+    /**
+     * @return <code>true</code>, if the {@link MouseStopManager} is currently started.
+     */
     public final boolean isMouseStopManagerRunning()
     {
         if ( stopManager == null )
@@ -285,6 +307,12 @@ public abstract class Mouse extends InputDevice
             return( InputState.NEGATIVE );
     }
     
+    /**
+     * Adds a {@link MouseStopListener} to this Mouse to be notified
+     * when the mouse has stopped being moved (for a while).
+     * 
+     * @param l
+     */
     public void addMouseStopListener( MouseStopListener l )
     {
         boolean contains = false;
@@ -302,6 +330,11 @@ public abstract class Mouse extends InputDevice
         numStopListeners = stopListeners.size();
     }
     
+    /**
+     * Removes a {@link MouseStopListener} from the list of notified instances.
+     * 
+     * @param l
+     */
     public void removeMouseStopListener( MouseStopListener l )
     {
         stopListeners.remove( l );
@@ -324,6 +357,12 @@ public abstract class Mouse extends InputDevice
         return( hasInputStateListener() || hasMouseListener() );
     }
     
+    /**
+     * Adds a {@link MouseListener} to the list of instances being notifed on
+     * mouse events.
+     * 
+     * @param l
+     */
     public void addMouseListener( MouseListener l )
     {
         boolean contains = false;
@@ -343,6 +382,11 @@ public abstract class Mouse extends InputDevice
         numListeners = listeners.size();
     }
     
+    /**
+     * Removes a {@link MouseListener} from the list of notified instances.
+     * 
+     * @param l
+     */
     public void removeMouseListener( MouseListener l )
     {
         listeners.remove( l );
@@ -351,6 +395,16 @@ public abstract class Mouse extends InputDevice
         numListeners = listeners.size();
     }
     
+    /**
+     * Prepares a {@link MouseButtonPressedEvent} for being fired.<br>
+     * The event is not fired from this method.<br>
+     * This method cares about the current button-state.
+     * 
+     * @param button
+     * @param when
+     * 
+     * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
+     */
     protected final MouseButtonPressedEvent prepareMouseButtonPressedEvent( MouseButton button, long when )
     {
         addButtonsState( button );
@@ -365,6 +419,13 @@ public abstract class Mouse extends InputDevice
         return( e );
     }
     
+    /**
+     * Fires a {@link MouseButtonPressedEvent} and pushes it back to the pool,
+     * if consumeEvent is true.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireOnMouseButtonPressed( MouseButtonPressedEvent e, boolean consumeEvent )
     {
         if ( !isEnabled() || !hasListener() )
@@ -386,6 +447,16 @@ public abstract class Mouse extends InputDevice
             MouseEventPool.freePressed( e );
     }
     
+    /**
+     * Prepares a {@link MouseButtonReleasedEvent} for being fired.<br>
+     * The event is not fired from this method.<br>
+     * This method cares about the current button-state.
+     * 
+     * @param button
+     * @param when
+     * 
+     * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
+     */
     protected final MouseButtonReleasedEvent prepareMouseButtonReleasedEvent( MouseButton button, long when )
     {
         removeButtonsState( button );
@@ -400,6 +471,13 @@ public abstract class Mouse extends InputDevice
         return( e );
     }
     
+    /**
+     * Fires a {@link MouseButtonReleasedEvent} and pushes it back to the pool,
+     * if consumeEvent is true.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireOnMouseButtonReleased( MouseButtonReleasedEvent e, boolean consumeEvent )
     {
         if ( !isEnabled() || !hasListener() )
@@ -421,6 +499,17 @@ public abstract class Mouse extends InputDevice
             MouseEventPool.freeReleased( e );
     }
     
+    /**
+     * Prepares a {@link MouseMovedEvent} for being fired.<br>
+     * The event is not fired from this method.<br>
+     * This method also notifies the {@link MouseStopManager}, so
+     * that it can track, when the mouse has stopped.
+     * 
+     * @param button
+     * @param when
+     * 
+     * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
+     */
     protected final MouseMovedEvent prepareMouseMovedEvent( int x, int y, int dx, int dy, long when )
     {
         if ( !isEnabled() || !hasListener() )
@@ -438,6 +527,13 @@ public abstract class Mouse extends InputDevice
         return( e );
     }
     
+    /**
+     * Fires a {@link MouseMovedEvent} and pushes it back to the pool,
+     * if consumeEvent is true.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireOnMouseMoved( MouseMovedEvent e, boolean consumeEvent )
     {
         if ( !isEnabled() )
@@ -468,6 +564,16 @@ public abstract class Mouse extends InputDevice
             MouseEventPool.freeMoved( e );
     }
     
+    /**
+     * Prepares a {@link MouseWheelEvent} for being fired.<br>
+     * The event is not fired from this method.<br>
+     * This method updates the wheel-state.
+     * 
+     * @param button
+     * @param when
+     * 
+     * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
+     */
     protected final MouseWheelEvent prepareMouseWheelMovedEvent( int wheelDelta, boolean isPageMove, long when )
     {
         final MouseWheel wheel = getWheel();
@@ -487,6 +593,13 @@ public abstract class Mouse extends InputDevice
         return( e );
     }
     
+    /**
+     * Fires a {@link MouseWheelEvent} and pushes it back to the pool,
+     * if consumeEvent is true.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireOnMouseWheelMoved( MouseWheelEvent e, boolean consumeEvent )
     {
         final MouseWheel wheel = getWheel();
@@ -516,6 +629,15 @@ public abstract class Mouse extends InputDevice
             MouseEventPool.freeWheel( e );
     }
     
+    /**
+     * Prepares a {@link MouseStoppedEvent} for bein fired.<br>
+     * The event is not fired from this method.<br>
+     * 
+     * @param button
+     * @param when
+     * 
+     * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
+     */
     public final MouseStoppedEvent prepareMouseStoppedEvent( long when )
     {
         if ( !isEnabled() || ( numStopListeners == 0 ) )
@@ -528,6 +650,13 @@ public abstract class Mouse extends InputDevice
         return( e );
     }
     
+    /**
+     * Fires a {@link MouseStoppedEvent} and pushes it back to the pool,
+     * if consumeEvent is true.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireOnMouseStopped( MouseStoppedEvent e, boolean consumeEvent )
     {
         if ( !isEnabled() || ( numStopListeners == 0 ) )
@@ -548,6 +677,12 @@ public abstract class Mouse extends InputDevice
             MouseEventPool.freeStopped( e );
     }
     
+    /**
+     * This method simply forwards to the concrete fire* methods.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireMouseEvent( MouseEvent e, boolean consumeEvent )
     {
         switch ( e.getSubType() )

@@ -61,6 +61,9 @@ public class Key extends DigitalDeviceComponent
         return( keyCode );
     }
     
+    /**
+     * @return true, if this Key has a printable char.
+     */
     public final boolean hasKeyChar()
     {
         return( hasKeyChar );

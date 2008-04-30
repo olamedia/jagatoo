@@ -30,7 +30,7 @@
 package org.jagatoo.input.devices.components;
 
 /**
- * Insert type comment here.
+ * Abstraction of all DeviceComponents, that have only two states.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */

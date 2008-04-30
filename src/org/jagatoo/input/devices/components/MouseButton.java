@@ -42,11 +42,17 @@ public final class MouseButton extends DigitalDeviceComponent
     private final int index;
     private final int maskValue;
     
+    /**
+     * @return this button's index.
+     */
     public final int getIndex()
     {
         return( index );
     }
     
+    /**
+     * @return a value, that identifies this button in a bit-mask.
+     */
     public final int getMaskValue()
     {
         return( maskValue );
@@ -61,6 +67,11 @@ public final class MouseButton extends DigitalDeviceComponent
         return( this.getClass().getSimpleName() + " \"" + getName() + "\"" );
     }
     
+    /**
+     * Create a new MouseButton instance.
+     * 
+     * @param name the button's name
+     */
     MouseButton( String name )
     {
         super( Type.MOUSE_BUTTON, name );

@@ -50,6 +50,15 @@ import org.jagatoo.input.render.InputSourceWindow;
 import org.jagatoo.logging.LogChannel;
 import org.jagatoo.util.arrays.ArrayUtils;
 
+/**
+ * The InputSystem is the root starting point for all input related tasks.
+ * You can use it as a singleton by using the getInstance() method to retrieve
+ * an instance.<br>
+ * The {@link InputSystem} allows for registering {@link InputDevice}s and
+ * appropriate listeners/managers.
+ * 
+ * @author Marvin Froehlich (aka Qudus)
+ */
 public class InputSystem
 {
     public static final LogChannel LOG_CHANNEL = new LogChannel( "JAGaToo.InputSystem" );
@@ -72,16 +81,28 @@ public class InputSystem
     private InputStatesManager[] statesManagers = null;
     private final ArrayList< InputHandler< ? > > inputHandlers = new ArrayList< InputHandler< ? > >();
     
+    /**
+     * Sets the instance to be used as the singleton instance.
+     * 
+     * @param inputSystem
+     */
     public static final void setInstance( InputSystem inputSystem )
     {
         instance = inputSystem;
     }
     
+    /**
+     * @return <code>true</code>, if there currently is a singleton-instance.
+     */
     public static final boolean hasInstance()
     {
         return( instance != null );
     }
     
+    /**
+     * @return the singleton instance. If none is currently registered,
+     * a new one is created (and returned).
+     */
     public static final InputSystem getInstance()
     {
         if ( instance == null )
@@ -97,6 +118,11 @@ public class InputSystem
         return( eventQueue );
     }
     
+    /**
+     * Registers an {@link InputStatesManager} to be updated automatically.
+     * 
+     * @param mgr
+     */
     public void registerInputStatesManager( InputStatesManager mgr )
     {
         if ( mgr == null )
@@ -115,6 +141,11 @@ public class InputSystem
         }
     }
     
+    /**
+     * Deregisters an {@link InputStatesManager}.
+     * 
+     * @param mgr
+     */
     public void deregisterInputStatesManager( InputStatesManager mgr )
     {
         if ( mgr == null )
@@ -138,6 +169,15 @@ public class InputSystem
         }
     }
     
+    /**
+     * Notifies all registered InputStateManagers about a state-change.
+     * 
+     * @param device
+     * @param comp
+     * @param state
+     * @param delta
+     * @param nanoTime
+     */
     public final void notifyInputStatesManagers( final InputDevice device, DeviceComponent comp, int state, final int delta, long nanoTime )
     {
         if ( ( statesManagers == null ) || ( statesManagers.length == 0 ) )
@@ -149,6 +189,13 @@ public class InputSystem
         }
     }
     
+    /**
+     * Adds an {@link InputHandler} to be updated automatically.<br>
+     * This method calls {@link InputHandler#setInputSystem(InputSystem)}
+     * with this InputSystem as the parameter.
+     * 
+     * @param inputHandler
+     */
     public void addInputHandler( InputHandler< ? > inputHandler )
     {
         if ( inputHandler == null )
@@ -162,6 +209,13 @@ public class InputSystem
         }
     }
     
+    /**
+     * Removes an {@link InputHandler}.<br>
+     * This method calls {@link InputHandler#setInputSystem(InputSystem)}
+     * with <code>null</code> as the parameter.
+     * 
+     * @param inputHandler
+     */
     public void removeInputHandler( InputHandler< ? > inputHandler )
     {
         if ( inputHandler == null )
@@ -173,6 +227,13 @@ public class InputSystem
         }
     }
     
+    /**
+     * Adds an {@link InputListener}.<br>
+     * This automatically adds the listener to all registered {@link InputDevice}s
+     * and also adds them to all devices, that are registered later.
+     * 
+     * @param l
+     */
     public void addInputListener( InputListener l )
     {
         boolean contains = false;
@@ -206,6 +267,12 @@ public class InputSystem
         }
     }
     
+    /**
+     * Removes an {@link InputListener} from this {@link InputSystem} and all
+     * registered {@link InputDevice}s.
+     * 
+     * @param l
+     */
     public void removeInputListener( InputListener l )
     {
         if ( inputListeners.remove( l ) )
@@ -227,6 +294,13 @@ public class InputSystem
         }
     }
     
+    /**
+     * Adds an {@link InputStateListener}.<br>
+     * This automatically adds the listener to all registered {@link InputDevice}s
+     * and also adds them to all devices, that are registered later.
+     * 
+     * @param l
+     */
     public void addInputStateListener( InputStateListener l )
     {
         boolean contains = false;
@@ -260,6 +334,12 @@ public class InputSystem
         }
     }
     
+    /**
+     * Removes an {@link InputStateListener} from this {@link InputSystem} and all
+     * registered {@link InputDevice}s.
+     * 
+     * @param l
+     */
     public void removeInputStateListener( InputStateListener l )
     {
         if ( inputStateListeners.remove( l ) )
@@ -378,7 +458,8 @@ public class InputSystem
     }
     
     /**
-     * Deregisters the given Keyboard from this InputSystem.
+     * Deregisters the given Keyboard from this InputSystem and calls the
+     * destroy() method.
      * 
      * @param keyboard
      * 
@@ -1064,6 +1145,12 @@ public class InputSystem
         updateInputHandlers( nanoTime );
     }
     
+    /**
+     * Destroys the InputSystem.<br>
+     * This first deregisters all currently registered InputDevices.
+     * 
+     * @throws InputSystemException
+     */
     public void destroy() throws InputSystemException
     {
         HashSet< Object > factories = new HashSet< Object >();
@@ -1100,6 +1187,13 @@ public class InputSystem
         }
     }
     
+    /**
+     * Destroys all Keyboards from the given factory.
+     * 
+     * @param deviceFactory
+     * 
+     * @throws InputSystemException
+     */
     public void destroy( KeyboardFactory deviceFactory ) throws InputSystemException
     {
         for ( int i = keyboards.length - 1; i >= 0; i-- )
@@ -1111,6 +1205,13 @@ public class InputSystem
         deviceFactory.destroy( this );
     }
     
+    /**
+     * Destroys all Mouses from the given factory.
+     * 
+     * @param deviceFactory
+     * 
+     * @throws InputSystemException
+     */
     public void destroy( MouseFactory deviceFactory ) throws InputSystemException
     {
         for ( int i = mouses.length - 1; i >= 0; i-- )
@@ -1122,6 +1223,13 @@ public class InputSystem
         deviceFactory.destroy( this );
     }
     
+    /**
+     * Destroys all Controllers from the given factory.
+     * 
+     * @param deviceFactory
+     * 
+     * @throws InputSystemException
+     */
     public void destroy( ControllerFactory deviceFactory ) throws InputSystemException
     {
         for ( int i = controllers.length - 1; i >= 0; i-- )
@@ -1133,6 +1241,13 @@ public class InputSystem
         deviceFactory.destroy( this );
     }
     
+    /**
+     * Destroys all InputDevices from the given factory.
+     * 
+     * @param deviceFactory
+     * 
+     * @throws InputSystemException
+     */
     public void destroy( InputDeviceFactory deviceFactory ) throws InputSystemException
     {
         destroy( (KeyboardFactory)deviceFactory );
@@ -1140,11 +1255,22 @@ public class InputSystem
         destroy( (ControllerFactory)deviceFactory );
     }
     
+    /**
+     * Destroys all InputDevices from the {@link InputDeviceFactory},
+     * that is retrieved from the given {@link InputSourceWindow}.
+     * 
+     * @param sourceWindow
+     * 
+     * @throws InputSystemException
+     */
     public void destroy( InputSourceWindow sourceWindow ) throws InputSystemException
     {
         destroy( sourceWindow.getInputDeviceFactory( this ) );
     }
     
+    /**
+     * Creates a new InputSystem instance.
+     */
     public InputSystem()
     {
         this.eventQueue = new EventQueue();

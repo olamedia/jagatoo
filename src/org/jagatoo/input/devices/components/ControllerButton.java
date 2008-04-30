@@ -32,7 +32,7 @@ package org.jagatoo.input.devices.components;
 import org.jagatoo.input.devices.Controller;
 
 /**
- * Insert type comment here.
+ * This is a simple abstraction of a {@link Controller}'s button.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
@@ -43,6 +43,9 @@ public class ControllerButton extends DigitalDeviceComponent
     
     private InputState state = InputState.NEGATIVE;
     
+    /**
+     * @return the {@link Controller}, this button belongs to.
+     */
     public final Controller getController()
     {
         return( controller );
@@ -69,11 +72,17 @@ public class ControllerButton extends DigitalDeviceComponent
             setState( InputState.NEGATIVE );
     }
     
+    /**
+     * @return this button's current state.
+     */
     public final InputState getState()
     {
         return( state );
     }
     
+    /**
+     * @return this button's current boolean state.
+     */
     public final boolean getBooleanState()
     {
         return( state.getBooleanValue() );

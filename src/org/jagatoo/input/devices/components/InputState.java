@@ -55,6 +55,9 @@ public enum InputState
         return( isVolatile );
     }
     
+    /**
+     * @return a simple boolean value for this InputState.
+     */
     public final boolean getBooleanValue()
     {
         return( booleanValue );

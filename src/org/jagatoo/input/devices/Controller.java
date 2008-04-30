@@ -43,6 +43,14 @@ import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.listeners.ControllerListener;
 import org.jagatoo.input.render.InputSourceWindow;
 
+/**
+ * This is the base-class for all Controller implementations.<br>
+ * Applications should always use instances as Controller, but never cast them to
+ * the concrete implementation.<br>
+ * Instances can only be created/retrieved through an {@link InputDeviceFactory}.
+ * 
+ * @author Marvin Froehlich (aka Qudus)
+ */
 public abstract class Controller extends InputDevice
 {
     private final ControllerFactory sourceFactory;
@@ -117,6 +125,11 @@ public abstract class Controller extends InputDevice
         return( hasInputStateListener() || hasControllerListener() );
     }
     
+    /**
+     * Adds a new {@link ControllerListener} to the list of notified instances.
+     * 
+     * @param l
+     */
     public void addControllerListener( ControllerListener l )
     {
         for ( int i = 0; i < listeners.size(); i++ )
@@ -129,6 +142,11 @@ public abstract class Controller extends InputDevice
         numListeners = listeners.size();
     }
     
+    /**
+     * Removes a {@link ControllerListener} from the list of notified instances.
+     * 
+     * @param l
+     */
     public void removeControllerListener( ControllerListener l )
     {
         listeners.remove( l );
@@ -146,11 +164,25 @@ public abstract class Controller extends InputDevice
         return( false );
     }
     
+    /**
+     * @param button
+     * 
+     * @return the current state-mask for this Controller's buttons.
+     */
     public final int getButtonState( ControllerButton button )
     {
         return( isButtonPressed( button ) ? 1 : 0 );
     }
     
+    /**
+     * Prepares a {@link ControllerButtonPressedEvent} for being fired.<br>
+     * The event is not fired from this method.<br>
+     * 
+     * @param button
+     * @param when
+     * 
+     * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
+     */
     protected final ControllerButtonPressedEvent prepareControllerButtonPressed( ControllerButton button, long when )
     {
         if ( !isEnabled() || !hasListener() )
@@ -163,6 +195,13 @@ public abstract class Controller extends InputDevice
         return( e );
     }
     
+    /**
+     * Fires a {@link ControllerButtonPressedEvent} and pushes it back to the pool,
+     * if consumeEvent is true.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireOnControllerButtonPressed( ControllerButtonPressedEvent e, boolean consumeEvent )
     {
         if ( !isEnabled() || !hasListener() )
@@ -184,6 +223,15 @@ public abstract class Controller extends InputDevice
             ControllerEventPool.freePressed( e );
     }
     
+    /**
+     * Prepares a {@link ControllerButtonReleasedEvent} for being fired.<br>
+     * The event is not fired from this method.<br>
+     * 
+     * @param button
+     * @param when
+     * 
+     * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
+     */
     public final ControllerButtonReleasedEvent prepareControllerButtonReleased( ControllerButton button, long when )
     {
         if ( !isEnabled() || !hasListener() )
@@ -196,6 +244,13 @@ public abstract class Controller extends InputDevice
         return( e );
     }
     
+    /**
+     * Fires a {@link ControllerButtonReleasedEvent} and pushes it back to the pool,
+     * if consumeEvent is true.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireOnControllerButtonReleased( ControllerButtonReleasedEvent e, boolean consumeEvent )
     {
         if ( !isEnabled() || !hasListener() )
@@ -217,6 +272,15 @@ public abstract class Controller extends InputDevice
             ControllerEventPool.freeReleased( e );
     }
     
+    /**
+     * Prepares a {@link ControllerAxisChangedEvent} for being fired.<br>
+     * The event is not fired from this method.<br>
+     * 
+     * @param button
+     * @param when
+     * 
+     * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
+     */
     public final ControllerAxisChangedEvent prepareControllerAxisChanged( ControllerAxis axis, float delta, long when )
     {
         if ( !isEnabled() || !hasListener() )
@@ -229,6 +293,13 @@ public abstract class Controller extends InputDevice
         return( e );
     }
     
+    /**
+     * Fires a {@link ControllerAxisChangedEvent} and pushes it back to the pool,
+     * if consumeEvent is true.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireOnControllerAxisChanged( ControllerAxisChangedEvent e, boolean consumeEvent )
     {
         if ( !isEnabled() || !hasListener() )
@@ -249,6 +320,12 @@ public abstract class Controller extends InputDevice
             ControllerEventPool.freeAxis( e );
     }
     
+    /**
+     * This method just forwards to the concrete fire* methods.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
     public final void fireControllerEvent( ControllerEvent e, boolean consumeEvent )
     {
         switch ( e.getSubType() )
