@@ -84,8 +84,8 @@ public class InputTest implements InputListener, InputHotPlugListener
 {
     private static final int DEBUG_MASK_EVENTS = 1;
     private static final int DEBUG_MASK_KEYBOARD_EVENTS = 2;
-    private static final int DEBUG_MASK_MOUSE_EVENTS = 3;
-    private static final int DEBUG_MASK_CONTROLLER_EVENTS = 4;
+    private static final int DEBUG_MASK_MOUSE_EVENTS = 4;
+    private static final int DEBUG_MASK_CONTROLLER_EVENTS = 8;
     private static final int DEBUG_MASK_TEST_ACTION = 16;
     private static final int DEBUG_MASK_MYBINDING = 32;
     private static final int DEBUG_MASK_MYACTION = 64;
