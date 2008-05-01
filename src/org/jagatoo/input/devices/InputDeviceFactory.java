@@ -29,6 +29,9 @@
  */
 package org.jagatoo.input.devices;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.events.EventQueue;
@@ -221,6 +224,40 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      */
     protected abstract Controller[] initControllers() throws InputSystemException;
     
+    private static final class ControllerSorter implements Comparator< Controller >
+    {
+        private static final ControllerSorter instance = new ControllerSorter();
+        
+        public int compare( Controller c1, Controller c2 )
+        {
+            if ( c1.getAxesCount() < c2.getAxesCount() )
+                return( +1 );
+            
+            if ( c1.getAxesCount() > c2.getAxesCount() )
+                return( -1 );
+            
+            if ( c1.getButtonsCount() < c2.getButtonsCount() )
+                return( +1 );
+            
+            if ( c1.getButtonsCount() > c2.getButtonsCount() )
+                return( -1 );
+            
+            return( 0 );
+        }
+        
+        public static Controller[] sort( Controller[] controllers )
+        {
+            /*
+             * Sort controllers according to their expected preference.
+             * I expect: more axes = better Controller.
+             *           same axes-count, but more buttons = better controller.
+             */
+            Arrays.sort( controllers, instance );
+            
+            return( controllers );
+        }
+    }
+    
     /**
      * @return an array of all the installed Controllers in the system.
      * 
@@ -228,7 +265,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      */
     protected static final Controller[] initControllers( InputDeviceFactory factory ) throws InputSystemException
     {
-        return( factory.initControllers() );
+        return( ControllerSorter.sort( factory.initControllers() ) );
     }
     
     /**

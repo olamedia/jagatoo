@@ -202,7 +202,7 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
             {
                 if ( isController( controllers[ i ].getType() ) )
                 {
-                    if ( controllers[ i ].getComponents().length > 10 )
+                    //if ( controllers[ i ].getComponents().length > 10 )
                     {
                         alreadyExisting = false;
                         if ( currentControllers != null )

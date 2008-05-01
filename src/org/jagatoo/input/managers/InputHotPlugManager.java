@@ -112,7 +112,7 @@ public class InputHotPlugManager implements Runnable
             keyboardFactories = newArray;
         }
         
-        refreshCachedKeyboards( factory );
+        //refreshCachedKeyboards( factory );
     }
     
     /**
@@ -162,7 +162,7 @@ public class InputHotPlugManager implements Runnable
             mouseFactories = newArray;
         }
         
-        refreshCachedMouses( factory );
+        //refreshCachedMouses( factory );
     }
     
     /**
@@ -212,7 +212,7 @@ public class InputHotPlugManager implements Runnable
             controllerFactories = newArray;
         }
         
-        refreshCachedControllers( factory );
+        //refreshCachedControllers( factory );
     }
     
     /**
@@ -345,11 +345,14 @@ public class InputHotPlugManager implements Runnable
                         
                         Keyboard[] cachedKeyboards0 = cachedKeyboardsMap.get( factory );
                         refreshCachedKeyboards( factory );
-                        Keyboard[] cachedKeyboards1 = cachedKeyboardsMap.get( factory );
-                        
-                        if ( cachedKeyboards0.length != cachedKeyboards1.length )
+                        if ( cachedKeyboards0 != null )
                         {
-                            notifyListeners( cachedKeyboards0, cachedKeyboards1 );
+                            Keyboard[] cachedKeyboards1 = cachedKeyboardsMap.get( factory );
+                            
+                            if ( cachedKeyboards0.length != cachedKeyboards1.length )
+                            {
+                                notifyListeners( cachedKeyboards0, cachedKeyboards1 );
+                            }
                         }
                     }
                 }
@@ -362,11 +365,14 @@ public class InputHotPlugManager implements Runnable
                         
                         Mouse[] cachedMouses0 = cachedMousesMap.get( factory );
                         refreshCachedMouses( factory );
-                        Mouse[] cachedMouses1 = cachedMousesMap.get( factory );
-                        
-                        if ( cachedMouses0.length != cachedMouses1.length )
+                        if ( cachedMouses0 != null )
                         {
-                            notifyListeners( cachedMouses0, cachedMouses1 );
+                            Mouse[] cachedMouses1 = cachedMousesMap.get( factory );
+                            
+                            if ( cachedMouses0.length != cachedMouses1.length )
+                            {
+                                notifyListeners( cachedMouses0, cachedMouses1 );
+                            }
                         }
                     }
                 }
@@ -379,11 +385,14 @@ public class InputHotPlugManager implements Runnable
                         
                         Controller[] cachedControllers0 = cachedControllersMap.get( factory );
                         refreshCachedControllers( factory );
-                        Controller[] cachedControllers1 = cachedControllersMap.get( factory );
-                        
-                        if ( cachedControllers0.length != cachedControllers1.length )
+                        if ( cachedControllers0 != null )
                         {
-                            notifyListeners( cachedControllers0, cachedControllers1 );
+                            Controller[] cachedControllers1 = cachedControllersMap.get( factory );
+                            
+                            if ( cachedControllers0.length != cachedControllers1.length )
+                            {
+                                notifyListeners( cachedControllers0, cachedControllers1 );
+                            }
                         }
                     }
                 }
