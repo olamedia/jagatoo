@@ -52,6 +52,20 @@ public class MouseButtons
     public static final MouseButton EXT_BUTTON_8 = new MouseButton( "Extension Button 8" );
     public static final MouseButton EXT_BUTTON_9 = new MouseButton( "Extension Button 9" );
     
+    public static final int MASK_LEFT_BUTTON = LEFT_BUTTON.getMaskValue();
+    public static final int MASK_MIDDLE_BUTTON = MIDDLE_BUTTON.getMaskValue();
+    public static final int MASK_RIGHT_BUTTON = RIGHT_BUTTON.getMaskValue();
+    
+    public static final int MASK_EXT_BUTTON_1 = EXT_BUTTON_1.getMaskValue();
+    public static final int MASK_EXT_BUTTON_2 = EXT_BUTTON_2.getMaskValue();
+    public static final int MASK_EXT_BUTTON_3 = EXT_BUTTON_3.getMaskValue();
+    public static final int MASK_EXT_BUTTON_4 = EXT_BUTTON_4.getMaskValue();
+    public static final int MASK_EXT_BUTTON_5 = EXT_BUTTON_5.getMaskValue();
+    public static final int MASK_EXT_BUTTON_6 = EXT_BUTTON_6.getMaskValue();
+    public static final int MASK_EXT_BUTTON_7 = EXT_BUTTON_7.getMaskValue();
+    public static final int MASK_EXT_BUTTON_8 = EXT_BUTTON_8.getMaskValue();
+    public static final int MASK_EXT_BUTTON_9 = EXT_BUTTON_9.getMaskValue();
+    
     public static final MouseWheel.WheelUpDownComponent WHEEL_UP = MouseWheel.GLOBAL_WHEEL.getUp();
     public static final MouseWheel.WheelUpDownComponent WHEEL_DOWN = MouseWheel.GLOBAL_WHEEL.getDown();
     
