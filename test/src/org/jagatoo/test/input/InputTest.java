@@ -675,9 +675,9 @@ public class InputTest implements InputListener, InputHotPlugListener
     
     public InputTest() throws Throwable
     {
-        //startLWJGL();
+        startLWJGL();
         //startJInput();
-        startAWT();
+        //startAWT();
     }
     
     public static void main( String[] args ) throws Throwable
