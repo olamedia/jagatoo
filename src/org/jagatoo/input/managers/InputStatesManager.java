@@ -257,6 +257,7 @@ public class InputStatesManager
             tmpStates[ i ] = 0;
         }
         
+        prevStates = states1;
         currStates = states2;
         
         swapper = false;
