@@ -392,9 +392,9 @@ public class InputTest implements InputListener, InputHotPlugListener
             ex.printStackTrace();
         }
         
-        System.out.println( is.getKeyboard() );
-        System.out.println( is.getMouse() );
-        System.out.println( is.getController() );
+        System.out.println( ( is.hasKeyboard() ? is.getKeyboard() : "No Keyboard registered." ) );
+        System.out.println( ( is.hasMouse() ? is.getMouse() : "No Mouse registered." ) );
+        System.out.println( ( is.hasController() ? is.getController() : "No Controller registered." ) );
         
         setupInputBindings( is );
         

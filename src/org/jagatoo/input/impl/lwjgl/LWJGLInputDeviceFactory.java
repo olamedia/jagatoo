@@ -101,28 +101,30 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
             
             LWJGLController[] controllers = new LWJGLController[ count ];
             
-            boolean alreadyexisting = false;
+            boolean alreadyExisting = false;
+            int k = 0;
             for ( int i = 0; i < count; i++ )
             {
-                alreadyexisting = false;
+                alreadyExisting = false;
                 if ( currentControllers != null )
                 {
                     for ( int j = 0; j < currentControllers.length; j++ )
                     {
                         if ( ( currentControllers[ j ] instanceof LWJGLController ) && ( currentControllers[ j ].getName().equals( org.lwjgl.input.Controllers.getController( i ).getName() ) ) )
                         {
-                            controllers[ i ] = (LWJGLController)currentControllers[ j ];
-                            alreadyexisting = true;
+                            controllers[ k++ ] = (LWJGLController)currentControllers[ j ];
+                            alreadyExisting = true;
                             break;
                         }
                     }
                 }
                 
-                if ( !alreadyexisting )
+                if ( !alreadyExisting )
                 {
                     try
                     {
-                        controllers[ i ] = new LWJGLController( this, getSourceWindow(), getEveneQueue(), org.lwjgl.input.Controllers.getController( i ) );
+                        LWJGLController c = new LWJGLController( this, getSourceWindow(), getEveneQueue(), org.lwjgl.input.Controllers.getController( i ) );
+                        controllers[ k++ ] = c;
                     }
                     catch ( InputSystemException ise )
                     {
@@ -132,6 +134,14 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
                         }
                     }
                 }
+            }
+            
+            if ( k != count )
+            {
+                LWJGLController[] controllers2 = new LWJGLController[ k ];
+                System.arraycopy( controllers, 0, controllers2, 0, k );
+                
+                return( controllers2 );
             }
             
             return( controllers );

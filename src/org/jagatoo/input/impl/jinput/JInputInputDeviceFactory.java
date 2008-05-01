@@ -60,12 +60,12 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
             
             JInputMouse[] tmpMouses = new JInputMouse[ controllers.length ];
             int numMouses = 0;
-            boolean alreadyexisting = false;
+            boolean alreadyExisting = false;
             for ( int i = 0; i < controllers.length; i++ )
             {
                 if ( controllers[ i ].getType() == net.java.games.input.Controller.Type.MOUSE )
                 {
-                    alreadyexisting = false;
+                    alreadyExisting = false;
                     if ( currentMoues != null )
                     {
                         for ( int j = 0; j < currentMoues.length; j++ )
@@ -73,13 +73,13 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
                             if ( ( currentMoues[ j ] instanceof JInputMouse ) && ( currentMoues[ j ].getName().equals( controllers[ i ].getName() ) ) )
                             {
                                 tmpMouses[ numMouses++ ] = (JInputMouse)currentMoues[ j ];
-                                alreadyexisting = true;
+                                alreadyExisting = true;
                                 break;
                             }
                         }
                     }
                     
-                    if ( !alreadyexisting )
+                    if ( !alreadyExisting )
                     {
                         tmpMouses[ numMouses++ ] = new JInputMouse( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Mouse)controllers[ i ] );
                     }
@@ -116,14 +116,14 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
             
             JInputKeyboard[] tmpKeyboards = new JInputKeyboard[ controllers.length ];
             int numKeyboards = 0;
-            boolean alreadyexisting = false;
+            boolean alreadyExisting = false;
             for ( int i = 0; i < controllers.length; i++ )
             {
                 if ( controllers[ i ].getType() == net.java.games.input.Controller.Type.KEYBOARD )
                 {
                     if ( controllers[ i ].getComponents().length > 10 )
                     {
-                        alreadyexisting = false;
+                        alreadyExisting = false;
                         if ( currentKeyboards != null )
                         {
                             for ( int j = 0; j < currentKeyboards.length; j++ )
@@ -131,13 +131,13 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
                                 if ( ( currentKeyboards[ j ] instanceof JInputKeyboard ) && ( currentKeyboards[ j ].getName().equals( controllers[ i ].getName() ) ) )
                                 {
                                     tmpKeyboards[ numKeyboards++ ] = (JInputKeyboard)currentKeyboards[ j ];
-                                    alreadyexisting = true;
+                                    alreadyExisting = true;
                                     break;
                                 }
                             }
                         }
                         
-                        if ( !alreadyexisting )
+                        if ( !alreadyExisting )
                         {
                             tmpKeyboards[ numKeyboards++ ] = new JInputKeyboard( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Keyboard)controllers[ i ] );
                         }
@@ -197,14 +197,14 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
             
             JInputController[] tmpControllers = new JInputController[ controllers.length ];
             int numControllers = 0;
-            boolean alreadyexisting = false;
+            boolean alreadyExisting = false;
             for ( int i = 0; i < controllers.length; i++ )
             {
                 if ( isController( controllers[ i ].getType() ) )
                 {
                     if ( controllers[ i ].getComponents().length > 10 )
                     {
-                        alreadyexisting = false;
+                        alreadyExisting = false;
                         if ( currentControllers != null )
                         {
                             for ( int j = 0; j < currentControllers.length; j++ )
@@ -212,13 +212,13 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
                                 if ( ( currentControllers[ j ] instanceof JInputController ) && ( currentControllers[ j ].getName().equals( controllers[ i ].getName() ) ) )
                                 {
                                     tmpControllers[ numControllers++ ] = (JInputController)currentControllers[ j ];
-                                    alreadyexisting = true;
+                                    alreadyExisting = true;
                                     break;
                                 }
                             }
                         }
                         
-                        if ( !alreadyexisting )
+                        if ( !alreadyExisting )
                         {
                             try
                             {
