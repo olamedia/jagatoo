@@ -220,7 +220,17 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
                         
                         if ( !alreadyexisting )
                         {
-                            tmpControllers[ numControllers++ ] = new JInputController( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
+                            try
+                            {
+                                tmpControllers[ numControllers++ ] = new JInputController( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
+                            }
+                            catch ( InputSystemException ise )
+                            {
+                                if ( ise.getInfo() != InputSystemException.Info.ILLEGAL_CONTROLLER_CONFIGURATION )
+                                {
+                                    throw( ise );
+                                }
+                            }
                         }
                     }
                 }

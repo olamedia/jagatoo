@@ -378,6 +378,12 @@ public abstract class Controller extends InputDevice
         this.axes = createAxesArray( implObj );
         this.lastWhen_axisChanged = new long[ axes.length ];
         this.buttons = createButtonsArray( implObj );
+        
+        if ( ( getAxesCount() == 0 ) && ( getButtonsCount() == 0 ) )
+        {
+            throw( new InputSystemException( InputSystemException.Info.ILLEGAL_CONTROLLER_CONFIGURATION ) );
+        }
+        
         this.lastWhen_buttonPressed = new long[ buttons.length ];
         this.lastWhen_buttonReleased = new long[ buttons.length ];
         

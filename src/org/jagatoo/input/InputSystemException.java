@@ -39,9 +39,52 @@ public class InputSystemException extends Exception
 {
     private static final long serialVersionUID = 6198466862319520551L;
     
+    public enum Info
+    {
+        ILLEGAL_CONTROLLER_CONFIGURATION( "Illegal Controller configuration. Probably no axes and buttons." ),
+        ;
+        
+        private final String text;
+        
+        public final String getText()
+        {
+            return( text );
+        }
+        
+        private Info( String text )
+        {
+            this.text = text;
+        }
+    }
+    
+    private final Info info;
+    
+    public final Info getInfo()
+    {
+        return( info );
+    }
+    
+    public InputSystemException( Info info, Throwable cause )
+    {
+        super( info.getText() );
+        
+        this.info = info;
+        
+        this.initCause( cause );
+    }
+    
+    public InputSystemException( Info info )
+    {
+        super( info.getText() );
+        
+        this.info = info;
+    }
+    
     public InputSystemException( String message, Throwable cause )
     {
         super( message );
+        
+        this.info = null;
         
         this.initCause( cause );
     }
@@ -49,11 +92,15 @@ public class InputSystemException extends Exception
     public InputSystemException( String message )
     {
         super( message );
+        
+        this.info = null;
     }
     
     public InputSystemException( Throwable cause )
     {
         super( cause.getMessage() );
+        
+        this.info = null;
         
         this.initCause( cause );
     }

@@ -120,7 +120,17 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
                 
                 if ( !alreadyexisting )
                 {
-                    controllers[ i ] = new LWJGLController( this, getSourceWindow(), getEveneQueue(), org.lwjgl.input.Controllers.getController( i ) );
+                    try
+                    {
+                        controllers[ i ] = new LWJGLController( this, getSourceWindow(), getEveneQueue(), org.lwjgl.input.Controllers.getController( i ) );
+                    }
+                    catch ( InputSystemException ise )
+                    {
+                        if ( ise.getInfo() != InputSystemException.Info.ILLEGAL_CONTROLLER_CONFIGURATION )
+                        {
+                            throw( ise );
+                        }
+                    }
                 }
             }
             
