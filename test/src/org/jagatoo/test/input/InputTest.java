@@ -509,8 +509,8 @@ public class InputTest implements InputListener, InputHotPlugListener
         {
             if ( deviceFactory == null )
             {
-                deviceFactory = new org.jagatoo.input.impl.awt.AWTInputDeviceFactory( this, inputSystem.getEventQueue() );
-                //deviceFactory = new org.jagatoo.input.impl.mixed.AWTJInputInputDeviceFactory( this, inputSystem.getEventQueue() );
+                //deviceFactory = new org.jagatoo.input.impl.awt.AWTInputDeviceFactory( this, inputSystem.getEventQueue() );
+                deviceFactory = new org.jagatoo.input.impl.mixed.AWTJInputInputDeviceFactory( this, inputSystem.getEventQueue() );
             }
             
             return( deviceFactory );
