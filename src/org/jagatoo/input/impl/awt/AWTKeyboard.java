@@ -46,6 +46,7 @@ import org.jagatoo.input.events.KeyTypedEvent;
 import org.jagatoo.input.events.KeyboardEvent;
 import org.jagatoo.input.localization.KeyboardLocalizer;
 import org.jagatoo.input.render.InputSourceWindow;
+import org.jagatoo.logging.Log;
 
 /**
  * AWT implementation of the Keyboard class.
@@ -354,6 +355,14 @@ public class AWTKeyboard extends Keyboard
         lastUpdateTime = nanoTime;
     }
     
+    private static final void dumpKeyConversionFailed( java.awt.event.KeyEvent e )
+    {
+        String message = "Key-conversion failed for AWT key " + e.getKeyCode() + ". Please check localization (" + KeyboardLocalizer.getCurrentMappingName() + ")";
+        
+        System.err.println( message );
+        Log.exception( InputSystem.LOG_CHANNEL, message );
+    }
+    
     private void processKeyEvent( java.awt.event.KeyEvent _e )
     {
         if ( !isEnabled() || !getSourceWindow().receivesInputEvents() )
@@ -364,6 +373,13 @@ public class AWTKeyboard extends Keyboard
             case java.awt.event.KeyEvent.KEY_PRESSED:
             {
                 final Key key = convertKey( _e.getKeyCode(), _e.getKeyLocation(), _e.getKeyChar() );
+                
+                if ( key == null )
+                {
+                    dumpKeyConversionFailed( _e );
+                    break;
+                }
+                
                 final int keyIndex = key.getKeyCode() - 1;
                 
                 synchronized ( changedKeyStates )
@@ -378,6 +394,13 @@ public class AWTKeyboard extends Keyboard
             case java.awt.event.KeyEvent.KEY_RELEASED:
             {
                 final Key key = convertKey( _e.getKeyCode(), _e.getKeyLocation(), _e.getKeyChar() );
+                
+                if ( key == null )
+                {
+                    dumpKeyConversionFailed( _e );
+                    break;
+                }
+                
                 final int keyIndex = key.getKeyCode() - 1;
                 
                 synchronized ( changedKeyStates )

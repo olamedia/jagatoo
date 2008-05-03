@@ -113,4 +113,17 @@ public class KeyboardLocalizer
         
         return( mapping );
     }
+    
+    /**
+     * @return the class-name of the current Mapping.
+     */
+    public static final String getCurrentMappingName()
+    {
+        Mapping mapping = getMapping();
+        
+        if ( mapping == null )
+            return( "[NO MAPPING]" );
+        
+        return( mapping.getClass().getName() );
+    }
 }

@@ -313,7 +313,7 @@ public abstract class Keyboard extends InputDevice
      */
     protected final KeyTypedEvent prepareKeyTypedEvent( char keyChar, int modifierMask, long when, long lastWhen )
     {
-        if ( !isEnabled() || !hasListener() )
+        if ( !isEnabled() || !hasListener() || ( keyChar == '\0' ) )
             return( null );
         
         KeyTypedEvent e = KeyboardEventPool.allocTyped( this, keyChar, modifierMask, when, lastWhen );
@@ -397,7 +397,7 @@ public abstract class Keyboard extends InputDevice
     @Override
     public String toString()
     {
-        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", localization-mapping = \"" + ( ( KeyboardLocalizer.getMapping() != null ) ? KeyboardLocalizer.getMapping().getClass().getName() : null ) + "\" }" );
+        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", localization-mapping = \"" + KeyboardLocalizer.getCurrentMappingName() + "\" }" );
     }
     
     /**

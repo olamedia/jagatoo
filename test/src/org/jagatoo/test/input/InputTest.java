@@ -72,11 +72,15 @@ import org.jagatoo.input.managers.SimpleInputActionManager;
 import org.jagatoo.input.render.Cursor;
 import org.jagatoo.input.render.InputSourceWindow;
 import org.jagatoo.test.util.JOGLBase;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 
 /**
- * Insert type comment here.
+ * This testcase is supposed to demonstrate all features of JAGaToo's InputSystem.
+ * Please don't just run the testcase, but read and understand it
+ * and modify it to test different features and see, how they work.
+ * To avoid too much information in the output log you can enable/disable
+ * certain debug information through the debug flags below.
+ * In the constructor at the bottom of the testcase you can use different
+ * device-systems. Please switch between them to test them all.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
@@ -559,9 +563,9 @@ public class InputTest implements InputListener, InputHotPlugListener
     @SuppressWarnings("unused")
     private void startLWJGL() throws Throwable
     {
-        Display.setDisplayMode( new DisplayMode( 1024, 768 ) );
-        Display.create();
-        Display.setLocation( 0, 0 );
+        org.lwjgl.opengl.Display.setDisplayMode( new org.lwjgl.opengl.DisplayMode( 1024, 768 ) );
+        org.lwjgl.opengl.Display.create();
+        org.lwjgl.opengl.Display.setLocation( 0, 0 );
         
         InputSystem is = null;
         try
@@ -571,7 +575,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             
             setupInputSystem( is, sourceWindow );
             
-            while ( !Display.isCloseRequested() )
+            while ( !org.lwjgl.opengl.Display.isCloseRequested() )
             {
                 final long time = System.nanoTime();
                 
@@ -588,16 +592,16 @@ public class InputTest implements InputListener, InputHotPlugListener
         {
             prepareShutdown( is );
             
-            Display.destroy();
+            org.lwjgl.opengl.Display.destroy();
         }
     }
     
     @SuppressWarnings("unused")
     private void startJInput() throws Throwable
     {
-        Display.setDisplayMode( new DisplayMode( 1024, 768 ) );
-        Display.create();
-        Display.setLocation( 0, 0 );
+        org.lwjgl.opengl.Display.setDisplayMode( new org.lwjgl.opengl.DisplayMode( 1024, 768 ) );
+        org.lwjgl.opengl.Display.create();
+        org.lwjgl.opengl.Display.setLocation( 0, 0 );
         
         InputSystem is = null;
         try
@@ -607,7 +611,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             
             setupInputSystem( is, sourceWindow );
             
-            while ( !Display.isCloseRequested() )
+            while ( !org.lwjgl.opengl.Display.isCloseRequested() )
             {
                 final long time = System.nanoTime();
                 
@@ -626,7 +630,7 @@ public class InputTest implements InputListener, InputHotPlugListener
         {
             prepareShutdown( is );
             
-            Display.destroy();
+            org.lwjgl.opengl.Display.destroy();
         }
     }
     

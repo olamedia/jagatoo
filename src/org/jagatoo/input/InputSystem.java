@@ -183,9 +183,12 @@ public class InputSystem
         if ( ( statesManagers == null ) || ( statesManagers.length == 0 ) )
             return;
         
-        for ( int i = 0; i < statesManagers.length; i++ )
+        if ( comp != null )
         {
-            statesManagers[ i ].internalUpdateState( device, comp, state, delta, nanoTime );
+            for ( int i = 0; i < statesManagers.length; i++ )
+            {
+                statesManagers[ i ].internalUpdateState( device, comp, state, delta, nanoTime );
+            }
         }
     }
     
