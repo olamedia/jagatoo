@@ -98,10 +98,10 @@ public class InputTest implements InputListener, InputHotPlugListener
          * Disable particular debugging outputs...
          */
         
-        debugMask &= ~DEBUG_MASK_EVENTS;
-        debugMask &= ~DEBUG_MASK_KEYBOARD_EVENTS;
-        debugMask &= ~DEBUG_MASK_MOUSE_EVENTS;
-        debugMask &= ~DEBUG_MASK_CONTROLLER_EVENTS;
+        //debugMask &= ~DEBUG_MASK_EVENTS;
+        //debugMask &= ~DEBUG_MASK_KEYBOARD_EVENTS;
+        //debugMask &= ~DEBUG_MASK_MOUSE_EVENTS;
+        //debugMask &= ~DEBUG_MASK_CONTROLLER_EVENTS;
         debugMask &= ~DEBUG_MASK_TEST_ACTION;
         debugMask &= ~DEBUG_MASK_MYBINDING;
         debugMask &= ~DEBUG_MASK_MYACTION;

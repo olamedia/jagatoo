@@ -194,7 +194,7 @@ public abstract class Keyboard extends InputDevice
      */
     protected final KeyPressedEvent prepareKeyPressedEvent( Key key, int modifierMask, long when, long lastWhen )
     {
-        if ( !isEnabled() || !hasListener() )
+        if ( !isEnabled() || !hasListener() || ( key == null ) )
             return( null );
         
         keyStates[ key.getKeyCode() - 1 ] = true;
@@ -259,7 +259,7 @@ public abstract class Keyboard extends InputDevice
      */
     protected final KeyReleasedEvent prepareKeyReleasedEvent( Key key, int modifierMask, long when, long lastWhen )
     {
-        if ( !isEnabled() || !hasListener() )
+        if ( !isEnabled() || !hasListener() || ( key == null ) )
             return( null );
         
         keyStates[ key.getKeyCode() - 1 ] = false;
