@@ -39,6 +39,12 @@ import org.jagatoo.input.events.MouseStoppedEvent;
 public interface MouseStopListener
 {
     /**
+     * @return the number of nano-seconds, the mouse needs to have stopped
+     * to fire this MouseStopListener.
+     */
+    public long getMouseStopDelay();
+    
+    /**
      * Invoked when a change of the mouse's position has not been registered
      * for a certain amount of time.
      * 

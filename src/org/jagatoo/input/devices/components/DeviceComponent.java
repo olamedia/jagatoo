@@ -158,8 +158,8 @@ public abstract class DeviceComponent
         }
         if ( index < actions.length - 1 )
         {
-            System.arraycopy( actions, index, actions2, index - 1, actions.length - index );
-            System.arraycopy( actionDevices, index, actionDevices2, index - 1, actionDevices.length - index );
+            System.arraycopy( actions, index + 1, actions2, index, actions.length - index - 1 );
+            System.arraycopy( actionDevices, index + 1, actionDevices2, index, actionDevices.length - index - 1 );
         }
         
         actions = actions2;

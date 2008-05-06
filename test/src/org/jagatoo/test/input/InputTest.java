@@ -192,6 +192,14 @@ public class InputTest implements InputListener, InputHotPlugListener
             System.out.println( "Wheel moved: " + e.getWheelDelta() + ", " + e.isPageMove() + ", " + e.getMouse().getCurrentX() + ", " + e.getMouse().getCurrentY() + ", " + e.getMouse().getButtonsState() );
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    public long getMouseStopDelay()
+    {
+        return( 500000000L );
+    }
+    
     public void onMouseStopped( MouseStoppedEvent e, int x, int y )
     {
         if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_MOUSE_EVENTS ) )

@@ -217,6 +217,14 @@ class CommandDispatcher implements InputListener
     /**
      * {@inheritDoc}
      */
+    public long getMouseStopDelay()
+    {
+        return( 500000000L );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void onMouseStopped( MouseStoppedEvent e, int x, int y )
     {
     }

@@ -76,13 +76,11 @@ public abstract class Mouse extends InputDevice
     private final ArrayList< MouseListener > listeners = new ArrayList< MouseListener >();
     private final ArrayList< MouseStopListener > stopListeners = new ArrayList< MouseStopListener >();
     private int numListeners = 0;
-    private int numStopListeners = 0;
     
     private long lastWhen_buttonPressed = -1L;
     private long lastWhen_buttonReleased = -1L;
     private long lastWhen_moved = -1L;
     private long lastWhen_wheelMoved = -1L;
-    private long lastWhen_stopped = -1L;
     
     /**
      * @return the {@link MouseFactory}, that created this instance.
@@ -101,7 +99,7 @@ public abstract class Mouse extends InputDevice
     public final void startMouseStopManager() throws InputSystemException
     {
         if ( stopManager == null )
-            stopManager = new MouseStopManager( this );
+            stopManager = new MouseStopManager( this, stopListeners );
         
         stopManager.start();
     }
@@ -315,6 +313,13 @@ public abstract class Mouse extends InputDevice
      */
     public void addMouseStopListener( MouseStopListener l )
     {
+        if ( stopManager != null )
+        {
+            stopManager.addMouseStopListener( l );
+            
+            return;
+        }
+        
         boolean contains = false;
         for ( int i = 0; i < stopListeners.size(); i++ )
         {
@@ -327,7 +332,6 @@ public abstract class Mouse extends InputDevice
         
         if ( !contains )
             stopListeners.add( l );
-        numStopListeners = stopListeners.size();
     }
     
     /**
@@ -337,8 +341,14 @@ public abstract class Mouse extends InputDevice
      */
     public void removeMouseStopListener( MouseStopListener l )
     {
+        if ( stopManager != null )
+        {
+            stopManager.removeMouseStopListener( l );
+            
+            return;
+        }
+        
         stopListeners.remove( l );
-        numStopListeners = stopListeners.size();
     }
     
     /**
@@ -346,7 +356,7 @@ public abstract class Mouse extends InputDevice
      */
     public final boolean hasMouseListener()
     {
-        return( numListeners > 0 );
+        return( stopListeners.size() > 0 );
     }
     
     /**
@@ -630,54 +640,6 @@ public abstract class Mouse extends InputDevice
     }
     
     /**
-     * Prepares a {@link MouseStoppedEvent} for bein fired.<br>
-     * The event is not fired from this method.<br>
-     * 
-     * @param button
-     * @param when
-     * 
-     * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
-     */
-    public final MouseStoppedEvent prepareMouseStoppedEvent( long when )
-    {
-        if ( !isEnabled() || ( numStopListeners == 0 ) )
-            return( null );
-        
-        MouseStoppedEvent e = MouseEventPool.allocStopped( this, getCurrentX(), getCurrentY(), when, lastWhen_stopped );
-        
-        lastWhen_stopped = when;
-        
-        return( e );
-    }
-    
-    /**
-     * Fires a {@link MouseStoppedEvent} and pushes it back to the pool,
-     * if consumeEvent is true.
-     * 
-     * @param e
-     * @param consumeEvent
-     */
-    public final void fireOnMouseStopped( MouseStoppedEvent e, boolean consumeEvent )
-    {
-        if ( !isEnabled() || ( numStopListeners == 0 ) )
-        {
-            if ( consumeEvent )
-                MouseEventPool.freeStopped( e );
-            return;
-        }
-        
-        for ( int i = 0; i < stopListeners.size(); i++ )
-        {
-            stopListeners.get( i ).onMouseStopped( e, e.getX(), e.getY() );
-        }
-        
-        fireStateEventsAndDoActions( e, 0, 0 );
-        
-        if ( consumeEvent )
-            MouseEventPool.freeStopped( e );
-    }
-    
-    /**
      * This method simply forwards to the concrete fire* methods.
      * 
      * @param e
@@ -697,7 +659,14 @@ public abstract class Mouse extends InputDevice
                 fireOnMouseMoved( (MouseMovedEvent)e, consumeEvent );
                 break;
             case STOPPED:
-                fireOnMouseStopped( (MouseStoppedEvent)e, consumeEvent );
+                if ( stopManager != null )
+                {
+                    stopManager.fireOnMouseStopped( (MouseStoppedEvent)e, consumeEvent );
+                }
+                else if ( consumeEvent )
+                {
+                    MouseEventPool.freeStopped( (MouseStoppedEvent)e );
+                }
                 break;
             case WHEEL_MOVED:
                 fireOnMouseWheelMoved( (MouseWheelEvent)e, consumeEvent );

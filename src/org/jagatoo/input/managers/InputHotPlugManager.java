@@ -133,7 +133,7 @@ public class InputHotPlugManager implements Runnable
         
         KeyboardFactory[] newArray = new KeyboardFactory[ keyboardFactories.length - 1 ];
         System.arraycopy( keyboardFactories, 0, newArray, 0, index );
-        System.arraycopy( keyboardFactories, index, newArray, index - 1, keyboardFactories.length - index - 1 );
+        System.arraycopy( keyboardFactories, index + 1, newArray, index, keyboardFactories.length - index - 1 );
         keyboardFactories = newArray;
     }
     
@@ -183,7 +183,7 @@ public class InputHotPlugManager implements Runnable
         
         MouseFactory[] newArray = new MouseFactory[ mouseFactories.length - 1 ];
         System.arraycopy( mouseFactories, 0, newArray, 0, index );
-        System.arraycopy( mouseFactories, index, newArray, index - 1, mouseFactories.length - index - 1 );
+        System.arraycopy( mouseFactories, index + 1, newArray, index, mouseFactories.length - index - 1 );
         mouseFactories = newArray;
     }
     
@@ -233,7 +233,7 @@ public class InputHotPlugManager implements Runnable
         
         ControllerFactory[] newArray = new ControllerFactory[ controllerFactories.length - 1 ];
         System.arraycopy( controllerFactories, 0, newArray, 0, index );
-        System.arraycopy( controllerFactories, index, newArray, index - 1, controllerFactories.length - index - 1 );
+        System.arraycopy( controllerFactories, index + 1, newArray, index, controllerFactories.length - index - 1 );
         controllerFactories = newArray;
     }
     
