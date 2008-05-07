@@ -45,6 +45,8 @@ import org.jagatoo.input.render.InputSourceWindow;
  */
 public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactory, ControllerFactory
 {
+    private final InputDeviceFactory masterFactory;
+    
     private final EventQueue eventQueue;
     private final InputSourceWindow sourceWindow;
     
@@ -62,6 +64,26 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     private Controller[] cachedControllers = null;
     
     private final boolean useStaticArrays;
+    
+    /**
+     * @return the master {@link InputDeviceFactory}, if this is a sub-factory (part of a mixed one).
+     */
+    protected final InputDeviceFactory getMasterFactory()
+    {
+        return( masterFactory );
+    }
+    
+    protected final InputDeviceFactory findSourceFactory()
+    {
+        InputDeviceFactory sourceFactory = this;
+        
+        while ( sourceFactory.getMasterFactory() != null )
+        {
+            sourceFactory = sourceFactory.getMasterFactory();
+        }
+        
+        return( sourceFactory );
+    }
     
     protected EventQueue getEveneQueue()
     {
@@ -298,8 +320,10 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      */
     public abstract void destroy( InputSystem inputSystem ) throws InputSystemException;
     
-    public InputDeviceFactory( boolean useStaticArrays, InputSourceWindow sourceWindow, EventQueue eventQueue )
+    public InputDeviceFactory( InputDeviceFactory masterFactory, boolean useStaticArrays, InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
+        this.masterFactory = masterFactory;
+        
         this.useStaticArrays = useStaticArrays;
         
         this.sourceWindow = sourceWindow;

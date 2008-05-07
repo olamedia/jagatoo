@@ -100,9 +100,9 @@ public class AWTJInputInputDeviceFactory extends InputDeviceFactory
     
     public AWTJInputInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
-        super( true, sourceWindow, eventQueue );
+        super( null, true, sourceWindow, eventQueue );
         
-        this.awtFactory = new AWTInputDeviceFactory( sourceWindow, eventQueue );
-        this.jInputFactory = new JInputInputDeviceFactory( sourceWindow, eventQueue );
+        this.awtFactory = new AWTInputDeviceFactory( this, sourceWindow, eventQueue );
+        this.jInputFactory = new JInputInputDeviceFactory( this, sourceWindow, eventQueue );
     }
 }

@@ -61,7 +61,7 @@ public class SWTInputDeviceFactory extends InputDeviceFactory
             }
         }
         
-        return( new SWTMouse[] { new SWTMouse( this, getSourceWindow(), getEveneQueue() ) } );
+        return( new SWTMouse[] { new SWTMouse( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -80,7 +80,7 @@ public class SWTInputDeviceFactory extends InputDeviceFactory
             }
         }
         
-        return( new SWTKeyboard[] { new SWTKeyboard( this, getSourceWindow(), getEveneQueue() ) } );
+        return( new SWTKeyboard[] { new SWTKeyboard( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -100,8 +100,13 @@ public class SWTInputDeviceFactory extends InputDeviceFactory
     {
     }
     
+    public SWTInputDeviceFactory( InputDeviceFactory masterFactory, InputSourceWindow sourceWindow, EventQueue eventQueue )
+    {
+        super( masterFactory, false, sourceWindow, eventQueue );
+    }
+    
     public SWTInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
-        super( false, sourceWindow, eventQueue );
+        this( null, sourceWindow, eventQueue );
     }
 }

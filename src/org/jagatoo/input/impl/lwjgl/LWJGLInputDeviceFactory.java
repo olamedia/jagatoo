@@ -62,7 +62,7 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
             }
         }
         
-        return( new LWJGLMouse[] { new LWJGLMouse( this, getSourceWindow(), getEveneQueue() ) } );
+        return( new LWJGLMouse[] { new LWJGLMouse( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -81,7 +81,7 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
             }
         }
         
-        return( new LWJGLKeyboard[] { new LWJGLKeyboard( this, getSourceWindow(), getEveneQueue() ) } );
+        return( new LWJGLKeyboard[] { new LWJGLKeyboard( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -123,7 +123,7 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
                 {
                     try
                     {
-                        LWJGLController c = new LWJGLController( this, getSourceWindow(), getEveneQueue(), org.lwjgl.input.Controllers.getController( i ) );
+                        LWJGLController c = new LWJGLController( findSourceFactory(), getSourceWindow(), getEveneQueue(), org.lwjgl.input.Controllers.getController( i ) );
                         controllers[ k++ ] = c;
                     }
                     catch ( InputSystemException ise )
@@ -193,8 +193,13 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
         }
     }
     
+    public LWJGLInputDeviceFactory( InputDeviceFactory masterFactory, InputSourceWindow sourceWindow, EventQueue eventQueue )
+    {
+        super( masterFactory, true, sourceWindow, eventQueue );
+    }
+    
     public LWJGLInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
-        super( true, sourceWindow, eventQueue );
+        this( null, sourceWindow, eventQueue );
     }
 }

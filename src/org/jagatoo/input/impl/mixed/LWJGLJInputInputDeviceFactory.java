@@ -100,9 +100,9 @@ public class LWJGLJInputInputDeviceFactory extends InputDeviceFactory
     
     public LWJGLJInputInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
-        super( true, sourceWindow, eventQueue );
+        super( null, true, sourceWindow, eventQueue );
         
-        this.lwjglFactory = new LWJGLInputDeviceFactory( sourceWindow, eventQueue );
-        this.jInputFactory = new JInputInputDeviceFactory( sourceWindow, eventQueue );
+        this.lwjglFactory = new LWJGLInputDeviceFactory( this, sourceWindow, eventQueue );
+        this.jInputFactory = new JInputInputDeviceFactory( this, sourceWindow, eventQueue );
     }
 }

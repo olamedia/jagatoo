@@ -81,7 +81,7 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
                     
                     if ( !alreadyExisting )
                     {
-                        tmpMouses[ numMouses++ ] = new JInputMouse( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Mouse)controllers[ i ] );
+                        tmpMouses[ numMouses++ ] = new JInputMouse( findSourceFactory(), getSourceWindow(), getEveneQueue(), (net.java.games.input.Mouse)controllers[ i ] );
                     }
                 }
             }
@@ -139,7 +139,7 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
                         
                         if ( !alreadyExisting )
                         {
-                            tmpKeyboards[ numKeyboards++ ] = new JInputKeyboard( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Keyboard)controllers[ i ] );
+                            tmpKeyboards[ numKeyboards++ ] = new JInputKeyboard( findSourceFactory(), getSourceWindow(), getEveneQueue(), (net.java.games.input.Keyboard)controllers[ i ] );
                         }
                     }
                 }
@@ -222,7 +222,7 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
                         {
                             try
                             {
-                                tmpControllers[ numControllers++ ] = new JInputController( this, getSourceWindow(), getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
+                                tmpControllers[ numControllers++ ] = new JInputController( findSourceFactory(), getSourceWindow(), getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
                             }
                             catch ( InputSystemException ise )
                             {
@@ -260,8 +260,13 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
     {
     }
     
+    public JInputInputDeviceFactory( InputDeviceFactory masterFactory, InputSourceWindow sourceWindow, EventQueue eventQueue )
+    {
+        super( masterFactory, true, sourceWindow, eventQueue );
+    }
+    
     public JInputInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
-        super( true, sourceWindow, eventQueue );
+        this( null, sourceWindow, eventQueue );
     }
 }

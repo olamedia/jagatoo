@@ -61,7 +61,7 @@ public class AWTInputDeviceFactory extends InputDeviceFactory
             }
         }
         
-        return( new AWTMouse[] { new AWTMouse( this, getSourceWindow(), getEveneQueue() ) } );
+        return( new AWTMouse[] { new AWTMouse( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -80,7 +80,7 @@ public class AWTInputDeviceFactory extends InputDeviceFactory
             }
         }
         
-        return( new AWTKeyboard[] { new AWTKeyboard( this, getSourceWindow(), getEveneQueue() ) } );
+        return( new AWTKeyboard[] { new AWTKeyboard( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -100,8 +100,13 @@ public class AWTInputDeviceFactory extends InputDeviceFactory
     {
     }
     
+    public AWTInputDeviceFactory( InputDeviceFactory masterFactory, InputSourceWindow sourceWindow, EventQueue eventQueue )
+    {
+        super( masterFactory, false, sourceWindow, eventQueue );
+    }
+    
     public AWTInputDeviceFactory( InputSourceWindow sourceWindow, EventQueue eventQueue )
     {
-        super( false, sourceWindow, eventQueue );
+        this( null, sourceWindow, eventQueue );
     }
 }
