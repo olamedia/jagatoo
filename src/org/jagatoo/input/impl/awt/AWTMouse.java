@@ -85,11 +85,15 @@ public class AWTMouse extends Mouse
     private int lastAbsoluteX = 0;
     private int lastAbsoluteY = 0;
     
+    @SuppressWarnings("unused")
     private int lastRelX = -1;
+    @SuppressWarnings("unused")
     private int lastRelY = -1;
     
     private int nextIgnoredX = -1;
     private int nextIgnoredY = -1;
+    
+    private long lastKnownNanoTime = -1L;
     
     private final void ensureRobot() throws InputSystemException
     {
@@ -258,6 +262,8 @@ public class AWTMouse extends Mouse
     @Override
     public void update( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
+        lastKnownNanoTime = nanoTime;
+        
         try
         {
             notifyStatesManagersFromQueue( is, eventQueue, nanoTime );
@@ -266,7 +272,7 @@ public class AWTMouse extends Mouse
             
             if ( !isAbsolute() && needsRecenter )
             {
-                recenter();
+                //recenter();
             }
         }
         catch ( Throwable t )
@@ -293,7 +299,15 @@ public class AWTMouse extends Mouse
         try
         {
             updateCenters();
-            recenter();
+            
+            if ( absolute )
+            {
+                setPosition( getCurrentX(), getCurrentY() );
+            }
+            else
+            {
+                recenter();
+            }
         }
         catch ( Throwable t )
         {
@@ -322,7 +336,7 @@ public class AWTMouse extends Mouse
                 final MouseButton button = convertButton( _e.getButton() );
                 if ( button != null )
                 {
-                    MouseButtonPressedEvent e = prepareMouseButtonPressedEvent( button, 0L );
+                    MouseButtonPressedEvent e = prepareMouseButtonPressedEvent( button, lastKnownNanoTime );
                     
                     if ( e == null )
                         return;
@@ -337,7 +351,7 @@ public class AWTMouse extends Mouse
                 final MouseButton button = convertButton( _e.getButton() );
                 if ( button != null )
                 {
-                    MouseButtonReleasedEvent e = prepareMouseButtonReleasedEvent( button, 0L );
+                    MouseButtonReleasedEvent e = prepareMouseButtonReleasedEvent( button, lastKnownNanoTime );
                     
                     if ( e == null )
                         return;
@@ -359,7 +373,7 @@ public class AWTMouse extends Mouse
                     
                     storePosition( x, y );
                     
-                    MouseMovedEvent e = prepareMouseMovedEvent( x, y, dx, dy, 0L );
+                    MouseMovedEvent e = prepareMouseMovedEvent( x, y, dx, dy, lastKnownNanoTime );
                     
                     if ( e == null )
                         return;
@@ -371,18 +385,18 @@ public class AWTMouse extends Mouse
                 }
                 else
                 {
-                    if ( ( _e.getX() != lastRelX ) && ( _e.getY() != lastRelY ) && ( _e.getX() != nextIgnoredX ) && ( _e.getY() != nextIgnoredY ) )
+                    final int dx = _e.getX() - centerComponent.x + los.x;
+                    final int dy = _e.getY() - centerComponent.y + los.y;
+                    
+                    if ( ( dx != 0 ) || ( dy != 0 ) )
                     {
-                        final int dx = _e.getX() - lastRelX;
-                        final int dy = _e.getY() - lastRelY;
-                        
                         lastRelX = _e.getX();
                         lastRelY = _e.getY();
                         
                         nextIgnoredX = -1;
                         nextIgnoredY = -1;
                         
-                        MouseMovedEvent e = prepareMouseMovedEvent( lastAbsoluteX, lastAbsoluteY, dx, dy, 0L );
+                        MouseMovedEvent e = prepareMouseMovedEvent( lastAbsoluteX, lastAbsoluteY, dx, dy, lastKnownNanoTime );
                         
                         if ( e == null )
                             return;
@@ -390,6 +404,15 @@ public class AWTMouse extends Mouse
                         getEventQueue().enqueue( e );
                         
                         needsRecenter = true;
+                        
+                        try
+                        {
+                            recenter();
+                        }
+                        catch ( InputSystemException ise )
+                        {
+                            ise.printStackTrace();
+                        }
                     }
                 }
                 
@@ -406,7 +429,7 @@ public class AWTMouse extends Mouse
         java.awt.event.MouseWheelEvent __e = (java.awt.event.MouseWheelEvent)_e;
         final boolean isPageMove = __e.getScrollType() == java.awt.event.MouseWheelEvent.WHEEL_BLOCK_SCROLL;
         
-        MouseWheelEvent e = MouseEventPool.allocWheel( this, getWheel(), -__e.getWheelRotation(), isPageMove, 0L, 0L );
+        MouseWheelEvent e = MouseEventPool.allocWheel( this, getWheel(), -__e.getWheelRotation(), isPageMove, lastKnownNanoTime, 0L );
         
         if ( e != null )
             getEventQueue().enqueue( e );

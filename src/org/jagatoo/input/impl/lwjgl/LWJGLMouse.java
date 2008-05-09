@@ -151,7 +151,7 @@ public class LWJGLMouse extends Mouse
                 final int y = getSourceWindow().getHeight() - org.lwjgl.input.Mouse.getEventY();
                 
                 final int dx = org.lwjgl.input.Mouse.getEventDX();
-                final int dy = org.lwjgl.input.Mouse.getEventDY();
+                final int dy = -org.lwjgl.input.Mouse.getEventDY();
                 
                 final int buttonIdx = org.lwjgl.input.Mouse.getEventButton();
                 final boolean buttonState = org.lwjgl.input.Mouse.getEventButtonState();

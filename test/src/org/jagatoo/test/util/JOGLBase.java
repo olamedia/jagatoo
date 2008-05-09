@@ -120,8 +120,13 @@ public abstract class JOGLBase implements GLEventListener
     
     private final Animator animator;
     
-    protected void quit()
+    public void quit()
     {
+        if ( frame.isDisplayable() )
+        {
+            frame.dispose();
+        }
+        
         // Run this on another thread than the AWT event queue to
         // make sure the call to Animator.stop() completes before
         // exiting
@@ -133,12 +138,6 @@ public abstract class JOGLBase implements GLEventListener
                 System.exit( 0 );
             }
         } ).start();
-    }
-    
-    protected void onKeyPressed( int key )
-    {
-        if ( key == KeyEvent.VK_ESCAPE )
-            quit();
     }
     
     private void startLoop()
@@ -204,20 +203,6 @@ public abstract class JOGLBase implements GLEventListener
         frame.setVisible( true );
         canvas.requestFocus();
         animator.start();
-        
-        Toolkit.getDefaultToolkit().addAWTEventListener( new AWTEventListener()
-        {
-            public void eventDispatched( AWTEvent event )
-            {
-                if ( event instanceof KeyEvent )
-                {
-                    if ( event.getID() == KeyEvent.KEY_PRESSED )
-                    {
-                        onKeyPressed( ((KeyEvent)event).getKeyCode() );
-                    }
-                }
-            }
-        }, AWTEvent.KEY_EVENT_MASK );
         
         Thread.yield();
         

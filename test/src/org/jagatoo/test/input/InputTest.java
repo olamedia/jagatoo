@@ -114,6 +114,8 @@ public class InputTest implements InputListener, InputHotPlugListener
     
     private final InputHotPlugManager hotplugManager = new InputHotPlugManager();
     
+    private boolean exitRequested = false;
+    
     private static final boolean isDebugFlagSet( int flag )
     {
         return( ( debugMask & flag ) != 0 );
@@ -121,6 +123,11 @@ public class InputTest implements InputListener, InputHotPlugListener
     
     public void onKeyPressed( KeyPressedEvent e, Key key )
     {
+        if ( key == Keys.ESCAPE )
+        {
+            exitRequested = true;
+        }
+        
         if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_KEYBOARD_EVENTS ) )
             System.out.println( "key pressed: " + e.getKey() + ", " + e.getModifierMask() );
     }
@@ -180,6 +187,7 @@ public class InputTest implements InputListener, InputHotPlugListener
     {
         if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_MOUSE_EVENTS ) )
             System.out.println( "Mouse moved: " + x + ", " + y + ", " + dx + ", " + dy + ", " + e.getMouse().getButtonsState() );
+        
         /*
         xxx += dx;
         System.out.println( xxx );
@@ -583,7 +591,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             
             setupInputSystem( is, sourceWindow );
             
-            while ( !org.lwjgl.opengl.Display.isCloseRequested() )
+            while ( !exitRequested && !org.lwjgl.opengl.Display.isCloseRequested() )
             {
                 final long time = System.nanoTime();
                 
@@ -619,7 +627,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             
             setupInputSystem( is, sourceWindow );
             
-            while ( !org.lwjgl.opengl.Display.isCloseRequested() )
+            while ( !exitRequested && !org.lwjgl.opengl.Display.isCloseRequested() )
             {
                 final long time = System.nanoTime();
                 
@@ -664,7 +672,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             
             setupInputSystem( is, sourceWindow );
             
-            while ( jogl.getFrame().isDisplayable() )
+            while ( !exitRequested && jogl.getFrame().isDisplayable() )
             {
                 final long time = System.nanoTime();
                 
@@ -683,6 +691,11 @@ public class InputTest implements InputListener, InputHotPlugListener
         finally
         {
             prepareShutdown( is );
+            
+            if ( jogl.getFrame().isDisplayable() )
+            {
+                jogl.quit();
+            }
         }
     }
     

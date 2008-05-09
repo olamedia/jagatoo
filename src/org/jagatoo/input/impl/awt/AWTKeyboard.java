@@ -39,11 +39,9 @@ import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.KeyID;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.events.EventQueue;
-import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
-import org.jagatoo.input.events.KeyboardEvent;
 import org.jagatoo.input.localization.KeyboardLocalizer;
 import org.jagatoo.input.render.InputSourceWindow;
 import org.jagatoo.logging.Log;
@@ -254,6 +252,7 @@ public class AWTKeyboard extends Keyboard
     {
     }
     
+    /*
     private final void notifyStatesManagersFromQueue( InputSystem is, EventQueue eventQueue, long nanoTime )
     {
         if ( eventQueue.getNumEvents() == 0 )
@@ -265,6 +264,7 @@ public class AWTKeyboard extends Keyboard
             {
                 final InputEvent event = eventQueue.getEvent( i );
                 
+                System.out.println( event );
                 if ( event.getType() == InputEvent.Type.KEYBOARD_EVENT )
                 {
                     final KeyboardEvent kbEvent = (KeyboardEvent)event;
@@ -282,6 +282,7 @@ public class AWTKeyboard extends Keyboard
             }
         }
     }
+    */
     
     private static final long PRESSED_RELEASED_DELAY = 64L;
     
@@ -295,7 +296,7 @@ public class AWTKeyboard extends Keyboard
     {
         try
         {
-            notifyStatesManagersFromQueue( is, eventQueue, nanoTime );
+            //notifyStatesManagersFromQueue( is, eventQueue, nanoTime );
             
             getEventQueue().dequeueAndFire( is );
             
@@ -316,6 +317,8 @@ public class AWTKeyboard extends Keyboard
                             
                             KeyPressedEvent e = prepareKeyPressedEvent( key, modifierMask, nanoTime, 0L );
                             
+                            is.notifyInputStatesManagers( this, key, 1, +1, nanoTime );
+                            
                             if ( e != null )
                             {
                                 fireOnKeyPressed( e, true );
@@ -326,6 +329,8 @@ public class AWTKeyboard extends Keyboard
                             final int modifierMask = applyModifier( key, false );
                             
                             KeyReleasedEvent e = prepareKeyReleasedEvent( key, modifierMask, nanoTime, 0L );
+                            
+                            is.notifyInputStatesManagers( this, key, 0, -1, nanoTime );
                             
                             if ( e != null )
                             {
