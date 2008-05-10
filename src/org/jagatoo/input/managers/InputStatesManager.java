@@ -29,6 +29,8 @@
  */
 package org.jagatoo.input.managers;
 
+import java.util.List;
+
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.actions.InputAction;
@@ -231,6 +233,108 @@ public class InputStatesManager
         {
             manipulator.apply( currStates );
         }
+    }
+    
+    /**
+     * Fills all InputActions into the list, that currently have
+     * the requested InputState.
+     * 
+     * @param state
+     * @param actions
+     * @param clearListBefore
+     */
+    public void getActionsByState( InputState state, List< ? super InputAction > actions, boolean clearListBefore )
+    {
+        actions.clear();
+        
+        for ( InputAction action : bindingsManager.getBoundActions() )
+        {
+            final InputState state2 = getInputState( action );
+            
+            if ( state2 == state )
+            {
+                actions.add( action );
+            }
+        }
+    }
+    
+    /**
+     * Fills all InputActions into the list, that currently have
+     * the requested InputState.<br>
+     * The list is cleared before.
+     * 
+     * @param state
+     * @param actions
+     */
+    public final void getActionsByState( InputState state, List< ? super InputAction > actions )
+    {
+        getActionsByState( state, actions, true );
+    }
+    
+    /**
+     * Fills all InputActions into the array, that currently have
+     * the requested InputState.<br>
+     * The array is not cleared before.<br>
+     * The array must be of sufficient length.<br>
+     * The number of found actions is returned.
+     * 
+     * @param state
+     * @param actions
+     * 
+     * @return the number of found actions.
+     */
+    public int getActionsByState( InputState state, InputAction[] actions )
+    {
+        int i = 0;
+        for ( InputAction action : bindingsManager.getBoundActions() )
+        {
+            final InputState state2 = getInputState( action );
+            
+            if ( state2 == state )
+            {
+                actions[ i++ ] = action;
+            }
+        }
+        
+        return( i );
+    }
+    
+    /**
+     * Fills all InputActions, that currently have
+     * the requested InputState, into an array.<br>
+     * 
+     * @param state
+     * @param actions
+     * 
+     * @return an array of all found actions, or null, if no actions have been found.
+     */
+    public InputAction[] getActionsByState( InputState state )
+    {
+        InputAction[] actions = null;
+        
+        int i = 0;
+        for ( InputAction action : bindingsManager.getBoundActions() )
+        {
+            final InputState state2 = getInputState( action );
+            
+            if ( state2 == state )
+            {
+                if ( actions == null )
+                    actions = new InputAction[ numStates ];
+                
+                actions[ i++ ] = action;
+            }
+        }
+        
+        if ( ( i > 0 ) && ( i < numStates ) )
+        {
+            InputAction[] actions2 = new InputAction[ i ];
+            System.arraycopy( actions, 0, actions2, 0, i );
+            
+            return( actions2 );
+        }
+        
+        return( actions );
     }
     
     /**

@@ -62,9 +62,6 @@ public abstract class DeviceComponent
     
     private final Type type;
     
-    private final boolean is_digital = ( this instanceof DigitalDeviceComponent );
-    private final boolean is_analog = ( this instanceof AnalogDeviceComponent );
-    
     private InvokableInputAction[] actions = null;
     private InputDevice[] actionDevices = null;
     
@@ -105,7 +102,7 @@ public abstract class DeviceComponent
      */
     public final boolean isDigital()
     {
-        return( is_digital );
+        return( this instanceof DigitalDeviceComponent );
     }
     
     /**
@@ -113,7 +110,7 @@ public abstract class DeviceComponent
      */
     public final boolean isAnalog()
     {
-        return( is_analog );
+        return( this instanceof AnalogDeviceComponent );
     }
     
     /**
