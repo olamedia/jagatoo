@@ -29,31 +29,23 @@
  */
 package org.jagatoo.datatypes;
 
-import org.openmali.vecmath2.Tuple2f;
+import org.openmali.pooling.ObjectPool;
 
 /**
- * A Sized2f class provides getters and setters for the size.
+ * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface Sized2f extends Sized2fRO
+class Dim2fPool extends ObjectPool< Dim2f >
 {
-    /**
-     * Sets the size.
-     * 
-     * @param width
-     * @param height
-     * 
-     * @return true, if the size actually has changed
-     */
-    public boolean setSize( float width, float height );
+    @Override
+    protected final Dim2f newInstance()
+    {
+        return( new Dim2f() );
+    }
     
-    /**
-     * Sets the size.
-     * 
-     * @param size
-     * 
-     * @return true, if the size actually has changed
-     */
-    public boolean setSize( Tuple2f size );
+    public Dim2fPool()
+    {
+        super( 16 );
+    }
 }

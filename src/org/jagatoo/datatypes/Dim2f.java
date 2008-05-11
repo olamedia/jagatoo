@@ -29,11 +29,7 @@
  */
 package org.jagatoo.datatypes;
 
-import java.util.ArrayList;
-
-import org.jagatoo.datatypes.util.ResizeListener2i;
-import org.openmali.vecmath2.Tuple2i;
-
+import org.openmali.vecmath2.Tuple2f;
 
 /**
  * A basic 2-dimensional unpositioned rectangle.
@@ -41,46 +37,19 @@ import org.openmali.vecmath2.Tuple2i;
  * @author Marvin Froehlich (aka Qudus)
  * @author Kevin Finley (aka Horati)
  */
-public class Dim2i implements Sized2i
+public class Dim2f implements Sized2f
 {
-    private static final Dim2iPool POOL = new Dim2iPool();
+    private static final Dim2fPool POOL = new Dim2fPool();
     
-    private int width, height;
+    private float width, height;
     protected boolean isDirty = true;
-    
-    private final ArrayList<ResizeListener2i> resizeListeners = new ArrayList<ResizeListener2i>();
-    
-    /**
-     * {@inheritDoc}
-     * Notification takes place in the thread that called this.setSize(...). 
-     */
-    public void addResizeListener( ResizeListener2i listener )
-    {
-        this.resizeListeners.add( listener );
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void removeResizeListener( ResizeListener2i listener )
-    {
-        this.resizeListeners.remove( listener );
-    }
-    
-    protected void fireResizeEvent( int oldWidth, int oldHeight, int newWidth, int newHeight )
-    {
-        for ( int i = 0; i < resizeListeners.size(); i++ )
-        {
-            resizeListeners.get( i ).onObjectResized( this, oldWidth, oldHeight, newWidth, newHeight );
-        }
-    }
     
     /**
      * @return true, if this object has been modified since the last setClean() call.
      * 
      * @see #setClean()
      */
-    public boolean isDirty()
+    public final boolean isDirty()
     {
         return( isDirty );
     }
@@ -101,10 +70,10 @@ public class Dim2i implements Sized2i
      * 
      * @return true, if the size actually has changed
      */
-    public boolean setSize( int width, int height )
+    public boolean setSize( float width, float height )
     {
-        final int oldWidth = getWidth();
-        final int oldHeight = getHeight();
+        final float oldWidth = getWidth();
+        final float oldHeight = getHeight();
         
         if ( ( oldWidth != width ) || ( oldHeight != height ) )
         {
@@ -112,8 +81,6 @@ public class Dim2i implements Sized2i
             this.height = height;
             
             this.isDirty = true;
-            
-            fireResizeEvent( oldWidth, oldHeight, width, height );
             
             return( true );
         }
@@ -124,7 +91,7 @@ public class Dim2i implements Sized2i
     /**
      * {@inheritDoc}
      */
-    public boolean setSize( Sized2iRO size )
+    public boolean setSize( Sized2f size )
     {
         return( setSize( size.getWidth(), size.getHeight() ) );
     }
@@ -132,7 +99,7 @@ public class Dim2i implements Sized2i
     /**
      * {@inheritDoc}
      */
-    public boolean setSize( Tuple2i size )
+    public boolean setSize( Tuple2f size )
     {
         return( setSize( size.getX(), size.getY() ) );
     }
@@ -140,15 +107,15 @@ public class Dim2i implements Sized2i
     /**
      * @return the upper-left corner's coordinates
      */
-    public Tuple2i getSize()
+    public Tuple2f getSize()
     {
-        return( new Tuple2i( width, height ) );
+        return( new Tuple2f( width, height ) );
     }
     
     /**
      * @return the rectangle's width
      */
-    public int getWidth()
+    public float getWidth()
     {
         return( width );
     }
@@ -156,7 +123,7 @@ public class Dim2i implements Sized2i
     /**
      * @return the rectangle's height
      */
-    public int getHeight()
+    public float getHeight()
     {
         return( height );
     }
@@ -167,7 +134,7 @@ public class Dim2i implements Sized2i
     public float getAspect()
     {
         if ( getHeight() != 0 )
-            return( (float)getWidth() / (float)getHeight() );
+            return( getWidth() / getHeight() );
         
         return( 0f );
     }
@@ -178,7 +145,7 @@ public class Dim2i implements Sized2i
      * @param width the rectangle's width
      * @param height the rectangle's height
      */
-    public void set( int width, int height )
+    public void set( float width, float height )
     {
         setSize( width, height );
     }
@@ -188,12 +155,12 @@ public class Dim2i implements Sized2i
      * 
      * @param size
      */
-    public void set( Sized2i size )
+    public void set( Sized2f size )
     {
         setSize( size.getWidth(), size.getHeight() );
     }
     
-    public boolean equals( Sized2i rect )
+    public boolean equals( Sized2f rect )
     {
         if ( rect == null )
             return( false );
@@ -213,10 +180,10 @@ public class Dim2i implements Sized2i
         if ( o == null )
             return( false );
         
-        if ( !( o instanceof Sized2iRO ) )
+        if ( !( o instanceof Sized2fRO ) )
             return( false );
         
-        return( equals( (Sized2iRO)o ) );
+        return( equals( (Sized2fRO)o ) );
     }
     
     /**
@@ -234,7 +201,7 @@ public class Dim2i implements Sized2i
      * @param width the rectangle's width
      * @param height the rectangle's height
      */
-    public Dim2i( int width, int height )
+    public Dim2f( float width, float height )
     {
         this.width = width;
         this.height = height;
@@ -245,7 +212,7 @@ public class Dim2i implements Sized2i
      * 
      * @param template
      */
-    public Dim2i( Sized2i template )
+    public Dim2f( Sized2f template )
     {
         this( template.getWidth(), template.getHeight() );
     }
@@ -253,26 +220,26 @@ public class Dim2i implements Sized2i
     /**
      * Creates a new 2-dimensional unpositioned rectangle with zero position and size.
      */
-    public Dim2i()
+    public Dim2f()
     {
-        this( 0, 0 );
+        this( 0f, 0f );
     }
     
-    public static final Dim2i fromPool()
+    public static final Dim2f fromPool()
     {
         return( POOL.alloc() );
     }
     
-    public static final Dim2i fromPool( int width, int height )
+    public static final Dim2f fromPool( float width, float height )
     {
-        Dim2i inst = POOL.alloc();
+        Dim2f inst = POOL.alloc();
         
         inst.set( width, height );
         
         return( inst );
     }
     
-    public static final void toPool( Dim2i dim )
+    public static final void toPool( Dim2f dim )
     {
         POOL.free( dim );
     }

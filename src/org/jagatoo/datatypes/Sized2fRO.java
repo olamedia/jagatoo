@@ -32,28 +32,24 @@ package org.jagatoo.datatypes;
 import org.openmali.vecmath2.Tuple2f;
 
 /**
- * A Sized2f class provides getters and setters for the size.
+ * A Sized2f class provides getters for the size.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface Sized2f extends Sized2fRO
+public interface Sized2fRO
 {
     /**
-     * Sets the size.
-     * 
-     * @param width
-     * @param height
-     * 
-     * @return true, if the size actually has changed
+     * @return the size
      */
-    public boolean setSize( float width, float height );
+    public Tuple2f getSize();
     
     /**
-     * Sets the size.
-     * 
-     * @param size
-     * 
-     * @return true, if the size actually has changed
+     * @return the width
      */
-    public boolean setSize( Tuple2f size );
+    public float getWidth();
+    
+    /**
+     * @return the height
+     */
+    public float getHeight();
 }
