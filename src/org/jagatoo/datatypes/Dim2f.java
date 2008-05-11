@@ -88,6 +88,16 @@ public class Dim2f implements Sized2f
         return( false );
     }
     
+    public final void setWidth( float width )
+    {
+        setSize( width, this.height );
+    }
+    
+    public final void setHeight( float height )
+    {
+        setSize( this.width, height );
+    }
+    
     /**
      * {@inheritDoc}
      */

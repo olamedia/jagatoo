@@ -121,6 +121,16 @@ public class Dim2i implements Sized2i
         return( false );
     }
     
+    public final void setWidth( int width )
+    {
+        setSize( width, this.height );
+    }
+    
+    public final void setHeight( int height )
+    {
+        setSize( this.width, height );
+    }
+    
     /**
      * {@inheritDoc}
      */
