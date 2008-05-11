@@ -193,6 +193,30 @@ public class Dim2i implements Sized2i
         setSize( size.getWidth(), size.getHeight() );
     }
     
+    /**
+     * Adds the deltas to the values.
+     * 
+     * @param dw
+     * @param dh
+     */
+    public final void add( int dw, int dh )
+    {
+        this.width += dw;
+        this.height += dh;
+    }
+    
+    /**
+     * Multiplies the values with these factors.
+     * 
+     * @param factW
+     * @param factH
+     */
+    public final void scale( int factW, int factH )
+    {
+        this.width *= factW;
+        this.height *= factH;
+    }
+    
     public boolean equals( Sized2i rect )
     {
         if ( rect == null )
