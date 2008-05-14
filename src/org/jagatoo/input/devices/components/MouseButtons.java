@@ -36,7 +36,7 @@ package org.jagatoo.input.devices.components;
  */
 public class MouseButtons
 {
-    static final MouseButton[] buttonsMap = new MouseButton[ 12 ];
+    static final MouseButton[] buttonsMap = new MouseButton[ 32 ];
     
     public static final MouseButton LEFT_BUTTON = new MouseButton( "Left Button" );
     public static final MouseButton MIDDLE_BUTTON = new MouseButton( "Middle Button" );
@@ -51,6 +51,26 @@ public class MouseButtons
     public static final MouseButton EXT_BUTTON_7 = new MouseButton( "Extension Button 7" );
     public static final MouseButton EXT_BUTTON_8 = new MouseButton( "Extension Button 8" );
     public static final MouseButton EXT_BUTTON_9 = new MouseButton( "Extension Button 9" );
+    public static final MouseButton EXT_BUTTON_10 = new MouseButton( "Extension Button 10" );
+    public static final MouseButton EXT_BUTTON_11 = new MouseButton( "Extension Button 11" );
+    public static final MouseButton EXT_BUTTON_12 = new MouseButton( "Extension Button 12" );
+    public static final MouseButton EXT_BUTTON_13 = new MouseButton( "Extension Button 13" );
+    public static final MouseButton EXT_BUTTON_14 = new MouseButton( "Extension Button 14" );
+    public static final MouseButton EXT_BUTTON_15 = new MouseButton( "Extension Button 15" );
+    public static final MouseButton EXT_BUTTON_16 = new MouseButton( "Extension Button 16" );
+    public static final MouseButton EXT_BUTTON_17 = new MouseButton( "Extension Button 17" );
+    public static final MouseButton EXT_BUTTON_18 = new MouseButton( "Extension Button 18" );
+    public static final MouseButton EXT_BUTTON_19 = new MouseButton( "Extension Button 19" );
+    public static final MouseButton EXT_BUTTON_20 = new MouseButton( "Extension Button 20" );
+    public static final MouseButton EXT_BUTTON_21 = new MouseButton( "Extension Button 21" );
+    public static final MouseButton EXT_BUTTON_22 = new MouseButton( "Extension Button 22" );
+    public static final MouseButton EXT_BUTTON_23 = new MouseButton( "Extension Button 23" );
+    public static final MouseButton EXT_BUTTON_24 = new MouseButton( "Extension Button 24" );
+    public static final MouseButton EXT_BUTTON_25 = new MouseButton( "Extension Button 25" );
+    public static final MouseButton EXT_BUTTON_26 = new MouseButton( "Extension Button 26" );
+    public static final MouseButton EXT_BUTTON_27 = new MouseButton( "Extension Button 27" );
+    public static final MouseButton EXT_BUTTON_28 = new MouseButton( "Extension Button 28" );
+    public static final MouseButton EXT_BUTTON_29 = new MouseButton( "Extension Button 29" );
     
     public static final int MASK_LEFT_BUTTON = LEFT_BUTTON.getMaskValue();
     public static final int MASK_MIDDLE_BUTTON = MIDDLE_BUTTON.getMaskValue();
@@ -65,6 +85,26 @@ public class MouseButtons
     public static final int MASK_EXT_BUTTON_7 = EXT_BUTTON_7.getMaskValue();
     public static final int MASK_EXT_BUTTON_8 = EXT_BUTTON_8.getMaskValue();
     public static final int MASK_EXT_BUTTON_9 = EXT_BUTTON_9.getMaskValue();
+    public static final int MASK_EXT_BUTTON_10 = EXT_BUTTON_10.getMaskValue();
+    public static final int MASK_EXT_BUTTON_11 = EXT_BUTTON_11.getMaskValue();
+    public static final int MASK_EXT_BUTTON_12 = EXT_BUTTON_12.getMaskValue();
+    public static final int MASK_EXT_BUTTON_13 = EXT_BUTTON_13.getMaskValue();
+    public static final int MASK_EXT_BUTTON_14 = EXT_BUTTON_14.getMaskValue();
+    public static final int MASK_EXT_BUTTON_15 = EXT_BUTTON_15.getMaskValue();
+    public static final int MASK_EXT_BUTTON_16 = EXT_BUTTON_16.getMaskValue();
+    public static final int MASK_EXT_BUTTON_17 = EXT_BUTTON_17.getMaskValue();
+    public static final int MASK_EXT_BUTTON_18 = EXT_BUTTON_18.getMaskValue();
+    public static final int MASK_EXT_BUTTON_19 = EXT_BUTTON_19.getMaskValue();
+    public static final int MASK_EXT_BUTTON_20 = EXT_BUTTON_20.getMaskValue();
+    public static final int MASK_EXT_BUTTON_21 = EXT_BUTTON_21.getMaskValue();
+    public static final int MASK_EXT_BUTTON_22 = EXT_BUTTON_22.getMaskValue();
+    public static final int MASK_EXT_BUTTON_23 = EXT_BUTTON_23.getMaskValue();
+    public static final int MASK_EXT_BUTTON_24 = EXT_BUTTON_24.getMaskValue();
+    public static final int MASK_EXT_BUTTON_25 = EXT_BUTTON_25.getMaskValue();
+    public static final int MASK_EXT_BUTTON_26 = EXT_BUTTON_26.getMaskValue();
+    public static final int MASK_EXT_BUTTON_27 = EXT_BUTTON_27.getMaskValue();
+    public static final int MASK_EXT_BUTTON_28 = EXT_BUTTON_28.getMaskValue();
+    public static final int MASK_EXT_BUTTON_29 = EXT_BUTTON_29.getMaskValue();
     
     public static final MouseWheel.WheelUpDownComponent WHEEL_UP = MouseWheel.GLOBAL_WHEEL.getUp();
     public static final MouseWheel.WheelUpDownComponent WHEEL_DOWN = MouseWheel.GLOBAL_WHEEL.getDown();
