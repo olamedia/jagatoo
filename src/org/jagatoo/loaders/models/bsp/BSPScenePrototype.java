@@ -63,7 +63,7 @@
 package org.jagatoo.loaders.models.bsp;
 
 import org.jagatoo.loaders.models.bsp.lumps.*;
-import org.jagatoo.util.image.DirectBufferedImage;
+import org.jagatoo.util.image.SharedBufferedImage;
 
 /**
  * Contains all data of a whole loaded BSP scene.
@@ -85,7 +85,7 @@ public class BSPScenePrototype
     /**
      * 
      */
-    public DirectBufferedImage[]  lightMaps;
+    public SharedBufferedImage[]  lightMaps;
     
     /**
      * 

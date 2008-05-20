@@ -27,7 +27,7 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.test.util;
+package org.jagatoo.test.util.render;
 
 import java.awt.*;
 import java.awt.event.*;

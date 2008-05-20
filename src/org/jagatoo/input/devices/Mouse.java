@@ -752,7 +752,9 @@ public abstract class Mouse extends InputDevice
         this.sourceFactory = sourceFactory;
         
         this.xAxis = new MouseAxis( this, 'X', "Mouse-X-Axis" );
+        xAxis.setValue( sourceWindow.getWidth() / 2 );
         this.yAxis = new MouseAxis( this, 'Y', "Mouse-Y-Axis" );
+        yAxis.setValue( sourceWindow.getHeight() / 2 );
         this.buttons = new MouseButton[ numButtons ];
         
         for ( int i = 0; i < buttons.length; i++ )

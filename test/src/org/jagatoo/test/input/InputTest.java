@@ -71,7 +71,7 @@ import org.jagatoo.input.managers.SimpleInputActionListener;
 import org.jagatoo.input.managers.SimpleInputActionManager;
 import org.jagatoo.input.render.Cursor;
 import org.jagatoo.input.render.InputSourceWindow;
-import org.jagatoo.test.util.JOGLBase;
+import org.jagatoo.test.util.render.JOGLBase;
 
 /**
  * This testcase is supposed to demonstrate all features of JAGaToo's InputSystem.

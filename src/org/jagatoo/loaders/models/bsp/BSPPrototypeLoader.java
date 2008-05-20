@@ -69,7 +69,7 @@ import java.io.InputStream;
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.loaders.models.bsp.lumps.*;
-import org.jagatoo.util.image.DirectBufferedImage;
+import org.jagatoo.util.image.SharedBufferedImage;
 
 /**
  * Loads the Quake 3 BSP file according to spec.
@@ -178,16 +178,18 @@ public class BSPPrototypeLoader
         return( s );
     }
     
-    private static DirectBufferedImage[] readLightmaps( BSPFile file ) throws IOException
+    private static SharedBufferedImage[] readLightmaps( BSPFile file ) throws IOException
     {
         file.seek( BSPDirectory.kLightmaps );
-        int num = file.lumps[ BSPDirectory.kLightmaps ].length / ( 128 * 128 * 3 );
+        final int num = file.lumps[ BSPDirectory.kLightmaps ].length / ( 128 * 128 * 3 );
         
-        DirectBufferedImage[] lightMaps = new DirectBufferedImage[ num ];
+        SharedBufferedImage[] lightMaps = new SharedBufferedImage[ num ];
+        
         for ( int i = 0; i < num; i++ )
         {
-            lightMaps[ i ] = DirectBufferedImage.getDirectImageRGB( 128, 128 );
-            file.readFully( lightMaps[ i ].getBackingStore() );
+            lightMaps[ i ] = SharedBufferedImage.create( 128, 128, 3, new int[] { 0, 1, 2 }, null );
+            
+            file.readFully( lightMaps[ i ].getSharedData() );
         }
         
         return( lightMaps );
