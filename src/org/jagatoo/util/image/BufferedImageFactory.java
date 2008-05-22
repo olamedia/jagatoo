@@ -72,12 +72,12 @@ public class BufferedImageFactory
         return( newImage );
     }
     
-    public static BufferedImage createSharedBufferedImage( int width, int height, int pixelSize, boolean hasAlpha, int[] pixelOffsets, byte[] data )
+    public static SharedBufferedImage createSharedBufferedImage( int width, int height, int pixelSize, boolean hasAlpha, int[] pixelOffsets, byte[] data )
     {
         return( SharedBufferedImage.create( width, height, pixelSize, hasAlpha, pixelOffsets, data ) );
     }
     
-    public static final BufferedImage createSharedBufferedImage( int width, int height, int pixelSize, int[] pixelOffsets, byte[] data )
+    public static final SharedBufferedImage createSharedBufferedImage( int width, int height, int pixelSize, int[] pixelOffsets, byte[] data )
     {
         return( SharedBufferedImage.create( width, height, pixelSize, pixelOffsets, data ) );
     }
