@@ -479,30 +479,48 @@ public class ImageUtility
     }
     
     /**
+     * Scales an Image to the size of trgImage and draws it onto trgImage.<br>
+     * <br>
+     * This uses AWT!
+     * 
+     * @param srcImage The Image that should be scaled.
+     * @param trgImage the target image.
+     * 
+     * @return The target image.
+     */
+    public static <BufferedImage_ extends BufferedImage> BufferedImage_ scaleImage( Image srcImage, BufferedImage_ trgImage )
+    {
+        Graphics2D g2 = trgImage.createGraphics();
+        
+        g2.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC );
+        
+        try
+        {
+            g2.drawImage( srcImage, 0, 0, trgImage.getWidth(), trgImage.getHeight(), null );
+        }
+        finally
+        {
+            g2.dispose();
+        }
+        
+        return( trgImage );
+    }
+    
+    /**
      * Scales an Image and creates a BufferedImage in the desired format. This
      * uses AWT.
      * 
      * @param image The Image that should be scaled.
      * @param width The desired image width.
      * @param height The desired image height.
-     * @param type The desired BufferedImage type. See BufferedImage.
-     * @return The scaled image as a BufferedImage of the given type.
+     * @param alpha create an alpha-channel for the new image?
+     * @return The scaled image as a SharedBufferedImage.
      */
-    public static BufferedImage scaleImage( Image image, int width, int height, int type )
+    public static SharedBufferedImage scaleImage( Image image, int width, int height, boolean alpha )
     {
-        BufferedImage newImg = new BufferedImage( width, height, type );
+        SharedBufferedImage newImg = SharedBufferedImage.create( width, height, ( alpha ? 4 : 3 ), alpha, null, null );
         
-        Graphics2D g = newImg.createGraphics();
-        try
-        {
-            g.drawImage( image, 0, 0, width, height, null );
-        }
-        finally
-        {
-            g.dispose();
-        }
-        
-        return( newImg );
+        return( scaleImage( image, newImg ) );
     }
     
     /**
