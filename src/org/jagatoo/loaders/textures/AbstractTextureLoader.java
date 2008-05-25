@@ -270,6 +270,33 @@ public abstract class AbstractTextureLoader
         return( textureFormatLoaders.remove( tsl ) );
     }
     
+    /**
+     * Sets the {@link TextureImageFormatLoader}, that is used as the
+     * fallback-loader, if no other format-loader was capable of loading
+     * the requested texture resource.
+     * 
+     * @param ftifl
+     */
+    public void setFallbackTextureImageFormatLoader( TextureImageFormatLoader ftifl )
+    {
+        if ( ftifl == null )
+        {
+            throw new IllegalArgumentException( "ftifl must not be null." );
+        }
+        
+        this.fallbackTextureImageFormatLoader = ftifl;
+    }
+    
+    /**
+     * @return the {@link TextureImageFormatLoader}, that is used as the
+     * fallback-loader, if no other format-loader was capable of loading
+     * the requested texture resource.
+     */
+    public final TextureImageFormatLoader getFallbackTextureImageFormatLoader()
+    {
+        return( fallbackTextureImageFormatLoader );
+    }
+    
     
     protected AbstractTexture createTextureFromTextureImage( AbstractTextureImage ti, boolean loadMipmaps, TextureFactory texFactory )
     {
