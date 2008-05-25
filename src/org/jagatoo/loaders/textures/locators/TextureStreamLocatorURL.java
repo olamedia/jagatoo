@@ -27,45 +27,53 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.util.image;
+package org.jagatoo.loaders.textures.locators;
 
-import java.awt.image.DataBuffer;
-import java.nio.ByteBuffer;
-
-import org.jagatoo.util.nio.BufferUtils;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 /**
- * Concrete class which backs a data buffer with a native {@link ByteBuffer}.
+ * Locates a texture from an URL.
  * 
- * @author David Yazel
+ * @author Matthias Mann
  */
-public class DirectDataBufferByte extends DataBuffer
+public class TextureStreamLocatorURL implements TextureStreamLocator
 {
-    private ByteBuffer bb;
+    protected URL baseUrl;
     
-    public final ByteBuffer getByteBuffer()
+    public String getBaseDirName()
     {
-        return( bb );
+        return( new File( baseUrl.getFile() ).getAbsolutePath() );
     }
     
-    @Override
-    public int getElem( int bank, int i )
+    /** Creates a new instance of FileTextureStreamLocator */
+    public TextureStreamLocatorURL( URL baseUrl )
     {
-        return( bb.get( i ) );
+        this.baseUrl = baseUrl;
     }
     
-    @Override
-    public void setElem( int bank, int i, int val )
+    public URL getBaseUrl()
     {
-        bb.put( i, (byte)val );
+        return( baseUrl );
     }
     
-    public DirectDataBufferByte( int size )
+    public void setBaseUrl( URL baseUrl )
     {
-        super( TYPE_BYTE, size );
-        
-        bb = BufferUtils.createByteBuffer( size );
-        bb.limit( size );
-        bb.position( 0 );
+        this.baseUrl = baseUrl;
+    }
+    
+    public InputStream openTextureStream( String name )
+    {
+        try
+        {
+            URL url = new URL( baseUrl, name );
+            return( url.openStream() );
+        }
+        catch ( IOException ex )
+        {
+            return( null );
+        }
     }
 }

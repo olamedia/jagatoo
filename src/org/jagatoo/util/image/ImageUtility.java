@@ -49,8 +49,9 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
+import org.jagatoo.image.DirectBufferedImage;
+import org.jagatoo.image.SharedBufferedImage;
 import org.jagatoo.logging.JAGTLog;
-import org.jagatoo.util.image.DirectBufferedImage;
 
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;

@@ -66,10 +66,10 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.jagatoo.image.SharedBufferedImage;
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.loaders.models.bsp.lumps.*;
-import org.jagatoo.util.image.SharedBufferedImage;
 
 /**
  * Loads the Quake 3 BSP file according to spec.

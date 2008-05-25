@@ -62,8 +62,8 @@
  */
 package org.jagatoo.loaders.models.bsp;
 
+import org.jagatoo.image.SharedBufferedImage;
 import org.jagatoo.loaders.models.bsp.lumps.*;
-import org.jagatoo.util.image.SharedBufferedImage;
 
 /**
  * Contains all data of a whole loaded BSP scene.

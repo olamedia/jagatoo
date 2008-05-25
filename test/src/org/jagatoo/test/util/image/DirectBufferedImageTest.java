@@ -3,12 +3,8 @@ package org.jagatoo.test.util.image;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.ByteBuffer;
-import java.util.Random;
 
 import javax.imageio.ImageIO;
-
-import org.jagatoo.util.nio.BufferUtils;
 
 public class DirectBufferedImageTest
 {
@@ -17,7 +13,7 @@ public class DirectBufferedImageTest
         BufferedImage src = ImageIO.read( new File( "/media/sda6/workspace/xith-tk/test-resources/textures/crate.png" ) );
         
         //BufferedImage dst = new BufferedImage( src.getWidth(), src.getHeight(), BufferedImage.TYPE_4BYTE_ABGR );
-        BufferedImage dst = org.jagatoo.util.image.DirectBufferedImage.makeDirectImageRGBA( src.getWidth(), src.getHeight() );
+        BufferedImage dst = org.jagatoo.image.DirectBufferedImage.makeDirectImageRGBA( src.getWidth(), src.getHeight() );
         
         Graphics2D graphics = dst.createGraphics();
         
