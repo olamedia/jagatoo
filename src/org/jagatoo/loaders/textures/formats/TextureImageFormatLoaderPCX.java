@@ -255,6 +255,8 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
         //bb.position( 0 );
         bb.limit( bb.capacity() );
         
+        final int byteOffset0 = bb.position();
+        
         final int dstBytesPerPixel = image.getFormat().getPixelSize();
         final int trgLineSize = width * dstBytesPerPixel;
         //final int trgImageSize = height * trgLineSize;
@@ -289,9 +291,9 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
                     if ( flipVertically )
                         actualByteOffset = ( ( height - yp - 1 ) * trgLineSize ) + ( xp * dstBytesPerPixel );
                     
-                    bb.put( actualByteOffset + 0, pixel[ 0 ] );
-                    bb.put( actualByteOffset + 1, pixel[ 1 ] );
-                    bb.put( actualByteOffset + 2, pixel[ 2 ] );
+                    bb.put( byteOffset0 + actualByteOffset + 0, pixel[ 0 ] );
+                    bb.put( byteOffset0 + actualByteOffset + 1, pixel[ 1 ] );
+                    bb.put( byteOffset0 + actualByteOffset + 2, pixel[ 2 ] );
                     
                     dstByteOffset += 3;
                 }

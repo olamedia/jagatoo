@@ -43,6 +43,7 @@ import org.jagatoo.loaders.textures.formats.TextureFormatLoader;
 import org.jagatoo.loaders.textures.formats.TextureFormatLoaderDDS;
 import org.jagatoo.loaders.textures.formats.TextureImageFormatLoader;
 import org.jagatoo.loaders.textures.formats.TextureImageFormatLoaderBMP;
+import org.jagatoo.loaders.textures.formats.TextureImageFormatLoaderGIF;
 import org.jagatoo.loaders.textures.formats.TextureImageFormatLoaderImageIOImageInputStream;
 import org.jagatoo.loaders.textures.formats.TextureImageFormatLoaderPCX;
 import org.jagatoo.loaders.textures.formats.TextureImageFormatLoaderTGA;
@@ -858,6 +859,7 @@ public abstract class AbstractTextureLoader
     {
         addTextureImageFormatLoader( new TextureImageFormatLoaderBMP() );
         addTextureImageFormatLoader( new TextureImageFormatLoaderPCX() );
+        addTextureImageFormatLoader( new TextureImageFormatLoaderGIF() );
         addTextureImageFormatLoader( new TextureImageFormatLoaderTGA() );
         
         addTextureFormatLoader( new TextureFormatLoaderDDS() );
