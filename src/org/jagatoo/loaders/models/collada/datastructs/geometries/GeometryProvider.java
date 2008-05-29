@@ -31,50 +31,55 @@ package org.jagatoo.loaders.models.collada.datastructs.geometries;
 
 
 /**
- * A Geometry provider. Basically it can be what
+ * A Geometry provider. Basically it can be, what
  * instance_geometry or instance_controller is in a COLLADA file,
  * library_visuals_scenes section.
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public abstract class GeometryProvider {
+public abstract class GeometryProvider
+{
+    /** The geometry libraries */
+    private final LibraryGeometries libGeoms;
     
     /** The destination geometry : it will contain the result of the computations of this COLLADAController */
     protected Geometry destinationGeometry;
     
-    /** The geometry libraries */
-    protected LibraryGeometries libGeoms;
-
-    /**
-     * Creates a new COLLADAController.
-     * 
-     * @param libGeoms The {@link LibraryGeometries} we need to compute
-     * the destination mesh.
-     */
-    public GeometryProvider(LibraryGeometries libGeoms) {
-        
-        this.libGeoms = libGeoms;
-        
+    protected final LibraryGeometries getLibraryGeometries()
+    {
+        return( libGeoms );
     }
     
     /**
      * @param currentTime the frame time in miliseconds
      * @return the destinationGeometry computed from the source mesh
      */
-    public abstract Geometry updateDestinationGeometry(long currentTime);
-
+    public abstract Geometry updateDestinationGeometry( long currentTime );
+    
     /**
      * @return the destinationGeometry
      */
-    public Geometry getDestinationGeometry() {
-        return destinationGeometry;
+    public Geometry getDestinationGeometry()
+    {
+        return( destinationGeometry );
     }
-
+    
     /**
      * @param destinationGeometry the destinationGeometry to set
      */
-    public void setDestinationMesh(Geometry destinationGeometry) {
+    public void setDestinationMesh( Geometry destinationGeometry )
+    {
         this.destinationGeometry = destinationGeometry;
     }
     
+    /**
+     * Creates a new COLLADAController.
+     * 
+     * @param libGeoms The {@link LibraryGeometries} we need to compute
+     * the destination mesh.
+     */
+    public GeometryProvider( LibraryGeometries libGeoms )
+    {
+        this.libGeoms = libGeoms;
+    }
 }

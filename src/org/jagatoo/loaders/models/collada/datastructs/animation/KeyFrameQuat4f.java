@@ -40,6 +40,15 @@ import org.openmali.vecmath2.Quaternion4f;
 public class KeyFrameQuat4f extends KeyFrame {
     
     /** Rotational value */
-    public Quaternion4f value;
+    private Quaternion4f value = null;
     
+    public void setValue( Quaternion4f value )
+    {
+        this.value = value;
+    }
+    
+    public final Quaternion4f getValue()
+    {
+        return( value );
+    }
 }

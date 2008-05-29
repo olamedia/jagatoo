@@ -31,8 +31,8 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.ArrayList;
 
+import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.Influence;
-import org.jagatoo.loaders.models.collada.exceptions.ColladaLoaderException;
 
 /**
  * A Skin. It defines how skeletal animation should be computed.
@@ -61,29 +61,29 @@ public class XMLSkin {
      * Build an array of BoneWeight for easy skinning manipulation
      */
     public Influence[] buildInfluencesForVertex( int vertexIndex ) {
-    	//get the number of influences (bone-weight) for the vertex
-    	int influences = vertexWeights.vcount.ints[ vertexIndex ];
+    	// get the number of influences (bone-weight) for the vertex
+    	int numInfluences = vertexWeights.vcount.ints[ vertexIndex ];
     	
-    	//get the "skin-weights", maybe it could be done only one time, when the sources array is filled.
+    	// get the "skin-weights", maybe it could be done only one time, when the sources array is filled.
     	XMLSource weightSources = getWeightSources();
     	
     	//fill the array "skin-weights" source
-    	Influence[] boneWeights = new Influence[ influences ];
-    	for (int i = 0; i < boneWeights.length; i++) {
-    		boneWeights[i] = new Influence();
-		}
-    	//FIXME I don`t know how to use well the offset attribute:
+    	Influence[] influences = new Influence[ numInfluences ];
+    	// FIXME: I don`t know how to use well the offset attribute:
     	/*
     	 * Example:
     	 * <input semantic="JOINT" source="#pCylinderShape1-skin-joints" offset="0"></input>
     	 * <input semantic="WEIGHT" source="#pCylinderShape1-skin-weights" offset="1"></input>
     	 */
-    	for (int i = 0; i < boneWeights.length; i++) {
-    		boneWeights[ i ].bone = vertexWeights.v.ints[ vertexIndex + i ];
-    		boneWeights[ i ].weight = weightSources.floatArray.floats[ vertexIndex + i ];
+    	for (int i = 0; i < influences.length; i++) {
+            
+    	    influences[i] = new Influence(
+                vertexWeights.v.ints[ vertexIndex + i ], // bone-index
+                weightSources.floatArray.floats[ vertexIndex + i ] // weight
+                );
 		}
     	
-    	return boneWeights;
+    	return influences;
     }
 
     /**
@@ -96,7 +96,7 @@ public class XMLSkin {
 				return source;
 			}
 		}
-		throw new ColladaLoaderException( "Could not found source " + 
+		throw new IncorrectFormatException( "Could not find source " + 
 				SKING_WEIGHT_SOURCE + " in library_controllers" );
 	}
     

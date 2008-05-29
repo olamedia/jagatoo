@@ -32,13 +32,12 @@ package org.jagatoo.loaders.models.collada;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
-import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFramePoint3f;
+import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrameTuple3f;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrameQuat4f;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
+import org.jagatoo.logging.JAGTLog;
 
 /**
  * A COLLADA "Action", or "Animation" or "Animation clip" or "Animation strip",
@@ -47,8 +46,8 @@ import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
  * @author Amos Wenger (aka BlueSky)
  * @author Matias Leone (aka Maguila)
  */
-public class COLLADAAction {
-    
+public class COLLADAAction
+{
     /**
      * The identifier of this animation. It should be unique in the same model,
      * ex. you cannot have two animations that have the same ID for the same
@@ -60,15 +59,17 @@ public class COLLADAAction {
      * Translation key frames : if any, define the movement of the
      * Skeleton itself (e.g. moves the whole model)
      */
-    public final List<KeyFramePoint3f> transKeyFrames = new ArrayList<KeyFramePoint3f> ();
+    public final ArrayList<KeyFrameTuple3f> transKeyFrames = new ArrayList<KeyFrameTuple3f> ();
+    
     /**
      * Rotation key frames, per bone.
      */
-    public final Map<Bone, List<KeyFrameQuat4f>> rotKeyFrames = new HashMap<Bone, List<KeyFrameQuat4f>>();
+    public final HashMap<Bone, ArrayList<KeyFrameQuat4f>> rotKeyFrames = new HashMap<Bone, ArrayList<KeyFrameQuat4f>>();
+    
     /**
      * Scale key frames, per bone.
      */
-    public final Map<Bone, List<KeyFramePoint3f>> scaleKeyFrames = new HashMap<Bone, List<KeyFramePoint3f>>();
+    public final HashMap<Bone, ArrayList<KeyFrameTuple3f>> scaleKeyFrames = new HashMap<Bone, ArrayList<KeyFrameTuple3f>>();
     
     /**
      * Skeleton for this action
@@ -81,50 +82,53 @@ public class COLLADAAction {
      * 
      * @param id the id of this COLLADA Action
      */
-    public COLLADAAction(String id) {
-        
+    public COLLADAAction( String id )
+    {
         this.id = id;
-        
     }
-        
+    
     /**
      * @return the ID String of this COLLADA Action.
      */
-    public String getId() {
-    
-        return id;
-    
-    }
-    
-    /**
-     * @return the skeleton
-     */
-    public Skeleton getSkeleton() {
-        return skeleton;
+    public String getId()
+    {
+        return( id );
     }
     
     /**
      * @param skeleton
      *                the skeleton to set
      */
-    public void setSkeleton(Skeleton skeleton) {
+    public void setSkeleton( Skeleton skeleton )
+    {
         this.skeleton = skeleton;
+    }
+    
+    /**
+     * @return the skeleton
+     */
+    public Skeleton getSkeleton()
+    {
+        return( skeleton );
     }
     
     
     /**
-     * Loop through each bone of the skeleton and complete their temp key frames
-     * arrays
+     * Loops through each bone of the skeleton and completes their temp key frames arrays.
      */
-    public void prepareBones() {
+    public void prepareBones()
+    {
         skeleton.resetIterator();
-        for (Iterator<Bone> iterator = this.skeleton.iterator(); iterator.hasNext();) {
+        for ( Iterator<Bone> iterator = this.skeleton.iterator(); iterator.hasNext(); )
+        {
         	Bone bone = iterator.next();
-        	System.out.println(rotKeyFrames.get(bone));
-            bone.rotKeyFrames = rotKeyFrames.get(bone);
-            bone.scaleKeyFrames = scaleKeyFrames.get(bone);
-            System.out.println(bone.rotKeyFrames.equals(rotKeyFrames.get(bone)));
+            
+        	JAGTLog.debug( rotKeyFrames.get( bone ) );
+            
+        	bone.rotKeyFrames = rotKeyFrames.get( bone );
+            bone.scaleKeyFrames = scaleKeyFrames.get( bone );
+            
+            JAGTLog.debug( bone.rotKeyFrames.equals( rotKeyFrames.get( bone ) ) );
         }
     }
-    
 }

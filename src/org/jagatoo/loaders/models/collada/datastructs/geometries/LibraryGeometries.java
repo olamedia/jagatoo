@@ -38,25 +38,23 @@ import java.util.HashMap;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class LibraryGeometries {
-    
+public class LibraryGeometries
+{
     /** Map of all geoms : key is id, value is the COLLADAGeometry object */
-    private final HashMap<String, Geometry> geometries;
-    
-    /**
-     * Create a new COLLADALibraryGeometries
-     */
-    public LibraryGeometries() {
-        
-        geometries = new HashMap<String, Geometry>();
-        
-    }
+    private final HashMap<String, Geometry> geometries = new HashMap<String, Geometry>();
     
     /**
      * @return the geometries in this COLLADALibraryGeometries
      */
-    public HashMap<String, Geometry> getGeometries() {
-        return geometries;
+    public final HashMap<String, Geometry> getGeometries()
+    {
+        return( geometries );
     }
     
+    /**
+     * Create a new COLLADALibraryGeometries
+     */
+    public LibraryGeometries()
+    {
+    }
 }

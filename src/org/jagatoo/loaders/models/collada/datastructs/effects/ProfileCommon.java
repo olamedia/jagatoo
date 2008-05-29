@@ -34,16 +34,13 @@ package org.jagatoo.loaders.models.collada.datastructs.effects;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class ProfileCommon extends Profile {
-    
+public class ProfileCommon extends Profile
+{
     /**
      * Creates a new COLLADA Common Profile
-     *
      */
-    public ProfileCommon() {
-        
+    public ProfileCommon()
+    {
         super();
-        
     }
-    
 }

@@ -31,7 +31,7 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.ArrayList;
 
-import org.jagatoo.loaders.models.collada.exceptions.ColladaLoaderException;
+import org.jagatoo.loaders.IncorrectFormatException;
 
 /**
  * A COLLADA Sampler.
@@ -57,7 +57,7 @@ public class XMLSampler {
     			return input;
     		}
 		}
-    	throw new ColladaLoaderException( "Could not found input with semantic " + semantic );
+    	throw new IncorrectFormatException( "Could not find input with semantic " + semantic );
     }
 
 }

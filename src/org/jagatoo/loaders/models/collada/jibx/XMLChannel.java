@@ -31,8 +31,8 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.StringTokenizer;
 
+import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
-import org.jagatoo.loaders.models.collada.exceptions.ColladaLoaderException;
 
 /**
  * A COLLADA Channel.
@@ -82,8 +82,9 @@ public class XMLChannel {
     public KeyFrame.Axis getRotationAxis() {
         checkIsParsed();
         if (type != ChannelType.ROTATE) {
-            throw new ColladaLoaderException("It is not a rotation key frame, it's a "+type);
+            throw new IncorrectFormatException( "It is not a rotation key frame, it's a " + type );
         }
+        
         return this.targetAxis;
     }
 

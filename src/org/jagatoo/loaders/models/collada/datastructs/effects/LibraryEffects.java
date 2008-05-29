@@ -40,25 +40,23 @@ import java.util.HashMap;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class LibraryEffects {
-
+public class LibraryEffects
+{
     /** Map of all geoms : key is id of the effect, value is the id of the source mesh */
-    private final HashMap<String, Effect> effects;
+    private final HashMap<String, Effect> effects = new HashMap<String, Effect>();
+    
+    /**
+     * @return the effects in this COLLADALibraryEffects
+     */
+    public HashMap<String, Effect> getEffects()
+    {
+        return( effects );
+    }
     
     /**
      * Create a new COLLADALibraryEffects
      */
-    public LibraryEffects() {
-        
-        effects = new HashMap<String, Effect>();
-        
+    public LibraryEffects()
+    {
     }
-
-    /**
-     * @return the effects in this COLLADALibraryEffects
-     */
-    public HashMap<String, Effect> getEffects() {
-        return effects;
-    }
-    
 }

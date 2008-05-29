@@ -43,18 +43,25 @@ import org.jagatoo.loaders.models.collada.datastructs.images.Surface;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public abstract class Profile {
-    
+public abstract class Profile
+{
     /** Surfaces used in this profile. Key = id, Value = surface */
-    public HashMap<String, Surface> surfaces;
+    private HashMap<String, Surface> surfaces = new HashMap<String, Surface>();
+    
+    public void setSurfaces( HashMap<String, Surface> surfaces )
+    {
+        this.surfaces = surfaces;
+    }
+    
+    public final HashMap<String, Surface> getSurfaces()
+    {
+        return( surfaces );
+    }
     
     /**
      * Creates a new COLLADA profile
      */
-    public Profile() {
-        
-        surfaces = new HashMap<String, Surface>();
-        
+    public Profile()
+    {
     }
-    
 }

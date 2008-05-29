@@ -37,14 +37,15 @@ import org.jagatoo.loaders.models.collada.datastructs.materials.LibraryMaterials
 import org.jagatoo.loaders.models.collada.datastructs.materials.Material;
 import org.jagatoo.loaders.models.collada.jibx.XMLLibraryMaterials;
 import org.jagatoo.loaders.models.collada.jibx.XMLMaterial;
+import org.jagatoo.logging.JAGTLog;
 
 /**
  * Loader for LibraryMaterials
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class LibraryMaterialsLoader {
-    
+public class LibraryMaterialsLoader
+{
     /**
      * Load LibraryMaterials
      * 
@@ -53,28 +54,21 @@ public class LibraryMaterialsLoader {
      * @param libMaterials
      *            The JAXB data to load from
      */
-    static void loadLibraryMaterials(AssetFolder colladaFile,
-            XMLLibraryMaterials libMaterials) {
-        
-        LibraryMaterials colLibMaterials = colladaFile
-        .getLibraryMaterials();
-        HashMap<String, Material> colMaterials = colLibMaterials
-        .getMaterials();
+    static void loadLibraryMaterials( AssetFolder colladaFile, XMLLibraryMaterials libMaterials )
+    {
+        LibraryMaterials colLibMaterials = colladaFile.getLibraryMaterials();
+        HashMap<String, Material> colMaterials = colLibMaterials.getMaterials();
         
         Collection<XMLMaterial> materials = libMaterials.materials.values();
         
-        COLLADALoader.logger.increaseTabbing();
-        for (XMLMaterial material : materials) {
-            
-            Material colMaterial = new Material(colladaFile,
-                    material.id, material.instanceEffect.url);
-            COLLADALoader.logger.print("TT] Found material [" + colMaterial.getId() + ":"
-                    + colMaterial.getEffect() + "]");
-            colMaterials.put(colMaterial.getId(), colMaterial);
-            
+        JAGTLog.increaseIndentation();
+        for ( XMLMaterial material : materials )
+        {
+            Material colMaterial = new Material( colladaFile, material.id, material.instanceEffect.url );
+            JAGTLog.debug( "TT] Found material [", colMaterial.getId(), ":", colMaterial.getEffect(), "]" );
+            colMaterials.put( colMaterial.getId(), colMaterial );
         }
-        COLLADALoader.logger.decreaseTabbing();
         
+        JAGTLog.decreaseIndentation();
     }
-    
 }

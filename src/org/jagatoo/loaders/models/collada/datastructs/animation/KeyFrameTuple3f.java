@@ -29,19 +29,28 @@
  */
 package org.jagatoo.loaders.models.collada.datastructs.animation;
 
-import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.Tuple3f;
 
 /**
- * A KeyFrame containing Point3fs.
+ * A KeyFrame containing Tuple3fs.
  * 
  * @author Amos Wenger (aka BlueSky)
  * @author Matias Leone (aka Maguila)
  */
-public class KeyFramePoint3f extends KeyFrame {
-    
+public class KeyFrameTuple3f extends KeyFrame
+{
     /**
      * Key frame transform values: translation or rotation (in radians)
      */
-    public Point3f value;
+    private Tuple3f value = null;
     
+    public void setValue( Tuple3f value )
+    {
+        this.value = value;
+    }
+    
+    public final Tuple3f getValue()
+    {
+        return( value );
+    }
 }

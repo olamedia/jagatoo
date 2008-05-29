@@ -36,40 +36,37 @@ import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.datastructs.images.LibraryImages;
 import org.jagatoo.loaders.models.collada.jibx.XMLImage;
 import org.jagatoo.loaders.models.collada.jibx.XMLLibraryImages;
+import org.jagatoo.logging.JAGTLog;
 
 /**
  * Loader for LibraryImages
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class LibraryImagesLoader {
-    
+public class LibraryImagesLoader
+{
     /**
-     * Load LibraryImages
+     * Loads LibraryImages.
      * 
      * @param colladaFile
      *            The collada file to add them to
      * @param libImages
      *            The JAXB data to load from
      */
-    static void loadLibraryImages(AssetFolder colladaFile,
-            XMLLibraryImages libImages) {
-        
+    static void loadLibraryImages( AssetFolder colladaFile, XMLLibraryImages libImages )
+    {
         LibraryImages colLibImages = colladaFile.getLibraryImages();
         HashMap<String, String> colImages = colLibImages.getImages();
         
         Collection<XMLImage> images = libImages.images.values();
         
-        COLLADALoader.logger.increaseTabbing();
-        for (XMLImage image : images) {
-            
-            COLLADALoader.logger.print("TT] Found image [" + image.id + ":"
-                    + image.initFrom + "]");
-            colImages.put(image.id, image.initFrom);
-            
+        JAGTLog.increaseIndentation();
+        for ( XMLImage image : images )
+        {
+            JAGTLog.debug( "TT] Found image [", image.id, ":", image.initFrom, "]" );
+            colImages.put( image.id, image.initFrom );
         }
-        COLLADALoader.logger.decreaseTabbing();
         
+        JAGTLog.decreaseIndentation();
     }
-    
 }

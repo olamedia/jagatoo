@@ -32,7 +32,8 @@ package org.jagatoo.loaders.models.collada.datastructs.animation;
 import java.util.List;
 
 import org.jagatoo.loaders.models.collada.Rotations;
-import org.openmali.vecmath2.Point3f;
+import org.openmali.FastMath;
+import org.openmali.vecmath2.Tuple3f;
 
 /**
  * A KeyFrame contains information for the animation of a Bone. It can contain
@@ -41,14 +42,15 @@ import org.openmali.vecmath2.Point3f;
  * @author Amos Wenger (aka BlueSky)
  * @author Matias Leone (aka Maguila)
  */
-public abstract class KeyFrame {
-    
+public abstract class KeyFrame
+{
     /**
      * An Axis.
      * 
      * @author Amos Wenger (aka BlueSky)
      */
-    public static enum Axis {
+    public static enum Axis
+    {
         /** X Axis : (1, 0, 0) */
         X,
         /** Y Axis : (0, 1, 0) */
@@ -73,20 +75,19 @@ public abstract class KeyFrame {
      *                first value index
      * @return a new key frame
      */
-    public static KeyFrame buildPoint3fKeyFrame(float time, float[] values, int valueIndex) {
+    public static KeyFrame buildPoint3fKeyFrame( float time, float[] values, int valueIndex )
+    {
+        KeyFrameTuple3f frame = new KeyFrameTuple3f();
+        frame.time = (long)( time * 1000f );
         
-        KeyFramePoint3f frame = new KeyFramePoint3f();
-        frame.time = (long) (time * 1000);
-        
-        frame.value = new Point3f(
+        frame.setValue( new Tuple3f(
                 values[valueIndex],
                 values[valueIndex + 1],
                 values[valueIndex + 2]
-        );
-        return frame;
+        ) );
         
+        return( frame );
     }
-    
     
     /**
      * Creates a rotation key frame
@@ -99,53 +100,51 @@ public abstract class KeyFrame {
      *                the axis of the rotation
      * @return a new key frame
      */
-    public static KeyFrame buildQuaternion4fKeyFrame(float time, float angle, Axis axis) {
-        
+    public static KeyFrame buildQuaternion4fKeyFrame( float time, float angle, Axis axis )
+    {
         KeyFrameQuat4f frame = new KeyFrameQuat4f();
-        frame.time = (long) (time * 1000);
-        float radians = (float) Math.toRadians(angle);
+        frame.time = (long)( time * 1000f );
+        float radians = FastMath.toRad( angle );
         
-        Point3f euler = new Point3f(0f, 0f, 0f);
+        Tuple3f euler = new Tuple3f(0f, 0f, 0f);
         
-        switch (axis) {
-        
-        case X:
-            euler = new Point3f(radians, 0f, 0f);
-            break;
-            
-        case Y:
-            euler = new Point3f(0f, radians, 0f);
-            break;
-            
-        case Z:
-            euler = new Point3f(0f, 0f, radians);
-            break;
-            
+        switch ( axis )
+        {
+            case X:
+                euler.set( radians, 0f, 0f );
+                break;
+                
+            case Y:
+                euler.set( 0f, radians, 0f );
+                break;
+                
+            case Z:
+                euler.set( 0f, 0f, radians );
+                break;
         }
         
-        frame.value = Rotations.toQuaternion(euler);
+        frame.setValue( Rotations.toQuaternion( euler ) );
         
-        return frame;
+        return( frame );
     }
     
     /**
-     * Search the next key frame according to the current time
+     * Searches the next key frame according to the current time.
      * 
      * @param frames
      * @param currentTime
      *                in milliseconds
      * @return selected key frame index
      */
-    public static int searchNextFrame(List<? extends KeyFrame> frames, long currentTime) {
-        
+    public static int searchNextFrame( List<? extends KeyFrame> frames, long currentTime )
+    {
         int frame = 0;
         
-        while (frame < frames.size() && frames.get(frame).time < currentTime) {
+        while ( frame < frames.size() && frames.get(frame).time < currentTime )
+        {
             frame++;
         }
         
-        return frame;
-        
+        return( frame );
     }
-    
 }

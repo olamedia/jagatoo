@@ -29,55 +29,101 @@
  */
 package org.jagatoo.loaders.models.collada.datastructs.geometries;
 
-import java.util.List;
-
 /**
- * A COLLADA Mesh : it's a collection of vertices and optionnally
+ * A COLLADA Mesh : it's a collection of vertices and optionally
  * vertex indices, normals (and indices), colors (and indices),
  * UV coordinates (and indices).
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class Mesh {
-
+public class Mesh
+{
     /** Mesh sources : vertices, normals, colors, UVs. May NOT be null */
-    public MeshSources sources = null;
-
+    private MeshSources sources = null;
+    
     /** Vertex indices. May NOT be null */
-    public int[] vertexIndices = null;
-
+    private int[] vertexIndices = null;
+    
     /** Normal indices. May be null */
-    public int[] normalIndices = null;
-
+    private int[] normalIndices = null;
+    
     /** Color indices. May be null */
-    public int[] colorIndices = null;
-
+    private int[] colorIndices = null;
+    
     /** UV coordinate indices. May be null */
-    public List <int[]> uvIndices = null;
-
-    /**
-     * Create a new COLLADA Mesh
-     * @param sources The sources which should be used by this mesh.
-     */
-    public Mesh(MeshSources sources) {
-
+    private int[][] uvIndices = null;
+    
+    public void setSources( MeshSources sources )
+    {
         this.sources = sources;
-
     }
-
+    
+    public final MeshSources getSources()
+    {
+        return( sources );
+    }
+    
+    public final void setVertexIndices( int[] vertexIndices )
+    {
+        this.vertexIndices = vertexIndices;
+    }
+    
+    public final int[] getVertexIndices()
+    {
+        return( vertexIndices );
+    }
+    
+    public final void setNormalIndices( int[] normalIndices )
+    {
+        this.normalIndices = normalIndices;
+    }
+    
+    public final int[] getNormalIndices()
+    {
+        return( normalIndices );
+    }
+    
+    public final void setColorIndices( int[] colorIndices )
+    {
+        this.colorIndices = colorIndices;
+    }
+    
+    public final int[] getColorIndices()
+    {
+        return( colorIndices );
+    }
+    
+    public final void setUVIndices( int[][] uvIndices )
+    {
+        this.uvIndices = uvIndices;
+    }
+    
+    public final int[][] getUVIndices()
+    {
+        return( uvIndices );
+    }
+    
     /**
      * @return a copy of this mesh
      */
     public Mesh copy() {
 
-        Mesh newMesh = new Mesh(sources.copy());
+        Mesh newMesh = new Mesh( sources.copy() );
+        
         newMesh.vertexIndices = vertexIndices;
         newMesh.normalIndices = normalIndices;
         newMesh.colorIndices = colorIndices;
         newMesh.uvIndices = uvIndices;
-        return null;
-
+        
+        return( newMesh );
     }
-
-
+    
+    /**
+     * Create a new COLLADA Mesh
+     * @param sources The sources which should be used by this mesh.
+     */
+    public Mesh( MeshSources sources )
+    {
+        this.sources = sources;
+    }
 }

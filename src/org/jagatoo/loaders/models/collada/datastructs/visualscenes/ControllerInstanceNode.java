@@ -42,44 +42,43 @@ import org.jagatoo.loaders.models.collada.datastructs.materials.Material;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class ControllerInstanceNode extends Node {
-
+public class ControllerInstanceNode extends Node
+{
     /** Our controller */
-    private String controllerUrl;
-    private String materialUrl;
+    private final String controllerURL;
+    private final String materialURL;
     
     /**
-     * Create a new {@link ControllerInstanceNode}
+     * @return the controller.
+     */
+    public final Controller getController()
+    {
+        return( getFile().getLibraryControllers().getControllers().get( controllerURL ) );
+    }
+    
+    /**
+     * @return the material.
+     */
+    public Material getMaterial()
+    {
+        return( getFile().getLibraryMaterials().getMaterials().get( materialURL ) );
+    }
+    
+    /**
+     * Creates a new {@link ControllerInstanceNode}.
+     * 
      * @param file The COLLADA file this node belongs to
      * @param id The id of this node
      * @param name The name of this node
      * @param transform The transform of this node
-     * @param controllerUrl The URL of the geometry this node is an instance of
-     * @param materialUrl The URL of the material bound to this node
+     * @param controllerURL The URL of the geometry this node is an instance of
+     * @param materialURL The URL of the material bound to this node
      */
-    public ControllerInstanceNode(AssetFolder file, String id, String name, COLLADATransform transform, String controllerUrl, String materialUrl) {
+    public ControllerInstanceNode( AssetFolder file, String id, String name, COLLADATransform transform, String controllerURL, String materialURL )
+    {
+        super( file, id, name, transform );
         
-        super(file, id, name, transform);
-        this.controllerUrl = controllerUrl;
-        this.materialUrl = materialUrl;
-        
+        this.controllerURL = controllerURL;
+        this.materialURL = materialURL;
     }
-    
-    /**
-     * @return the controller
-     */
-    public Controller getController() {
-        
-        return file.getLibraryControllers().getControllers().get(controllerUrl);
-    }
-    
-    /**
-     * @return the material
-     */
-    public Material getMaterial() {
-        
-        return file.getLibraryMaterials().getMaterials().get(materialUrl);
-        
-    }
-    
 }

@@ -31,8 +31,8 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.ArrayList;
 
+import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
-import org.jagatoo.loaders.models.collada.exceptions.ColladaLoaderException;
 import org.jagatoo.loaders.models.collada.jibx.XMLChannel.ChannelType;
 
 /**
@@ -65,9 +65,9 @@ public class XMLAnimation {
                 return source;
             }
         }
-        throw new ColladaLoaderException( "Could not found source with id " + id );
+        throw new IncorrectFormatException( "Could not find source with id " + id );
     }
-
+    
 
     /**
      * @return the target bone name for this animation

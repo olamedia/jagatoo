@@ -37,12 +37,11 @@ package org.jagatoo.loaders.models.collada.datastructs.visualscenes;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public abstract class COLLADATransform {
-    
+public abstract class COLLADATransform
+{
     /**
      * @return a Matrix transform version of this Transform
      * This is required for convenience when implementing scenegraph binding
      */
     public abstract MatrixTransform getMatrixTransform();
-    
 }

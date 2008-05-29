@@ -41,25 +41,23 @@ import java.util.HashMap;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class LibraryControllers {
-    
+public class LibraryControllers
+{
     /** Map of all geoms : key is id of the controller, value is controller */
-    private final HashMap<String, Controller> controllers;
-    
-    /**
-     * Create a new COLLADALibraryControllers
-     */
-    public LibraryControllers() {
-        
-        controllers = new HashMap<String, Controller>();
-        
-    }
+    private final HashMap<String, Controller> controllers = new HashMap<String, Controller>();
     
     /**
      * @return the controllers in this COLLADALibraryControllers
      */
-    public HashMap<String, Controller> getControllers() {
-        return controllers;
+    public HashMap<String, Controller> getControllers()
+    {
+        return( controllers );
     }
     
+    /**
+     * Create a new COLLADALibraryControllers
+     */
+    public LibraryControllers()
+    {
+    }
 }

@@ -30,21 +30,30 @@
 package org.jagatoo.loaders.models.collada.datastructs.controllers;
 
 /**
- *  Easy manipulation for weight value of one bone, for a vertex
- *  
+ * Easy manipulation for weight value of one bone, for a vertex.
+ * 
  * @author Matias Leone (aka Maguila)
  * @author Amos Wenger (aka BlueSky)
  */
-public class Influence {
-
-	/**
-	 * Bone index
-	 */
-	public int bone;
+public class Influence
+{
+	private final int boneIndex;
 	
-	/**
-	 * Weight value
-	 */
-	public float weight;
+	private final float weight;
 	
+	public final int getBoneIndex()
+	{
+	    return( boneIndex );
+	}
+	
+	public final float getWeight()
+	{
+	    return( weight );
+	}
+	
+	public Influence( int boneIndex, float weight )
+	{
+	    this.boneIndex = boneIndex;
+	    this.weight = weight;
+	}
 }

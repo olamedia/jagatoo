@@ -47,29 +47,31 @@ import org.jagatoo.loaders.models.collada.datastructs.geometries.MeshSources;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.TrianglesGeometry;
 import org.jagatoo.loaders.models.collada.jibx.XMLController;
 import org.jagatoo.loaders.models.collada.jibx.XMLSkin;
+import org.jagatoo.logging.JAGTLog;
 
 /**
  * A COLLADA Skeletal Controller. It computes mesh
  * deformation from the keyframe information.
- *
+ * 
  * @see GeometryProvider
+ * 
  * @author Amos Wenger (aka BlueSky)
  * @author Matias Leone (aka Maguila)
  */
-public class SkeletalController extends Controller implements AnimatableModel {
-
+public class SkeletalController extends Controller implements AnimatableModel
+{
     /** The ID of the source mesh */
-    private String sourceMeshId = null;
-
+    private final String sourceMeshId;
+    
     /** COLLADA Geometry */
     private Geometry sourceGeom;
-
+    
     /** The skeleton we're using to compute */
     private Skeleton skeleton;
-
+    
     /**
      * Creates a new COLLADASkeletalController
-     *
+     * 
      * @param libGeoms
      *                The {@link LibraryGeometries} we need to get our sourceMesh from
      * @param sourceMeshId
@@ -79,27 +81,28 @@ public class SkeletalController extends Controller implements AnimatableModel {
      * @param libAnims 
      *                The library of animations to load actions from
      */
-    public SkeletalController(LibraryGeometries libGeoms, String sourceMeshId,
-            XMLController controller, LibraryAnimations libAnims, Skeleton skel) {
-
-        super(libGeoms, controller);
+    public SkeletalController( LibraryGeometries libGeoms, String sourceMeshId, XMLController controller, LibraryAnimations libAnims, Skeleton skel )
+    {
+        super( libGeoms, controller );
+        
         this.sourceMeshId = sourceMeshId;
         this.skeleton = skel;
         
         this.libAnims = libAnims;
         
-        this.sourceGeom = libGeoms.getGeometries().get(sourceMeshId);
+        this.sourceGeom = libGeoms.getGeometries().get( sourceMeshId );
     }
-
+    
     /**
      * @return the sourceMeshId
      */
-    public String getSourceMeshId() {
-        return sourceMeshId;
+    public String getSourceMeshId()
+    {
+        return( sourceMeshId );
     }
-
+    
     // // // // // // ANIMATION PART - BEGINS// // // // // //
-
+    
     /**
      * List of animations that exist 
      * for this SkeletalController's skeleton.
@@ -115,12 +118,12 @@ public class SkeletalController extends Controller implements AnimatableModel {
      * The current action that is being used
      */
     private COLLADAAction currentAction;
-
+    
     /**
      * For animation looping
      */
     private boolean loop = false;
-
+    
     /**
      * Last animated time
      */
@@ -140,12 +143,12 @@ public class SkeletalController extends Controller implements AnimatableModel {
      * Iterator through skeleton bones
      */
     private Iterable<Bone> boneIt = this.skeleton;
-
+    
     /**
      * Starts playing the selected animation
      */
-    public void play(COLLADAAction action, boolean loop) {
-
+    public void play( COLLADAAction action, boolean loop )
+    {
         this.currentAction = action;
         
         // complete the temps array reference in each bone of the skeleton
@@ -158,215 +161,254 @@ public class SkeletalController extends Controller implements AnimatableModel {
         this.skeleton.resetIterator();
         
         boneIt = this.skeleton;
-
+        
         currentTime = 0;
         playing = true;
     }
-
-    @Override
-    public Geometry updateDestinationGeometry(long currTime) {
-
-        // TODO once this method works well, we should optimize all the
-        // variables declarations
-
-
-    	
-        if(sourceGeom == null) {
-
-            sourceGeom = libGeoms.getGeometries().get(sourceMeshId);
-            
-            if(!(sourceGeom instanceof TrianglesGeometry)) {
-                throw new Error("Only TrianglesGeometry is supported for now ! Make" +
-                            " sure your model is triangulated when exporting from your modeling tool.");
-            } else {
-                this.destinationGeometry = sourceGeom.copy();
-            }
-
-        }
-        
-    	if(!playing) return this.destinationGeometry;
-
-        if(skeleton == null) {
-
-            System.out
-            .println("Hey ! We haven't been initialized yet... Darn.");
-
-        } else {
-            System.out
-            .println("Our skeleton root bone is named \""
-                    + skeleton.getRootBone().getName()+"\"");
-
-            // deltaT to animate
-            currentTime = currTime;
-
-            // Translation : only for the skeleton
-
-            KeyFrameComputer.computeTuple3f(currentTime, skeleton.transKeyFrames, skeleton.relativeTranslation);
-            // loop through all bones
-            if(currentAction == null) return destinationGeometry;
-            if(!bonesPrepared) {
-            	currentAction.prepareBones();
-                this.skeleton = currentAction.getSkeleton();
-            }
-            boneIt = this.skeleton;
-            for (Bone bone : boneIt) {
-                // if there is no keyframes, don't do any transformations
-                if (!bone.hasKeyFrames()) {
-                	System.out.println("no keyframes!");
-                    bone.setNoRelativeMovement();
-                    continue;
-                }
-                System.out.println("Keyframes");
-                // Scaling
-                KeyFrameComputer.computeTuple3f(currentTime, bone.scaleKeyFrames, bone.relativeScaling);
-
-                // Rotation
-                KeyFrameComputer.computeQuaternion4f(currentTime, bone.rotKeyFrames, bone.relativeRotation);
-
-            }
-
-            // update absolutes transitions for all bones
-            skeleton.updateAbsolutes();
-
-        }
-
-
-        /*
-         * Now I need to to apply transitions to every vertex. I need the
-         * following information and I don't know where 1) The
-         * mesh I am animating is 2) The triangles of that mesh are 3) The
-         * vertices, 3 for each triangle, are 4) The normals 3 for each triangle
-         * are.
-         *
-         * I suppose there should be something in Geometry. The only place I
-         * could find something is Mesh, It has the vertices and normals
-         * indices, but not the triangles
-         */
-
-
-        /*
-         * Apply the transitions to every vertex using the bone's weights
-         */
-        TrianglesGeometry triMesh = (TrianglesGeometry) sourceGeom;
-
-        //current mesh
-        Mesh mesh = triMesh.getMesh();
-
-        //vertices and normals sources
-        MeshSources sources = mesh.sources;
-
-        //skin info
-        XMLSkin skin = this.getController().skin;
-        
-        //iterate over vertices
-        Influence[] influences;
-
-            //check if there is any influence
-
-                //TODO: use the destinationGeometry
-                //1. transform the normals, only rotation
-                //2. transform the vertex, rotation and translation
-                
-                //This is a big test, still under construction.
-
-        for(int j = 0; j < sources.vertices.length; j+=3) {
-        	
-        	//TODO: I have no idea how to fix the fact that "i" must be
-        	//divided by 6.  It has to do with the relative array sizes
-        	//(see XMLSkin).
-        	influences = skin.buildInfluencesForVertex( j/6 );
-        	if( influences.length <= 0 ) return destinationGeometry;
-        	normalizeInfluences( influences );
-//        	Point3f vertex = new Point3f(
-//        			sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]],
-//        			sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]],
- //       			sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+2]]);
-            System.out.println("old by mesh: " + sourceGeom.getMesh().vertexIndices[j]);
-            sourceGeom.getMesh().vertexIndices[j] = sourceGeom.getMesh().vertexIndices[j]+30;
-            System.out.println("new by mesh: " + sourceGeom.getMesh().vertexIndices[j]);
-            
-            System.out.println("old by mesh tris: " + sourceGeom.getGeometry().mesh.triangles.p[j]);
-            sourceGeom.getGeometry().mesh.triangles.p[j] = sourceGeom.getGeometry().mesh.triangles.p[j]+1;
-            System.out.println("old by mesh tris: " + sourceGeom.getGeometry().mesh.triangles.p[j]);
-            
-            System.out.println("old by sources: " + sources.vertices[j]);
-            sources.vertices[j] = sources.vertices[j] + 30;
-            System.out.println("new by sources: " + sources.vertices[j]);
-        }
-        destinationGeometry = sourceGeom.copy();
-        return destinationGeometry;
-    }
-
+    
     /**
      * Normalize the influences weights
      */
-    private void normalizeInfluences(Influence[] influences) {
-        //TODO: not done yet
-
+    private void normalizeInfluences( Influence[] influences )
+    {
+        // TODO: not yet implemented!
     }
-
+    
+    @Override
+    public Geometry updateDestinationGeometry( long currTime )
+    {
+        // TODO: once this method works well, we should optimize all the variables declarations
+    	
+        if ( sourceGeom == null )
+        {
+            sourceGeom = getLibraryGeometries().getGeometries().get( sourceMeshId );
+            
+            if ( !( sourceGeom instanceof TrianglesGeometry ) )
+            {
+                throw new Error( "Only TrianglesGeometry is supported for now ! Make" +
+                                 " sure your model is triangulated when exporting from your modeling tool." );
+            }
+            else
+            {
+                this.destinationGeometry = sourceGeom.copy();
+            }
+        }
+        
+    	if ( !playing )
+    	    return( this.destinationGeometry );
+    	
+        if ( skeleton == null )
+        {
+            JAGTLog.debug( "Hey ! We haven't been initialized yet... Darn." );
+        }
+        else
+        {
+            JAGTLog.debug( "Our skeleton root bone is named \"",
+                           skeleton.getRootBone().getName(), "\"" );
+            
+            // deltaT to animate
+            currentTime = currTime;
+            
+            // Translation : only for the skeleton
+            
+            KeyFrameComputer.computeTuple3f( currentTime, skeleton.transKeyFrames, skeleton.relativeTranslation );
+            
+            // Loop through all bones...
+            if ( currentAction == null )
+                return( destinationGeometry );
+            
+            if ( !bonesPrepared )
+            {
+            	currentAction.prepareBones();
+                this.skeleton = currentAction.getSkeleton();
+            }
+            
+            boneIt = this.skeleton;
+            for ( Bone bone : boneIt )
+            {
+                // if there is no keyframes, don't do any transformations
+                if ( !bone.hasKeyFrames() )
+                {
+                    JAGTLog.debug( "no keyframes!" );
+                    bone.setNoRelativeMovement();
+                    continue;
+                }
+                
+                JAGTLog.debug( "Keyframes" );
+                // Scaling
+                KeyFrameComputer.computeTuple3f( currentTime, bone.scaleKeyFrames, bone.relativeScaling );
+                
+                // Rotation
+                KeyFrameComputer.computeQuaternion4f( currentTime, bone.rotKeyFrames, bone.relativeRotation );
+            }
+            
+            // Update absolutes transitions for all bones.
+            skeleton.updateAbsolutes();
+        }
+        
+        /*
+         * Now I need to to apply transitions to every vertex. I need the
+         * following information and I don't know where
+         *     1) The mesh I am animating is
+         *     2) The triangles of that mesh are
+         *     3) The vertices, 3 for each triangle, are
+         *     4) The normals 3 for each triangle are.
+         * 
+         * I suppose, there should be something in Geometry. The only place,
+         * I could find something is Mesh. It has the vertices and normals
+         * indices, but not the triangles.
+         */
+        
+        /*
+         * Apply the transitions to every vertex using the bones' weights.
+         */
+        TrianglesGeometry triMesh = (TrianglesGeometry)sourceGeom;
+        
+        // current mesh
+        Mesh mesh = triMesh.getMesh();
+        
+        // vertices and normals sources
+        MeshSources sources = mesh.getSources();
+        
+        // skin info
+        XMLSkin skin = this.getController().skin;
+        
+        // iterate over vertices
+        Influence[] influences;
+        
+        // Check if there is any influence!
+        
+        /*
+         * TODO:
+         * use the destinationGeometry
+         * 1. transform the normals, only rotation
+         * 2. transform the vertex, rotation and translation
+         */
+        
+        // This is a big test, still under construction.
+        for ( int j = 0; j < sources.getVertices().length; j += 3 )
+        {
+            /*
+             * FIXME: I have no idea, how to fix the fact that "i" must be
+             * divided by 6.  It has to do with the relative array sizes
+             * (see XMLSkin).
+             */
+        	influences = skin.buildInfluencesForVertex( j / 6 );
+        	if ( influences.length <= 0 )
+        	    //return( destinationGeometry );
+        	    continue;
+        	
+        	normalizeInfluences( influences );
+        	/*
+        	Point3f vertex = new Point3f(
+        	        sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]],
+        	        sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]],
+        	        sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+2]]);
+            */
+        	/*
+            JAGTLog.debug( "old by mesh: ", sourceGeom.getMesh().getVertexIndices()[j] );
+            sourceGeom.getMesh().getVertexIndices()[j] = sourceGeom.getMesh().getVertexIndices()[j];
+            JAGTLog.debug( "new by mesh: ", sourceGeom.getMesh().getVertexIndices()[j] );
+            
+            JAGTLog.debug( "old by mesh tris: ", sourceGeom.getGeometry().mesh.triangles.p[j] );
+            sourceGeom.getGeometry().mesh.triangles.p[j] = sourceGeom.getGeometry().mesh.triangles.p[j] + 1;
+            JAGTLog.debug( "old by mesh tris: ", sourceGeom.getGeometry().mesh.triangles.p[j] );
+            
+            JAGTLog.debug( "old by sources: ", sources.getVertices()[j] );
+            sources.getVertices()[j] = sources.getVertices()[j];
+            JAGTLog.debug( "new by sources: ", sources.getVertices()[j] );
+            */
+        	
+            //System.out.println( skeleton.getRootBone().getAbsoluteRotation() );
+            
+        	for ( int i = 0; i < influences.length; i++ )
+        	{
+        	    final Influence influence = influences[i];
+        	    
+        	}
+        }
+        
+        destinationGeometry = sourceGeom.copy();
+        
+        return( destinationGeometry );
+    }
+    
     // // // // // // ANIMATION PART - ENDS// // // // // //
-
+    
     /**
      * Set the skeleton of this controller
      *
      * @param skeleton
      *                The skeleton to use
      */
-    public void setSkeleton(Skeleton skeleton) {
+    public void setSkeleton( Skeleton skeleton )
+    {
         this.skeleton = skeleton;
     }
-
-    public COLLADAAction getAction(String id) {
-        return actions.get(id);
-    }
-
-    public HashMap<String, COLLADAAction> getActions() {
-        return actions;
-    }
-
-    public ColladaProtoypeModel getPrototypeModel() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    public boolean hasActions() {
-        return (actions.values().size() > 0 ? true : false);
-    }
-
-    public boolean isLooping() {
-        return loop;
-    }
-
-    public boolean isPlaying() {
-        return playing;
-    }
-
-    public int numActions() {
-    	return actions.values().size();
-    }
-
-    public void pause() {
-        playing = false;
-    }
-
-    public void play(String actionId, boolean loop) {
-    	calcActions(actionId);
-        this.play(actions.get(actionId), loop);
+    
+    public final COLLADAAction getAction( String id )
+    {
+        return( actions.get( id ) );
     }
     
-    public void calcActions(String actionId) {
-    	for(Iterator<Entry<String, COLLADAAction>> i = libAnims.getAnimations().entrySet().iterator(); i.hasNext();) {
-    		Entry<String, COLLADAAction> entry = i.next();
-    		if(entry.getKey().equals(actionId)) {
-    			System.out.println("Action found");
-    			actions.put(entry.getKey(), entry.getValue());
-    		}
-    	}
+    public final HashMap<String, COLLADAAction> getActions()
+    {
+        return( actions );
     }
-
-    public void resume() {
+    
+    public ColladaProtoypeModel getPrototypeModel()
+    {
+        // TODO Auto-generated method stub
+        return( null );
+    }
+    
+    public final int numActions()
+    {
+        return( actions.values().size() );
+    }
+    
+    public final boolean hasActions()
+    {
+        return( numActions() > 0 );
+    }
+    
+    public final boolean isLooping()
+    {
+        return( loop );
+    }
+    
+    public final boolean isPlaying()
+    {
+        return( playing );
+    }
+    
+    public void calcActions( String actionId )
+    {
+        for ( Iterator<Entry<String, COLLADAAction>> i = libAnims.getAnimations().entrySet().iterator(); i.hasNext(); )
+        {
+            Entry<String, COLLADAAction> entry = i.next();
+            
+            if ( entry.getKey().equals( actionId ) )
+            {
+                JAGTLog.debug( "Action found" );
+                actions.put( entry.getKey(), entry.getValue() );
+            }
+        }
+    }
+    
+    public void play( String actionId, boolean loop )
+    {
+    	calcActions( actionId );
+        this.play( actions.get( actionId ), loop );
+    }
+    
+    public void pause()
+    {
+        playing = false;
+    }
+    
+    public void resume()
+    {
         playing = true;
     }
-
 }

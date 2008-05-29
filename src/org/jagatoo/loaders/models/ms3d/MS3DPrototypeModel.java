@@ -363,7 +363,7 @@ public class MS3DPrototypeModel {
 				Quaternion4f quatCur = RotationUtils.toQuaternion( curFrame.param );
 				Quaternion4f quatPrev = RotationUtils.toQuaternion( prevFrame.param );
 				Quaternion4f quatSpeed = new Quaternion4f();
-				Interpolation.nlerp(quatSpeed, quatCur, quatPrev, timeDist);
+				Interpolation.nlerp(quatCur, quatPrev, timeDist, quatSpeed);
 
 				//scale quatSpeed with elapsed time
 				quatSpeed.scale( 1 / timeDist );

@@ -29,7 +29,7 @@
  */
 package org.jagatoo.loaders.models.collada.datastructs.images;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Represent a surface : nearly the same thing as a texture, but
@@ -41,27 +41,28 @@ import java.util.List;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class Surface {
-    
-    /** Images used by this COLLADA surface */
-    public List<String> imageIds;
+public class Surface
+{
     private final String id;
     
-    /**
-     * Creates a new COLLADA Surface
-     * @param id The source id of this surface
-     */
-    public Surface(String id) {
-        
-        this.id = id;
-        
-    }
+    /** Images used by this COLLADA surface */
+    public ArrayList<String> imageIds = null;
     
     /**
      * @return the id
      */
-    public String getId() {
-        return id;
+    public final String getId()
+    {
+        return( id );
     }
     
+    /**
+     * Creates a new COLLADA Surface.
+     * 
+     * @param id The source id of this surface
+     */
+    public Surface( String id )
+    {
+        this.id = id;
+    }
 }

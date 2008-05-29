@@ -36,25 +36,23 @@ import java.util.HashMap;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class LibraryMaterials {
-    
+public class LibraryMaterials
+{
     /** All materials. Key = id, value = material */
-    private final HashMap<String, Material> materials;
+    private final HashMap<String, Material> materials = new HashMap<String, Material>();
     
     /**
-     * Creates a new COLLADALibraryMaterials
+     * @return the materials.
      */
-    public LibraryMaterials() {
-        
-        materials = new HashMap<String, Material>();
-        
+    public final HashMap<String, Material> getMaterials()
+    {
+        return( materials );
     }
     
     /**
-     * @return the materials
+     * Creates a new LibraryMaterials.
      */
-    public HashMap<String, Material> getMaterials() {
-        return materials;
+    public LibraryMaterials()
+    {
     }
-    
 }

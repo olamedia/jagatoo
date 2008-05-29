@@ -86,9 +86,9 @@ public class XMLNode {
         Matrix4f mat = new Matrix4f();
         mat.setIdentity();
         mat.setTranslation(translate);
-        // System.out.println("Mat before translate : \n"+matrix.matrix4f);
+        //JAGTLog.debug( "Mat before translate : \n", matrix.matrix4f );
         matrix.matrix4f.mul(mat);
-        // System.out.println("Mat after translate of "+translate+" : \n"+matrix.matrix4f);
+        //JAGTLog.debug( "Mat after translate of "+translate+" : \n", matrix.matrix4f );
     }
     
     public void applyRotate(String str) {
@@ -101,9 +101,9 @@ public class XMLNode {
         float angle = FastMath.toRad( Float.parseFloat(tknz.nextToken()) );
         rotate.mul( angle );
         Matrix4f mat = MatrixUtils.eulerToMatrix4f(rotate);
-        // System.out.println("Mat before rotate : \n"+matrix.matrix4f);
+        //JAGTLog.debug( "Mat before rotate : \n", matrix.matrix4f );
         matrix.matrix4f.mul(mat);
-        // System.out.println("Mat after rotate of "+rotate+" : \n"+matrix.matrix4f);
+        //JAGTLog.debug( "Mat after rotate of "+rotate+" : \n", matrix.matrix4f );
     }
     
     public void applyScale(String str) {
@@ -115,7 +115,7 @@ public class XMLNode {
                 Float.parseFloat(tknz.nextToken())
         );
         
-        // System.out.println("Mat before scale : \n"+matrix.matrix4f);
+        //JAGTLog.debug( "Mat before scale : \n", matrix.matrix4f );
         
         matrix.matrix4f.mul( 0, 0, scale.getX() );
         matrix.matrix4f.mul( 0, 1, scale.getX() );
@@ -132,7 +132,7 @@ public class XMLNode {
         matrix.matrix4f.mul( 2, 2, scale.getZ() );
         matrix.matrix4f.mul( 2, 3, scale.getZ() );
         
-        // System.out.println("Mat after scale of "+scale+" : \n"+matrix.matrix4f);
+        //JAGTLog.debug( "Mat after scale of ", scale, ": \n", matrix.matrix4f );
     }
     
 }

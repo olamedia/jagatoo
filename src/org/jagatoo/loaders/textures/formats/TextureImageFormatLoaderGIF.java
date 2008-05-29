@@ -159,7 +159,7 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
                     else
                     {
                         in.skip( 3 );
-                        len = in.read();//len=0, block terminator!
+                        len = in.read(); // len = 0, block terminator!
                     }
                 }
                 
@@ -186,10 +186,10 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
         
         while ( codeLen > workData.bitsRemaining )
         {
-            if ( workData.bytesAvailable == 0 )//find another data block available
+            if ( workData.bytesAvailable == 0 ) // find another data block available
             {
-                workData.bytesAvailable = in.read();//start a new image data subblock if possible!
-                //the blocksize bytes_available is no bigger than 0xFF
+                workData.bytesAvailable = in.read(); // start a new image data subblock if possible!
+                // the blocksize bytes_available is no bigger than 0xFF
                 if ( workData.bytesAvailable > 0 )
                 {
                     in.read( bytesBuff, 0, workData.bytesAvailable );
@@ -208,6 +208,7 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
                     //return( endOfImage );
                 }
             }
+            
             workData.tempByte = bytesBuff[workData.bufferIndex++] & 0xFF;
             workData.bytesAvailable--;
             temp |= ( workData.tempByte << workData.bitsRemaining );
@@ -274,7 +275,7 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
         int incr = width * ( pass[passIndex + 1] - 1 );
         int numPixels = width * height;
         
-        int min_code_size = in.read();//The length of the root
+        int min_code_size = in.read(); // The length of the root
         int clearCode = ( 1 << min_code_size );
         int codeEndOfImage = clearCode + 1;
         int first_code_index = codeEndOfImage + 1;
@@ -552,6 +553,8 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
         //bb.position( 0 );
         bb.limit( bb.capacity() );
         
+        final int byteOffset0 = bb.position();
+        
         int dstBytesPerPixel = image.getPixelSize();
         
         final boolean isInterlaced = ( ( flags2 & 0x40 ) == 0x40 );
@@ -579,7 +582,7 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
         }
         
         bb.position( 0 );
-        bb.limit( orgWidth * orgHeight * dstBytesPerPixel );
+        bb.limit( byteOffset0 + orgWidth * orgHeight * dstBytesPerPixel );
         
         return( image );
     }

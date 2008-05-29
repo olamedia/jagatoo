@@ -34,57 +34,73 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Iterator for an easy manager of the bones of a Skeleton
- *
+ * Iterator for an easy management of a {@link Skeleton}'s {@link Bone}s.
+ * 
  * @author Matias Leone
  */
-public class SkeletonIterator implements Iterator<Bone> {
-
-	private Skeleton skeleton;
-	private List<Bone> bones = new ArrayList<Bone>();
+public class SkeletonIterator implements Iterator<Bone>
+{
+	private final Skeleton skeleton;
+	private final ArrayList<Bone> bones = new ArrayList<Bone>();
 	private int currentIndex;
-
+	
 	/**
-	 * Creates an iterator for the bones of the skeleton
-	 * @param skeleton
+	 * {@inheritDoc}
 	 */
-	public SkeletonIterator( Skeleton skeleton ) {
-		this.skeleton = skeleton;
+	public boolean hasNext()
+	{
+		return( ( currentIndex + 1 ) < bones.size() );
 	}
-
-	/**
-	 * Reset the iterator to it's initial position
-	 */
-	public void reset() {
-		Bone bone = this.skeleton.rootBone;
-		bones.clear();
-		fillBoneList( bone, bones );
-		currentIndex = -1;
+	
+    /**
+     * {@inheritDoc}
+     */
+	public Bone next()
+	{
+		return( bones.get( ++currentIndex ) );
 	}
-
-	/**
-	 * Fills the bone list with a depth first criteria
-	 * @param bone
-	 * @param boneList
-	 */
-	private void fillBoneList( Bone bone, List<Bone> boneList ) {
-		boneList.add( bone );
-		for (int i = 0; i < bone.numChildren(); i++) {
-			fillBoneList( bone.getChild( i ), boneList );
-		}
+	
+    /**
+     * {@inheritDoc}
+     */
+	public void remove()
+	{
+		throw( new UnsupportedOperationException( "Can not remove a bone" ) );
 	}
+    
+    /**
+     * Fills the bone list with a depth first criteria.
+     * 
+     * @param bone
+     * @param boneList
+     */
+    private void fillBoneList( Bone bone, List<Bone> boneList )
+    {
+        boneList.add( bone );
+        
+        for ( int i = 0; i < bone.numChildren(); i++ )
+        {
+            fillBoneList( bone.getChild( i ), boneList );
+        }
+    }
 
-	public boolean hasNext() {
-		return (currentIndex + 1) < bones.size();
-	}
+    /**
+     * Reset the iterator to it's initial position
+     */
+    public void reset()
+    {
+        Bone bone = this.skeleton.rootBone;
+        bones.clear();
+        fillBoneList( bone, bones );
+        currentIndex = -1;
+    }
 
-	public Bone next() {
-		return bones.get( ++currentIndex );
-	}
-
-
-	public void remove() {
-		throw new UnsupportedOperationException( "Can not remove a bone" );
-	}
-
+    /**
+     * Creates an iterator for the bones of the skeleton
+     * @param skeleton
+     */
+    public SkeletonIterator( Skeleton skeleton )
+    {
+        this.skeleton = skeleton;
+    }
 }

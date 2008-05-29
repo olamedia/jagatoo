@@ -29,71 +29,127 @@
  */
 package org.jagatoo.loaders.models.collada.datastructs.geometries;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * A COLLADA Mesh : it's a collection of vertices and optionnally
+ * A COLLADA Mesh : it's a collection of vertices and optionally
  * vertex indices, normals (and indices), colors (and indices),
  * UV coordinates (and indices).
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class MeshSources {
-
+public class MeshSources
+{
     /** Vertices. Format : X,Y,Z May NOT be null */
-    public float[] vertices = null;
-
+    private float[] vertices = null;
+    
     /** Normals. Format : X,Y,Z. May be null */
-    public float[] normals = null;
-
+    private float[] normals = null;
+    
     /** Colors. Format : R,G,B,A. May be null */
-    public float[] colors = null;
-
+    private float[] colors = null;
+    
     /** UV coordinates. 2-dimensional arrays because there can be several texture sets. May be null */
-    public List<float[]> uvs = null;
-
+    private float[][] uvs = null;
+    
+    public void setVertices( float[] vertices )
+    {
+        this.vertices = vertices;
+    }
+    
+    public final float[] getVertices()
+    {
+        return( vertices );
+    }
+    
+    public void setNormals( float[] normals )
+    {
+        this.normals = normals;
+    }
+    
+    public final float[] getNormals()
+    {
+        return( normals );
+    }
+    
+    public void setColors( float[] colors )
+    {
+        this.colors = colors;
+    }
+    
+    public final float[] getColors()
+    {
+        return( colors );
+    }
+    
+    public void setUVs( float[][] uvs )
+    {
+        this.uvs = uvs;
+    }
+    
+    public void addUV( float[] uv )
+    {
+        if ( uvs == null )
+        {
+            uvs = new float[][] { uv };
+        }
+        else
+        {
+            float[][] newUVs = new float[ uvs.length + 1 ][];
+            System.arraycopy( uvs, 0, newUVs, 0, uvs.length );
+            uvs = newUVs;
+            uvs[ uvs.length - 1 ] = uv;
+        }
+    }
+    
+    public final float[][] getUVs()
+    {
+        return( uvs );
+    }
+    
+    /**
+     * @return a copy of these sources.
+     */
+    public MeshSources copy()
+    {
+        MeshSources newMS = new MeshSources();
+        
+        newMS.vertices = new float[ this.vertices.length ];
+        System.arraycopy( this.vertices, 0, newMS.vertices, 0, this.vertices.length );
+        
+        if ( this.normals != null )
+        {
+            newMS.normals = new float[ this.normals.length ];
+            System.arraycopy( this.normals, 0, newMS.normals, 0, this.normals.length );
+        }
+        
+        if ( this.colors != null )
+        {
+            newMS.colors = new float[ this.colors.length ];
+            System.arraycopy( this.colors, 0, newMS.colors, 0, this.colors.length );
+        }
+        
+        if ( this.uvs != null )
+        {
+            newMS.uvs = new float[ this.uvs.length ][];
+            for ( int i = 0; i < uvs.length; i++ )
+            {
+                final float[] uv = this.uvs[ i ];
+                
+                float[] newUV = new float[ uv.length ];
+                System.arraycopy( uv, 0, newUV, 0, uv.length );
+                newMS.uvs[ i ] = newUV;
+            }
+            
+            System.arraycopy( this.uvs, 0, newMS.uvs, 0, this.uvs.length );
+        }
+        
+        return( newMS );
+    }
+    
     /**
      * Create a new COLLADA Mesh
      */
-    public MeshSources() {
-
+    public MeshSources()
+    {
         // Do nothing, we're just a data-structure, you know :)
-
     }
-
-    /**
-     * @return a copy of these sources
-     */
-    public MeshSources copy() {
-
-        MeshSources newMS = new MeshSources();
-
-        newMS.vertices = new float[this.vertices.length];
-        System.arraycopy(this.vertices, 0, newMS.vertices, 0, this.vertices.length);
-
-        if(newMS.normals != null) {
-            newMS.normals = new float[this.normals.length];
-            System.arraycopy(this.normals, 0, newMS.normals, 0, this.normals.length);
-        }
-
-        if(newMS.colors != null) {
-            newMS.colors = new float[this.colors.length];
-            System.arraycopy(this.colors, 0, newMS.colors, 0, this.colors.length);
-        }
-
-        if(newMS.uvs != null) {
-            newMS.uvs = new ArrayList<float[]>(this.uvs.size());
-            for (float[] uv : this.uvs) {
-                float[] newUv = new float[uv.length];
-                System.arraycopy(newUv, 0, uv, 0, uv.length);
-                newMS.uvs.add(newUv);
-            }
-            System.arraycopy(this.normals, 0, newMS.normals, 0, this.normals.length);
-        }
-
-        return null;
-
-    }
-
 }

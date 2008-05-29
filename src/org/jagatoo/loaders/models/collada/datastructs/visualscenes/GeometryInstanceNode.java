@@ -42,14 +42,31 @@ import org.jagatoo.loaders.models.collada.datastructs.materials.Material;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class GeometryInstanceNode extends Node {
-
+public class GeometryInstanceNode extends Node
+{
     /** Our geometry */
-    private String geometryID;
-    private String materialID;
+    private final String geometryID;
+    private final String materialID;
     
     /**
-     * Create a new {@link GeometryInstanceNode}
+     * @return the geometry.
+     */
+    public final Geometry getGeometry()
+    {
+        return( getFile().getLibraryGeometries().getGeometries().get( geometryID ) );
+    }
+    
+    /**
+     * @return the material.
+     */
+    public final Material getMaterial()
+    {
+        return( getFile().getLibraryMaterials().getMaterials().get( materialID ) );
+    }
+    
+    /**
+     * Creates a new {@link GeometryInstanceNode}.
+     * 
      * @param file The COLLADA file this node belongs to
      * @param id The id of this node
      * @param name The name of this node
@@ -57,30 +74,11 @@ public class GeometryInstanceNode extends Node {
      * @param geometryUrl The URL of the geometry this node is an instance of
      * @param materialUrl The URL of the material bound to this node
      */
-    public GeometryInstanceNode(AssetFolder file, String id, String name, COLLADATransform transform, String geometryUrl, String materialUrl) {
+    public GeometryInstanceNode( AssetFolder file, String id, String name, COLLADATransform transform, String geometryUrl, String materialUrl )
+    {
+        super( file, id, name, transform );
         
-        super(file, id, name, transform);
         this.geometryID = geometryUrl;
         this.materialID = materialUrl;
-        
     }
-    
-    /**
-     * @return the geometry
-     */
-    public Geometry getGeometry() {
-        
-        return file.getLibraryGeometries().getGeometries().get(geometryID);
-        
-    }
-    
-    /**
-     * @return the material
-     */
-    public Material getMaterial() {
-        
-        return file.getLibraryMaterials().getMaterials().get(materialID);
-        
-    }
-    
 }

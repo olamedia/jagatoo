@@ -49,4 +49,9 @@ public class ParsingErrorException extends RuntimeException
     {
         super( s );
     }
+    
+    public ParsingErrorException( Throwable cause )
+    {
+        super( cause );
+    }
 }

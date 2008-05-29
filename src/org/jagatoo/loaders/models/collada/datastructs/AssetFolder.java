@@ -41,129 +41,137 @@ import org.jagatoo.loaders.models.collada.datastructs.visualscenes.LibraryVisual
 
 
 /**
- * This class contains every information which has been loaded
- * from a COLLADA file and that the loader handles. The reason
- * this class exists is that data provided directly by XMlBeans when
+ * This class contains every information, that has been loaded
+ * from a COLLADA file and that the loader handles. The reason,
+ * this class exists, is that data provided directly by XMlBeans when
  * loading a COLLADA file isn't really convenient to handle. So
  * in the org.collada.xith3d.COLLADALoader file, XMLBeans data (which
  * is composed of classes contained in the
  * org.jagatoo.loaders.models.collada.schema.org.collada.x2005.x11.colladaSchema
  * package) is converted to a COLLADAFile. Then it can be used in a scenegraph,
  * e.g. Xith3D.
- *
+ * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class AssetFolder {
-
+public class AssetFolder
+{
     /** LibraryControllers : contains all controllers */
-    private LibraryControllers libraryControllers;
-
+    private final LibraryControllers libraryControllers;
+    
     /** LibraryEffects : contains all effects */
-    private LibraryEffects libraryEffects;
-
+    private final LibraryEffects libraryEffects;
+    
     /** LibraryImages : contains all images */
-    private LibraryImages libraryImages;
-
+    private final LibraryImages libraryImages;
+    
     /** LibraryMaterials : contains all materials */
-    private LibraryMaterials libraryMaterials;
-
+    private final LibraryMaterials libraryMaterials;
+    
     /** LibraryGeometries : contains all geometries */
-    private LibraryGeometries libraryGeometries;
-
+    private final LibraryGeometries libraryGeometries;
+    
     /** LibraryVisualScenes : contains all visual scenes */
-    private LibraryVisualScenes libraryVisualsScenes;
+    private final LibraryVisualScenes libraryVisualsScenes;
     
     /** LibraryAnimations : contains all animations/actions */
-    private LibraryAnimations libraryAnimations;
-
-    private ColladaProtoypeModel model;
-
+    private final LibraryAnimations libraryAnimations;
+    
+    private ColladaProtoypeModel protoModel;
+    
     /**
      * The base path, used e.g. when loading textures.
      * Basically it's where this file has been loaded from.
      */
     private final URL basePath;
-
+    
+    /**
+     * @return the libraryControllers.
+     */
+    public final LibraryControllers getLibraryControllers()
+    {
+        return( libraryControllers );
+    }
+    
+    /**
+     * @return the libraryEffects.
+     */
+    public final LibraryEffects getLibraryEffects()
+    {
+        return( libraryEffects );
+    }
+    
+    /**
+     * @return the libraryImages.
+     */
+    public final LibraryImages getLibraryImages()
+    {
+        return( libraryImages );
+    }
+    
+    /**
+     * @return the libraryMaterials.
+     */
+    public final LibraryMaterials getLibraryMaterials()
+    {
+        return( libraryMaterials );
+    }
+    
+    /**
+     * @return the libraryGeometries.
+     */
+    public final LibraryGeometries getLibraryGeometries()
+    {
+        return( libraryGeometries );
+    }
+    
+    /**
+     * @return the libraryVisualsScenes.
+     */
+    public final LibraryVisualScenes getLibraryVisualsScenes()
+    {
+        return( libraryVisualsScenes );
+    }
+    
+    /**
+     * @return the libraryAnimations.
+     */
+    public final LibraryAnimations getLibraryAnimations()
+    {
+        return( libraryAnimations );
+    }
+    
+    /**
+     * @return the basePath.
+     */
+    public final URL getBasePath()
+    {
+        return( basePath );
+    }
+    
+    public void setModel( ColladaProtoypeModel model )
+    {
+        this.protoModel = model;
+    }
+    
+	public final ColladaProtoypeModel getModel()
+	{
+		return( protoModel );
+	}
+    
     /**
      * Creates a new COLLADAFile
      * @param basePath The base path, used e.g. when loading textures
      */
-    public AssetFolder(URL basePath) {
-
+    public AssetFolder( URL basePath )
+    {
         this.basePath = basePath;
-
-        libraryControllers = new LibraryControllers();
-        libraryAnimations = new LibraryAnimations();
-        libraryEffects = new LibraryEffects();
-        libraryImages = new LibraryImages();
-        libraryMaterials = new LibraryMaterials();
-        libraryGeometries = new LibraryGeometries();
-        libraryVisualsScenes = new LibraryVisualScenes();
-
+        
+        this.libraryControllers = new LibraryControllers();
+        this.libraryAnimations = new LibraryAnimations();
+        this.libraryEffects = new LibraryEffects();
+        this.libraryImages = new LibraryImages();
+        this.libraryMaterials = new LibraryMaterials();
+        this.libraryGeometries = new LibraryGeometries();
+        this.libraryVisualsScenes = new LibraryVisualScenes();
     }
-
-    /**
-     * @return the libraryControllers
-     */
-    public LibraryControllers getLibraryControllers() {
-        return libraryControllers;
-    }
-
-    /**
-     * @return the libraryEffects
-     */
-    public LibraryEffects getLibraryEffects() {
-        return libraryEffects;
-    }
-
-    /**
-     * @return the libraryImages
-     */
-    public LibraryImages getLibraryImages() {
-        return libraryImages;
-    }
-
-    /**
-     * @return the libraryMaterials
-     */
-    public LibraryMaterials getLibraryMaterials() {
-        return libraryMaterials;
-    }
-
-    /**
-     * @return the libraryGeometries
-     */
-    public LibraryGeometries getLibraryGeometries() {
-        return libraryGeometries;
-    }
-
-    /**
-     * @return the libraryVisualsScenes
-     */
-    public LibraryVisualScenes getLibraryVisualsScenes() {
-        return libraryVisualsScenes;
-    }
-    
-    /**
-     * @return the libraryAnimations
-     */
-    public LibraryAnimations getLibraryAnimations() {
-        return libraryAnimations;
-    }
-
-    /**
-     * @return the basePath
-     */
-    public URL getBasePath() {
-        return basePath;
-    }
-
-	public ColladaProtoypeModel getModel() {
-		return model;
-	}
-
-	public void setModel(ColladaProtoypeModel model) {
-		this.model = model;
-	}
-
 }

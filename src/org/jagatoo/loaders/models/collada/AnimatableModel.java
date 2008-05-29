@@ -35,14 +35,14 @@ import org.jagatoo.loaders.models.collada.datastructs.ColladaProtoypeModel;
 
 /**
  * A COLLADA model. This interface should be implemented by
- * the game engine who wants to use Jagatoo for model loading.
+ * the game engine, that wants to use JAGaToo for model loading.
  * 
  * It contains mostly methods used for controlling animations.
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public interface AnimatableModel {
-    
+public interface AnimatableModel
+{
     /**
      * Get the prototype model (Jagatoo side) used by this model
      * (Game engine side).
@@ -123,5 +123,4 @@ public interface AnimatableModel {
      * "loop" set to "true"
      */
     public boolean isLooping();
-    
 }
