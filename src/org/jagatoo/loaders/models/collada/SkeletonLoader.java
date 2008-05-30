@@ -44,8 +44,8 @@ import org.openmali.vecmath2.Vector3f;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class SkeletonLoader {
-    
+public class SkeletonLoader
+{
     /**
      * The up point (0, 0, 1).
      * Note : depends on the COLLADA assets : this should be taken into account!
@@ -53,41 +53,15 @@ public class SkeletonLoader {
     private final static Vector3f UP = Vector3f.newReadOnly( 0f, 0f, 1f );
     
     /**
-     * Loads a whole Skeleton.
-     * 
-     * @param rootNode
-     * 
-     * @return the skeleton
-     */
-    public static Skeleton loadSkeleton( XMLNode rootNode )
-    {
-        Point3f skeletonPos;
-        Matrix4f localToWorld;
-        // Get the localToWorld matrix
-        localToWorld = rootNode.matrix.matrix4f;
-        JAGTLog.debug( "LocalToWorld = ", localToWorld );
-        
-        // Get the root bone root position
-        skeletonPos = new Point3f( localToWorld.m03(), localToWorld.m13(), localToWorld.m23() );
-        
-        // Create the root bone
-        Bone rootBone = new Bone( rootNode.id, 0f, new Quaternion4f( 0f, 0f, 0f, 1f ) );
-        
-        loadJoint( localToWorld, rootBone, rootNode, Point3f.ZERO, Point3f.ZERO );
-        
-        return( new Skeleton( rootBone, skeletonPos ) );
-    }
-    
-    /**
      * Loads a Joint, and its children of course.
      * 
      * @param localToWorld
-     * @param bone
      * @param node
      * @param parentRoot
      * @param parentTip
+     * @param bone
      */
-    private static void loadJoint( Matrix4f localToWorld, Bone bone, XMLNode node, Point3f parentRoot, Point3f parentTip )
+    private static void loadJoint( Matrix4f localToWorld, XMLNode node, Point3f parentRoot, Point3f parentTip, Bone bone )
     {
         if ( node.childrenList == null )
         {
@@ -199,8 +173,34 @@ public class SkeletonLoader {
             {
                 Bone newBone = new Bone( child.id, 0.2f, new Quaternion4f( 0f, 0f, 0f, 1f ) );
                 bone.addChild( newBone );
-                loadJoint( localToWorld, newBone, child, parentTip, nodeTip );
+                loadJoint( localToWorld, child, parentTip, nodeTip, newBone );
             }
         }
+    }
+    
+    /**
+     * Loads a whole Skeleton.
+     * 
+     * @param rootNode
+     * 
+     * @return the skeleton
+     */
+    public static Skeleton loadSkeleton( XMLNode rootNode )
+    {
+        Point3f skeletonPos;
+        Matrix4f localToWorld;
+        // Get the localToWorld matrix
+        localToWorld = rootNode.matrix.matrix4f;
+        JAGTLog.debug( "LocalToWorld = ", localToWorld );
+        
+        // Get the root bone root position
+        skeletonPos = new Point3f( localToWorld.m03(), localToWorld.m13(), localToWorld.m23() );
+        
+        // Create the root bone
+        Bone rootBone = new Bone( rootNode.id, 0f, new Quaternion4f( 0f, 0f, 0f, 1f ) );
+        
+        loadJoint( localToWorld, rootNode, Point3f.ZERO, Point3f.ZERO, rootBone );
+        
+        return( new Skeleton( rootBone, skeletonPos ) );
     }
 }

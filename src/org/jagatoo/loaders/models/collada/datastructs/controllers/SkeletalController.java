@@ -185,8 +185,8 @@ public class SkeletalController extends Controller implements AnimatableModel
             
             if ( !( sourceGeom instanceof TrianglesGeometry ) )
             {
-                throw new Error( "Only TrianglesGeometry is supported for now ! Make" +
-                                 " sure your model is triangulated when exporting from your modeling tool." );
+                throw new Error( "Only TrianglesGeometry is supported for now ! " +
+                                 "Make sure, your model is triangulated when exporting from your modeling tool." );
             }
             else
             {
@@ -213,7 +213,6 @@ public class SkeletalController extends Controller implements AnimatableModel
             
             KeyFrameComputer.computeTuple3f( currentTime, skeleton.transKeyFrames, skeleton.relativeTranslation );
             
-            // Loop through all bones...
             if ( currentAction == null )
                 return( destinationGeometry );
             
@@ -223,10 +222,11 @@ public class SkeletalController extends Controller implements AnimatableModel
                 this.skeleton = currentAction.getSkeleton();
             }
             
+            // Loop through all bones...
             boneIt = this.skeleton;
             for ( Bone bone : boneIt )
             {
-                // if there is no keyframes, don't do any transformations
+                // If there is no keyframe, don't do any transformations.
                 if ( !bone.hasKeyFrames() )
                 {
                     JAGTLog.debug( "no keyframes!" );
@@ -235,6 +235,7 @@ public class SkeletalController extends Controller implements AnimatableModel
                 }
                 
                 JAGTLog.debug( "Keyframes" );
+                
                 // Scaling
                 KeyFrameComputer.computeTuple3f( currentTime, bone.scaleKeyFrames, bone.relativeScaling );
                 
@@ -262,10 +263,10 @@ public class SkeletalController extends Controller implements AnimatableModel
         /*
          * Apply the transitions to every vertex using the bones' weights.
          */
-        TrianglesGeometry triMesh = (TrianglesGeometry)sourceGeom;
+        //TrianglesGeometry triMesh = (TrianglesGeometry)sourceGeom;
         
         // current mesh
-        Mesh mesh = triMesh.getMesh();
+        Mesh mesh = sourceGeom.getMesh();
         
         // vertices and normals sources
         MeshSources sources = mesh.getSources();
@@ -273,62 +274,57 @@ public class SkeletalController extends Controller implements AnimatableModel
         // skin info
         XMLSkin skin = this.getController().skin;
         
-        // iterate over vertices
-        Influence[] influences;
-        
-        // Check if there is any influence!
-        
         /*
-         * TODO:
-         * use the destinationGeometry
          * 1. transform the normals, only rotation
          * 2. transform the vertex, rotation and translation
          */
         
+        destinationGeometry = sourceGeom.copy();
+        
         // This is a big test, still under construction.
-        for ( int j = 0; j < sources.getVertices().length; j += 3 )
+        final int numVertices = sources.getVertices().length / 3;
+        for ( int vi = 0; vi < numVertices; vi++ )
         {
-            /*
-             * FIXME: I have no idea, how to fix the fact that "i" must be
-             * divided by 6.  It has to do with the relative array sizes
-             * (see XMLSkin).
-             */
-        	influences = skin.buildInfluencesForVertex( j / 6 );
+            Influence[] influences = skin.buildInfluencesForVertex( vi );
+        	
+            // Check if there is any influence!
         	if ( influences.length <= 0 )
         	    //return( destinationGeometry );
         	    continue;
         	
         	normalizeInfluences( influences );
+        	
+            //final int vi3 = i * 3;
+            
         	/*
         	Point3f vertex = new Point3f(
-        	        sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j]],
-        	        sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+1]],
-        	        sources.vertices[sourceGeom.getGeometry().mesh.triangles.p[j+2]]);
+        	        sources.vertices[destinationGeometry.getGeometry().mesh.triangles.p[vi3 + 0]],
+        	        sources.vertices[destinationGeometry.getGeometry().mesh.triangles.p[vi3 + 1]],
+        	        sources.vertices[destinationGeometry.getGeometry().mesh.triangles.pv[i3 + 2]]);
             */
+        	
         	/*
-            JAGTLog.debug( "old by mesh: ", sourceGeom.getMesh().getVertexIndices()[j] );
-            sourceGeom.getMesh().getVertexIndices()[j] = sourceGeom.getMesh().getVertexIndices()[j];
-            JAGTLog.debug( "new by mesh: ", sourceGeom.getMesh().getVertexIndices()[j] );
+            JAGTLog.debug( "old by mesh: ", destinationGeometry.getMesh().getVertexIndices()[vi3] );
+            destinationGeometry.getMesh().getVertexIndices()[vi3] = destinationGeometry.getMesh().getVertexIndices()[vi3];
+            JAGTLog.debug( "new by mesh: ", destinationGeometry.getMesh().getVertexIndices()[vi3] );
             
-            JAGTLog.debug( "old by mesh tris: ", sourceGeom.getGeometry().mesh.triangles.p[j] );
-            sourceGeom.getGeometry().mesh.triangles.p[j] = sourceGeom.getGeometry().mesh.triangles.p[j] + 1;
-            JAGTLog.debug( "old by mesh tris: ", sourceGeom.getGeometry().mesh.triangles.p[j] );
+            JAGTLog.debug( "old by mesh tris: ", destinationGeometry.getGeometry().mesh.triangles.pv[i3] );
+            destinationGeometry.getGeometry().mesh.triangles.p[vi3] = destinationGeometry.getGeometry().mesh.triangles.p[vi3] + 1;
+            JAGTLog.debug( "old by mesh tris: ", destinationGeometry.getGeometry().mesh.triangles.p[vi3] );
             
-            JAGTLog.debug( "old by sources: ", sources.getVertices()[j] );
-            sources.getVertices()[j] = sources.getVertices()[j];
-            JAGTLog.debug( "new by sources: ", sources.getVertices()[j] );
+            JAGTLog.debug( "old by sources: ", sources.getVertices()[vi3] );
+            sources.getVertices()[vi3] = sources.getVertices()[vi3];
+            JAGTLog.debug( "new by sources: ", sources.getVertices()[vi3] );
             */
         	
             //System.out.println( skeleton.getRootBone().getAbsoluteRotation() );
             
-        	for ( int i = 0; i < influences.length; i++ )
+        	for ( int ii = 0; ii < influences.length; ii++ )
         	{
-        	    final Influence influence = influences[i];
+        	    final Influence influence = influences[ii];
         	    
         	}
         }
-        
-        destinationGeometry = sourceGeom.copy();
         
         return( destinationGeometry );
     }

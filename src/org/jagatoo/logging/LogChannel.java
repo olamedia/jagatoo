@@ -81,13 +81,21 @@ public class LogChannel
     
     /**
      * {@inheritDoc}
-     * 
-     * @param o
      */
     @Override
     public boolean equals( Object o )
     {
         return( ( o instanceof LogChannel ) && ( ((LogChannel)o).getID() == this.getID() ) );
+    }
+    
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        return( this.getClass().getSimpleName() + "{ " + this.getID() + ", \"" + getName() + "\" }" );
     }
     
     public LogChannel( String name )
