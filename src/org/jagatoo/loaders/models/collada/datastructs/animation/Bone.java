@@ -44,6 +44,9 @@ import org.openmali.vecmath2.Vector3f;
  */
 public class Bone
 {
+    /** The source-id of this bone */
+    private final String sid;
+    
     /** The name of this bone */
     private final String name;
     
@@ -114,6 +117,11 @@ public class Bone
     
     /** Children (optional) */
     private ArrayList<Bone> children;
+    
+    public final String getSourceId()
+    {
+        return( sid );
+    }
     
     /**
      * @return the name of this bone.
@@ -295,7 +303,8 @@ public class Bone
     
     /**
      * Create a new Bone
-     *
+     * 
+     * @param sid
      * @param name
      *                The name of this bone
      * @param length
@@ -303,8 +312,9 @@ public class Bone
      * @param bindRotation
      *                The bind rotation of this bone
      */
-    public Bone( String name, float length, Quaternion4f bindRotation )
+    public Bone( String sid, String name, float length, Quaternion4f bindRotation )
     {
+        this.sid = sid;
         this.name = name;
         
         this.length = length;

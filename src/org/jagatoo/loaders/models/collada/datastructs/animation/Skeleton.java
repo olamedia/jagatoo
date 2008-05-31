@@ -30,6 +30,7 @@
 package org.jagatoo.loaders.models.collada.datastructs.animation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import org.openmali.vecmath2.Matrix3f;
@@ -44,11 +45,13 @@ import org.openmali.vecmath2.Point3f;
 public class Skeleton implements Iterable<Bone>
 {
     /** The root bone : there's only one (for simple implementation) */
-    public final Bone rootBone;
+    private final Bone rootBone;
+    
+    private final HashMap<String, Bone> boneMap = new HashMap<String, Bone>();
     
     // GC-friendly hacks
-    private final static Matrix3f tempMatrix = new Matrix3f();
-    private final static Point3f tempPoint = new Point3f();
+    private final Matrix3f tempMatrix = new Matrix3f();
+    private final Point3f tempPoint = new Point3f();
     
     /**
      * The position of our Skeleton. The root bone is transformed by this
@@ -71,6 +74,11 @@ public class Skeleton implements Iterable<Bone>
     public final Bone getRootBone()
     {
         return( rootBone );
+    }
+    
+    public final Bone getBoneBySourceId( String sourceId )
+    {
+        return( boneMap.get( sourceId ) );
     }
     
     /**
@@ -186,10 +194,18 @@ public class Skeleton implements Iterable<Bone>
      *                The root bone
      * @param relativeTranslation
      *                The position of the Skeleton
+     * @param boneList
      */
-    public Skeleton( Bone rootBone, Point3f relativeTranslation )
+    public Skeleton( Bone rootBone, Point3f relativeTranslation, ArrayList<Bone> boneList )
     {
         this.rootBone = rootBone;
+        
+        for ( int i = 0; i < boneList.size(); i++ )
+        {
+            final Bone bone = boneList.get( i );
+            
+            this.boneMap.put( bone.getSourceId(), bone );
+        }
         
         this.relativeTranslation = relativeTranslation;
         

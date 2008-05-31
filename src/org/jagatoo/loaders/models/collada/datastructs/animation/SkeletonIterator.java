@@ -89,7 +89,7 @@ public class SkeletonIterator implements Iterator<Bone>
      */
     public void reset()
     {
-        Bone bone = this.skeleton.rootBone;
+        Bone bone = this.skeleton.getRootBone();
         bones.clear();
         fillBoneList( bone, bones );
         currentIndex = -1;

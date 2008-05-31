@@ -48,6 +48,8 @@ import org.jagatoo.loaders.models.collada.datastructs.geometries.TrianglesGeomet
 import org.jagatoo.loaders.models.collada.jibx.XMLController;
 import org.jagatoo.loaders.models.collada.jibx.XMLSkin;
 import org.jagatoo.logging.JAGTLog;
+import org.openmali.vecmath2.Matrix3f;
+import org.openmali.vecmath2.Point3f;
 
 /**
  * A COLLADA Skeletal Controller. It computes mesh
@@ -166,14 +168,6 @@ public class SkeletalController extends Controller implements AnimatableModel
         playing = true;
     }
     
-    /**
-     * Normalize the influences weights
-     */
-    private void normalizeInfluences( Influence[] influences )
-    {
-        // TODO: not yet implemented!
-    }
-    
     @Override
     public Geometry updateDestinationGeometry( long currTime )
     {
@@ -281,27 +275,32 @@ public class SkeletalController extends Controller implements AnimatableModel
         
         destinationGeometry = sourceGeom.copy();
         
+        MeshSources targets = destinationGeometry.getMesh().getSources();
+        
         // This is a big test, still under construction.
         final int numVertices = sources.getVertices().length / 3;
+        
+        skin.buildInfluences( skeleton, numVertices );
+        
+        Point3f coord0 = Point3f.fromPool();
+        Point3f coordTrans = Point3f.fromPool();
+        Point3f coord1 = Point3f.fromPool();
+        
         for ( int vi = 0; vi < numVertices; vi++ )
         {
-            Influence[] influences = skin.buildInfluencesForVertex( vi );
+            Influence[] influences = skin.getInfluencesForVertex( vi );
         	
             // Check if there is any influence!
         	if ( influences.length <= 0 )
         	    //return( destinationGeometry );
         	    continue;
         	
-        	normalizeInfluences( influences );
-        	
-            //final int vi3 = i * 3;
+            final int vi3 = vi * 3;
             
-        	/*
-        	Point3f vertex = new Point3f(
-        	        sources.vertices[destinationGeometry.getGeometry().mesh.triangles.p[vi3 + 0]],
-        	        sources.vertices[destinationGeometry.getGeometry().mesh.triangles.p[vi3 + 1]],
-        	        sources.vertices[destinationGeometry.getGeometry().mesh.triangles.pv[i3 + 2]]);
-            */
+        	coord0.set( sources.getVertices()[vi3 + 0],
+        	            sources.getVertices()[vi3 + 1],
+        	            sources.getVertices()[vi3 + 2]
+        	          );
         	
         	/*
             JAGTLog.debug( "old by mesh: ", destinationGeometry.getMesh().getVertexIndices()[vi3] );
@@ -319,12 +318,29 @@ public class SkeletalController extends Controller implements AnimatableModel
         	
             //System.out.println( skeleton.getRootBone().getAbsoluteRotation() );
             
+        	coord1.setZero();
+        	
         	for ( int ii = 0; ii < influences.length; ii++ )
         	{
         	    final Influence influence = influences[ii];
         	    
+        	    coordTrans.set( coord0 );
+        	    Matrix3f mat = new Matrix3f();
+        	    mat.set( influence.getQuaternion() );
+        	    mat.transform( coordTrans );
+        	    coordTrans.mul( influence.getWeight() );
+        	    
+        	    coord1.add( coordTrans );
         	}
+        	
+            targets.getVertices()[vi3 + 0] = coord1.getX();
+            targets.getVertices()[vi3 + 1] = coord1.getY();
+            targets.getVertices()[vi3 + 2] = coord1.getZ();
         }
+        
+        Point3f.toPool( coord1 );
+        Point3f.toPool( coordTrans );
+        Point3f.toPool( coord0 );
         
         return( destinationGeometry );
     }

@@ -32,6 +32,8 @@ package org.jagatoo.loaders.models.collada.jibx;
 import java.util.ArrayList;
 
 import org.jagatoo.loaders.IncorrectFormatException;
+import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
+import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.Influence;
 
 /**
@@ -42,10 +44,15 @@ import org.jagatoo.loaders.models.collada.datastructs.controllers.Influence;
  */
 public class XMLSkin {
     
+    /**
+     * This source defines a joint/bone for each vertex and each joint
+     */
+    private static final String SKIN_JOINTS_SOURCE = "skin-joints";
+    
 	/**
 	 * This source defines a weight for each vertex and each joint
 	 */
-    private static final String SKING_WEIGHT_SOURCE = "skin-weights";
+    private static final String SKIN_WEIGHTS_SOURCE = "skin-weights";
 
 	public String source = null;
     
@@ -57,47 +64,94 @@ public class XMLSkin {
     public ArrayList<XMLInput> jointsInputs = null;
     public XMLVertexWeights vertexWeights = new XMLVertexWeights();
     
+    private Influence[][] influences = null;
+    
     /**
-     * Build an array of BoneWeight for easy skinning manipulation
+     * Search the "skin-joints" source.
+     * Maybe there is a better way get that
      */
-    public Influence[] buildInfluencesForVertex( int vertexIndex ) {
-    	// get the number of influences (bone-weight) for the vertex
-    	int numInfluences = vertexWeights.vcount.ints[ vertexIndex ];
-    	
-    	// get the "skin-weights", maybe it could be done only one time, when the sources array is filled.
-    	XMLSource weightSources = getWeightSources();
-    	
-    	//fill the array "skin-weights" source
-    	Influence[] influences = new Influence[ numInfluences ];
-    	// FIXME: I don`t know how to use well the offset attribute:
-    	/*
-    	 * Example:
-    	 * <input semantic="JOINT" source="#pCylinderShape1-skin-joints" offset="0"></input>
-    	 * <input semantic="WEIGHT" source="#pCylinderShape1-skin-weights" offset="1"></input>
-    	 */
-    	for (int i = 0; i < influences.length; i++) {
-            
-    	    influences[i] = new Influence(
-                vertexWeights.v.ints[ vertexIndex + i ], // bone-index
-                weightSources.floatArray.floats[ vertexIndex + i ] // weight
-                );
-		}
-    	
-    	return influences;
+    public XMLSource getJointsSource() {
+        for (XMLSource source : sources) {
+            if ( source.id.endsWith( SKIN_JOINTS_SOURCE ) ) {
+                return source;
+            }
+        }
+        throw new IncorrectFormatException( "Could not find source " + 
+                SKIN_JOINTS_SOURCE + " in library_controllers" );
     }
-
+    
     /**
      * Search the "skin-weights" source.
      * Maybe there is a better way get that
      */
-	private XMLSource getWeightSources() {
-		for (XMLSource source : sources) {
-			if ( source.id.contains( SKING_WEIGHT_SOURCE ) ) {
-				return source;
-			}
-		}
-		throw new IncorrectFormatException( "Could not find source " + 
-				SKING_WEIGHT_SOURCE + " in library_controllers" );
-	}
+    public XMLSource getWeightsSource() {
+        for (XMLSource source : sources) {
+            if ( source.id.endsWith( SKIN_WEIGHTS_SOURCE ) ) {
+                return source;
+            }
+        }
+        throw new IncorrectFormatException( "Could not find source " + 
+                SKIN_WEIGHTS_SOURCE + " in library_controllers" );
+    }
     
+    /**
+     * Normalize the influences weights
+     */
+    private void normalizeInfluences()
+    {
+        // TODO: not yet implemented!
+    }
+    
+    public void buildInfluences( Skeleton skeleton, int numVertices )
+    {
+        if ( influences != null )
+            return;
+        
+        influences = new Influence[ numVertices ][];
+        
+        XMLSource jointsSource = getJointsSource();
+        
+        // get the "skin-weights", maybe it could be done only one time, when the sources array is filled.
+        XMLSource weightsSource = getWeightsSource();
+        
+        int vIndex = 0;
+        for ( int i = 0; i < vertexWeights.vcount.ints.length; i++ )
+        {
+            final int numBones = vertexWeights.vcount.ints[i];
+            
+            influences[i] = new Influence[numBones];
+            
+            for ( int j = 0; j < numBones; j++ )
+            {
+                final int boneIndex = vertexWeights.v.ints[vIndex + j * 2 + 0];
+                final int weightIndex = vertexWeights.v.ints[vIndex + j * 2 + 1];
+                
+                final float weight = weightsSource.floatArray.floats[weightIndex];
+                
+                if ( boneIndex == -1 )
+                {
+                    //influences[i][j] = new Influence( skeleton.binShapeMatrix, weight );
+                }
+                else
+                {
+                    final String boneSourceId = jointsSource.idrefArray.idrefs[boneIndex];
+                    final Bone bone = skeleton.getBoneBySourceId( boneSourceId );
+                    
+                    influences[i][j] = new Influence( bone.getAbsoluteRotation(), weight );
+                }
+            }
+            
+            vIndex += numBones * 2;
+        }
+        
+        normalizeInfluences();
+    }
+    
+    /**
+     * Build an array of BoneWeight for easy skinning manipulation
+     */
+    public Influence[] getInfluencesForVertex( int vertexIndex )
+    {
+    	return( influences[vertexIndex] );
+    }
 }

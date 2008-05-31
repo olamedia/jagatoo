@@ -29,6 +29,8 @@
  */
 package org.jagatoo.loaders.models.collada;
 
+import java.util.ArrayList;
+
 import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.jibx.XMLNode;
@@ -61,8 +63,10 @@ public class SkeletonLoader
      * @param parentTip
      * @param bone
      */
-    private static void loadJoint( Matrix4f localToWorld, XMLNode node, Point3f parentRoot, Point3f parentTip, Bone bone )
+    private static void loadJoint( Matrix4f localToWorld, XMLNode node, Point3f parentRoot, Point3f parentTip, Bone bone, ArrayList<Bone> boneList )
     {
+        boneList.add( bone );
+        
         if ( node.childrenList == null )
         {
             JAGTLog.debug( "=====================================" );
@@ -171,9 +175,9 @@ public class SkeletonLoader
             
             for ( XMLNode child : node.childrenList )
             {
-                Bone newBone = new Bone( child.id, 0.2f, new Quaternion4f( 0f, 0f, 0f, 1f ) );
+                Bone newBone = new Bone( child.sid, child.name, 0.2f, new Quaternion4f( 0f, 0f, 0f, 1f ) );
                 bone.addChild( newBone );
-                loadJoint( localToWorld, child, parentTip, nodeTip, newBone );
+                loadJoint( localToWorld, child, parentTip, nodeTip, newBone, boneList );
             }
         }
     }
@@ -197,10 +201,12 @@ public class SkeletonLoader
         skeletonPos = new Point3f( localToWorld.m03(), localToWorld.m13(), localToWorld.m23() );
         
         // Create the root bone
-        Bone rootBone = new Bone( rootNode.id, 0f, new Quaternion4f( 0f, 0f, 0f, 1f ) );
+        Bone rootBone = new Bone( rootNode.sid, rootNode.name, 0f, new Quaternion4f( 0f, 0f, 0f, 1f ) );
         
-        loadJoint( localToWorld, rootNode, Point3f.ZERO, Point3f.ZERO, rootBone );
+        ArrayList<Bone> boneList = new ArrayList<Bone>();
         
-        return( new Skeleton( rootBone, skeletonPos ) );
+        loadJoint( localToWorld, rootNode, Point3f.ZERO, Point3f.ZERO, rootBone, boneList );
+        
+        return( new Skeleton( rootBone, skeletonPos, boneList ) );
     }
 }
