@@ -143,7 +143,7 @@ public abstract class PlaceableImpl implements Placeable {
     
     public float getPositionX() {return this.position.getX();}
     public float getPositionY() {return this.position.getY();}
-    public float getPositionZ() {return this.position.getY();}
+    public float getPositionZ() {return this.position.getZ();}
     
     public float getRotationX() {return getRotation().getX();}
     public float getRotationY() {return getRotation().getY();}
