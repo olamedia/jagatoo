@@ -46,9 +46,7 @@ public abstract class PlaceableImpl implements Placeable {
     
     protected Point3f position;
     protected Matrix3f rotation;
-    
-    // GC-friendliness
-    private static Tuple3f tmpTuple3f = new Point3f();
+    private Tuple3f rotEuler = null;
     
     /**
      * Creation a new PlaceableImpl with pos (0,0,0)
@@ -64,7 +62,7 @@ public abstract class PlaceableImpl implements Placeable {
     
     public Tuple3f getPosition() {
         
-        return this.position;
+        return this.position.getReadOnly();
         
     }
     
@@ -76,8 +74,12 @@ public abstract class PlaceableImpl implements Placeable {
     
     public Tuple3f getRotation() {
         
-        MatrixUtils.matrixToEuler(this.rotation, tmpTuple3f);
-        return tmpTuple3f;
+        if ( rotEuler == null )
+            rotEuler = new Tuple3f();
+        
+        MatrixUtils.matrixToEuler(this.rotation, rotEuler);
+        
+        return rotEuler.getReadOnly();
         
     }
     
@@ -89,7 +91,7 @@ public abstract class PlaceableImpl implements Placeable {
     
     public Matrix3f getRotationMatrix() {
         
-        return this.rotation;
+        return this.rotation.getReadOnly();
         
     }
     
