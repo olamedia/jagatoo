@@ -51,6 +51,7 @@ import org.jagatoo.loaders.models.collada.jibx.XMLLibraryVisualScenes;
 import org.jagatoo.loaders.models.collada.jibx.XMLNode;
 import org.jagatoo.loaders.models.collada.jibx.XMLVisualScene;
 import org.jagatoo.logging.JAGTLog;
+import org.openmali.vecmath2.Vector3f;
 
 /**
  * Class used to load LibraryVisualScenes.
@@ -67,7 +68,7 @@ public class LibraryVisualScenesLoader
      * @param libScenes
      *            The JAXB data to load from
      */
-    static void loadLibraryVisualScenes( AssetFolder colladaFile, XMLLibraryVisualScenes libScenes )
+    static void loadLibraryVisualScenes( AssetFolder colladaFile, XMLLibraryVisualScenes libScenes, Vector3f upVector )
     {
         LibraryVisualScenes colLibVisualScenes = colladaFile.getLibraryVisualsScenes();
         HashMap<String, Scene> scenes = colLibVisualScenes.getScenes();
@@ -128,7 +129,7 @@ public class LibraryVisualScenesLoader
                 {
                     JAGTLog.debug( "TT] Alright, it's a skeleton node" );
                     
-                    Skeleton skeleton = SkeletonLoader.loadSkeleton( node );
+                    Skeleton skeleton = SkeletonLoader.loadSkeleton( node, upVector );
                     colLibVisualScenes.getSkeletons().put( node.id, skeleton );
                     Collection<Controller> controllers = colladaFile.getLibraryControllers().getControllers().values();
                     for ( Controller controller : controllers )

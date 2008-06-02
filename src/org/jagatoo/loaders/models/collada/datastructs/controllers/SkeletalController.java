@@ -168,6 +168,21 @@ public class SkeletalController extends Controller implements AnimatableModel
         playing = true;
     }
     
+    private static final void readVertexCoord( final float[] vertexCoordData, int dataOffset, Point3f coord )
+    {
+        coord.set( vertexCoordData[dataOffset + 0],
+                   vertexCoordData[dataOffset + 1],
+                   vertexCoordData[dataOffset + 2]
+                 );
+    }
+    
+    private static final void writeVertexCoord( Point3f coord, final float[] vertexCoordData, int dataOffset )
+    {
+        vertexCoordData[dataOffset + 0] = coord.getX();
+        vertexCoordData[dataOffset + 1] = coord.getY();
+        vertexCoordData[dataOffset + 2] = coord.getZ();
+    }
+    
     @Override
     public Geometry updateDestinationGeometry( long currTime )
     {
@@ -297,26 +312,9 @@ public class SkeletalController extends Controller implements AnimatableModel
         	
             final int vi3 = vi * 3;
             
-        	coord0.set( sources.getVertices()[vi3 + 0],
-        	            sources.getVertices()[vi3 + 1],
-        	            sources.getVertices()[vi3 + 2]
-        	          );
+            readVertexCoord( sources.getVertices(), vi3, coord0 );
         	
-        	/*
-            JAGTLog.debug( "old by mesh: ", destinationGeometry.getMesh().getVertexIndices()[vi3] );
-            destinationGeometry.getMesh().getVertexIndices()[vi3] = destinationGeometry.getMesh().getVertexIndices()[vi3];
-            JAGTLog.debug( "new by mesh: ", destinationGeometry.getMesh().getVertexIndices()[vi3] );
-            
-            JAGTLog.debug( "old by mesh tris: ", destinationGeometry.getGeometry().mesh.triangles.pv[i3] );
-            destinationGeometry.getGeometry().mesh.triangles.p[vi3] = destinationGeometry.getGeometry().mesh.triangles.p[vi3] + 1;
-            JAGTLog.debug( "old by mesh tris: ", destinationGeometry.getGeometry().mesh.triangles.p[vi3] );
-            
-            JAGTLog.debug( "old by sources: ", sources.getVertices()[vi3] );
-            sources.getVertices()[vi3] = sources.getVertices()[vi3];
-            JAGTLog.debug( "new by sources: ", sources.getVertices()[vi3] );
-            */
-        	
-            //System.out.println( skeleton.getRootBone().getAbsoluteRotation() );
+            //skin.bindShapeMatrix.matrix4f.transform( coord0 );
             
         	coord1.setZero();
         	
@@ -325,17 +323,18 @@ public class SkeletalController extends Controller implements AnimatableModel
         	    final Influence influence = influences[ii];
         	    
         	    coordTrans.set( coord0 );
-        	    Matrix3f mat = new Matrix3f();
-        	    mat.set( influence.getQuaternion() );
-        	    mat.transform( coordTrans );
+        	    influence.getMatrix().transform( coordTrans );
+        	    /*
+        	    coordTrans.addX( influence.getMatrix().m03() );
+                coordTrans.addY( influence.getMatrix().m13() );
+                coordTrans.addZ( influence.getMatrix().m23() );
         	    coordTrans.mul( influence.getWeight() );
+        	    */
         	    
         	    coord1.add( coordTrans );
         	}
         	
-            targets.getVertices()[vi3 + 0] = coord1.getX();
-            targets.getVertices()[vi3 + 1] = coord1.getY();
-            targets.getVertices()[vi3 + 2] = coord1.getZ();
+            writeVertexCoord( coord1, targets.getVertices(), vi3 );
         }
         
         Point3f.toPool( coord1 );

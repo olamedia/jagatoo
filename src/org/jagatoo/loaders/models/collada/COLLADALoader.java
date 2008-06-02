@@ -179,7 +179,7 @@ public class COLLADALoader
                 {
                     JAGTLog.debug( "CC] Found LibraryVisualScenes ! Investigating... !" );
                     JAGTLog.increaseIndentation();
-                    LibraryVisualScenesLoader.loadLibraryVisualScenes( colladaFile, libraryVisualScenes );
+                    LibraryVisualScenesLoader.loadLibraryVisualScenes( colladaFile, libraryVisualScenes, collada.asset.getUpVector() );
                     JAGTLog.decreaseIndentation();
                 }
             }

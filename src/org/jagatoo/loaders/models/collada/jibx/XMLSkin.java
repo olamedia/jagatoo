@@ -35,6 +35,7 @@ import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.Influence;
+import org.openmali.vecmath2.Matrix4f;
 
 /**
  * A Skin. It defines how skeletal animation should be computed.
@@ -130,14 +131,20 @@ public class XMLSkin {
                 
                 if ( boneIndex == -1 )
                 {
-                    //influences[i][j] = new Influence( skeleton.binShapeMatrix, weight );
+                    influences[i][j] = new Influence( bindShapeMatrix.matrix4f, weight );
                 }
                 else
                 {
                     final String boneSourceId = jointsSource.idrefArray.idrefs[boneIndex];
                     final Bone bone = skeleton.getBoneBySourceId( boneSourceId );
                     
-                    influences[i][j] = new Influence( bone.getAbsoluteRotation(), weight );
+                    /*
+                    Matrix4f m = new Matrix4f( bone.invBindMatrix );
+                    m.mul( bone.getAbsoluteTransformation() );
+                    */
+                    Matrix4f m = new Matrix4f( bone.getAbsoluteTransformation() );
+                    
+                    influences[i][j] = new Influence( m, weight );
                 }
             }
             

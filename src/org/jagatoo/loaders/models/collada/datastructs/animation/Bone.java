@@ -35,6 +35,7 @@ import org.openmali.vecmath2.Matrix4f;
 import org.openmali.vecmath2.Quaternion4f;
 import org.openmali.vecmath2.Tuple3f;
 import org.openmali.vecmath2.Vector3f;
+import org.openmali.vecmath2.util.FloatUtils;
 
 /**
  * A Bone (of a Skeleton)
@@ -57,10 +58,10 @@ public class Bone
     private final Quaternion4f bindRotation;
     
     /** The bind matrix */
-    private final Matrix4f bindMatrix;
+    public final Matrix4f bindMatrix;
     
     /** The inverse bind matrix */
-    private final Matrix4f invBindMatrix;
+    public final Matrix4f invBindMatrix;
     
     /** The rotation of this bone */
     public final Quaternion4f relativeRotation;
@@ -97,6 +98,8 @@ public class Bone
      * The absolute scaling of this bone, along the three axis : X, Y, and Z.
      */
     Tuple3f absoluteScaling;
+    
+    Matrix4f absoluteTransformation;
     
     
     /**
@@ -198,6 +201,11 @@ public class Bone
         return( absoluteScaling );
     }
     
+    public final Matrix4f getAbsoluteTransformation()
+    {
+        return( absoluteTransformation );
+    }
+    
     /**
      * @return true if the bone has at least one key frame of any kind.
      */
@@ -220,7 +228,7 @@ public class Bone
     public void setNoRelativeMovement()
     {
         this.relativeRotation.set( 0f, 0f, 0f, 1f );
-        this.relativeScaling.set( 0f, 0f, 0f );
+        this.relativeScaling.set( 1f, 1f, 1f );
     }
     
     /**
@@ -312,19 +320,17 @@ public class Bone
      * @param bindRotation
      *                The bind rotation of this bone
      */
-    public Bone( String sid, String name, float length, Quaternion4f bindRotation )
+    public Bone( String sid, String name, Matrix4f matrix, Quaternion4f bindRotation )
     {
         this.sid = sid;
         this.name = name;
         
-        this.length = length;
-        this.bindRotation = bindRotation;
-        
-        this.bindMatrix = new Matrix4f();
-        this.bindMatrix.set( bindRotation );
-        this.bindMatrix.m23( length ); // Set the Z translational component of the matrix to length
+        this.bindMatrix = matrix;
         this.invBindMatrix = new Matrix4f();
         invBindMatrix.invert( bindMatrix );
+        
+        this.length = FloatUtils.vectorLength( matrix.m03(), matrix.m13(), matrix.m23() );
+        this.bindRotation = bindRotation;
         
         // Init relative rot/scaling
         this.relativeRotation = new Quaternion4f( 0f, 0f, 0f, 1f );
@@ -334,5 +340,7 @@ public class Bone
         this.absoluteRotation = new Quaternion4f( 0f, 0f, 0f, 1f );
         this.absoluteTranslation = new Vector3f( 0f, 0f, 0f );
         this.absoluteScaling = new Tuple3f( 1f, 1f, 1f );
+        
+        this.absoluteTransformation = new Matrix4f( bindMatrix );
     }
 }

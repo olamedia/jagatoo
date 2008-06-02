@@ -112,9 +112,13 @@ public class Skeleton implements Iterable<Bone>
             bone.absoluteRotation.mul( bone.relativeRotation );
             
             bone.absoluteTranslation.set( relativeTranslation );
-            bone.absoluteTranslation.addZ( bone.getLength() );
+            //bone.absoluteTranslation.addZ( bone.getLength() );
+            bone.absoluteTranslation.normalize();
+            bone.absoluteTranslation.mul( bone.getLength() );
             
             bone.absoluteScaling.set( bone.relativeScaling );
+            
+            bone.absoluteTransformation.setIdentity();
         }
         else
         {
@@ -138,6 +142,9 @@ public class Skeleton implements Iterable<Bone>
                                       bone.relativeScaling.getY(), bone.absoluteScaling.getZ() *
                                       bone.relativeScaling.getZ()
                                     );
+            
+            bone.absoluteTransformation.set( parentBone.absoluteTransformation );
+            bone.absoluteTransformation.mul( bone.bindMatrix );
         }
         
         // Both for root and children nodes

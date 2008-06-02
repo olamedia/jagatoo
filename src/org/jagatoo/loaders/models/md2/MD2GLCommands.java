@@ -85,29 +85,6 @@ public class MD2GLCommands
     /** The commands */
     private MD2GLCommand[] commands;
     
-    /** 
-     * Creates new MD2GlCommands 
-     *
-     * @param in The input stream to read this list 
-     * @param indicator The indicator
-     */
-    public MD2GLCommands( LittleEndianDataInputStream in, int indicator ) throws IOException
-    {
-        this.indicator = indicator;
-        if ( indicator < 0 )
-        {
-            type = FAN;
-        }
-        else
-        {
-            type = STRIP;
-        }
-        commands = new MD2GLCommand[ getCount() ];
-        
-        for ( int i = 0; i < getCount(); i++ ) 
-            commands[ i ] = new MD2GLCommand( in );
-    }
-    
     /**
      * Retrieves the type of this command.
      * 
@@ -129,11 +106,31 @@ public class MD2GLCommands
     /**
      * Retrieves the count of the commands in this set.
      */
-    public int getCount()
+    public final int getCount()
     {
-        if ( indicator < 0 )
-            return( -indicator );
-        
         return( indicator );
+    }
+    
+    /** 
+     * Creates new MD2GlCommands 
+     *
+     * @param in The input stream to read this list 
+     * @param indicator The indicator
+     */
+    public MD2GLCommands( LittleEndianDataInputStream in, int indicator ) throws IOException
+    {
+        this.indicator = Math.abs( indicator );
+        if ( indicator < 0 )
+        {
+            this.type = FAN;
+        }
+        else
+        {
+            this.type = STRIP;
+        }
+        this.commands = new MD2GLCommand[ getCount() ];
+        
+        for ( int i = 0; i < getCount(); i++ ) 
+            commands[ i ] = new MD2GLCommand( in );
     }
 }

@@ -31,6 +31,8 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.Date;
 
+import org.openmali.vecmath2.Vector3f;
+
 /**
  * Asset information about a COLLADA file, e.g.
  * the author, the contributor, the creation/modification
@@ -54,5 +56,22 @@ public class XMLAsset {
         Z_UP
     }
     public UpAxis upAxis = null;
+    
+    public final Vector3f getUpVector() {
+        if (upAxis == null) {
+            return Vector3f.POSITIVE_Y_AXIS; // COLLADA-default!
+        }
+        
+        switch (upAxis) {
+            case X_UP:
+                return Vector3f.POSITIVE_X_AXIS;
+            case Y_UP:
+                return Vector3f.POSITIVE_Y_AXIS;
+            case Z_UP:
+                return Vector3f.POSITIVE_Z_AXIS;
+        }
+        
+        return null;
+    }
     
 }

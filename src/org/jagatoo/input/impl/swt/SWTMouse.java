@@ -57,6 +57,7 @@ public class SWTMouse extends Mouse
 {
     private int calibrationStep = -1;
     
+    //private final org.eclipse.swt.opengl.GLCanvas control;
     private final org.eclipse.swt.widgets.Control control;
     private final java.awt.Point centerControl = new java.awt.Point( 0, 0 );
     private final java.awt.Point los = new java.awt.Point( 0, 0 );
@@ -342,6 +343,7 @@ public class SWTMouse extends Mouse
         try
         {
             this.control = (org.eclipse.swt.widgets.Control)sourceWindow.getDrawable();
+            //this.control = (org.eclipse.swt.opengl.GLCanvas)sourceWindow.getDrawable();
             
             //final org.eclipse.swt.widgets.Display display = control.getDisplay();
             
@@ -354,7 +356,7 @@ public class SWTMouse extends Mouse
                     final MouseButton button = convertButton( _e.button );
                     if ( button != null )
                     {
-                        MouseButtonPressedEvent e = prepareMouseButtonPressedEvent( button, ( (long)_e.time * 1000000L ) - lastGameTimeDelta );
+                        MouseButtonPressedEvent e = prepareMouseButtonPressedEvent( button, System.nanoTime() - lastGameTimeDelta );
                         
                         if ( e == null )
                             return;
@@ -368,7 +370,7 @@ public class SWTMouse extends Mouse
                     final MouseButton button = convertButton( _e.button );
                     if ( button != null )
                     {
-                        MouseButtonReleasedEvent e = prepareMouseButtonReleasedEvent( button, ( (long)_e.time * 1000000L ) - lastGameTimeDelta );
+                        MouseButtonReleasedEvent e = prepareMouseButtonReleasedEvent( button, System.nanoTime() - lastGameTimeDelta );
                         
                         if ( e == null )
                             return;
@@ -386,7 +388,7 @@ public class SWTMouse extends Mouse
                     final int mouseY = _e.y;
                     final int dX = ( mouseX - centerControl.x );
                     final int dY = -( mouseY - centerControl.y );
-                    final long when = ( (long)_e.time * 1000000L ) - lastGameTimeDelta;
+                    final long when = System.nanoTime() - lastGameTimeDelta;
                     
                     boolean doEvent = true;
                     if ( !isAbsolute() )

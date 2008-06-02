@@ -29,7 +29,7 @@
  */
 package org.jagatoo.loaders.models.collada.datastructs.controllers;
 
-import org.openmali.vecmath2.Quaternion4f;
+import org.openmali.vecmath2.Matrix4f;
 
 /**
  * Easy manipulation for weight value of one bone, for a vertex.
@@ -39,33 +39,33 @@ import org.openmali.vecmath2.Quaternion4f;
  */
 public class Influence
 {
-    //private final Matrix4f matrix;
-    private final Quaternion4f quat;
+    private final Matrix4f matrix;
+    //private final Quaternion4f quat;
     
     private final float weight;
     
-    /*
 	public final Matrix4f getMatrix()
 	{
 	    return( matrix );
 	}
-	*/
     
+    /*
     public final Quaternion4f getQuaternion()
     {
         return( quat );
     }
+    */
 	
 	public final float getWeight()
 	{
 	    return( weight );
 	}
 	
-    //public Influence( Matrix4f matrix, float weight )
-	public Influence( Quaternion4f quat, float weight )
+    public Influence( Matrix4f matrix, float weight )
+	//public Influence( Quaternion4f quat, float weight )
 	{
-	    //this.matrix = matrix;
-        this.quat = quat;
+	    this.matrix = matrix;
+        //this.quat = quat;
 	    this.weight = weight;
 	}
 }

@@ -57,6 +57,9 @@ public class SWTKeyboard extends Keyboard
 {
     private long lastGameTimeDelta = System.nanoTime();
     
+    private final long[] lastPressedTimes;
+    private final long[] lastReleasedTimes;
+    
     /**
      * <p>
      * An hash map of net.jtank.input.KeyCode keys with their SWT equivalents as
@@ -164,21 +167,14 @@ public class SWTKeyboard extends Keyboard
      */
     public static org.jagatoo.input.devices.components.Key convertKey( org.eclipse.swt.events.KeyEvent ev )
     {
-        try
+        org.jagatoo.input.devices.components.Key result = KEYCODE_CONVERSION.get( ev.keyCode );
+        
+        if ( result == null )
         {
-            return( KEYCODE_CONVERSION.get( ev.keyCode ) );
+            result = CHAR_CONVERSION.get( Character.toLowerCase( ev.character ) );
         }
-        catch ( NullPointerException e )
-        {
-            try
-            {
-                return( CHAR_CONVERSION.get( Character.toLowerCase( ev.character ) ) );
-            }
-            catch ( NullPointerException e2 )
-            {
-                return( null );
-            }
-        }
+        
+        return( result );
     }
     
     /**
@@ -283,21 +279,31 @@ public class SWTKeyboard extends Keyboard
     {
         super( factory, sourceWindow, eventQueue, "Primary Keyboard" );
         
+        this.lastPressedTimes = new long[ Keys.getNumKeys() ];
+        java.util.Arrays.fill( lastPressedTimes, -1L );
+        this.lastReleasedTimes = new long[ Keys.getNumKeys() ];
+        System.arraycopy( lastPressedTimes, 0, lastReleasedTimes, 0, lastPressedTimes.length );
+        
         try
         {
             final org.eclipse.swt.widgets.Control control = (org.eclipse.swt.widgets.Control)sourceWindow.getDrawable();
+            //final org.eclipse.swt.opengl.GLCanvas control = (org.eclipse.swt.opengl.GLCanvas)sourceWindow.getDrawable();
             control.addKeyListener( new org.eclipse.swt.events.KeyListener()
             {
                 public void keyPressed( org.eclipse.swt.events.KeyEvent _e )
                 {
                     final org.jagatoo.input.devices.components.Key key = convertKey( _e );
-                    final long when = ( (long)_e.time * 1000000L ) - lastGameTimeDelta;
+                    final int keyIndex = key.getKeyCode() - 1;
+                    final long when = System.nanoTime() - lastGameTimeDelta;
                     
                     if ( key != null )
                     {
                         final int modifierMask = applyModifier( key, true );
                         
-                        KeyPressedEvent e = prepareKeyPressedEvent( key, modifierMask, when, 0L );
+                        long lastWhen = lastPressedTimes[ keyIndex ];
+                        lastPressedTimes[ keyIndex ] = when;
+                        
+                        KeyPressedEvent e = prepareKeyPressedEvent( key, modifierMask, when, lastWhen );
                         
                         if ( e != null )
                         {
@@ -307,7 +313,7 @@ public class SWTKeyboard extends Keyboard
                         
                         if ( _e.character != '\0' )
                         {
-                            KeyTypedEvent kte = prepareKeyTypedEvent( _e.character, modifierMask, when, 0L );
+                            KeyTypedEvent kte = prepareKeyTypedEvent( _e.character, modifierMask, when, lastWhen );
                             
                             if ( e != null )
                             {
@@ -320,13 +326,17 @@ public class SWTKeyboard extends Keyboard
                 public void keyReleased( org.eclipse.swt.events.KeyEvent _e )
                 {
                     final org.jagatoo.input.devices.components.Key key = convertKey( _e );
-                    final long when = ( (long)_e.time * 1000000L ) - lastGameTimeDelta;
+                    final int keyIndex = key.getKeyCode() - 1;
+                    final long when = System.nanoTime() - lastGameTimeDelta;
                     
                     if ( key != null )
                     {
                         final int modifierMask = applyModifier( key, true );
                         
-                        KeyReleasedEvent e = prepareKeyReleasedEvent( key, modifierMask, when, 0L );
+                        long lastWhen = lastReleasedTimes[ keyIndex ];
+                        lastReleasedTimes[ keyIndex ] = when;
+                        
+                        KeyReleasedEvent e = prepareKeyReleasedEvent( key, modifierMask, when, lastWhen );
                         
                         if ( e != null )
                         {

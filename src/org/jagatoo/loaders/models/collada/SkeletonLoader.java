@@ -49,13 +49,7 @@ import org.openmali.vecmath2.Vector3f;
 public class SkeletonLoader
 {
     /**
-     * The up point (0, 0, 1).
-     * Note : depends on the COLLADA assets : this should be taken into account!
-     */
-    private final static Vector3f UP = Vector3f.newReadOnly( 0f, 0f, 1f );
-    
-    /**
-     * Loads a Joint, and its children of course.
+     * Loads a Joint/Bone, and its children.
      * 
      * @param localToWorld
      * @param node
@@ -63,7 +57,7 @@ public class SkeletonLoader
      * @param parentTip
      * @param bone
      */
-    private static void loadJoint( Matrix4f localToWorld, XMLNode node, Point3f parentRoot, Point3f parentTip, Bone bone, ArrayList<Bone> boneList )
+    private static void loadJoint( Matrix4f localToWorld, XMLNode node, Vector3f upVector, Point3f parentRoot, Point3f parentTip, Bone bone, ArrayList<Bone> boneList )
     {
         boneList.add( bone );
         
@@ -139,7 +133,7 @@ public class SkeletonLoader
             {
                 // Singularity : Angle = 0. The axis found is (NaN, NaN, NaN)
                 // In this case we reset it to UP.
-                axis.set( UP );
+                axis.set( upVector );
             }
             
             if ( axis.lengthSquared() == 0f )
@@ -175,9 +169,9 @@ public class SkeletonLoader
             
             for ( XMLNode child : node.childrenList )
             {
-                Bone newBone = new Bone( child.sid, child.name, 0.2f, new Quaternion4f( 0f, 0f, 0f, 1f ) );
+                Bone newBone = new Bone( child.sid, child.name, child.matrix.matrix4f, new Quaternion4f( 0f, 0f, 0f, 1f ) );
                 bone.addChild( newBone );
-                loadJoint( localToWorld, child, parentTip, nodeTip, newBone, boneList );
+                loadJoint( localToWorld, child, upVector, parentTip, nodeTip, newBone, boneList );
             }
         }
     }
@@ -189,7 +183,7 @@ public class SkeletonLoader
      * 
      * @return the skeleton
      */
-    public static Skeleton loadSkeleton( XMLNode rootNode )
+    public static Skeleton loadSkeleton( XMLNode rootNode, Vector3f upVector )
     {
         Point3f skeletonPos;
         Matrix4f localToWorld;
@@ -201,11 +195,11 @@ public class SkeletonLoader
         skeletonPos = new Point3f( localToWorld.m03(), localToWorld.m13(), localToWorld.m23() );
         
         // Create the root bone
-        Bone rootBone = new Bone( rootNode.sid, rootNode.name, 0f, new Quaternion4f( 0f, 0f, 0f, 1f ) );
+        Bone rootBone = new Bone( rootNode.sid, rootNode.name, localToWorld, new Quaternion4f( 0f, 0f, 0f, 1f ) );
         
         ArrayList<Bone> boneList = new ArrayList<Bone>();
         
-        loadJoint( localToWorld, rootNode, Point3f.ZERO, Point3f.ZERO, rootBone, boneList );
+        loadJoint( localToWorld, rootNode, upVector, Point3f.ZERO, Point3f.ZERO, rootBone, boneList );
         
         return( new Skeleton( rootBone, skeletonPos, boneList ) );
     }
