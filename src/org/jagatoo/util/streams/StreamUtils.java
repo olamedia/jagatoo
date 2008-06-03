@@ -29,6 +29,7 @@
  */
 package org.jagatoo.util.streams;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -39,6 +40,222 @@ import java.io.InputStream;
  */
 public class StreamUtils
 {
+    /**
+     * Reads one byte from the InputStream.
+     * 
+     * @param in
+     * 
+     * @return the read byte.
+     * 
+     * @throws IOException
+     */
+    public static final byte readByte( InputStream in ) throws IOException
+    {
+        return( (byte)in.read() );
+    }
+    
+    /**
+     * Reads one byte from the InputStream.
+     * 
+     * @param in
+     * 
+     * @return the read byte.
+     * 
+     * @throws IOException
+     */
+    public static final byte readByte( BufferedInputStream in ) throws IOException
+    {
+        return( (byte)in.read() );
+    }
+    
+    /**
+     * Reads one unsigned byte from the InputStream stored in a short-value
+     * to preserve the sign.
+     * 
+     * @param in
+     * 
+     * @return the read unsigned byte as a short.
+     * 
+     * @throws IOException
+     */
+    public static final short readUnsignedByte( InputStream in ) throws IOException
+    {
+        int b = in.read();
+        
+        return( (short)( b & 0xFF ) );
+    }
+    
+    /**
+     * Reads one unsigned byte from the InputStream stored in a short-value
+     * to preserve the sign.
+     * 
+     * @param in
+     * 
+     * @return the read unsigned byte as a short.
+     * 
+     * @throws IOException
+     */
+    public static final short readUnsignedByte( BufferedInputStream in ) throws IOException
+    {
+        int b = in.read();
+        
+        return( (short)( b & 0xFF ) );
+    }
+    
+    /**
+     * Reads two bytes from the InputStream stored in a short-value.
+     * 
+     * @param in
+     * 
+     * @return the read short.
+     * 
+     * @throws IOException
+     */
+    public static final short readShort( InputStream in ) throws IOException
+    {
+        int s1 = ( in.read() & 0xFF ) << 8;
+        int s2 = ( in.read() & 0xFF );
+        
+        return( (short)( s1 | s2 ) );
+    }
+    
+    /**
+     * Reads two bytes from the InputStream stored in a short-value.
+     * 
+     * @param in
+     * 
+     * @return the read short.
+     * 
+     * @throws IOException
+     */
+    public static final short readShort( BufferedInputStream in ) throws IOException
+    {
+        int s1 = ( in.read() & 0xFF ) << 8;
+        int s2 = ( in.read() & 0xFF );
+        
+        return( (short)( s1 | s2 ) );
+    }
+    
+    /**
+     * Reads two bytes from the InputStream, convertes them to a short
+     * and stores them to an int to preserve the sign.
+     * 
+     * @param in
+     * 
+     * @return the read unsigned short (as an int).
+     * 
+     * @throws IOException
+     */
+    public static final int readUnsignedShort( InputStream in ) throws IOException
+    {
+        int high = (int)in.read();
+        int low = (int)in.read();
+        
+        return( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
+    }
+    
+    /**
+     * Reads two bytes from the InputStream, convertes them to a short
+     * and stores them to an int to preserve the sign.
+     * 
+     * @param in
+     * 
+     * @return the read unsigned short (as an int).
+     * 
+     * @throws IOException
+     */
+    public static final int readUnsignedShort( BufferedInputStream in ) throws IOException
+    {
+        int high = (int)in.read();
+        int low = (int)in.read();
+        
+        return( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
+    }
+    
+    /**
+     * Reads one (signed) int from the stream.
+     * 
+     * @param in
+     * 
+     * @return the read int.
+     * 
+     * @throws IOException
+     */
+    public static final int readInt( InputStream in ) throws IOException
+    {
+        int i4 = ( in.read() & 0xFF ) << 24;
+        int i3 = ( in.read() & 0xFF ) << 16;
+        int i2 = ( in.read() & 0xFF ) << 8;
+        int i1 = ( in.read() & 0xFF );
+        
+        return( i4 | i3 | i2 | i1 );
+    }
+    
+    /**
+     * Reads one (signed) int from the stream.
+     * 
+     * @param in
+     * 
+     * @return the read int.
+     * 
+     * @throws IOException
+     */
+    public static final int readInt( BufferedInputStream in ) throws IOException
+    {
+        int i4 = ( in.read() & 0xFF ) << 24;
+        int i3 = ( in.read() & 0xFF ) << 16;
+        int i2 = ( in.read() & 0xFF ) << 8;
+        int i1 = ( in.read() & 0xFF );
+        
+        return( i4 | i3 | i2 | i1 );
+    }
+    
+    /**
+     * Reads bytesToRead bytes from the stream.
+     * 
+     * @param in
+     * @param bytesToRead
+     * @param buffer
+     * @param bufferOffset
+     * 
+     * @throws IOException
+     */
+    public static final void readBytes( InputStream in, int bytesToRead, byte[] buffer, int bufferOffset ) throws IOException
+    {
+        int bytesRead = 0;
+        int read;
+        do
+        {
+            read = in.read( buffer, bufferOffset + bytesRead, bytesToRead );
+            bytesRead += read;
+            bytesToRead -= read;
+        }
+        while ( ( bytesToRead > 0 ) && ( read > 0 ) );
+    }
+    
+    /**
+     * Reads bytesToRead bytes from the stream.
+     * 
+     * @param in
+     * @param bytesToRead
+     * @param buffer
+     * @param bufferOffset
+     * 
+     * @throws IOException
+     */
+    public static final void readBytes( BufferedInputStream in, int bytesToRead, byte[] buffer, int bufferOffset ) throws IOException
+    {
+        int bytesRead = 0;
+        int read;
+        do
+        {
+            read = in.read( buffer, bufferOffset + bytesRead, bytesToRead );
+            bytesRead += read;
+            bytesToRead -= read;
+        }
+        while ( ( bytesToRead > 0 ) && ( read > 0 ) );
+    }
+    
     /**
      * Builds a byte-array from the given InputStream.<br>
      * The byte-array is created with a size of <code>initialSize</code> and is
@@ -51,15 +268,15 @@ public class StreamUtils
      * 
      * @throws IOException
      */
-    public static final byte[] buildByteArray(InputStream in, int initialSize) throws IOException
+    public static final byte[] buildByteArray( InputStream in, int initialSize ) throws IOException
     {
         byte[] buffer = new byte[ initialSize ];
         
         int i = 0;
         int b;
-        while ((b = in.read()) != -1)
+        while ( ( b = in.read() ) != -1 )
         {
-            if (i >= buffer.length)
+            if ( i >= buffer.length )
             {
                 byte[] newBuffer = new byte[ (buffer.length * 3) / 2 + 1 ];
                 System.arraycopy( buffer, 0, newBuffer, 0, i );

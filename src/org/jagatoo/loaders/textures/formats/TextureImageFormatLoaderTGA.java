@@ -288,8 +288,10 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         
         AbstractTextureImage image = texFactory.createTextureImage( width, height, orgWidth, orgHeight, ( acceptAlpha ? bytesPerPixel : 3 ) );
         ByteBuffer bb = image.getDataBuffer();
-        bb.position( 0 );
+        //bb.position( 0 );
         bb.limit( bb.capacity() );
+        
+        final int byteOffset0 = bb.position();
         
         final int dstBytesPerPixel = image.getFormat().getPixelSize();
         
@@ -386,7 +388,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         }
         
         bb.position( 0 );
-        bb.limit( width * height * dstBytesPerPixel );
+        bb.limit( byteOffset0 + ( width * height * dstBytesPerPixel ) );
         
         return( image );
     }

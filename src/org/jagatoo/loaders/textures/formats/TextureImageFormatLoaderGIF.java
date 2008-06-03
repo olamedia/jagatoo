@@ -582,7 +582,7 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
         }
         
         bb.position( 0 );
-        bb.limit( byteOffset0 + orgWidth * orgHeight * dstBytesPerPixel );
+        bb.limit( byteOffset0 + width * height * dstBytesPerPixel );
         
         return( image );
     }

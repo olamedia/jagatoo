@@ -284,6 +284,8 @@ public class TextureImageFormatLoaderBMP implements TextureImageFormatLoader
             //bb.position( 0 );
             bb.limit( bb.capacity() );
             
+            final int byteOffset0 = bb.position();
+            
             final int dstBytesPerPixel = image.getFormat().getPixelSize();
             
             byte[] imageData = null;
@@ -362,7 +364,7 @@ public class TextureImageFormatLoaderBMP implements TextureImageFormatLoader
             }
             
             bb.position( 0 );
-            bb.limit( width * height * dstBytesPerPixel );
+            bb.limit( byteOffset0 + ( width * height * dstBytesPerPixel ) );
             
             return ( image );
         }

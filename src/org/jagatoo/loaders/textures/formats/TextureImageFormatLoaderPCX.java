@@ -316,7 +316,7 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
         */
         
         bb.position( 0 );
-        bb.limit( width * height * dstBytesPerPixel );
+        bb.limit( byteOffset0 + ( width * height * dstBytesPerPixel ) );
         
         return( image );
     }
