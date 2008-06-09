@@ -72,102 +72,102 @@ import java.io.IOException;
 public abstract class BSPDirectory
 {
     /**
-     * 
+     * Stores player/object positions, etc...
      */
-    public static final int kEntities      = 0;         // Stores player/object positions, etc...
+    public static final int kEntities      = 0;
     
     /**
-     * 
+     * Stores texture information
      */
-    public static final int kTextures      = 1;         // Stores texture information
+    public static final int kTextures      = 1;
     
     /**
-     * 
+     * Stores the splitting planes
      */
-    public static final int kPlanes        = 2;           // Stores the splitting planes
+    public static final int kPlanes        = 2;
     
     /**
-     * 
+     * Stores the BSP nodes
      */
-    public static final int kNodes         = 3;            // Stores the BSP nodes
+    public static final int kNodes         = 3;
     
     /**
-     * 
+     * Stores the leafs of the nodes
      */
-    public static final int kLeafs         = 4;            // Stores the leafs of the nodes
+    public static final int kLeafs         = 4;
     
     /**
-     * 
+     * Stores the leaf's indices into the faces
      */
-    public static final int kLeafFaces     = 5;        // Stores the leaf's indices into the faces
+    public static final int kLeafFaces     = 5;
     
     /**
-     * 
+     * Stores the leaf's indices into the brushes
      */
-    public static final int kLeafBrushes   = 6;      // Stores the leaf's indices into the brushes
+    public static final int kLeafBrushes   = 6;
     
     /**
-     * 
+     * Stores the info of world models
      */
-    public static final int kModels        = 7;           // Stores the info of world models
+    public static final int kModels        = 7;
     
     /**
-     * 
+     * Stores the brushes info (for collision)
      */
-    public static final int kBrushes       = 8;          // Stores the brushes info (for collision)
+    public static final int kBrushes       = 8;
     
     /**
-     * 
+     * Stores the brush surfaces info
      */
-    public static final int kBrushSides    = 9;       // Stores the brush surfaces info
+    public static final int kBrushSides    = 9;
     
     /**
-     * 
+     * Stores the level vertices
      */
-    public static final int kVertices      = 10;        // Stores the level vertices
+    public static final int kVertices      = 10;
     
     /**
-     * 
+     * Stores the model vertices offsets
      */
-    public static final int kMeshVerts     = 11;       // Stores the model vertices offsets
+    public static final int kMeshVerts     = 11;
     
     /**
-     * 
+     * Stores the shader files (blending, anims..)
      */
-    public static final int kShaders       = 12;         // Stores the shader files (blending, anims..)
+    public static final int kShaders       = 12;
     
     /**
-     * 
+     * Stores the faces for the level
      */
-    public static final int kFaces         = 13;           // Stores the faces for the level
+    public static final int kFaces         = 13;
     
     /**
-     * 
+     * Stores the lightmaps for the level
      */
-    public static final int kLightmaps     = 14;       // Stores the lightmaps for the level
+    public static final int kLightmaps     = 14;
     
     /**
-     * 
+     * Stores extra world lighting information
      */
-    public static final int kLightVolumes  = 15;    // Stores extra world lighting information
+    public static final int kLightVolumes  = 15;
     
     /**
-     * 
+     * Stores PVS and cluster info (visibility)
      */
-    public static final int kVisData       = 16;         // Stores PVS and cluster info (visibility)
+    public static final int kVisData       = 16;
     
     /**
-     * 
+     * A constant to store the number of lumps
      */
-    public static final int kMaxLumps      = 17;        // A constant to store the number of lumps
+    public static final int kMaxLumps      = 17;
     
     /**
-     * 
+     * An array of all lumps in this directory.
      */
     public BSPLump[] lumps;
     
     /**
-     * 
+     * Reads all related data from the input.
      */
     protected abstract void readDirectory() throws IOException;
 }

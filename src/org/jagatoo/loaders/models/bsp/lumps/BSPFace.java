@@ -69,20 +69,80 @@ package org.jagatoo.loaders.models.bsp.lumps;
  */
 public class BSPFace
 {
-    public int textureID;          // The index into the texture array
-    public int effect;             // The index for the effects (or -1 = n/a)
-    public int type;               // 1=polygon, 2=patch, 3=mesh, 4=billboard
-    public int vertexIndex;        // The index into this face's first vertex
-    public int numOfVerts;         // The number of vertices for this face
-    public int meshVertIndex;      // The index into the first meshvertex
-    public int numMeshVerts;       // The number of mesh vertices
-    public int lightmapID;         // The texture index for the lightmap
-    public int lMapCorner[];       // The face's lightmap corner in the image
-    public int lMapSize[];         // The size of the lightmap section
-    public float lMapPos[];        // The 3D origin of lightmap.
-    public float lMapBitsets[][];  // The 3D space for s and t unit vectors.
-    public float vNormal[];        // The face normal.
-    public int size[];             // The bezier patch dimensions.
+    /**
+     * The index into the texture array
+     */
+    public int textureID;
+    
+    /**
+     * The index for the effects (or -1 = n/a)
+     */
+    public int effect;
+    
+    /**
+     * <ul>
+     *     <li>1 = polygon</li>
+     *     <li>2 = patch</li>
+     *     <li>3 = mesh</li>
+     *     <li>4 = billboard</li>
+     * </ul>
+     */
+    public int type;
+    
+    /**
+     * The index into this face's first vertex
+     */
+    public int vertexIndex;
+    
+    /**
+     * The number of vertices for this face
+     */
+    public int numOfVerts;
+    
+    /**
+     * The index into the first meshvertex
+     */
+    public int meshVertIndex;
+    
+    /**
+     * The number of mesh vertices
+     */
+    public int numMeshVerts;
+    
+    /**
+     * The texture index for the lightmap
+     */
+    public int lightmapID;
+    
+    /**
+     * The face's lightmap corner in the image
+     */
+    public int[] lMapCorner;
+    
+    /**
+     * The size of the lightmap section
+     */
+    public int[] lMapSize;
+    
+    /**
+     * The 3D origin of lightmap.
+     */
+    public float[] lMapPos;
+    
+    /**
+     * The 3D space for s and t unit vectors.
+     */
+    public float[][] lMapBitsets;
+    
+    /**
+     * The face normal.
+     */
+    public float[] vNormal;
+    
+    /**
+     * The bezier patch dimensions.
+     */
+    public int[] size;
     
     public BSPFace()
     {

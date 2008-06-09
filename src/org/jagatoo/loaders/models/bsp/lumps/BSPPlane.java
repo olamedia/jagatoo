@@ -71,6 +71,6 @@ import org.openmali.vecmath2.Vector3f;
  */
 public class BSPPlane
 {
-    public Vector3f normal = new Vector3f();
+    public final Vector3f normal = new Vector3f();
     public float d;
 }

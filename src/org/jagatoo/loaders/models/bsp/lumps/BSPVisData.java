@@ -75,7 +75,18 @@ package org.jagatoo.loaders.models.bsp.lumps;
  */
 public class BSPVisData
 {
-    public int     numOfClusters;    // The number of clusters
-    public int     bytesPerCluster;  // Bytes (8 bits) in the cluster's bitset
-    public byte[]  pBitsets;         // Array of bytes holding the cluster vis.
+    /**
+     * The number of clusters
+     */
+    public int     numOfClusters;
+    
+    /**
+     * Bytes (8 bits) in the cluster's bitset
+     */
+    public int     bytesPerCluster;
+    
+    /**
+     * Array of bytes holding the cluster vis.
+     */
+    public byte[]  pBitsets;
 }
