@@ -55,13 +55,23 @@ public abstract class NoParamCommandBase extends CommandBase implements NoParamC
         return( execute( inputInfo ) );
     }
     
-    public NoParamCommandBase( final String key )
+    protected NoParamCommandBase( final String key, final String text, int numParams )
     {
-        super( key, 0 );
+        super( key, text, numParams );
     }
     
     protected NoParamCommandBase( final String key, int numParams )
     {
-        super( key, numParams );
+        this( key, null, numParams );
+    }
+    
+    public NoParamCommandBase( final String key, final String text )
+    {
+        this( key, text, 0 );
+    }
+    
+    public NoParamCommandBase( final String key )
+    {
+        this( key, 0 );
     }
 }

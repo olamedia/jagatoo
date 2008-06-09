@@ -44,6 +44,11 @@ public interface Command
     public String getKey();
     
     /**
+     * @return a descriptive text for this {@link Command}.
+     */
+    public String getText();
+    
+    /**
      * @return the number of expected parameters.
      */
     public int getNumParameters();

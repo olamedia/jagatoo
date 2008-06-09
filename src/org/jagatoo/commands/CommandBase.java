@@ -42,6 +42,7 @@ import org.jagatoo.util.strings.StringUtils;
 public abstract class CommandBase implements Command
 {
     private final String key;
+    private final String text;
     protected final Object[] paramsArray;
     
     /**
@@ -50,6 +51,14 @@ public abstract class CommandBase implements Command
     public final String getKey()
     {
         return( key );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public final String getText()
+    {
+        return( text );
     }
     
     /**
@@ -141,9 +150,15 @@ public abstract class CommandBase implements Command
         return( getKey().equals( ((Command)o).getKey() ) );
     }
     
-    public CommandBase( final String key, final int numParams )
+    public CommandBase( final String key, final String text, final int numParams )
     {
         this.key = key;
+        this.text = text;
         this.paramsArray = new Object[ numParams ];
+    }
+    
+    public CommandBase( final String key, final int numParams )
+    {
+        this( key, null, numParams );
     }
 }

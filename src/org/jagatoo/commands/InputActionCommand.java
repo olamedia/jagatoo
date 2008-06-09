@@ -45,22 +45,12 @@ public abstract class InputActionCommand extends NoParamCommandBase implements L
     
     private final int ordinal;
     
-    private final String text;
-    
     /**
      * {@inheritDoc}
      */
     public final int ordinal()
     {
         return( ordinal );
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public String getText()
-    {
-        return( text );
     }
     
     /**
@@ -88,7 +78,7 @@ public abstract class InputActionCommand extends NoParamCommandBase implements L
      */
     protected InputActionCommand( final String commandKey, int ordinal, String text, int numParams )
     {
-        super( commandKey, numParams );
+        super( commandKey, text, numParams );
         
         if ( ordinal < 0 )
         {
@@ -99,8 +89,6 @@ public abstract class InputActionCommand extends NoParamCommandBase implements L
             this.ordinal = ordinal;
             nextOrdinal = ordinal + 1;
         }
-        
-        this.text = text;
     }
     
     /**
