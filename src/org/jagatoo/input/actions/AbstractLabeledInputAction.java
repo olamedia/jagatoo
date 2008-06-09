@@ -47,6 +47,14 @@ public abstract class AbstractLabeledInputAction extends AbstractInputAction imp
         return( text );
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    public String getLocalizedText()
+    {
+        return( getText() );
+    }
+    
     public AbstractLabeledInputAction( int ordinal, String text )
     {
         super( ordinal );

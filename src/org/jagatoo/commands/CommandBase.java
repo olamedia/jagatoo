@@ -64,6 +64,14 @@ public abstract class CommandBase implements Command
     /**
      * {@inheritDoc}
      */
+    public String getLocalizedText()
+    {
+        return( getText() );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public final int getNumParameters()
     {
         return( paramsArray.length );

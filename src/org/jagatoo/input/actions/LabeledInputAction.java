@@ -41,4 +41,10 @@ public interface LabeledInputAction extends InputAction
      * @return a description-text for this InputAction.
      */
     public String getText();
+    
+    /**
+     * @return a <b>localozed</b> descriptive text for this {@link InputAction}.
+     * You should prefer this method over {@link #getText()}.
+     */
+    public String getLocalizedText();
 }

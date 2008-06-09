@@ -47,6 +47,14 @@ public abstract class AbstractLabeledInvokableInputAction extends AbstractInvoka
         return( text );
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    public String getLocalizedText()
+    {
+        return( getText() );
+    }
+    
     public AbstractLabeledInvokableInputAction( int ordinal, String text )
     {
         super( ordinal );

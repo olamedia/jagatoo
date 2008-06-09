@@ -45,8 +45,16 @@ public interface Command
     
     /**
      * @return a descriptive text for this {@link Command}.
+     * 
+     * @see #getLocalizedText()
      */
     public String getText();
+    
+    /**
+     * @return a <b>localozed</b> descriptive text for this {@link Command}.
+     * You should prefer this method over {@link #getText()}.
+     */
+    public String getLocalizedText();
     
     /**
      * @return the number of expected parameters.
