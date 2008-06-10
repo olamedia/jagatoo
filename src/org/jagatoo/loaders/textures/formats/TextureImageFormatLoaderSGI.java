@@ -126,88 +126,111 @@ public class TextureImageFormatLoaderSGI implements TextureImageFormatLoader
         
         if ( isCompressed )
         {
-            final int numScanLines = orgHeight * bytesPerPixel;
+            final int numScanLines = orgHeight * bytesPerPixel; // table length is the number of scan lines
+            final int[] scanlineOffsets = new int[ numScanLines ];
+            final int[] scanlineLengths = new int[ numScanLines ];
             
-            int[] scanlineOffsets = new int[ numScanLines ];
-            int[] scanlineLengths = new int[ numScanLines ];
-            
+            // Read in RLE tables:
             for ( int i = 0; i < numScanLines; i++ )
             {
-                scanlineOffsets[i] = StreamUtils.readInt( in ) - HEADER_SIZE;
-                //System.out.println( scanlineOffsets[i] );
+                scanlineOffsets[i] = StreamUtils.readInt( in ) - HEADER_SIZE - ( 8 * numScanLines );
             }
             
             for ( int i = 0; i < numScanLines; i++ )
             {
                 scanlineLengths[i] = StreamUtils.readInt( in );
-                //System.out.println( scanlineLengths[i] );
             }
             
-            if ( header.bpc == 1 )
+            // Read in the image data:
+            if ( header.bpc == 1 ) // Image data written as chars (bytes).
             {
-                int srcImageDataLength = 0;
-                for ( int i = 0; i < numScanLines; i++ )
+                // Find the size of the RLE data:
+                int compressedImageSize = scanlineOffsets[0] + scanlineLengths[0];
+                for ( int nIndex = 1; nIndex < numScanLines; nIndex++ )
                 {
-                    int test = scanlineOffsets[i] + scanlineLengths[i];
-                    if ( test > srcImageDataLength )
-                    {
-                        srcImageDataLength = test;
-                    }
+                    int reqBytes = scanlineOffsets[nIndex] + scanlineLengths[nIndex];
+                    if ( reqBytes > compressedImageSize )
+                        compressedImageSize = reqBytes;
                 }
                 
-                byte[] srcImageData = new byte[ srcImageDataLength ];
-                StreamUtils.readBytes( in, srcImageDataLength, srcImageData, 0 );
+                // Allocate RLE data buffer:
+                final byte[] compressedImageData = new byte[ compressedImageSize ];
                 
-                final int trgScanlineSize = orgWidth * dstBytesPerPixel;
+                int numBytesSoFar = 0;
                 
+                // Loop over each channel...
                 for ( int c = 0; c < bytesPerPixel; c++ )
                 {
-                    int pos = 0;
+                    int pixelIndex = 0;
                     
-                    for ( int y = 0; y < orgHeight; y++ )
+                    // Loop over each scan line (counting backwards because origin of RGB image coords is in lower left corner):
+                    for ( int y = orgHeight - 1; y >= 0; y-- )
                     {
+                        int rleDataIndex = y + c * orgHeight;
+                        
+                        int offsetRLE = scanlineOffsets[rleDataIndex];
+                        
+                        // Load the data if we don't have it already:
+                        int reqBytes = offsetRLE + scanlineLengths[rleDataIndex];
+                        int numBytesRead;
+                        while ( ( reqBytes > numBytesSoFar ) && ( numBytesRead = in.read( compressedImageData, numBytesSoFar, reqBytes - numBytesSoFar ) ) != -1 )
+                            numBytesSoFar += numBytesRead;
+                        
+                        
                         int offset;
                         if ( flipVertically )
-                            offset = y * trgScanlineSize;
+                            offset = y * orgWidth;
                         else
-                            offset = ( orgHeight - y - 1 ) * trgScanlineSize;
+                            offset = 0;
                         
-                        int index = y + c * orgHeight;
+                        int x = 0;
                         
-                        int RLEOffset = scanlineOffsets[index];
-                        
-                        byte count = 0;
                         while ( true )
                         {
-                            byte start = srcImageData[RLEOffset++];
+                            byte start = compressedImageData[offsetRLE++];
+                            byte count;
+                            if ( ( count = (byte)( start & 0x7F ) ) == 0 ) // Lowest 7 bits of start byte give the count.
+                                break; // End of compressed data
                             
-                            if ( ( count = (byte)( start & 0x7F ) ) == (byte)0 ) // Lowest 7 bits of start byte give the count.
-                                break; // End of compressed data.
-                            
+                            // First bit of start byte says to copy next <count> bytes
                             if ( ( start & 0x80 ) == 0x80 )
                             {
-                                // First bit of start byte says to copy next <bytCount> bytes
                                 while ( ( count-- ) > 0 )
                                 {
-                                    if ( imageData == null )
-                                        bb.put( byteOffset0 + pos + c, srcImageData[RLEOffset++] );
+                                    int pos;
+                                    if ( flipVertically )
+                                        pos = ( offset + x ) * dstBytesPerPixel + c;
                                     else
-                                        imageData[pos + c] = srcImageData[RLEOffset++];
+                                        pos = pixelIndex * dstBytesPerPixel + c;
                                     
-                                    pos += dstBytesPerPixel;
+                                    if ( imageData == null )
+                                        bb.put( byteOffset0 + pos, compressedImageData[offsetRLE++] );
+                                    else
+                                        imageData[pos] = compressedImageData[offsetRLE++];
+                                    
+                                    pixelIndex++;
+                                    x++;
                                 }
                             }
-                            else
+                            else // First bit of start byte says to repeat next byte <bytCount> times
                             {
-                                // First bit of start byte says to repeat next byte <bytCount> times
+                                byte b = compressedImageData[offsetRLE++];
+                                
                                 while ( ( count-- ) > 0 )
                                 {
-                                    if ( imageData == null )
-                                        bb.put( byteOffset0 + pos + c, srcImageData[RLEOffset++] );
+                                    int pos;
+                                    if ( flipVertically )
+                                        pos = ( offset + x ) * dstBytesPerPixel + c;
                                     else
-                                        imageData[pos + c] = srcImageData[RLEOffset++];
+                                        pos = pixelIndex * dstBytesPerPixel + c;
                                     
-                                    pos += dstBytesPerPixel;
+                                    if ( imageData == null )
+                                        bb.put( byteOffset0 + pos, b );
+                                    else
+                                        imageData[pos] = b;
+                                    
+                                    pixelIndex++;
+                                    x++;
                                 }
                             }
                         }
