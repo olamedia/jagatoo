@@ -55,8 +55,8 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
         return( sourceWindow );
     }
     
-    private static Keyboard[] staticCachedKeyboards = null;
-    private static Mouse[] staticCachedMouses = null;
+    //private static Keyboard[] staticCachedKeyboards = null;
+    //private static Mouse[] staticCachedMouses = null;
     private static Controller[] staticCachedControllers = null;
     
     private Keyboard[] cachedKeyboards = null;
@@ -92,33 +92,41 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     
     private synchronized final void setCachedKeyboards( Keyboard[] keyboards )
     {
+        /*
         if ( useStaticArrays )
             staticCachedKeyboards = keyboards;
         else
+        */
             this.cachedKeyboards = keyboards;
     }
     
     protected synchronized final Keyboard[] getCachedKeyboards()
     {
+        /*
         if ( useStaticArrays )
             return( staticCachedKeyboards );
         else
+        */
             return( cachedKeyboards );
     }
     
     private synchronized final void setCachedMouses( Mouse[] mouses )
     {
+        /*
         if ( useStaticArrays )
             staticCachedMouses = mouses;
         else
+        */
             this.cachedMouses = mouses;
     }
     
     protected synchronized final Mouse[] getCachedMouses()
     {
+        /*
         if ( useStaticArrays )
             return( staticCachedMouses );
         else
+        */
             return( cachedMouses );
     }
     
@@ -140,6 +148,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     
     protected synchronized void flushCache( boolean keyboards, boolean mouses, boolean controllers )
     {
+        /*
         if ( useStaticArrays )
         {
             if ( keyboards )
@@ -159,6 +168,24 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
             if ( mouses )
                 this.cachedMouses = null;
             
+            if ( controllers )
+                this.cachedControllers = null;
+        }
+        */
+        
+        if ( keyboards )
+            this.cachedKeyboards = null;
+        
+        if ( mouses )
+            this.cachedMouses = null;
+        
+        if ( useStaticArrays )
+        {
+            if ( controllers )
+                staticCachedControllers = null;
+        }
+        else
+        {
             if ( controllers )
                 this.cachedControllers = null;
         }
