@@ -30,7 +30,12 @@
 package org.jagatoo.util.versioning;
 
 /**
- * General Version information.
+ * General Version information.<br>
+ * Please note, that the version information is not guaranteed to be updated
+ * with each SVN commit. So the information might be outdated for
+ * development versions. Especially the revision-number will be outdated most
+ * of the time. Only releases are guaranteed to carry valid and correct
+ * version information.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
