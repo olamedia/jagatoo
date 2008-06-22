@@ -64,12 +64,11 @@ package org.jagatoo.loaders.models.bsp;
 
 import java.util.BitSet;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import org.jagatoo.loaders.models.bsp.lumps.BSPFace;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVisData;
-import org.openmali.vecmath2.Vector3f;
+import org.openmali.vecmath2.Tuple3f;
+import org.openmali.vecmath2.util.FloatUtils;
 
 /**
  * This class is used to manage the visibility of all the BSP clusters.
@@ -79,16 +78,16 @@ import org.openmali.vecmath2.Vector3f;
  */
 public class BSPClusterManager
 {
+    private static final boolean DEBUG = false;
+    
     protected BSPVisData     bspVisData;
     protected BSPFace[]      bspFaces;
     
     protected BitSet         faceBitset;
-    protected List<int[]>[]  clusterLeafs;
+    protected int[][][]      clusterLeafs;
     protected int[]          leafToCluster;
     protected float[]        planes;
     protected int[]          nodes;
-    
-    private   Vector3f       normal = new Vector3f();
     
     private   boolean        usePVS = true;
     private   boolean        lastUsePVS = true;
@@ -98,21 +97,22 @@ public class BSPClusterManager
      * 
      * @param camPos the position of the camera (View)
      */
-    private int getCluster( Vector3f camPos )
+    private int getCluster( Tuple3f camPos )
     {
         int index = 0;
         
         while ( index >= 0 )
         {
-            final int node = index * 3;
-            final int planeIndex = nodes[ node + 0 ] * 4;
-            normal.setX( planes[ planeIndex + 0 ] );
-            normal.setY( planes[ planeIndex + 1 ] );
-            normal.setZ( planes[ planeIndex + 2 ] );
+            int node = index * 3;
+            int planeIndex = nodes[ node + 0 ] * 4;
+            float nx = planes[ planeIndex + 0 ];
+            float ny = planes[ planeIndex + 1 ];
+            float nz = planes[ planeIndex + 2 ];
             float d = planes[ planeIndex + 3 ];
             
             // Distance from point to a plane
-            final float distance = normal.dot( camPos ) - d;
+            float dot = FloatUtils.dot( nx, ny, nz, camPos.getX(), camPos.getY(), camPos.getZ() );
+            float distance = dot - d;
             
             if ( distance > 0.0001f )
                 index = nodes[ node + 1 ];
@@ -152,16 +152,24 @@ public class BSPClusterManager
     }
     
     private int lastCluster = -2;
-    private Set<Integer> set = new HashSet<Integer>();
+    
+    /*
+     * For debugging...
+     */
+    private HashSet<Integer> set = new HashSet<Integer>();
+    private int numVis = 0;
+    private int numFacesVis = 0;
+    private int numClusters = 0;
+    private int numLeaves = 0;
     
     /**
      * Disables geometry that is invisible according to the PVS
      * 
      * @param camPos the position of the camera
      */
-    public void setVisibility( Vector3f camPos )
+    public void setVisibility( Tuple3f camPos )
     {
-        final boolean usePVSChanged = ( usePVS != lastUsePVS );
+        boolean usePVSChanged = ( usePVS != lastUsePVS );
         
         lastUsePVS = usePVS;
         
@@ -179,70 +187,85 @@ public class BSPClusterManager
             return;
         }
         
-        final boolean debug = false;
-            
-        if ( debug )
+        if ( DEBUG )
         {
             System.out.println( "new cluster is " + camCluster );
         }
+        
         lastCluster = camCluster;
         
         //faceBitset.clear( 0, faceBitset.size() - 1 );
         faceBitset.clear();
-        int numVis = 0;
-        int numFacesVis = 0;
-        int numClusters = 0;
-        int numLeaves = 0;
-        if ( debug )
+        
+        if ( DEBUG )
+        {
+            numVis = 0;
+            numFacesVis = 0;
+            numClusters = 0;
+            numLeaves = 0;
+            
             set.clear();
+        }
         
         for ( int i = 0; i < bspVisData.numOfClusters; i++ )
         {
-            final boolean isVisible = isClusterVisible( camCluster, i );
+            int[][] clusterLeafs_i = clusterLeafs[ i ];
             
-            if ( clusterLeafs[ i ] != null )
+            if ( DEBUG && ( clusterLeafs_i != null ) )
             {
                 numClusters++;
             }
             
-            if ( ( isVisible ) && ( clusterLeafs[ i ] != null ) )
+            if ( ( clusterLeafs_i != null ) && isClusterVisible( camCluster, i ) )
             {
                 boolean hasFaces = false;
                 
-                for ( int j = 0; j < clusterLeafs[ i ].size(); j++ )
+                for ( int j = 0; j < clusterLeafs_i.length; j++ )
                 {
-                    final int[] clusterLeaf = clusterLeafs[ i ].get( j );
-                    if ( clusterLeaf.length > 0 )
-                        numLeaves++;
+                    int[] clusterLeafs_i_j = clusterLeafs_i[ j ];
                     
-                    for ( int k = 0; k < clusterLeaf.length; k++ )
+                    if ( clusterLeafs_i_j.length > 0 )
                     {
-                        if ( !faceBitset.get( clusterLeaf[ k ] ) )
+                        if ( DEBUG )
                         {
-                            faceBitset.set( clusterLeaf[ k ] );
+                            numLeaves++;
+                        }
+                        
+                        for ( int k = 0; k < clusterLeafs_i_j.length; k++ )
+                        {
+                            int clusterLeaf = clusterLeafs_i_j[ k ];
                             
-                            if ( debug )
+                            if ( !faceBitset.get( clusterLeaf ) )
                             {
-                                int key = ( i << 24 ) | (bspFaces[ clusterLeaf[ k ] ].textureID << 8 ) | ( bspFaces[ clusterLeaf[ k ] ].lightmapID );
+                                faceBitset.set( clusterLeaf );
                                 
-                                if ( !set.contains( key ) )
-                                    set.add( key );
+                                if ( DEBUG )
+                                {
+                                    BSPFace bspFace = bspFaces[ clusterLeaf ];
+                                    int key = ( i << 24 ) | ( bspFace.textureID << 8 ) | ( bspFace.lightmapID );
+                                    
+                                    if ( !set.contains( key ) )
+                                        set.add( key );
+                                    
+                                    numFacesVis++;
+                                }
+                                
+                                hasFaces = true;
                             }
-                            
-                            numFacesVis++;
-                            hasFaces = true;
                         }
                     }
                 }
                 
-                if ( hasFaces )
+                if ( DEBUG && hasFaces )
+                {
                     numVis++;
+                }
             }
         }
         
         //faceSwitch.setChildMask( faceBitset );
         
-        if ( debug )
+        if ( DEBUG )
         {
             System.out.println( "num cluster is visible is " + numVis + " out of " + numClusters );
             //System.out.println( "num leaves visible is " + numLeaves + " out of " + leafs.length );
@@ -251,7 +274,7 @@ public class BSPClusterManager
         }
     }
     
-    public BSPClusterManager( BSPVisData bspVisData, BSPFace[] bspFaces, BitSet faceBitset, List<int[]>[] clusterLeafs, int[] leafToCluster, float[] planes, int[] nodes )
+    public BSPClusterManager( BSPVisData bspVisData, BSPFace[] bspFaces, BitSet faceBitset, int[][][] clusterLeafs, int[] leafToCluster, float[] planes, int[] nodes )
     {
         this.bspVisData     = bspVisData;
         this.bspFaces       = bspFaces;
