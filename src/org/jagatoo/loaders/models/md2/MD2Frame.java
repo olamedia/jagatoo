@@ -95,12 +95,12 @@ public class MD2Frame
         
         verts = new MD2Vertex[ header.getVertexCount() ];
         
-        scale[ 0 ] = in.readFloat() / 25.0f;
-        scale[ 1 ] = in.readFloat() / 25.0f;
-        scale[ 2 ] = in.readFloat() / 25.0f;
-        translate[ 0 ] = in.readFloat() / 25.0f;
-        translate[ 1 ] = in.readFloat() / 25.0f;
-        translate[ 2 ] = in.readFloat() / 25.0f;
+        scale[ 0 ] = in.readFloat();
+        scale[ 1 ] = in.readFloat();
+        scale[ 2 ] = in.readFloat();
+        translate[ 0 ] = in.readFloat();
+        translate[ 1 ] = in.readFloat();
+        translate[ 2 ] = in.readFloat();
         byte[] temp = new byte[ 16 ];
         in.read( temp, 0, 16 );
         
