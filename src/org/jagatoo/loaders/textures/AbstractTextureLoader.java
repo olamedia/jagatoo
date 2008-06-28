@@ -660,6 +660,15 @@ public abstract class AbstractTextureLoader
     }
     
     /**
+     * This method is called by the loaded after a texture haa actually been
+     * loaded, but not taken from teh cache.
+     * 
+     * @param texture
+     * @param resourceName
+     */
+    protected abstract void onTextureLoaded( AbstractTexture texture, String resourceName );
+    
+    /**
      * Retrives the texture with the given name. Loading works in the following
      * order:<br>
      * If the texture was already loaded and is still in the cache then the
@@ -723,18 +732,7 @@ public abstract class AbstractTextureLoader
             
             tex.setName( name );
             
-            try
-            {
-                java.lang.reflect.Method meth_setResourceName = tex.getClass().getDeclaredMethod( "setResourceName", String.class );
-                if ( meth_setResourceName != null )
-                {
-                    meth_setResourceName.invoke( tex, name );
-                }
-            }
-            catch ( Throwable t )
-            {
-                //t.printStackTrace();
-            }
+            onTextureLoaded( tex, name );
         }
         
         ProfileTimer.endProfile();
@@ -835,18 +833,7 @@ public abstract class AbstractTextureLoader
             
             tex.setName( name );
             
-            try
-            {
-                java.lang.reflect.Method meth_setResourceName = tex.getClass().getDeclaredMethod( "setResourceName", String.class );
-                if ( meth_setResourceName != null )
-                {
-                    meth_setResourceName.invoke( tex, name );
-                }
-            }
-            catch ( Throwable t )
-            {
-                //t.printStackTrace();
-            }
+            onTextureLoaded( tex, name );
         }
         
         return( tex );
