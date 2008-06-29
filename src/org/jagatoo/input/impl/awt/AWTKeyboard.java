@@ -364,8 +364,8 @@ public class AWTKeyboard extends Keyboard
     {
         String message = "Key-conversion failed for AWT key " + e.getKeyCode() + ". Please check localization (" + KeyboardLocalizer.getCurrentMappingName() + ")";
         
-        System.err.println( message );
-        Log.exception( InputSystem.LOG_CHANNEL, message );
+        //System.err.println( message );
+        Log.printlnEx( InputSystem.LOG_CHANNEL, message );
     }
     
     private void processKeyEvent( java.awt.event.KeyEvent _e )
