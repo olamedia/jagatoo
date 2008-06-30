@@ -43,9 +43,9 @@ import org.jagatoo.loaders.models.collada.datastructs.visualscenes.LibraryVisual
 /**
  * This class contains every information, that has been loaded
  * from a COLLADA file and that the loader handles. The reason,
- * this class exists, is that data provided directly by XMlBeans when
+ * this class exists, is that data provided directly by the xml lib when
  * loading a COLLADA file isn't really convenient to handle. So
- * in the org.collada.xith3d.COLLADALoader file, XMLBeans data (which
+ * in the org.collada.xith3d.COLLADALoader file, the xml lib data (which
  * is composed of classes contained in the
  * org.jagatoo.loaders.models.collada.schema.org.collada.x2005.x11.colladaSchema
  * package) is converted to a COLLADAFile. Then it can be used in a scenegraph,
