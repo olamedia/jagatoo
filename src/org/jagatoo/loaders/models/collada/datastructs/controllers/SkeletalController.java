@@ -48,7 +48,6 @@ import org.jagatoo.loaders.models.collada.datastructs.geometries.TrianglesGeomet
 import org.jagatoo.loaders.models.collada.jibx.XMLController;
 import org.jagatoo.loaders.models.collada.jibx.XMLSkin;
 import org.jagatoo.logging.JAGTLog;
-import org.openmali.vecmath2.Matrix3f;
 import org.openmali.vecmath2.Point3f;
 
 /**
