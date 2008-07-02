@@ -84,7 +84,7 @@ public class MappingFrance implements Mapping
                 break;
             case _2:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return( (char)233 );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
                     return( '~' );
                 break;
@@ -114,7 +114,7 @@ public class MappingFrance implements Mapping
                 break;
             case _7:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return( (char)232 );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
                     return( '`' );
                 break;
@@ -126,21 +126,21 @@ public class MappingFrance implements Mapping
                 break;
             case _9:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return( (char)231 );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
                     return( '^' );
                 break;
             
             case E:
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return( (char)8364 );
                 break;
             
             case CIRCUMFLEX:
                 if ( modifierMask == 0 )
                     return( '^' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return( (char)168 );
                 break;
             
             case NUMPAD_DECIMAL:
@@ -148,13 +148,13 @@ public class MappingFrance implements Mapping
                 
             case LOCAL_KEY1:
                 if ( modifierMask == 0 )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return( (char)178 );
                 break;
             case LOCAL_KEY2:
                 if ( modifierMask == 0 )
                     return( ')' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return((char)176 );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
                     return( ']' );
                 break;
@@ -162,13 +162,13 @@ public class MappingFrance implements Mapping
                 if ( modifierMask == 0 )
                     return( '$' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return( (char)163 );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return( (char)164 );
                 break;
             case LOCAL_KEY4:
                 if ( modifierMask == 0 )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return( (char)249 );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
                     return( '%' );
                 break;
@@ -176,7 +176,7 @@ public class MappingFrance implements Mapping
                 if ( modifierMask == 0 )
                     return( '*' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return( (char)181 );
                 break;
             case LOCAL_KEY6:
                 if ( modifierMask == 0 )
@@ -200,13 +200,13 @@ public class MappingFrance implements Mapping
                 if ( modifierMask == 0 )
                     return( '!' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return( (char)167 );
                 break;
             case LOCAL_KEY10:
                 if ( modifierMask == 0 )
                     return( '^' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '�' ); // TODO: This char gets lost in SVN! It must be denoted like this: (char)12345
+                    return( (char)168 );
                 break;
             case LOCAL_KEY11:
                 if ( modifierMask == 0 )
