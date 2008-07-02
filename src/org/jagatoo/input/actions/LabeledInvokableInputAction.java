@@ -35,16 +35,6 @@ package org.jagatoo.input.actions;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface LabeledInvokableInputAction extends InvokableInputAction
+public interface LabeledInvokableInputAction extends LabeledInputAction, InvokableInputAction
 {
-    /**
-     * @return a description-text for this InputAction.
-     */
-    public String getText();
-    
-    /**
-     * @return a <b>localozed</b> descriptive text for this {@link InputAction}.
-     * You should prefer this method over {@link #getText()}.
-     */
-    public String getLocalizedText();
 }
