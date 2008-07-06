@@ -88,9 +88,35 @@ public class InputBindingsManager< A extends InputAction >
         return( keyBindings.keySet() );
     }
     
+    public final int getBoundInputComponents( DeviceComponent[] result )
+    {
+        if ( result.length < keyBindings.size() )
+        {
+            throw new ArrayIndexOutOfBoundsException( "result array smaller than " + keyBindings.size() );
+        }
+        
+        int i = 0;
+        for ( DeviceComponent comp : keyBindings.keySet() )
+        {
+            result[i++] = comp;
+        }
+        
+        return( i );
+    }
+    
     public final Collection< A > getBoundActions()
     {
         return( keyBindings.values() );
+    }
+    
+    public final void getBoundActions( DeviceComponent[] components, InputAction[] result )
+    {
+        for ( int i = 0; i < components.length; i++ )
+        {
+            A action = getBoundAction( components[ i ] );
+            
+            result[i] = action;
+        }
     }
     
     /**

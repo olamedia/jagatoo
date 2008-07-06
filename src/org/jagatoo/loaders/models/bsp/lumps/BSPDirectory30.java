@@ -62,16 +62,66 @@
  */
 package org.jagatoo.loaders.models.bsp.lumps;
 
-import org.openmali.vecmath2.Vector3f;
+import org.jagatoo.loaders.models.bsp.BSPVersionDataLoader;
+import org.jagatoo.loaders.models.bsp.BSPVersionDataLoader30;
 
 /**
- * TODO: Insert package comments here
+ * List of Half-Life 1 BSP Lumps
  * 
- * @author David Yazel
+ * @author Sebastian Thiele (aka SETIssl)
  */
-public class BSPPlane
+public class BSPDirectory30 extends BSPDirectory
 {
-    public final Vector3f normal = new Vector3f();
-    public float d;
-    public int i;
+    public static final int v30_kEntities = 0;
+    public static final int v30_kPlanes = 1;
+    public static final int v30_kTextures = 2;
+    public static final int v30_kVertices = 3;
+    public static final int v30_kVisData = 4;
+    public static final int v30_kNodes = 5;
+    //public static final int v30_kLeafFaces = 6;     // TEXINFO
+    public static final int v30_kTexInfo = 6;     // TEXINFO
+    public static final int v30_kFaces = 7;
+    public static final int v30_kLightmaps = 8;
+    public static final int v30_kBrushes = 9;       // CLIPNODES
+    public static final int v30_kLeafs = 10;
+    public static final int v30_kLeafBrushes = 11;  // MARKSURFACES
+    public static final int v30_kBrushSides = 12;   // EDGES
+    public static final int v30_kSurfEdges = 13;
+    public static final int v30_kModels = 14;
+    public static final int v30_kMaxLumps = 15;
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public BSPVersionDataLoader getDataLoader()
+    {
+        return( new BSPVersionDataLoader30() );
+    }
+    
+    public BSPDirectory30()
+    {
+        super(
+               30,
+               v30_kEntities,
+               v30_kTextures,
+               v30_kPlanes,
+               v30_kNodes,
+               v30_kLeafs,
+               v30_kTexInfo, //v30_kLeafFaces,
+               v30_kLeafBrushes,
+               v30_kModels,
+               v30_kBrushes,
+               v30_kBrushSides,
+               v30_kVertices,
+               -1, // kMeshVerts
+               -1, // kShaders
+               v30_kFaces,
+               v30_kLightmaps,
+               -1, // kLightVolumes
+               v30_kVisData,
+               v30_kSurfEdges,
+               v30_kMaxLumps
+             );
+    }
 }

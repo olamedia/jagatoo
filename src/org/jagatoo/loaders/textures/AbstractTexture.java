@@ -94,6 +94,27 @@ public interface AbstractTexture extends NamableObject
             }
         }
         
+        public final AbstractTextureImage.Format getDefaultTextureImageFormat()
+        {
+            switch ( this )
+            {
+                case DEPTH:
+                    return( org.jagatoo.loaders.textures.AbstractTextureImage.Format.DEPTH );
+                    
+                case LUMINANCE:
+                    return( org.jagatoo.loaders.textures.AbstractTextureImage.Format.LUMINANCE );
+                    
+                case RGB:
+                    return( org.jagatoo.loaders.textures.AbstractTextureImage.Format.RGB );
+                    
+                case RGBA:
+                    return( org.jagatoo.loaders.textures.AbstractTextureImage.Format.RGBA );
+                    
+                default:
+                    throw new Error();
+            }
+        }
+        
         private Format( boolean hasAlpha )
         {
             this.hasAlpha = hasAlpha;

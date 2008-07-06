@@ -62,16 +62,34 @@
  */
 package org.jagatoo.loaders.models.bsp.lumps;
 
-import org.openmali.vecmath2.Vector3f;
-
 /**
  * TODO: Insert package comments here
  * 
  * @author David Yazel
  */
-public class BSPPlane
+public class BSPModel
 {
-    public final Vector3f normal = new Vector3f();
-    public float d;
-    public int i;
+    /**
+     * The min position for the bounding box
+     */
+    public float[] min = new float[ 3 ];
+    
+    /**
+     * The max position for the bounding box.
+     */
+    public float[] max = new float[ 3 ];
+    
+    /**
+     * The first face index in the model
+     */
+    public int faceIndex;
+    
+    /**
+     * The number of faces in the model
+     */
+    public int numOfFaces;
+    
+    public BSPModel()
+    {
+    }
 }

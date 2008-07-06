@@ -62,16 +62,29 @@
  */
 package org.jagatoo.loaders.models.bsp.lumps;
 
-import org.openmali.vecmath2.Vector3f;
-
 /**
  * TODO: Insert package comments here
  * 
- * @author David Yazel
+ * @author Marvin Froehlich (aka Qudus)
  */
-public class BSPPlane
+public class BSP30Model extends BSPModel
 {
-    public final Vector3f normal = new Vector3f();
-    public float d;
-    public int i;
+    /**
+     * Local origin.
+     */
+    public float[] origin = new float[ 3 ];
+    
+    /**
+     * Indices into either nodes or clipnodes - has to do with collision.
+     */
+    public int[] headNode = new int[ 4 ];
+    
+    /**
+     * Unknown; something to do with visibility?
+     */
+    public int visLeaves;
+    
+    public BSP30Model()
+    {
+    }
 }

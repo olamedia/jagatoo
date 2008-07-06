@@ -62,112 +62,163 @@
  */
 package org.jagatoo.loaders.models.bsp.lumps;
 
-import java.io.IOException;
+import org.jagatoo.loaders.models.bsp.BSPVersionDataLoader;
 
 /**
  * TODO: Insert package comments here.
  * 
  * @author David Yazel
+ * @author Marvin Froehlich (aka Qudus)
  */
 public abstract class BSPDirectory
 {
+    private final int version;
+    
     /**
      * Stores player/object positions, etc...
      */
-    public static final int kEntities      = 0;
+    public final int kEntities;
     
     /**
      * Stores texture information
      */
-    public static final int kTextures      = 1;
+    public final int kTextures;
     
     /**
      * Stores the splitting planes
      */
-    public static final int kPlanes        = 2;
+    public final int kPlanes;
     
     /**
      * Stores the BSP nodes
      */
-    public static final int kNodes         = 3;
+    public final int kNodes;
     
     /**
      * Stores the leafs of the nodes
      */
-    public static final int kLeafs         = 4;
+    public final int kLeafs;
     
     /**
      * Stores the leaf's indices into the faces
      */
-    public static final int kLeafFaces     = 5;
+    public final int kLeafFaces;
     
     /**
      * Stores the leaf's indices into the brushes
      */
-    public static final int kLeafBrushes   = 6;
+    public final int kLeafBrushes;
     
     /**
      * Stores the info of world models
      */
-    public static final int kModels        = 7;
+    public final int kModels;
     
     /**
      * Stores the brushes info (for collision)
      */
-    public static final int kBrushes       = 8;
+    public final int kBrushes;
     
     /**
      * Stores the brush surfaces info
      */
-    public static final int kBrushSides    = 9;
+    public final int kBrushSides;
     
     /**
      * Stores the level vertices
      */
-    public static final int kVertices      = 10;
+    public final int kVertices;
     
     /**
      * Stores the model vertices offsets
      */
-    public static final int kMeshVerts     = 11;
+    public final int kMeshVerts;
     
     /**
      * Stores the shader files (blending, anims..)
      */
-    public static final int kShaders       = 12;
+    public final int kShaders;
     
     /**
      * Stores the faces for the level
      */
-    public static final int kFaces         = 13;
+    public final int kFaces;
     
     /**
      * Stores the lightmaps for the level
      */
-    public static final int kLightmaps     = 14;
+    public final int kLightmaps;
     
     /**
      * Stores extra world lighting information
      */
-    public static final int kLightVolumes  = 15;
+    public final int kLightVolumes;
     
     /**
      * Stores PVS and cluster info (visibility)
      */
-    public static final int kVisData       = 16;
+    public final int kVisData;
+    
+    public final int kSurfEdges;
     
     /**
      * A constant to store the number of lumps
      */
-    public static final int kMaxLumps      = 17;
+    public final int kMaxLumps;
+    
+    public final int getVersion()
+    {
+        return( version );
+    }
     
     /**
-     * An array of all lumps in this directory.
+     * @return a {@link BSPVersionDataLoader}, that loads the lump-data
+     * in the way, the version wants it.
      */
-    public BSPLump[] lumps;
+    public abstract BSPVersionDataLoader getDataLoader();
     
-    /**
-     * Reads all related data from the input.
-     */
-    protected abstract void readDirectory() throws IOException;
+    public BSPDirectory( int version,
+                         int kEntities,
+                         int kTextures,
+                         int kPlanes,
+                         int kNodes,
+                         int kLeafs,
+                         int kLeafFaces,
+                         int kLeafBrushes,
+                         int kModels,
+                         int kBrushes,
+                         int kBrushSides,
+                         int kVertices,
+                         int kMeshVerts,
+                         int kShaders,
+                         int kFaces,
+                         int kLightmaps,
+                         int kLightVolumes,
+                         int kVisData,
+                         int kSurfEdges,
+                         int kMaxLumps
+                       )
+    {
+        this.version = version;
+        
+        this.kEntities = kEntities;
+        this.kTextures = kTextures;
+        this.kPlanes = kPlanes;
+        this.kNodes = kNodes;
+        this.kLeafs = kLeafs;
+        this.kLeafFaces = kLeafFaces;
+        this.kLeafBrushes = kLeafBrushes;
+        this.kModels = kModels;
+        this.kBrushes = kBrushes;
+        this.kBrushSides = kBrushSides;
+        this.kVertices = kVertices;
+        this.kMeshVerts = kMeshVerts;
+        this.kShaders = kShaders;
+        this.kFaces = kFaces;
+        this.kLightmaps = kLightmaps;
+        this.kLightVolumes = kLightVolumes;
+        this.kVisData = kVisData;
+        this.kSurfEdges = kSurfEdges;
+        this.kMaxLumps = kMaxLumps;
+    }
 }

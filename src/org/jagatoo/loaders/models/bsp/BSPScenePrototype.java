@@ -64,6 +64,7 @@ package org.jagatoo.loaders.models.bsp;
 
 import org.jagatoo.image.SharedBufferedImage;
 import org.jagatoo.loaders.models.bsp.lumps.*;
+import org.openmali.spatial.bounds.BoundingBox;
 
 /**
  * Contains all data of a whole loaded BSP scene.
@@ -76,6 +77,10 @@ public class BSPScenePrototype
      * 
      */
     public BSPFace[]        faces;
+    
+    public Object[][]       geometries;
+    
+    public BoundingBox      boundingBox;
     
     /**
      * 
@@ -110,6 +115,11 @@ public class BSPScenePrototype
     /**
      * 
      */
+    public BSPTexInfo[]     texInfos;
+    
+    /**
+     * 
+     */
     public int[]            meshVertices;
     
     /**
@@ -130,5 +140,13 @@ public class BSPScenePrototype
     /**
      * 
      */
-    public BSPSubModel[]    subModels;
+    public BSPModel[]       models;
+    
+    /**
+     * Half-Life only Lump
+     */
+    public BSPEdge[]    edges;
+    
+    public int[]    surfEdges;
+
 }

@@ -70,12 +70,15 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.models.bsp.lumps.BSPLump;
 
 /**
- * Represents a BSP source file.
+ * Represents a BSP source file, which is loaded as a resource (through a URL).
+ * The resource is first completely loaded and dumped into a byte-array.
+ * Then all the methods directly work on this byte-array.
+ * This is necessary to to support arbitrary seeking of byte-positions.
  * 
  * @author David Yazel
  * @author Marvin Froehlich (aka Qudus)
@@ -86,6 +89,7 @@ class BSPResource extends BSPFile
     private FloatBuffer  floatBuffer = null;
     private ByteBuffer   bBuffer = null;
     private IntBuffer    intBuffer = null;
+    private ShortBuffer  shortBuffer = null;
     
     private byte[]       in;
     private int          pointer;
@@ -100,9 +104,21 @@ class BSPResource extends BSPFile
     }
     
     @Override
+    public void resetPointer() throws IOException
+    {
+        pointer = 0;
+    }
+    
+    @Override
     public void seek( int lump ) throws IOException
     {
         pointer = lumps[ lump ].offset;
+    }
+    
+    @Override
+    public void skipBytes( int numBytes ) throws IOException
+    {
+        pointer += numBytes;
     }
     
     @Override
@@ -132,6 +148,32 @@ class BSPResource extends BSPFile
         }
         
         return( intBuffer.get( 0 ) );
+    }
+    
+    @Override
+    public short readShort() throws IOException
+    {
+        try
+        {
+            byteBuffer[ 0 ] = in[ pointer++ ];
+            byteBuffer[ 1 ] = in[ pointer++ ];
+        }
+        catch (ArrayIndexOutOfBoundsException e)
+        {
+        }
+        
+        return( shortBuffer.get( 0 ) );
+    }
+    
+    @Override
+    public int readUnsignedShort() throws IOException
+    {
+        byte low = in[ pointer++ ];
+        byte high = in[ pointer++ ];
+        
+        int ushort = ( ( high & 0xFF ) << 8 ) | ( low & 0xFF );
+        
+        return( ushort );
     }
     
     @Override
@@ -173,15 +215,11 @@ class BSPResource extends BSPFile
     }
     
     @Override
-    protected void readDirectory() throws IOException
+    public void readFully( char[] data, int count ) throws IOException
     {
-        this.lumps = new BSPLump[ 17 ];
-        
-        for ( int i = 0; i < 17; i++ )
+        for ( int i = 0; i < count; i++ )
         {
-            lumps[ i ] = new BSPLump();
-            lumps[ i ].offset = readInt();
-            lumps[ i ].length = readInt();
+            data[ i ] = readChar();
         }
     }
     
@@ -241,19 +279,12 @@ class BSPResource extends BSPFile
         this.bBuffer.order( ByteOrder.LITTLE_ENDIAN );
         this.floatBuffer = bBuffer.asFloatBuffer();
         this.intBuffer = bBuffer.asIntBuffer();
+        this.shortBuffer = bBuffer.asShortBuffer();
         
         this.in = readStreamToByteArray( in );
         this.pointer = 0;
         
-        this.ID = new char[ 4 ];
-        this.ID[ 0 ] = readChar();
-        this.ID[ 1 ] = readChar();
-        this.ID[ 2 ] = readChar();
-        this.ID[ 3 ] = readChar();
-        
-        this.version = readInt();
-        if ( version != 0x2e )
-            throw( new IncorrectFormatException( "Invalid Quake 3 BSP file" ) );
+        checkHeader();
         
         readDirectory();
     }

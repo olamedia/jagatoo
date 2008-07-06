@@ -69,9 +69,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.nio.ShortBuffer;
 
 import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.models.bsp.lumps.BSPDirectory;
 import org.jagatoo.loaders.models.bsp.lumps.BSPLump;
 
 /**
@@ -80,26 +80,42 @@ import org.jagatoo.loaders.models.bsp.lumps.BSPLump;
  * @author David Yazel
  * @author Marvin Froehlich (aka Qudus)
  */
-class BSPFile extends BSPDirectory
+class BSPFile
 {
     private byte[]            byteBuffer   = null;
     private FloatBuffer       floatBuffer  = null;
     private ByteBuffer        bBuffer      = null;
     private IntBuffer         intBuffer    = null;
+    private ShortBuffer       shortBuffer  = null;
     
     private RandomAccessFile  in;
     
     private char[]            ID;
     private int               version;
     
+    /**
+     * An array of all lumps in this directory.
+     */
+    protected BSPLump[] lumps;
+    
     public RandomAccessFile getInputFile()
     {
         return( in );
     }
     
+    public void resetPointer() throws IOException
+    {
+        in.seek( 0 );
+    }
+    
     public void seek(int lump) throws IOException
     {
         in.seek( lumps[ lump ].offset );
+    }
+    
+    public void skipBytes( int numBytes ) throws IOException
+    {
+        in.skipBytes( numBytes );
     }
     
     public byte readByte() throws IOException
@@ -117,6 +133,23 @@ class BSPFile extends BSPDirectory
         in.read( byteBuffer );
         
         return( intBuffer.get( 0 ) );
+    }
+    
+    public short readShort() throws IOException
+    {
+        in.read( byteBuffer );
+        
+        return( shortBuffer.get( 0 ) );
+    }
+    
+    public int readUnsignedShort() throws IOException
+    {
+        int low = in.read();
+        int high = in.read();
+        
+        int ushort = ( ( high & 0xFF ) << 8 ) | ( low & 0xFF );
+        
+        return( ushort );
     }
     
     public float readFloat() throws IOException
@@ -140,16 +173,37 @@ class BSPFile extends BSPDirectory
         return( data );
     }
     
-    @Override
+    public void readFully( char[] data, int count ) throws IOException
+    {
+        for ( int i = 0; i < count; i++ )
+        {
+            data[ i ] = readChar();
+        }
+    }
+    
     protected void readDirectory() throws IOException
     {
-        this.lumps = new BSPLump[ 17 ];
+    	final int lumpCount;
+    	switch ( version )
+    	{
+    	    case 46:
+                lumpCount = 17;
+    	        break;
+            default:
+                lumpCount = 15;
+                break;
+    	}
+    	
+        this.lumps = new BSPLump[ lumpCount ];
         
-        for ( int i = 0; i < 17; i++ )
+        for ( int i = 0; i < lumpCount; i++ )
         {
             lumps[ i ] = new BSPLump();
             lumps[ i ].offset = readInt();
             lumps[ i ].length = readInt();
+            
+            //Output Lump Offset and Length
+            //System.err.println( i + " - " + lumps[ i ].offset + " - " + lumps[ i ].length);
         }
     }
     
@@ -168,6 +222,70 @@ class BSPFile extends BSPDirectory
         return( version );
     }
     
+    protected void checkVersion( int version ) throws IncorrectFormatException
+    {
+        /*
+        if ( version != 0x2e )
+            throw( new IncorrectFormatException( "Invalid Quake 3 BSP file" ) );
+        */
+        
+        if ( ( version != 46 ) && ( version != 30 ) )
+        {
+            String errorCodeString = "Unable to read ";
+            
+            switch ( version ) 
+            {
+                case 29:
+                    errorCodeString += "Quake1 BSP file. version = " + version;
+                    break;
+                case 38:
+                    errorCodeString += "Quake2 BSP file. ID = " + new String( ID ) +" - version = " + version;
+                    break;
+                /*
+                case 30:
+                    errorCodeString += "Half-Life1 BSP file. version = " + version;
+                    break;
+                */
+                case 19:   
+                case 20:
+                    errorCodeString += "Half-Life2 BSP file. ID = " + new String( ID ) + " - version = " + version;
+                    break;
+                default:
+                    errorCodeString = "Unknown BSP version number or BSP format.";
+                    break;
+            }
+            
+            throw new IncorrectFormatException( errorCodeString );
+        }
+    }
+    
+    protected void checkHeader() throws IOException, IncorrectFormatException
+    {
+        // read bsp "magic number" ( "IBSP" or "VBSP" )
+        this.ID = new char[ 4 ];
+        this.ID[ 0 ] = readChar();
+        this.ID[ 1 ] = readChar();
+        this.ID[ 2 ] = readChar();
+        this.ID[ 3 ] = readChar();
+        
+        if ( !new String( ID ).substring( 1 ).equals( "BSP" ) )
+        {
+            //throw new IncorrectFormatException( "The read file is not a valid BSP level file." );
+            
+            /*
+             * We need to return the file-pointer to the beginning of the file
+             * to load the version, since HalfLife files don't have the
+             * "magic number"!
+             */
+            resetPointer();
+        }
+        
+        // read bsp version
+        this.version = readInt();
+        
+        checkVersion( version );
+    }
+    
     public BSPFile( File file ) throws IOException, IncorrectFormatException
     {
         super();
@@ -177,19 +295,12 @@ class BSPFile extends BSPDirectory
         this.bBuffer.order( ByteOrder.LITTLE_ENDIAN );
         this.floatBuffer = bBuffer.asFloatBuffer();
         this.intBuffer = bBuffer.asIntBuffer();
+        this.shortBuffer = bBuffer.asShortBuffer();
         
         this.in = new RandomAccessFile( file, "r" );
         
-        this.ID = new char[ 4 ];
-        this.ID[ 0 ] = readChar();
-        this.ID[ 1 ] = readChar();
-        this.ID[ 2 ] = readChar();
-        this.ID[ 3 ] = readChar();
-        
-        this.version = readInt();
-        if ( version != 0x2e )
-            throw( new IncorrectFormatException( "Invalid Quake 3 BSP file" ) );
-        
+        checkHeader();
+   	 	
         readDirectory();
     }
     

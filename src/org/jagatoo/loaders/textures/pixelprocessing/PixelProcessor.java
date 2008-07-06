@@ -70,7 +70,7 @@ public abstract class PixelProcessor
         int width = img.getWidth();
         int height = img.getHeight();
         
-        AbstractTextureImage ti = texFactory.createTextureImage( width, height, orgWidth, orgHeight, pixelSize );
+        AbstractTextureImage ti = texFactory.createTextureImage( width, height, orgWidth, orgHeight, pixelSize, format.getDefaultTextureImageFormat() );
         
         ByteBuffer bb = ti.getDataBuffer();
         
@@ -110,10 +110,10 @@ public abstract class PixelProcessor
             {
                 for ( int i = 0; i < pixelSize; ++i, srcOffsetX++ )
                 {
-                    byte value = (byte)( ( ( src.get( srcOffsetX ) & 255 ) +
-                                           ( src.get( srcOffsetX + pixelSize ) & 255 ) +
-                                           ( src.get( srcOffsetX + srcLineSize ) & 255 ) +
-                                           ( src.get( srcOffsetX + srcLineSize + pixelSize ) & 255 )
+                    byte value = (byte)( ( ( src.get( srcOffsetX ) & 0xFF ) +
+                                           ( src.get( srcOffsetX + pixelSize ) & 0xFF ) +
+                                           ( src.get( srcOffsetX + srcLineSize ) & 0xFF ) +
+                                           ( src.get( srcOffsetX + srcLineSize + pixelSize ) & 0xFF )
                                          ) >> 2
                                        );
                     trg.put( trgOffsetX++, value );
@@ -158,7 +158,7 @@ public abstract class PixelProcessor
                 return( PixelProcessorRGBA.getInstance() );
                 
             default:
-                throw( new Error( "PixelProcessor for format not (yet) available" ) );
+                throw( new Error( "PixelProcessor for format " + tiFormat + " not (yet) available" ) );
         }
     }
     

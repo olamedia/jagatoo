@@ -65,30 +65,10 @@ package org.jagatoo.loaders.models.bsp.lumps;
 /**
  * TODO: Insert package comments here
  * 
- * @author David Yazel
+ * @author Marvin Froehlich (aka Qudus)
  */
-public class BSPSubModel
+public class BSP46Model extends BSPModel
 {
-    /**
-     * The min position for the bounding box
-     */
-    public float[] min;
-    
-    /**
-     * The max position for the bounding box.
-     */
-    public float[] max;
-    
-    /**
-     * The first face index in the model
-     */
-    public int faceIndex;
-    
-    /**
-     * The number of faces in the model
-     */
-    public int numOfFaces;
-    
     /**
      * The first brush index in the model
      */
@@ -99,9 +79,7 @@ public class BSPSubModel
      */
     public int numOfBrushes;
     
-    public BSPSubModel()
+    public BSP46Model()
     {
-        this.min = new float[ 3 ];
-        this.max = new float[ 3 ];
     }
 }
