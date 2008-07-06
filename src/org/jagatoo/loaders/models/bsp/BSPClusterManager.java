@@ -76,14 +76,14 @@ import org.openmali.vecmath2.util.FloatUtils;
  */
 public class BSPClusterManager
 {
-    protected final BSPVisData     bspVisData;
-    protected final boolean        hasVisBitset;
+    private final BSPVisData       bspVisData;
+    private final boolean          hasVisBitset;
     
-    protected final BitSet         faceBitset;
-    protected final int[][][]      clusterLeafs;
-    protected final int[]          leafToCluster;
-    protected final float[]        planes;
-    protected final int[]          nodes;
+    protected final BitSet         shapeBitset;
+    private final int[][][]        clusterLeafs;
+    private final int[]            leafToCluster;
+    private final float[]          planes;
+    private final int[]            nodes;
     
     private   boolean        usePVS = true;
     private   boolean        lastUsePVS = true;
@@ -124,6 +124,12 @@ public class BSPClusterManager
         int i = ( camCluster * bspVisData.bytesPerCluster ) + ( testCluster / 8 );
         
         return( ( bspVisData.pBitsets[ i ] & ( 1 << ( testCluster & 0x07 ) ) ) != 0 );
+        
+        /*
+        int i = ( camCluster * bspVisData.bytesPerCluster * 8 ) + testCluster;
+        
+        return( visData[ i ] );
+        */
     }
     
     /**
@@ -161,8 +167,7 @@ public class BSPClusterManager
         
         if ( !usePVS )
         {
-            faceBitset.set( 0, faceBitset.size() - 1 );
-            //faceSwitch.setChildMask( faceBitset );
+            shapeBitset.set( 0, shapeBitset.size() - 1 );
             
             return( true );
         }
@@ -177,8 +182,7 @@ public class BSPClusterManager
         
         boolean allClustersVisible = !hasVisBitset || ( camCluster < 0 );
         
-        //faceBitset.clear( 0, faceBitset.size() - 1 );
-        faceBitset.clear();
+        shapeBitset.clear();
         
         for ( int i = 0; i < bspVisData.numOfClusters; i++ )
         {
@@ -196,9 +200,9 @@ public class BSPClusterManager
                         {
                             int clusterLeaf = clusterLeafs_i_j[ k ];
                             
-                            if ( !faceBitset.get( clusterLeaf ) )
+                            if ( !shapeBitset.get( clusterLeaf ) )
                             {
-                                faceBitset.set( clusterLeaf );
+                                shapeBitset.set( clusterLeaf );
                             }
                         }
                     }
@@ -209,22 +213,69 @@ public class BSPClusterManager
         return( true );
     }
     
-    public BSPClusterManager( BSPVisData bspVisData, BitSet faceBitset, int[][][] clusterLeafs, int[] leafToCluster, float[] planes, int[] nodes )
+    /*
+    private static final BitSet generateBitSet( byte[] visData )
+    {
+        BitSet bitset = new BitSet( visData.length * 8 );
+        
+        for ( int byteIndex = 0; byteIndex < visData.length; byteIndex++ )
+        {
+            int bitIndex0 = byteIndex * 8;
+            byte byt = visData[ byteIndex ];
+            
+            for ( int bitIndex = 0; bitIndex < 8; bitIndex++ )
+            {
+                boolean bitValue = ( byt & ( 1 << bitIndex ) ) != 0;
+                
+                bitset.set( bitIndex0 + bitIndex, bitValue );
+            }
+        }
+        
+        return( bitset );
+    }
+    */
+    
+    /*
+    private static final boolean[] decompressVisData( byte[] compressed )
+    {
+        boolean[] decompressed = new boolean[ compressed.length * 8 ];
+        
+        for ( int byteIndex = 0; byteIndex < compressed.length; byteIndex++ )
+        {
+            int bitIndex0 = byteIndex * 8;
+            byte byt = compressed[ byteIndex ];
+            
+            for ( int bitIndex = 0; bitIndex < 8; bitIndex++ )
+            {
+                boolean bitValue = ( byt & ( 1 << bitIndex ) ) != 0;
+                
+                decompressed[bitIndex0 + bitIndex] = bitValue;
+            }
+        }
+        
+        return( decompressed );
+    }
+    */
+    
+    public BSPClusterManager( BSPVisData bspVisData, BitSet shapeBitset, int[][][] clusterLeafs, int[] leafToCluster, float[] planes, int[] nodes )
     {
         this.bspVisData     = bspVisData;
         this.hasVisBitset   = ( bspVisData.pBitsets != null );
-        this.faceBitset     = faceBitset;
+        this.shapeBitset    = shapeBitset;
         this.clusterLeafs   = clusterLeafs;
         this.leafToCluster  = leafToCluster;
         this.planes         = planes;
         this.nodes          = nodes;
+        
+        //System.out.println( bspVisData.pBitsets.length + ", " + bspVisData.bytesPerCluster + ", " + bspVisData.numOfClusters );
+        //System.out.println( clusterLeafs.length + ", " + leafToCluster.length + ", " + planes.length );
     }
     
     public BSPClusterManager( BSPClusterManager template )
     {
         this.bspVisData     = template.bspVisData;
         this.hasVisBitset   = template.hasVisBitset;
-        this.faceBitset     = template.faceBitset;
+        this.shapeBitset    = template.shapeBitset;
         this.clusterLeafs   = template.clusterLeafs;
         this.leafToCluster  = template.leafToCluster;
         this.planes         = template.planes;

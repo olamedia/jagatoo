@@ -84,6 +84,259 @@ public class BSPPrototypeLoader
 {
     protected static final Boolean DEBUG = null;
     
+    protected static String[] readTextures( BSPFile file, BSPDirectory bspDir ) throws IOException
+    {
+        if ( bspDir.kTextures < 0 )
+        {
+            //JAGTLog.debug( "kTextures not currently supported by ", bspDir.getClass().getSimpleName() );
+            
+            return( null );
+        }
+        
+        file.seek( bspDir.kTextures );
+        
+        int textureCount = 0;
+        if ( file.getVersion() == 30 )
+        {
+            textureCount = file.readInt();
+        }
+        else if ( file.getVersion() == 46 )
+        {
+            textureCount = file.lumps[ bspDir.kTextures ].length / ( 64 + 2 * 4 );
+        }
+        
+        String[] textures = new String[ textureCount ];
+        
+        if ( file.getVersion() == 30 )
+        {
+            for ( int i = 0; i < textureCount; i++ )
+            {       
+                file.seek( bspDir.kTextures );
+                file.skipBytes( ( 4 * i ) + 4 );
+                int ofs = file.readInt();
+                
+                file.skipBytes( ofs - ( ( 4 * i ) + 8 ) );
+                
+                byte[] texNameBytes = file.readFully( 16 );
+                
+                for ( int b = 0; b < texNameBytes.length; b++ )
+                {
+                    if ( texNameBytes[ b ] == 0 )
+                    {
+                        textures[ i ] = new String( texNameBytes, 0, b );
+                        break;
+                    }
+                }
+                
+                if ( textures[ i ] == null )
+                {
+                    textures[ i ] = new String( texNameBytes );
+                }
+                
+                /*int width = */file.readInt();
+                /*int height = */file.readInt();
+                
+                /*int offset1 = */file.readInt();
+                /*int offset2 = */file.readInt();
+                /*int offset3 = */file.readInt();
+                /*int offset4 = */file.readInt();
+                
+                /*
+                System.out.print( textures[ i ] );
+                System.out.print( " { width: "  + width + ", height: " + height );
+                System.out.print( " | ofs1: "   + offset1 +  ", ofs2: " + offset2 );
+                System.out.println( ", ofs3: " + offset3 + ", ofs4: "  + offset4 + " }" );
+                */
+            }
+        }
+        else if ( file.getVersion() == 46 )
+        {      
+            byte[] ca = new byte[ 64 ];
+
+            for ( int i = 0; i < textureCount; i++ )
+            {     
+                file.readFully( ca ); // q3 - something...
+                file.readInt();
+                file.readInt();
+                
+                String s = new String( ca );
+                s = s.substring( 0, s.indexOf( 0 ) );
+                textures[ i ] = s;
+            }
+        }
+        
+        return( textures );
+    }
+    
+    protected static SharedBufferedImage[] readLightmaps( BSPFile file, BSPDirectory bspDir ) throws IOException
+    {
+        if ( bspDir.kLightmaps < 0 )
+        {
+            //JAGTLog.debug( "kLightmaps not currently supported by ", bspDir.getClass().getSimpleName() );
+            
+            return( null );
+        }
+        
+        int w = 0;
+        int h = 0;
+        
+        if ( file.getVersion() == 30 )
+        {
+            w = 16;
+            h = 16;
+        }
+        else if ( file.getVersion() == 46 )
+        {
+            w = 128;
+            h = 128;
+        }
+        
+        file.seek( bspDir.kLightmaps );
+        final int num = file.lumps[ bspDir.kLightmaps ].length / ( w * h * 3 );
+        
+        SharedBufferedImage[] lightMaps = new SharedBufferedImage[ num ];
+        
+        for ( int i = 0; i < num; i++ )
+        {
+            lightMaps[ i ] = SharedBufferedImage.create( w, h, 3, new int[] { 0, 1, 2 }, null );
+            
+            file.readFully( lightMaps[ i ].getSharedData() );
+        }
+        
+        return( lightMaps );
+    }
+    
+    /**
+     * Half-Life BSP only method, reads out texture structure data from the bsp file.
+     * 
+     * @param file HL BSP file, the texture info are read from
+     * @param bspDir HL BSP Lump Directory
+     * @return void add return value!
+     * @throws IOException
+     */
+    protected static BSPTexInfo[] readTexInfos( BSPFile file, BSPDirectory bspDir ) throws IOException
+    {
+        final int kTexInfo = bspDir.kLeafFaces;
+        
+        if ( kTexInfo < 0 )
+        {
+            //JAGTLog.debug( "kTexInfo not currently supported by ", bspDir.getClass().getSimpleName() );
+            
+            return( null );
+        }
+        
+        file.seek( kTexInfo );
+        int num = file.lumps[ kTexInfo ].length / ( ( 4 + 4 + 1 + 1 ) * 4 );
+        
+        BSPTexInfo[] texInfos = new BSPTexInfo[ num ];
+        
+        for ( int i = 0; i < num; i++ )
+        {
+            BSPTexInfo texInfo = new BSPTexInfo();
+            texInfos[ i ] = texInfo;
+            
+            texInfo.s[ 0 ] = file.readFloat();
+            texInfo.s[ 1 ] = file.readFloat();
+            texInfo.s[ 2 ] = file.readFloat();
+            texInfo.s[ 3 ] = file.readFloat();
+            
+            texInfo.t[ 0 ] = file.readFloat();
+            texInfo.t[ 1 ] = file.readFloat();
+            texInfo.t[ 2 ] = file.readFloat();
+            texInfo.t[ 3 ] = file.readFloat();
+            
+            texInfo.textureID = file.readInt();
+            texInfo.flags = file.readInt();
+        }
+        
+        return( texInfos );
+    }
+    
+    protected static BSPVertex[] readVertices( BSPFile file, BSPDirectory bspDir ) throws IOException
+    {
+        if ( bspDir.kVertices < 0 )
+        {
+            //JAGTLog.debug( "kVertices not currently supported by ", bspDir.getClass().getSimpleName() );
+            
+            return( null );
+        }
+        
+        file.seek( bspDir.kVertices );
+        int num = 0;
+        if ( bspDir.getVersion() == 30 )
+            num = file.lumps[ bspDir.kVertices ].length / ( 3 * 4 );
+        else if ( bspDir.getVersion() == 46 )
+            num = file.lumps[ bspDir.kVertices ].length / ( 11 * 4 );
+        
+        BSPVertex[] vertices = new BSPVertex[ num ];
+        for ( int i = 0; i < num; i++ )
+        {
+            BSPVertex vertex              = new BSPVertex();
+            vertices[ i ]                 = vertex;
+            
+            vertex.position.setX(    file.readFloat() );
+            vertex.position.setY(    file.readFloat() );
+            vertex.position.setZ(    file.readFloat() );
+            
+            if ( bspDir.getVersion() == 46 )
+            {
+                vertex.texCoord.setS(    file.readFloat() );
+                vertex.texCoord.setT(    file.readFloat() );
+                
+                vertex.lightTexCoord.setS( file.readFloat() );
+                vertex.lightTexCoord.setT( file.readFloat() );
+                
+                vertex.normal.setX(      file.readFloat() );
+                vertex.normal.setY(      file.readFloat() );
+                vertex.normal.setZ(      file.readFloat() );
+                
+                int r = file.readByte();
+                if ( r < 0 )
+                    r = -r + 127;
+                
+                int g = file.readByte();
+                if ( g < 0 )
+                    g = -g + 127;
+                
+                int b = file.readByte();
+                if ( b < 0 )
+                    b = -b + 127;
+                
+                int a = file.readByte();
+                if ( a < 0 )
+                    a = -a + 127;
+                
+                vertex.color.setRed( (float)r / 255f );
+                vertex.color.setGreen( (float)g / 255f );
+                vertex.color.setBlue( (float)b / 255f );
+                vertex.color.setAlpha( (float)a / 255f );
+            }
+        }
+        
+        return( vertices );
+    }
+    
+    protected static int[] readMeshVertices( BSPFile file, BSPDirectory bspDir ) throws IOException
+    {
+        if ( bspDir.kMeshVerts < 0 )
+        {
+            //JAGTLog.debug( "kMeshVerts not currently supported by ", bspDir.getClass().getSimpleName() );
+            
+            return( null );
+        }
+        
+        file.seek( bspDir.kMeshVerts );
+        int num = file.lumps[ bspDir.kMeshVerts ].length / 4;
+        
+        int[] meshVertices = new int[ num ];
+        for ( int i = 0; i < num; i++ )
+        {
+            meshVertices[ i ] = file.readInt();
+        }
+        
+        return( meshVertices );
+    }
+    
     /**
      * Half-Life BSP only method, reads out Edge data from the bsp file.
      * 
@@ -141,6 +394,99 @@ public class BSPPrototypeLoader
         return( surfEdges );
     }
     
+    protected static BSPFace[] readFaces( BSPFile file, BSPDirectory bspDir ) throws IOException
+    {
+        if ( bspDir.kFaces < 0 )
+        {
+            //JAGTLog.debug( "kFaces not currently supported by ", bspDir.getClass().getSimpleName() );
+            
+            return( null );
+        }
+        
+        file.seek( bspDir.kFaces );
+        
+        if ( file.getVersion() == 30 )
+        {
+            int num = file.lumps[ bspDir.kFaces ].length / ( 2 + 2 + 4 + 2 + 2 + 4 + 4 );
+
+            BSPFace[] faces = new BSPFace[ num ];
+            
+            for ( int i = 0; i < num; i++ )
+            {
+                BSPFace face            = new BSPFace();
+                faces[ i ]              = face;
+                
+                face.effect       = -1;
+                
+                /*int planenum = */file.readUnsignedShort();  // ushort planeNum : Index into planes lump
+                /*int side = */file.readUnsignedShort();      // ushort side     : If non-zero, must flip the normal of the given plane to match face orientation
+                
+                face.vertexIndex = file.readInt();   //int firstedge; : we must support > 64k edges
+                face.numOfVerts  = file.readUnsignedShort(); // ushort numedges :
+                
+                face.textureID   = file.readUnsignedShort();   // ushort texinfo : Index into texinfo lump
+                
+                // lighting info
+                /*byte[] styles = */file.readFully( 4 ); // byte styles[ MAXLIGHTMAPS ] : #define MAXLIGHTMAPS 4
+                face.lightmapID = file.readInt();   // int lightofs : start of [ numstyles * surfsize ] samples
+                
+                face.lightmapID = -1; // TODO: Remove me!
+            }
+            
+            return( faces );
+        }
+        else if ( file.getVersion() == 46 )
+        {
+            int num = file.lumps[ bspDir.kFaces ].length / ( 26 * 4 );
+    
+            BSPFace[] faces = new BSPFace[ num ];
+    
+            for ( int i = 0; i < num; i++ )
+            {
+                BSPFace face                     = new BSPFace();
+                faces[ i ]                       = face;
+                
+                face.textureID             = file.readInt();
+                face.effect                = file.readInt();
+                face.type                  = file.readInt();
+                face.vertexIndex           = file.readInt();
+                face.numOfVerts            = file.readInt();
+                face.meshVertIndex         = file.readInt();
+                face.numMeshVerts          = file.readInt();
+                face.lightmapID            = file.readInt();
+                face.lMapCorner[ 0 ]       = file.readInt();
+                face.lMapCorner[ 1 ]       = file.readInt();
+                
+                face.lMapSize[ 0 ]         = file.readInt();
+                face.lMapSize[ 1 ]         = file.readInt();
+                
+                face.lMapPos[ 0 ]          = file.readFloat();
+                face.lMapPos[ 1 ]          = file.readFloat();
+                face.lMapPos[ 2 ]          = file.readFloat();
+                
+                face.lMapBitsets[ 0 ][ 0 ] = file.readFloat();
+                face.lMapBitsets[ 0 ][ 1 ] = file.readFloat();
+                face.lMapBitsets[ 0 ][ 2 ] = file.readFloat();
+                
+                face.lMapBitsets[ 1 ][ 0 ] = file.readFloat();
+                face.lMapBitsets[ 1 ][ 1 ] = file.readFloat();
+                face.lMapBitsets[ 1 ][ 2 ] = file.readFloat();
+                
+                face.vNormal[ 0 ]          = file.readFloat();
+                face.vNormal[ 1 ]          = file.readFloat();
+                face.vNormal[ 2 ]          = file.readFloat();
+                
+                face.size[ 0 ]             = file.readInt();
+                face.size[ 1 ]             = file.readInt();
+                //System.out.println( "type=" + face.type + ", verts " + face.numOfVerts + ", " + face.numMeshVerts );
+            }
+            
+            return( faces );
+        }
+        
+        return( null );
+    }
+    
     protected static BSPVisData readVisData( BSPFile file, BSPDirectory bspDir, int leafCount) throws IOException
     {
         if ( bspDir.kVisData < 0 )
@@ -151,96 +497,29 @@ public class BSPPrototypeLoader
         
         file.seek( bspDir.kVisData );
         
-        BSPVisData visData = new BSPVisData();
+        BSPVisData visData = null;
         
-        if ( file.getVersion() == 46 ) 
+        if ( file.getVersion() == 30 ) 
         {
+            /*
+            byte[] visBytes = file.readFully( file.lumps[ bspDir.kVisData ].length ); // 282
+            visData = BSPVersionDataLoader30.decompressVis( leafCount, visBytes );
+            */
+            
+            visData = new BSPVisData();
+            visData.pBitsets = null;
+        }
+        else if ( file.getVersion() == 46 )
+        {
+            visData = new BSPVisData();
+            
             visData.numOfClusters = file.readInt();
             visData.bytesPerCluster = file.readInt();
             
             visData.pBitsets = file.readFully( visData.bytesPerCluster * visData.numOfClusters );
-            
-            return( visData );
-        }
-        else
-        {
-        	visData.pBitsets = file.readFully( file.lumps[ bspDir.kVisData ].length ); // 282
-        	/*
-        	byte[] visBytes = file.readFully( file.lumps[ bspDir.kVisData ].length ); // 282
-            
-			System.out.println( file.lumps[ bspDir.kVisData ].length );
-			File f2 = new File( "out.dat" );
-            
-			try
-			{
-				BufferedOutputStream bos = new BufferedOutputStream( new FileOutputStream( f2 ) );
-                
-				bos.write( visBytes );
-                
-				bos.flush();
-				bos.close();
-			}
-			catch ( IOException e )
-			{
-			}
-			visData = decompressVis( leafCount, VisBytes );
         }
         
         return( visData );
-    }
-    
-    protected static BSPVisData decompressVis ( int numLeafs, byte[] VisBytes )
-    {
-    	BSPVisData visData = new BSPVisData();
-    	int		c;
-    	byte[]	out;
-    	int		rows;
-        
-    	byte uInt[] = new byte[ 4 ];
-        
-    	long l = 0;
-	    l = VisBytes[ 0 ] & 0xFF;
-	    l <<= 8;
-	    l = VisBytes[ 1 ] & 0xFF;
-	    l <<= 8;
-	    l = VisBytes[ 2 ] & 0xFF;
-	    l <<= 8;
-	    l = VisBytes[ 3 ] & 0xFF;
-	    //System.out.println( "l: " + l );
-        
-    	//System.out.println( visBytes );
-    	rows = ( numLeafs + 7 ) >> 3;   // 10
-	    
-	    System.out.println( numLeafs );
-	    
-    	for ( int i = 0; i < rows; i++ )
-    	{
-    		/*
-    		if ( VisBytes.length != 0 )
-    		{
-    			out++ = VisBytes++;
-    			continue;
-    		}
-    	    
-    		c = VisBytes[ 1 ];
-    		visBytes += 2;
-    		while ( c )
-    		{
-    			out++ = 0;
-    			c--;
-    		}
-    		*/
-    	}
-        
-    	/*
-    	do
-    	{
-    		
-    	}
-    	while ( out - decompressed < row );
-    	*/
-        
-    	return( new BSPVisData() );
     }
     
     protected static BSPPlane[] readPlanes( BSPFile file, BSPDirectory bspDir, float worldScale ) throws IOException
@@ -252,15 +531,14 @@ public class BSPPrototypeLoader
             return( null );
         }
         
-        final int entryLength;
-        switch ( bspDir.getVersion() )
+        int entryLength = 0;
+        if ( bspDir.getVersion() == 30 )
         {
-            case 30:
-                entryLength = 5;
-                break;
-            default:
-                entryLength = 4;
-                break;
+            entryLength = 5;
+        }
+        else if ( bspDir.getVersion() == 46 )
+        {
+            entryLength = 4;
         }
         
         file.seek( bspDir.kPlanes );
@@ -275,12 +553,9 @@ public class BSPPrototypeLoader
             plane.normal.setX( file.readFloat() );
             plane.normal.setY( file.readFloat() );
             plane.normal.setZ( file.readFloat() );
-            plane.d        = file.readFloat() * worldScale;
+            plane.d = file.readFloat() * worldScale;
             
-            for ( int j = 4; j < entryLength; j++ )
-            {
-                file.skipBytes( 4 );
-            }
+            file.skipBytes( ( entryLength - 4 ) * 4 );
             
             //System.out.println( i + ": " + planes[ i ].normal + ", " + planes[ i ].d );
         }
@@ -301,27 +576,7 @@ public class BSPPrototypeLoader
         int num = file.lumps[ bspDir.kNodes ].length / ( 4 * 9 );
         BSPNode[] nodes = new BSPNode[ num ];
         
-        if ( file.getVersion() == 46 ) 
-        {
-            for (int i = 0; i < num; i++)
-            {
-                BSPNode node = new BSPNode();
-                nodes[ i ]   = node;
-                
-                node.plane     = file.readInt();
-                node.front     = file.readInt();
-                node.back      = file.readInt();
-                
-                node.mins[ 0 ] = file.readInt();
-                node.mins[ 1 ] = file.readInt();
-                node.mins[ 2 ] = file.readInt();
-                
-                node.maxs[ 0 ] = file.readInt();
-                node.maxs[ 1 ] = file.readInt();
-                node.maxs[ 2 ] = file.readInt();
-            }
-        }
-        else
+        if ( file.getVersion() == 30 ) 
         {
             for (int i = 0; i < num; i++)
             {
@@ -348,8 +603,117 @@ public class BSPPrototypeLoader
                 //System.out.println( "maxs: " + node.maxs[ 0 ] + " - " + node.maxs[ 1 ] + " - " + node.maxs[ 2 ] );
             }
         }
+        else if ( file.getVersion() == 46 )
+        {
+            for (int i = 0; i < num; i++)
+            {
+                BSPNode node = new BSPNode();
+                nodes[ i ]   = node;
+                
+                node.plane     = file.readInt();
+                node.front     = file.readInt();
+                node.back      = file.readInt();
+                
+                node.mins[ 0 ] = file.readInt();
+                node.mins[ 1 ] = file.readInt();
+                node.mins[ 2 ] = file.readInt();
+                
+                node.maxs[ 0 ] = file.readInt();
+                node.maxs[ 1 ] = file.readInt();
+                node.maxs[ 2 ] = file.readInt();
+            }
+        }
         
         return( nodes );
+    }
+    
+    protected static BSPLeaf[] readLeafs( BSPFile file, BSPDirectory bspDir ) throws IOException
+    {
+        if ( bspDir.kLeafs < 0 )
+        {
+            //JAGTLog.debug( "kLeafs not currently supported by ", bspDir.getClass().getSimpleName() );
+            
+            return( null );
+        }
+        
+        file.seek( bspDir.kLeafs );
+        int num = file.lumps[ bspDir.kLeafs ].length / ( 12 * 4 );
+        
+        BSPLeaf[] leafs = new BSPLeaf[ num ];
+        
+        if ( file.getVersion() == 30 )
+        {
+            for ( int i = 0; i < num; i++ )
+            {
+                BSPLeaf leaf                = new BSPLeaf();
+                leafs[ i ]                  = leaf;
+                
+                //System.out.println( "content: " + file.readInt() ); // int : contents;
+                //System.out.println( "visofs: "+ file.readInt() );   // int : visofs; // -1 = no visibility info
+                
+                // for frustum culling
+                leaf.mins[ 0 ]        = file.readShort();
+                leaf.mins[ 1 ]        = file.readShort();
+                leaf.mins[ 2 ]        = file.readShort();
+                    
+                leaf.maxs[ 0 ]        = file.readShort();
+                leaf.maxs[ 1 ]        = file.readShort();
+                leaf.maxs[ 2 ]        = file.readShort();
+                
+                //System.out.println( "firstmarksurfaces: " + file.readInt() ); //int       firstmarksurface;
+                //System.out.println( "nummarksurfaces: " + file.readInt() );       //int       nummarksurfaces;
+                
+                file.readFully( 4 ); // byte : ambient_level[ 4 ];
+            }
+        }
+        else if ( file.getVersion() == 46 )
+        {
+            for ( int i = 0; i < num; i++ )
+            {
+                BSPLeaf leaf                = new BSPLeaf();
+                leafs[ i ]                  = leaf;
+                
+                leaf.cluster          = file.readInt();
+                leaf.area             = file.readInt();
+                
+                leaf.mins[ 0 ]        = file.readInt();
+                leaf.mins[ 1 ]        = file.readInt();
+                leaf.mins[ 2 ]        = file.readInt();
+                
+                leaf.maxs[ 0 ]        = file.readInt();
+                leaf.maxs[ 1 ]        = file.readInt();
+                leaf.maxs[ 2 ]        = file.readInt();
+                
+                leaf.leafFace         = file.readInt();
+                leaf.numOfLeafFaces   = file.readInt();
+                
+                leaf.leafBrush        = file.readInt();
+                leaf.numOfLeafBrushes = file.readInt();
+            }
+        }
+        
+        return( leafs );
+    }
+    
+    protected static int[] readLeafFaces( BSPFile file, BSPDirectory bspDir ) throws IOException
+    {
+        if ( bspDir.kLeafFaces < 0 )
+        {
+            //JAGTLog.debug( "kLeafFaces not currently supported by ", bspDir.getClass().getSimpleName() );
+            
+            return( null );
+        }
+        
+        file.seek( bspDir.kLeafFaces );
+        int num = file.lumps[ bspDir.kLeafFaces ].length / 4;
+        
+        int[] leafFaces = new int[ num ];
+        for ( int i = 0; i < num; i++ )
+        {
+            leafFaces[ i ] = file.readInt();
+        }
+        
+        return( leafFaces );
     }
     
     protected static BSPModel[] readModels( BSPFile file, BSPDirectory bspDir ) throws IOException
@@ -444,441 +808,6 @@ public class BSPPrototypeLoader
         String s = new String( ca );
         
         return( s );
-    }
-    
-    protected static SharedBufferedImage[] readLightmaps( BSPFile file, BSPDirectory bspDir ) throws IOException
-    {
-        if ( bspDir.kLightmaps < 0 )
-        {
-            //JAGTLog.debug( "kLightmaps not currently supported by ", bspDir.getClass().getSimpleName() );
-            
-            return( null );
-        }
-        
-        int w = 0;
-        int h = 0;
-        
-        if ( file.getVersion() == 30 )
-        {
-            w = 16;
-            h = 16;
-        }
-        else if ( file.getVersion() == 46 )
-        {
-            w = 128;
-            h = 128;
-        }
-        
-        file.seek( bspDir.kLightmaps );
-        final int num = file.lumps[ bspDir.kLightmaps ].length / ( w * h * 3 );
-        
-        SharedBufferedImage[] lightMaps = new SharedBufferedImage[ num ];
-        
-        for ( int i = 0; i < num; i++ )
-        {
-            lightMaps[ i ] = SharedBufferedImage.create( w, h, 3, new int[] { 0, 1, 2 }, null );
-            
-            file.readFully( lightMaps[ i ].getSharedData() );
-        }
-        
-        return( lightMaps );
-    }
-    
-    protected static String[] readTextures( BSPFile file, BSPDirectory bspDir ) throws IOException
-    {
-        if ( bspDir.kTextures < 0 )
-        {
-            //JAGTLog.debug( "kTextures not currently supported by ", bspDir.getClass().getSimpleName() );
-            
-            return( null );
-        }
-        
-        file.seek( bspDir.kTextures );
-        
-        int textureCount = 0;
-        if ( file.getVersion() == 30 )
-        {
-            textureCount = file.readInt();
-        }
-        else if ( file.getVersion() == 46 )
-        {
-            textureCount = file.lumps[ bspDir.kTextures ].length / ( 64 + 2 * 4 );
-        }
-        
-        String[] textures = new String[ textureCount ];
-        
-        if ( file.getVersion() == 30 )
-        {
-            for ( int i = 0; i < textureCount; i++ )
-            {       
-                file.seek( bspDir.kTextures );
-                file.skipBytes( ( 4 * i ) + 4 );
-                int ofs = file.readInt();
-                
-                file.skipBytes( ofs - ( ( 4 * i ) + 8 ) );
-                
-                byte[] texNameBytes = file.readFully( 16 );
-                
-                for ( int b = 0; b < texNameBytes.length; b++ )
-                {
-                    if ( texNameBytes[ b ] == 0 )
-                    {
-                        textures[ i ] = new String( texNameBytes, 0, b );
-                        break;
-                    }
-                }
-                
-                if ( textures[ i ] == null )
-                {
-                    textures[ i ] = new String( texNameBytes );
-                }
-                
-                /*int width = */file.readInt();
-                /*int height = */file.readInt();
-                
-                /*int offset1 = */file.readInt();
-                /*int offset2 = */file.readInt();
-                /*int offset3 = */file.readInt();
-                /*int offset4 = */file.readInt();
-                
-                /*
-                System.out.print( textures[ i ] );
-                System.out.print( " { width: "  + width + ", height: " + height );
-                System.out.print( " | ofs1: "   + offset1 +  ", ofs2: " + offset2 );
-                System.out.println( ", ofs3: " + offset3 + ", ofs4: "  + offset4 + " }" );
-                */
-            }
-        }
-        else if ( file.getVersion() == 46 )
-        {      
-            byte[] ca = new byte[ 64 ];
-
-            for ( int i = 0; i < textureCount; i++ )
-            {     
-                file.readFully( ca ); // q3 - something...
-                file.readInt();
-                file.readInt();
-                
-                String s = new String( ca );
-                s = s.substring( 0, s.indexOf( 0 ) );
-                textures[ i ] = s;
-            }
-        }
-        
-        return( textures );
-    }
-    
-    /**
-     * Half-Life BSP only method, reads out texture structure data from the bsp file.
-     * 
-     * @param file HL BSP file, the texture info are read from
-     * @param bspDir HL BSP Lump Directory
-     * @return void add return value!
-     * @throws IOException
-     */
-    protected static BSPTexInfo[] readTexInfos( BSPFile file, BSPDirectory bspDir ) throws IOException
-    {
-        final int kTexInfo = bspDir.kLeafFaces;
-        
-        if ( kTexInfo < 0 )
-        {
-            //JAGTLog.debug( "kTexInfo not currently supported by ", bspDir.getClass().getSimpleName() );
-            
-            return( null );
-        }
-        
-        file.seek( kTexInfo );
-        int num = file.lumps[ kTexInfo ].length / ( ( 4 + 4 + 1 + 1 ) * 4 );
-        
-        BSPTexInfo[] texInfos = new BSPTexInfo[ num ];
-        
-        for ( int i = 0; i < num; i++ )
-        {
-            BSPTexInfo texInfo = new BSPTexInfo();
-            texInfos[ i ] = texInfo;
-            
-            texInfo.s[ 0 ] = file.readFloat();
-            texInfo.s[ 1 ] = file.readFloat();
-            texInfo.s[ 2 ] = file.readFloat();
-            texInfo.s[ 3 ] = file.readFloat();
-            
-            texInfo.t[ 0 ] = file.readFloat();
-            texInfo.t[ 1 ] = file.readFloat();
-            texInfo.t[ 2 ] = file.readFloat();
-            texInfo.t[ 3 ] = file.readFloat();
-            
-            texInfo.textureID = file.readInt();
-            texInfo.flags = file.readInt();
-        }
-        
-        return( texInfos );
-    }
-    
-    protected static BSPLeaf[] readLeafs( BSPFile file, BSPDirectory bspDir ) throws IOException
-    {
-        if ( bspDir.kLeafs < 0 )
-        {
-            //JAGTLog.debug( "kLeafs not currently supported by ", bspDir.getClass().getSimpleName() );
-            
-            return( null );
-        }
-        
-        file.seek( bspDir.kLeafs );
-        int num = file.lumps[ bspDir.kLeafs ].length / ( 12 * 4 );
-        
-        BSPLeaf[] leafs = new BSPLeaf[ num ];
-        
-        if ( file.getVersion() == 30 )
-        {
-            for ( int i = 0; i < num; i++ )
-            {
-                BSPLeaf leaf                = new BSPLeaf();
-                leafs[ i ]                  = leaf;
-                
-                //System.out.println( "content: " + file.readInt() ); // int : contents;
-                //System.out.println( "visofs: "+ file.readInt() );   // int : visofs; // -1 = no visibility info
-                
-                // for frustum culling
-                leaf.mins[ 0 ]        = file.readShort();
-                leaf.mins[ 1 ]        = file.readShort();
-                leaf.mins[ 2 ]        = file.readShort();
-                    
-                leaf.maxs[ 0 ]        = file.readShort();
-                leaf.maxs[ 1 ]        = file.readShort();
-                leaf.maxs[ 2 ]        = file.readShort();
-                
-                //System.out.println( "firstmarksurfaces: " + file.readInt() ); //int       firstmarksurface;
-                //System.out.println( "nummarksurfaces: " + file.readInt() );       //int       nummarksurfaces;
-                
-                file.readFully( 4 ); // byte : ambient_level[ 4 ];
-            }
-        }
-        else if ( file.getVersion() == 46 )
-        {
-            for ( int i = 0; i < num; i++ )
-            {
-                BSPLeaf leaf                = new BSPLeaf();
-                leafs[ i ]                  = leaf;
-                
-                leaf.cluster          = file.readInt();
-                leaf.area             = file.readInt();
-                
-                leaf.mins[ 0 ]        = file.readInt();
-                leaf.mins[ 1 ]        = file.readInt();
-                leaf.mins[ 2 ]        = file.readInt();
-                
-                leaf.maxs[ 0 ]        = file.readInt();
-                leaf.maxs[ 1 ]        = file.readInt();
-                leaf.maxs[ 2 ]        = file.readInt();
-                
-                leaf.leafFace         = file.readInt();
-                leaf.numOfLeafFaces   = file.readInt();
-                
-                leaf.leafBrush        = file.readInt();
-                leaf.numOfLeafBrushes = file.readInt();
-            }
-        }
-        
-        return( leafs );
-    }
-    
-    protected static int[] readLeafFaces( BSPFile file, BSPDirectory bspDir ) throws IOException
-    {
-        if ( bspDir.kLeafFaces < 0 )
-        {
-            //JAGTLog.debug( "kLeafFaces not currently supported by ", bspDir.getClass().getSimpleName() );
-            
-            return( null );
-        }
-        
-        file.seek( bspDir.kLeafFaces );
-        int num = file.lumps[ bspDir.kLeafFaces ].length / 4;
-        
-        int[] leafFaces = new int[ num ];
-        for ( int i = 0; i < num; i++ )
-        {
-            leafFaces[ i ] = file.readInt();
-        }
-        
-        return( leafFaces );
-    }
-    
-    protected static int[] readMeshVertices( BSPFile file, BSPDirectory bspDir ) throws IOException
-    {
-        if ( bspDir.kMeshVerts < 0 )
-        {
-            //JAGTLog.debug( "kMeshVerts not currently supported by ", bspDir.getClass().getSimpleName() );
-            
-            return( null );
-        }
-        
-        file.seek( bspDir.kMeshVerts );
-        int num = file.lumps[ bspDir.kMeshVerts ].length / 4;
-        
-        int[] meshVertices = new int[ num ];
-        for ( int i = 0; i < num; i++ )
-        {
-            meshVertices[ i ] = file.readInt();
-        }
-        
-        return( meshVertices );
-    }
-    
-    protected static BSPVertex[] readVertices( BSPFile file, BSPDirectory bspDir ) throws IOException
-    {
-        if ( bspDir.kVertices < 0 )
-        {
-            //JAGTLog.debug( "kVertices not currently supported by ", bspDir.getClass().getSimpleName() );
-            
-            return( null );
-        }
-        
-        file.seek( bspDir.kVertices );
-        int num;
-        if ( bspDir.getVersion() == 30 )
-            num = file.lumps[ bspDir.kVertices ].length / ( 3 * 4 );
-        else
-            num = file.lumps[ bspDir.kVertices ].length / ( 11 * 4 );
-        
-        BSPVertex[] vertices = new BSPVertex[ num ];
-        for ( int i = 0; i < num; i++ )
-        {
-            BSPVertex vertex              = new BSPVertex();
-            vertices[ i ]                 = vertex;
-            
-            vertex.position.setX(    file.readFloat() );
-            vertex.position.setY(    file.readFloat() );
-            vertex.position.setZ(    file.readFloat() );
-            
-            if ( bspDir.getVersion() != 30 )
-            {
-                vertex.texCoord.setS(    file.readFloat() );
-                vertex.texCoord.setT(    file.readFloat() );
-                
-                vertex.lightTexCoord.setS( file.readFloat() );
-                vertex.lightTexCoord.setT( file.readFloat() );
-                
-                vertex.normal.setX(      file.readFloat() );
-                vertex.normal.setY(      file.readFloat() );
-                vertex.normal.setZ(      file.readFloat() );
-                
-                int r = file.readByte();
-                if ( r < 0 )
-                    r = -r + 127;
-                
-                int g = file.readByte();
-                if ( g < 0 )
-                    g = -g + 127;
-                
-                int b = file.readByte();
-                if ( b < 0 )
-                    b = -b + 127;
-                
-                int a = file.readByte();
-                if ( a < 0 )
-                    a = -a + 127;
-                
-                vertex.color.setRed( (float)r / 255f );
-                vertex.color.setGreen( (float)g / 255f );
-                vertex.color.setBlue( (float)b / 255f );
-                vertex.color.setAlpha( (float)a / 255f );
-            }
-        }
-        
-        return( vertices );
-    }
-    
-    protected static BSPFace[] readFaces( BSPFile file, BSPDirectory bspDir ) throws IOException
-    {
-        if ( bspDir.kFaces < 0 )
-        {
-            //JAGTLog.debug( "kFaces not currently supported by ", bspDir.getClass().getSimpleName() );
-            
-            return( null );
-        }
-        
-        file.seek( bspDir.kFaces );
-        
-        if ( file.getVersion() == 30 )
-        {
-            int num = file.lumps[ bspDir.kFaces ].length / ( 2 + 2 + 4 + 2 + 2 + 4 + 4 );
-
-            BSPFace[] faces = new BSPFace[ num ];
-            
-            for ( int i = 0; i < num; i++ )
-            {
-                BSPFace face            = new BSPFace();
-                faces[ i ]              = face;
-                
-                face.effect       = -1;
-                
-                /*int planenum = */file.readUnsignedShort();  // ushort planeNum : Index into planes lump
-                /*int side = */file.readUnsignedShort();      // ushort side     : If non-zero, must flip the normal of the given plane to match face orientation
-                
-                face.vertexIndex = file.readInt();   //int firstedge; : we must support > 64k edges
-                face.numOfVerts  = file.readUnsignedShort(); // ushort numedges :
-                
-                face.textureID   = file.readUnsignedShort();   // ushort texinfo : Index into texinfo lump
-                
-                // lighting info
-                /*byte[] styles = */file.readFully( 4 ); // byte styles[ MAXLIGHTMAPS ] : #define MAXLIGHTMAPS 4
-                face.lightmapID = file.readInt();   // int lightofs : start of [ numstyles * surfsize ] samples
-                
-                face.lightmapID = -1; // TODO: Remove me!
-            }
-            
-            return( faces );
-        }
-        else if ( file.getVersion() == 46 )
-        {
-            int num = file.lumps[ bspDir.kFaces ].length / ( 26 * 4 );
-    
-            BSPFace[] faces = new BSPFace[ num ];
-    
-            for ( int i = 0; i < num; i++ )
-            {
-                BSPFace face                     = new BSPFace();
-                faces[ i ]                       = face;
-                
-                face.textureID             = file.readInt();
-                face.effect                = file.readInt();
-                face.type                  = file.readInt();
-                face.vertexIndex           = file.readInt();
-                face.numOfVerts            = file.readInt();
-                face.meshVertIndex         = file.readInt();
-                face.numMeshVerts          = file.readInt();
-                face.lightmapID            = file.readInt();
-                face.lMapCorner[ 0 ]       = file.readInt();
-                face.lMapCorner[ 1 ]       = file.readInt();
-                
-                face.lMapSize[ 0 ]         = file.readInt();
-                face.lMapSize[ 1 ]         = file.readInt();
-                
-                face.lMapPos[ 0 ]          = file.readFloat();
-                face.lMapPos[ 1 ]          = file.readFloat();
-                face.lMapPos[ 2 ]          = file.readFloat();
-                
-                face.lMapBitsets[ 0 ][ 0 ] = file.readFloat();
-                face.lMapBitsets[ 0 ][ 1 ] = file.readFloat();
-                face.lMapBitsets[ 0 ][ 2 ] = file.readFloat();
-                
-                face.lMapBitsets[ 1 ][ 0 ] = file.readFloat();
-                face.lMapBitsets[ 1 ][ 1 ] = file.readFloat();
-                face.lMapBitsets[ 1 ][ 2 ] = file.readFloat();
-                
-                face.vNormal[ 0 ]          = file.readFloat();
-                face.vNormal[ 1 ]          = file.readFloat();
-                face.vNormal[ 2 ]          = file.readFloat();
-                
-                face.size[ 0 ]             = file.readInt();
-                face.size[ 1 ]             = file.readInt();
-                //System.out.println( "type=" + face.type + ", verts " + face.numOfVerts + ", " + face.numMeshVerts );
-            }
-            
-            return( faces );
-        }
-        
-        return( null );
     }
     
     /**

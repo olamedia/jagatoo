@@ -29,6 +29,9 @@
  */
 package org.jagatoo.loaders.models.bsp;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.jagatoo.loaders.IncorrectFormatException;
@@ -40,6 +43,7 @@ import org.jagatoo.loaders.models.bsp.lumps.BSPEdge;
 import org.jagatoo.loaders.models.bsp.lumps.BSPFace;
 import org.jagatoo.loaders.models.bsp.lumps.BSPTexInfo;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVertex;
+import org.jagatoo.loaders.models.bsp.lumps.BSPVisData;
 import org.openmali.vecmath2.Matrix4f;
 import org.openmali.vecmath2.Point3f;
 import org.openmali.vecmath2.Vertex3f;
@@ -51,6 +55,83 @@ import org.openmali.vecmath2.Vertex3f;
  */
 public class BSPVersionDataLoader30 implements BSPVersionDataLoader
 {
+    private static void dumpCompressedVisData( byte[] visBytes )
+    {
+        File f2 = new File( "out.dat" );
+        
+        try
+        {
+            BufferedOutputStream bos = new BufferedOutputStream( new FileOutputStream( f2 ) );
+            
+            bos.write( visBytes );
+            
+            bos.flush();
+            bos.close();
+        }
+        catch ( IOException e )
+        {
+        }
+    }
+    
+    public static BSPVisData decompressVis ( int numLeafs, byte[] visBytes )
+    {
+        dumpCompressedVisData( visBytes );
+        
+        BSPVisData visData = new BSPVisData();
+        
+        int     c;
+        byte[]  out;
+        int     rows;
+        
+        byte uInt[] = new byte[ 4 ];
+        
+        long l = 0;
+        l = visBytes[ 0 ] & 0xFF;
+        l <<= 8;
+        l = visBytes[ 1 ] & 0xFF;
+        l <<= 8;
+        l = visBytes[ 2 ] & 0xFF;
+        l <<= 8;
+        l = visBytes[ 3 ] & 0xFF;
+        //System.out.println( "l: " + l );
+        
+        //System.out.println( visBytes );
+        rows = ( numLeafs + 7 ) >> 3;   // 10
+        
+        System.out.println( numLeafs );
+        
+        for ( int i = 0; i < rows; i++ )
+        {
+            /*
+            if ( VisBytes.length != 0 )
+            {
+                out++ = visBytes++;
+                continue;
+            }
+            
+            c = visBytes[ 1 ];
+            visBytes += 2;
+            while ( c )
+            {
+                out++ = 0;
+                c--;
+            }
+            */
+        }
+        
+        /*
+        do
+        {
+            
+        }
+        while ( out - decompressed < row );
+        */
+        
+        //visData.pBitsets = out;
+        
+        return( visData );
+    }
+    
     /**
      * {@inheritDoc}
      */
