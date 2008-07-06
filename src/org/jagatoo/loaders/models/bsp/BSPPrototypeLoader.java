@@ -243,7 +243,7 @@ public class BSPPrototypeLoader
     	return( new BSPVisData() );
     }
     
-    protected static BSPPlane[] readPlanes( BSPFile file, BSPDirectory bspDir ) throws IOException
+    protected static BSPPlane[] readPlanes( BSPFile file, BSPDirectory bspDir, float worldScale ) throws IOException
     {
         if ( bspDir.kPlanes < 0 )
         {
@@ -275,7 +275,7 @@ public class BSPPrototypeLoader
             plane.normal.setX( file.readFloat() );
             plane.normal.setY( file.readFloat() );
             plane.normal.setZ( file.readFloat() );
-            plane.d        = file.readFloat();
+            plane.d        = file.readFloat() * worldScale;
             
             for ( int j = 4; j < entryLength; j++ )
             {
@@ -902,7 +902,7 @@ public class BSPPrototypeLoader
         
         BSPVersionDataLoader loader = bspDir.getDataLoader();
         
-        BSPScenePrototype prototype = loader.loadPrototypeData( bspFile, bspDir );
+        BSPScenePrototype prototype = loader.loadPrototypeData( bspFile, bspDir, worldScale );
         
         loader.convertFacesToGeometries( prototype, geomFactory, worldScale );
         

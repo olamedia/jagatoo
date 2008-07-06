@@ -63,9 +63,7 @@
 package org.jagatoo.loaders.models.bsp;
 
 import java.util.BitSet;
-import java.util.HashSet;
 
-import org.jagatoo.loaders.models.bsp.lumps.BSPFace;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVisData;
 import org.openmali.vecmath2.Tuple3f;
 import org.openmali.vecmath2.util.FloatUtils;
@@ -78,16 +76,14 @@ import org.openmali.vecmath2.util.FloatUtils;
  */
 public class BSPClusterManager
 {
-    private static final boolean DEBUG = false;
+    protected final BSPVisData     bspVisData;
+    protected final boolean        hasVisBitset;
     
-    protected BSPVisData     bspVisData;
-    protected BSPFace[]      bspFaces;
-    
-    protected BitSet         faceBitset;
-    protected int[][][]      clusterLeafs;
-    protected int[]          leafToCluster;
-    protected float[]        planes;
-    protected int[]          nodes;
+    protected final BitSet         faceBitset;
+    protected final int[][][]      clusterLeafs;
+    protected final int[]          leafToCluster;
+    protected final float[]        planes;
+    protected final int[]          nodes;
     
     private   boolean        usePVS = true;
     private   boolean        lastUsePVS = true;
@@ -123,12 +119,9 @@ public class BSPClusterManager
         return( leafToCluster[ -( index + 1 ) ] );
     }
     
-    boolean isClusterVisible( int visCluster, int testCluster )
+    private final boolean isClusterVisible( int camCluster, int testCluster )
     {
-        if ( ( bspVisData.pBitsets == null ) || ( visCluster < 0 ) )
-            return( true );
-        
-        int i = ( visCluster * bspVisData.bytesPerCluster ) + ( testCluster / 8 );
+        int i = ( camCluster * bspVisData.bytesPerCluster ) + ( testCluster / 8 );
         
         return( ( bspVisData.pBitsets[ i ] & ( 1 << ( testCluster & 0x07 ) ) ) != 0 );
     }
@@ -153,21 +146,14 @@ public class BSPClusterManager
     
     private int lastCluster = -2;
     
-    /*
-     * For debugging...
-     */
-    private HashSet<Integer> set = new HashSet<Integer>();
-    private int numVis = 0;
-    private int numFacesVis = 0;
-    private int numClusters = 0;
-    private int numLeaves = 0;
-    
     /**
      * Disables geometry that is invisible according to the PVS
      * 
      * @param camPos the position of the camera
+     * 
+     * @return true, if PVS has changed.
      */
-    public void setVisibility( Tuple3f camPos )
+    public boolean setVisibility( Tuple3f camPos )
     {
         boolean usePVSChanged = ( usePVS != lastUsePVS );
         
@@ -178,59 +164,34 @@ public class BSPClusterManager
             faceBitset.set( 0, faceBitset.size() - 1 );
             //faceSwitch.setChildMask( faceBitset );
             
-            return;
+            return( true );
         }
         
         int camCluster = getCluster( camPos );
         if ( lastCluster == camCluster && !usePVSChanged )
         {
-            return;
-        }
-        
-        if ( DEBUG )
-        {
-            System.out.println( "new cluster is " + camCluster );
+            return( false );
         }
         
         lastCluster = camCluster;
         
+        boolean allClustersVisible = !hasVisBitset || ( camCluster < 0 );
+        
         //faceBitset.clear( 0, faceBitset.size() - 1 );
         faceBitset.clear();
-        
-        if ( DEBUG )
-        {
-            numVis = 0;
-            numFacesVis = 0;
-            numClusters = 0;
-            numLeaves = 0;
-            
-            set.clear();
-        }
         
         for ( int i = 0; i < bspVisData.numOfClusters; i++ )
         {
             int[][] clusterLeafs_i = clusterLeafs[ i ];
             
-            if ( DEBUG && ( clusterLeafs_i != null ) )
+            if ( ( clusterLeafs_i != null ) && ( allClustersVisible || isClusterVisible( camCluster, i ) ) )
             {
-                numClusters++;
-            }
-            
-            if ( ( clusterLeafs_i != null ) && isClusterVisible( camCluster, i ) )
-            {
-                boolean hasFaces = false;
-                
                 for ( int j = 0; j < clusterLeafs_i.length; j++ )
                 {
                     int[] clusterLeafs_i_j = clusterLeafs_i[ j ];
                     
                     if ( clusterLeafs_i_j.length > 0 )
                     {
-                        if ( DEBUG )
-                        {
-                            numLeaves++;
-                        }
-                        
                         for ( int k = 0; k < clusterLeafs_i_j.length; k++ )
                         {
                             int clusterLeaf = clusterLeafs_i_j[ k ];
@@ -238,46 +199,20 @@ public class BSPClusterManager
                             if ( !faceBitset.get( clusterLeaf ) )
                             {
                                 faceBitset.set( clusterLeaf );
-                                
-                                if ( DEBUG )
-                                {
-                                    BSPFace bspFace = bspFaces[ clusterLeaf ];
-                                    int key = ( i << 24 ) | ( bspFace.textureID << 8 ) | ( bspFace.lightmapID );
-                                    
-                                    if ( !set.contains( key ) )
-                                        set.add( key );
-                                    
-                                    numFacesVis++;
-                                }
-                                
-                                hasFaces = true;
                             }
                         }
                     }
                 }
-                
-                if ( DEBUG && hasFaces )
-                {
-                    numVis++;
-                }
             }
         }
         
-        //faceSwitch.setChildMask( faceBitset );
-        
-        if ( DEBUG )
-        {
-            System.out.println( "num cluster is visible is " + numVis + " out of " + numClusters );
-            //System.out.println( "num leaves visible is " + numLeaves + " out of " + leafs.length );
-            //System.out.println( "num faces visible is " + numFacesVis + " out of " + faces.size() );
-            System.out.println( "num unique shapes is " + set.size() );
-        }
+        return( true );
     }
     
-    public BSPClusterManager( BSPVisData bspVisData, BSPFace[] bspFaces, BitSet faceBitset, int[][][] clusterLeafs, int[] leafToCluster, float[] planes, int[] nodes )
+    public BSPClusterManager( BSPVisData bspVisData, BitSet faceBitset, int[][][] clusterLeafs, int[] leafToCluster, float[] planes, int[] nodes )
     {
         this.bspVisData     = bspVisData;
-        this.bspFaces       = bspFaces;
+        this.hasVisBitset   = ( bspVisData.pBitsets != null );
         this.faceBitset     = faceBitset;
         this.clusterLeafs   = clusterLeafs;
         this.leafToCluster  = leafToCluster;
@@ -288,7 +223,7 @@ public class BSPClusterManager
     public BSPClusterManager( BSPClusterManager template )
     {
         this.bspVisData     = template.bspVisData;
-        this.bspFaces       = template.bspFaces;
+        this.hasVisBitset   = template.hasVisBitset;
         this.faceBitset     = template.faceBitset;
         this.clusterLeafs   = template.clusterLeafs;
         this.leafToCluster  = template.leafToCluster;

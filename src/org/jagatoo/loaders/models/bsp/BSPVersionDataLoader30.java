@@ -54,7 +54,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
     /**
      * {@inheritDoc}
      */
-    public BSPScenePrototype loadPrototypeData( BSPFile bspFile, BSPDirectory bspDir ) throws IOException, IncorrectFormatException, ParsingErrorException
+    public BSPScenePrototype loadPrototypeData( BSPFile bspFile, BSPDirectory bspDir, float worldScale ) throws IOException, IncorrectFormatException, ParsingErrorException
     {
         BSPScenePrototype prototype = new BSPScenePrototype();
         
@@ -66,7 +66,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
             prototype.faces = BSPPrototypeLoader.readFaces( bspFile, bspDir );
         	
             prototype.entities = BSPPrototypeLoader.readEntities( bspFile, bspDir );
-            prototype.planes = BSPPrototypeLoader.readPlanes( bspFile, bspDir );
+            prototype.planes = BSPPrototypeLoader.readPlanes( bspFile, bspDir, worldScale );
             prototype.textureNames = BSPPrototypeLoader.readTextures( bspFile, bspDir );
             prototype.vertices = BSPPrototypeLoader.readVertices( bspFile, bspDir );
             prototype.leafs = BSPPrototypeLoader.readLeafs( bspFile, bspDir);
@@ -75,7 +75,6 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
             prototype.texInfos = BSPPrototypeLoader.readTexInfos( bspFile, bspDir );
             
             prototype.lightMaps = BSPPrototypeLoader.readLightmaps( bspFile, bspDir );
-            prototype.planes = BSPPrototypeLoader.readPlanes( bspFile, bspDir );
             //prototype.leafFaces = BSPPrototypeLoader.readLeafFaces( bspFile, bspDir );
             prototype.models = BSPPrototypeLoader.readModels( bspFile, bspDir );
             //prototype.meshVertices = BSPPrototypeLoader.readMeshVertices( bspFile, bspDir );

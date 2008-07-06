@@ -42,7 +42,7 @@ import org.jagatoo.loaders.models.bsp.lumps.BSPDirectory;
  */
 public interface BSPVersionDataLoader
 {
-    public BSPScenePrototype loadPrototypeData( BSPFile bspFile, BSPDirectory bspDir ) throws IOException, IncorrectFormatException, ParsingErrorException;
+    public BSPScenePrototype loadPrototypeData( BSPFile bspFile, BSPDirectory bspDir, float worldScale ) throws IOException, IncorrectFormatException, ParsingErrorException;
     
     public void convertFacesToGeometries( BSPScenePrototype prototype, GeometryFactory geomFactory, float worldScale );
 }
