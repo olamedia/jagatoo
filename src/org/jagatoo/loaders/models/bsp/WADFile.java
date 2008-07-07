@@ -30,7 +30,9 @@
 package org.jagatoo.loaders.models.bsp;
 
 
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -115,6 +117,54 @@ public class WADFile
     public void setWadDir( WADDirectory[] wadDir )
     {
         this.wadDir = wadDir;
+    }
+    
+    protected static void readWad(String fileName) throws IOException
+    {      
+       try
+       {
+           //String fileName = "I:\\Half-Life\\valve\\halflife.wad";
+           FileInputStream fstream = new FileInputStream( fileName );
+           DataInputStream in = new DataInputStream( fstream );
+
+           // read WAD header
+           byte[] nameArray = new byte[ 4 ];
+           in.readFully( nameArray );
+
+           int lumpCount = 0;
+           int dirOffset = 0;
+           
+           lumpCount = Integer.reverseBytes( in.readInt() );
+           dirOffset = Integer.reverseBytes( in.readInt() );
+
+           System.out.println ( "WadFile: " + fileName );
+           System.out.print( "desc: " + new String (nameArray ) );
+           System.out.print( " | lumps: " + lumpCount ); 
+           System.out.println( " | offset: " + dirOffset );
+
+           // read Lump Dir
+           in.skipBytes( dirOffset - ( 3 * 4) );
+
+           for ( int i = 0; i < lumpCount; i++ ) 
+           {
+               System.out.print( i + "\t| offset: " + Integer.reverseBytes( in.readInt() ) );
+               System.out.print( "\t| CompFileSize: " + Integer.reverseBytes( in.readInt() ) );
+               System.out.print( " | UnCompFileSize: " + Integer.reverseBytes( in.readInt() ) );
+               
+               System.out.print( " | FileType: " + in.readByte() );
+               System.out.print( " | CompType: " + in.readByte() );
+               System.out.print( " | Pad1: " + in.readByte() + " | Pad2: " + in.readByte() );
+
+               byte[] texName = new byte[16];
+               in.read( texName );
+               System.out.println( " | name: " + new String ( texName ).trim() );               
+           }
+           in.close();
+       } 
+       catch (Exception e)
+       {
+           System.err.println("File input error");
+       }
     }
     
     public WADDirectory[] readDirectory (int lumpCount)
