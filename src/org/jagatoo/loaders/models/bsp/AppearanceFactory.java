@@ -29,6 +29,7 @@
  */
 package org.jagatoo.loaders.models.bsp;
 
+import java.io.InputStream;
 import java.net.URL;
 
 import org.jagatoo.loaders.textures.AbstractTexture;
@@ -41,6 +42,20 @@ import org.jagatoo.loaders.textures.AbstractTextureImage;
  */
 public interface AppearanceFactory
 {
+    public static final int APP_TEXTURE_MODE_MODULATE = 0;
+    public static final int APP_TEXTURE_MODE_REPLACE = 1;
+    public static final int APP_TEXTURE_MODE_COMBINE = 2;
+    
+    public Object createAppearance( String appID );
+    
+    public void setTexture( Object appearance, String appID, int textureUnit, AbstractTexture texture );
+    
+    public void setTextureMode( Object appearance, String appID, int textureUnit, int textureMode );
+    
+    public void applyAppearance( Object appearance, String appID, Object geometry );
+    
+    public AbstractTexture loadTexture( InputStream in, String texName, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
+    
     public AbstractTexture loadTexture( URL url, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
     
     public AbstractTexture loadOrGetTexture( String texName, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
