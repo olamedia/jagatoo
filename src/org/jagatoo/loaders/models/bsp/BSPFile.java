@@ -65,6 +65,7 @@ package org.jagatoo.loaders.models.bsp;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -82,21 +83,27 @@ import org.jagatoo.loaders.models.bsp.lumps.BSPLump;
  */
 class BSPFile
 {
-    private byte[]            byteBuffer   = null;
-    private FloatBuffer       floatBuffer  = null;
-    private ByteBuffer        bBuffer      = null;
-    private IntBuffer         intBuffer    = null;
-    private ShortBuffer       shortBuffer  = null;
+    protected final byte[]       fourBytes;
+    protected final FloatBuffer  floatBuffer;
+    protected final ByteBuffer   byteBuffer;
+    protected final IntBuffer    intBuffer;
+    protected final ShortBuffer  shortBuffer;
     
-    private RandomAccessFile  in;
+    private final URL            baseURL;
+    private RandomAccessFile     in;
     
-    private char[]            ID;
-    private int               version;
+    private char[]               ID;
+    private int                  version;
     
     /**
      * An array of all lumps in this directory.
      */
     protected BSPLump[] lumps;
+    
+    public final URL getBaseURL()
+    {
+        return( baseURL );
+    }
     
     public RandomAccessFile getInputFile()
     {
@@ -130,14 +137,14 @@ class BSPFile
     
     public int readInt() throws IOException
     {
-        in.read( byteBuffer );
+        in.read( fourBytes );
         
         return( intBuffer.get( 0 ) );
     }
     
     public short readShort() throws IOException
     {
-        in.read( byteBuffer );
+        in.read( fourBytes );
         
         return( shortBuffer.get( 0 ) );
     }
@@ -154,7 +161,7 @@ class BSPFile
     
     public float readFloat() throws IOException
     {
-        in.read(byteBuffer);
+        in.read(fourBytes);
         
         return( floatBuffer.get( 0 ) );
     }
@@ -162,6 +169,11 @@ class BSPFile
     public void readFully( byte[] data ) throws IOException
     {
         in.readFully( data );
+    }
+    
+    public void readFully( byte[] data, int offset, int length ) throws IOException
+    {
+        in.readFully( data, offset, length );
     }
     
     public byte[] readFully( int count ) throws IOException
@@ -286,16 +298,31 @@ class BSPFile
         checkVersion( version );
     }
     
-    public BSPFile( File file ) throws IOException, IncorrectFormatException
+    protected BSPFile( URL baseURL )
     {
         super();
         
-        this.byteBuffer = new byte[ 4 ];
-        this.bBuffer = ByteBuffer.wrap( byteBuffer );
-        this.bBuffer.order( ByteOrder.LITTLE_ENDIAN );
-        this.floatBuffer = bBuffer.asFloatBuffer();
-        this.intBuffer = bBuffer.asIntBuffer();
-        this.shortBuffer = bBuffer.asShortBuffer();
+        this.fourBytes = new byte[ 4 ];
+        this.byteBuffer = ByteBuffer.wrap( fourBytes );
+        this.byteBuffer.order( ByteOrder.LITTLE_ENDIAN );
+        this.floatBuffer = byteBuffer.asFloatBuffer();
+        this.intBuffer = byteBuffer.asIntBuffer();
+        this.shortBuffer = byteBuffer.asShortBuffer();
+        
+        this.baseURL = baseURL;
+    }
+    
+    private static final URL createBaseURL( File file ) throws IOException
+    {
+        if ( file.isDirectory() )
+            throw new IllegalArgumentException( "You cannot pass a directory as the file parameter!" );
+        
+        return( file.getAbsoluteFile().getParentFile().toURI().toURL() );
+    }
+    
+    public BSPFile( File file ) throws IOException, IncorrectFormatException
+    {
+        this( createBaseURL( file ) );
         
         this.in = new RandomAccessFile( file, "r" );
         
@@ -304,10 +331,8 @@ class BSPFile
         readDirectory();
     }
     
-    public BSPFile(String filename) throws IOException, IncorrectFormatException
+    public BSPFile( String filename ) throws IOException, IncorrectFormatException
     {
         this( new File( filename ) );
     }
-    
-    protected BSPFile() {}
 }

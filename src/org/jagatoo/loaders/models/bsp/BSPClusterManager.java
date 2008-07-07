@@ -64,7 +64,11 @@ package org.jagatoo.loaders.models.bsp;
 
 import java.util.BitSet;
 
+import org.jagatoo.loaders.models.bsp.lumps.BSPLeaf;
+import org.jagatoo.loaders.models.bsp.lumps.BSPNode;
+import org.jagatoo.loaders.models.bsp.lumps.BSPPlane;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVisData;
+import org.jagatoo.logging.JAGTLog;
 import org.openmali.vecmath2.Tuple3f;
 import org.openmali.vecmath2.util.FloatUtils;
 
@@ -257,15 +261,15 @@ public class BSPClusterManager
     }
     */
     
-    public BSPClusterManager( BSPVisData bspVisData, BitSet shapeBitset, int[][][] clusterLeafs, int[] leafToCluster, float[] planes, int[] nodes )
+    public BSPClusterManager( BSPVisData bspVisData, int[][][] clusterLeafs, int[] leafToCluster, float[] planes, int[] nodes, BitSet shapeBitset )
     {
         this.bspVisData     = bspVisData;
         this.hasVisBitset   = ( bspVisData.pBitsets != null );
-        this.shapeBitset    = shapeBitset;
         this.clusterLeafs   = clusterLeafs;
         this.leafToCluster  = leafToCluster;
         this.planes         = planes;
         this.nodes          = nodes;
+        this.shapeBitset    = shapeBitset;
         
         //System.out.println( bspVisData.pBitsets.length + ", " + bspVisData.bytesPerCluster + ", " + bspVisData.numOfClusters );
         //System.out.println( clusterLeafs.length + ", " + leafToCluster.length + ", " + planes.length );
@@ -275,10 +279,130 @@ public class BSPClusterManager
     {
         this.bspVisData     = template.bspVisData;
         this.hasVisBitset   = template.hasVisBitset;
-        this.shapeBitset    = template.shapeBitset;
         this.clusterLeafs   = template.clusterLeafs;
         this.leafToCluster  = template.leafToCluster;
         this.planes         = template.planes;
         this.nodes          = template.nodes;
+        this.shapeBitset    = template.shapeBitset;
+    }
+    
+    
+    
+    
+    
+    /**
+     * converts the nodes for the BSP
+     */
+    private static int[] convertNodes( BSPNode[] bspNodes )
+    {
+        int[] nodes = new int[ bspNodes.length * 3 ];
+        for ( int i = 0; i < bspNodes.length; i++ )
+        {
+            final int j = i * 3;
+            nodes[ j + 0 ] = bspNodes[ i ].plane;
+            nodes[ j + 1 ] = bspNodes[ i ].front;
+            nodes[ j + 2 ] = bspNodes[ i ].back;
+        }
+        
+        return( nodes );
+    }
+    
+    /**
+     * Takes all the faces in the leaf and adds them to the cluster
+     * 
+     * @param leaf 
+     */
+    private static int[] convertLeaf( BSPLeaf leaf, int[] leafFaces, int[][][] clusterLeafs, int[] clusterLeaf )
+    {
+        if ( leaf.numOfLeafFaces == 0 )
+        {
+            //if (Xith3DDefaults.getLocalDebug( BSPLoader.DEBUG ))
+            //System.out.println( "no faces, but " + leaf.numOfLeafBrushes + " brushes" );
+            return( new int[] {} );
+        }
+        
+        int[] leafFaces2 = new int[ leaf.numOfLeafFaces ];
+        for ( int i = 0; i < leaf.numOfLeafFaces; i++ )
+        {
+            leafFaces2[ i ] = leafFaces[ i + leaf.leafFace ];
+        }
+        
+        clusterLeaf[ leaf.cluster ]++;
+        
+        if ( clusterLeafs[ leaf.cluster ] == null )
+        {
+            clusterLeafs[ leaf.cluster ] = new int[ 1 ][];
+        }
+        else
+        {
+            int[][] tmp = new int[ clusterLeafs[ leaf.cluster ].length + 1 ][];
+            System.arraycopy( clusterLeafs[ leaf.cluster ], 0, tmp, 0, clusterLeafs[ leaf.cluster ].length );
+            clusterLeafs[ leaf.cluster ] = tmp;
+            
+        }
+        
+        clusterLeafs[ leaf.cluster ][ clusterLeafs[ leaf.cluster ].length - 1 ] = leafFaces2;
+        
+        return( leafFaces2 );
+        
+        //if (Xith3DDefaults.getLocalDebug( BSPLoader.DEBUG ))
+        //System.out.println( "there are " + smap.size() + " unique textures in " + leaf.numOfLeafFaces + " faces" );
+    }
+    
+    /**
+     * converts the planes for the BSP
+     */
+    private static float[] convertPlanes( BSPPlane[] bspPlanes )
+    {
+        // now convert the planes
+        float[] planes = new float[ bspPlanes.length * 4 ];
+        for ( int i = 0; i < bspPlanes.length; i++ )
+        {
+            final int j = i * 4;
+            //planes[i].normal.normalize();
+            planes[ j + 0 ] = bspPlanes[ i ].normal.getX();
+            planes[ j + 1 ] = bspPlanes[ i ].normal.getZ();
+            planes[ j + 2 ] = -bspPlanes[ i ].normal.getY();
+            planes[ j + 3 ] = bspPlanes[ i ].d;
+        }
+        
+        return( planes );
+    }
+    
+    /**
+     * Creates a BSPClusterManager from the visdata contained in the prototype.
+     * 
+     * @param prototype
+     * @param faceBitset
+     */
+    public static BSPClusterManager create( BSPScenePrototype prototype, BitSet faceBitset )
+    {
+        int[] clusterLeaf = new int[ prototype.leafs.length ];
+        int[][][] clusterLeafs = new int[ prototype.visData.numOfClusters ][][];
+        
+        int[][] leafs = new int[ prototype.leafs.length ][];
+        int[] leafToCluster = new int[ prototype.leafs.length ];
+        
+        for ( int i = 0; i < prototype.leafs.length; i++ )
+        {
+            leafs[ i ] = convertLeaf( prototype.leafs[ i ], prototype.leafFaces, clusterLeafs, clusterLeaf );
+            leafToCluster[ i ] = prototype.leafs[ i ].cluster;
+        }
+        
+        JAGTLog.debug( "Converting nodes..." );
+        
+        int[] nodes = convertNodes( prototype.nodes );
+        float[] planes = convertPlanes( prototype.planes );
+        
+        
+        int numLeaves = 0;
+        for ( int i = 0; i < clusterLeaf.length; i++ )
+            numLeaves += clusterLeaf[ i ];
+        
+        JAGTLog.debug( "total referenced leaves = ", numLeaves );
+        JAGTLog.debug( "total leaves = ", prototype.leafs.length );
+        JAGTLog.debug( "total faces = ", prototype.geometries[0].length );
+        
+        return( new BSPClusterManager( prototype.visData, clusterLeafs, leafToCluster, planes, nodes, faceBitset ) );
     }
 }

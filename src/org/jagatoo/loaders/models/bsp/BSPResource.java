@@ -66,11 +66,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
 import org.jagatoo.loaders.IncorrectFormatException;
 
@@ -85,17 +80,8 @@ import org.jagatoo.loaders.IncorrectFormatException;
  */
 class BSPResource extends BSPFile
 {
-    private byte[]       byteBuffer = null;
-    private FloatBuffer  floatBuffer = null;
-    private ByteBuffer   bBuffer = null;
-    private IntBuffer    intBuffer = null;
-    private ShortBuffer  shortBuffer = null;
-    
     private byte[]       in;
     private int          pointer;
-    
-    private char[]       ID;
-    private int          version;
     
     @Override
     public RandomAccessFile getInputFile()
@@ -138,10 +124,10 @@ class BSPResource extends BSPFile
     {
         try
         {
-            byteBuffer[ 0 ] = in[ pointer++ ];
-            byteBuffer[ 1 ] = in[ pointer++ ];
-            byteBuffer[ 2 ] = in[ pointer++ ];
-            byteBuffer[ 3 ] = in[ pointer++ ];
+            fourBytes[ 0 ] = in[ pointer++ ];
+            fourBytes[ 1 ] = in[ pointer++ ];
+            fourBytes[ 2 ] = in[ pointer++ ];
+            fourBytes[ 3 ] = in[ pointer++ ];
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
@@ -155,8 +141,8 @@ class BSPResource extends BSPFile
     {
         try
         {
-            byteBuffer[ 0 ] = in[ pointer++ ];
-            byteBuffer[ 1 ] = in[ pointer++ ];
+            fourBytes[ 0 ] = in[ pointer++ ];
+            fourBytes[ 1 ] = in[ pointer++ ];
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
@@ -181,10 +167,10 @@ class BSPResource extends BSPFile
     {
         try
         {
-            byteBuffer[ 0 ] = in[ pointer++ ];
-            byteBuffer[ 1 ] = in[ pointer++ ];
-            byteBuffer[ 2 ] = in[ pointer++ ];
-            byteBuffer[ 3 ] = in[ pointer++ ];
+            fourBytes[ 0 ] = in[ pointer++ ];
+            fourBytes[ 1 ] = in[ pointer++ ];
+            fourBytes[ 2 ] = in[ pointer++ ];
+            fourBytes[ 3 ] = in[ pointer++ ];
         }
         catch (ArrayIndexOutOfBoundsException e)
         {
@@ -202,6 +188,17 @@ class BSPResource extends BSPFile
         }
         
         pointer += data.length;
+    }
+    
+    @Override
+    public void readFully( byte[] data, int offset, int length ) throws IOException
+    {
+        for ( int i = 0; i < length; i++ )
+        {
+            data[ offset + i ] = in[ pointer + i ];
+        }
+        
+        pointer += length;
     }
     
     @Override
@@ -226,18 +223,6 @@ class BSPResource extends BSPFile
     @Override
     public void close() throws IOException
     {
-    }
-    
-    @Override
-    public char[] getID()
-    {
-        return( ID );
-    }
-    
-    @Override
-    public int getVersion()
-    {
-        return( version );
     }
     
     private final byte[] ensureCapacity( byte[] buffer, int cap )
@@ -270,16 +255,9 @@ class BSPResource extends BSPFile
         return( buffer );
     }
     
-    public BSPResource( InputStream in ) throws IOException, IncorrectFormatException
+    public BSPResource( InputStream in, URL baseURL ) throws IOException, IncorrectFormatException
     {
-        super();
-        
-        this.byteBuffer = new byte[ 4 ];
-        this.bBuffer = ByteBuffer.wrap( byteBuffer );
-        this.bBuffer.order( ByteOrder.LITTLE_ENDIAN );
-        this.floatBuffer = bBuffer.asFloatBuffer();
-        this.intBuffer = bBuffer.asIntBuffer();
-        this.shortBuffer = bBuffer.asShortBuffer();
+        super( baseURL );
         
         this.in = readStreamToByteArray( in );
         this.pointer = 0;
@@ -289,8 +267,22 @@ class BSPResource extends BSPFile
         readDirectory();
     }
     
-    public BSPResource(URL resource) throws IOException, IncorrectFormatException
+    private static final URL createBaseURL( URL url ) throws IOException
     {
-        this( resource.openStream() );
+        String file = url.getFile();
+        String proto = url.toExternalForm().substring( 0, url.toExternalForm().length() - file.length() );
+        
+        int lastSlashPos = file.lastIndexOf( '/' );
+        if ( lastSlashPos < 0 )
+            return( null );
+        else if ( lastSlashPos == file.length() - 1 )
+            throw new IllegalArgumentException( "You cannot pass a directory as the url parameter!" );
+        else
+            return( new URL( proto + file.substring( 0, lastSlashPos + 1 ) ) );
+    }
+    
+    public BSPResource( URL resource ) throws IOException, IncorrectFormatException
+    {
+        this( resource.openStream(), createBaseURL( resource ) );
     }
 }

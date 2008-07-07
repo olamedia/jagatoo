@@ -62,8 +62,8 @@
  */
 package org.jagatoo.loaders.models.bsp;
 
-import org.jagatoo.image.SharedBufferedImage;
 import org.jagatoo.loaders.models.bsp.lumps.*;
+import org.jagatoo.loaders.textures.AbstractTexture;
 import org.openmali.spatial.bounds.BoundingBox;
 
 /**
@@ -90,7 +90,12 @@ public class BSPScenePrototype
     /**
      * 
      */
-    public SharedBufferedImage[]  lightMaps;
+    public AbstractTexture[]  baseTextures;
+    
+    /**
+     * 
+     */
+    public AbstractTexture[]  lightMaps;
     
     /**
      * 
@@ -101,11 +106,6 @@ public class BSPScenePrototype
      * 
      */
     public BSPLeaf[]        leafs;
-    
-    /**
-     * 
-     */
-    public String[]         textureNames;
     
     /**
      * 

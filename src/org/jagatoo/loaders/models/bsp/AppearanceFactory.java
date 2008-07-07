@@ -29,20 +29,23 @@
  */
 package org.jagatoo.loaders.models.bsp;
 
-import java.io.IOException;
+import java.net.URL;
 
-import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingErrorException;
-import org.jagatoo.loaders.models.bsp.lumps.BSPDirectory;
+import org.jagatoo.loaders.textures.AbstractTexture;
+import org.jagatoo.loaders.textures.AbstractTextureImage;
 
 /**
  * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface BSPVersionDataLoader
+public interface AppearanceFactory
 {
-    public BSPScenePrototype loadPrototypeData( BSPFile bspFile, BSPDirectory bspDir, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException;
+    public AbstractTexture loadTexture( URL url, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
     
-    public void convertFacesToGeometries( BSPScenePrototype prototype, GeometryFactory geomFactory, float worldScale );
+    public AbstractTexture loadOrGetTexture( String texName, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
+    
+    public AbstractTextureImage createTextureImage( AbstractTextureImage.Format format, int width, int height );
+    
+    public AbstractTexture createTexture( AbstractTextureImage texImage0, boolean generateMipmaps );
 }

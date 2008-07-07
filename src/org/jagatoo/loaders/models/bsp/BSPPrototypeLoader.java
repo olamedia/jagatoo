@@ -65,11 +65,15 @@ package org.jagatoo.loaders.models.bsp;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.ByteBuffer;
 
-import org.jagatoo.image.SharedBufferedImage;
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.loaders.models.bsp.lumps.*;
+import org.jagatoo.loaders.textures.AbstractTexture;
+import org.jagatoo.loaders.textures.AbstractTextureImage;
 
 /**
  * Loads the Quake 3 BSP file according to spec.
@@ -84,7 +88,40 @@ public class BSPPrototypeLoader
 {
     protected static final Boolean DEBUG = null;
     
-    protected static String[] readTextures( BSPFile file, BSPDirectory bspDir ) throws IOException
+    private static AbstractTexture loadTexture( BSPFile file, String textureName, AppearanceFactory appFactory )
+    {
+        URL baseURL = file.getBaseURL();
+        
+        if ( baseURL == null )
+        {
+            AbstractTexture texture = appFactory.loadOrGetTexture( textureName + ".tga", false, true, true, true, false );
+            if ( texture == null )
+                texture = appFactory.loadOrGetTexture( textureName + ".jpg", false, true, true, true, true );
+            
+            return( texture );
+        }
+        else
+        {
+            AbstractTexture texture = null;
+            try
+            {
+                texture = appFactory.loadTexture( new URL( baseURL, textureName + ".tga" ), false, true, true, true, false );
+                if ( texture == null )
+                    texture = appFactory.loadTexture( new URL( baseURL, textureName + ".jpg" ), false, true, true, true, true );
+            }
+            catch ( MalformedURLException e )
+            {
+                e.printStackTrace();
+                
+                // Load a non existing texture to make the TextureLoader use the fallback-texture.
+                texture = appFactory.loadOrGetTexture( "error-not-existing-texture.jpg", false, true, true, true, true );
+            }
+            
+            return( texture );
+        }
+    }
+    
+    protected static AbstractTexture[] readTextures( BSPFile file, BSPDirectory bspDir, AppearanceFactory appFactory ) throws IOException
     {
         if ( bspDir.kTextures < 0 )
         {
@@ -105,7 +142,7 @@ public class BSPPrototypeLoader
             textureCount = file.lumps[ bspDir.kTextures ].length / ( 64 + 2 * 4 );
         }
         
-        String[] textures = new String[ textureCount ];
+        AbstractTexture[] textures = new AbstractTexture[ textureCount ];
         
         if ( file.getVersion() == 30 )
         {
@@ -119,19 +156,22 @@ public class BSPPrototypeLoader
                 
                 byte[] texNameBytes = file.readFully( 16 );
                 
+                String textureName = null;
                 for ( int b = 0; b < texNameBytes.length; b++ )
                 {
                     if ( texNameBytes[ b ] == 0 )
                     {
-                        textures[ i ] = new String( texNameBytes, 0, b );
+                        textureName = new String( texNameBytes, 0, b );
                         break;
                     }
                 }
                 
                 if ( textures[ i ] == null )
                 {
-                    textures[ i ] = new String( texNameBytes );
+                    textureName = new String( texNameBytes );
                 }
+                
+                textures[ i ] = loadTexture( file, textureName, appFactory );
                 
                 /*int width = */file.readInt();
                 /*int height = */file.readInt();
@@ -159,16 +199,50 @@ public class BSPPrototypeLoader
                 file.readInt();
                 file.readInt();
                 
-                String s = new String( ca );
-                s = s.substring( 0, s.indexOf( 0 ) );
-                textures[ i ] = s;
+                String textureName = new String( ca );
+                textureName = textureName.substring( 0, textureName.indexOf( 0 ) );
+                
+                textures[ i ] = loadTexture( file, textureName, appFactory );
             }
         }
         
         return( textures );
     }
     
-    protected static SharedBufferedImage[] readLightmaps( BSPFile file, BSPDirectory bspDir ) throws IOException
+    private static void changeGamma( AbstractTextureImage img, float factor )
+    {
+        final ByteBuffer imgData = img.getDataBuffer();
+        final int pixelSize = img.getPixelSize();
+        
+        byte gtable[] = new byte[ 256 ];
+        for ( int i = 0; i < 256; i++ )
+            gtable[ i ] = (byte)Math.floor( 255.0 * Math.pow( i / 255.0, 1.0 / factor ) + 0.5 );
+        
+        // Go through every pixel in the lightmap
+        final int size = img.getWidth() * img.getHeight();
+        for ( int i = 0; i < size; i++ )
+        {
+            int tmp;
+            
+            /*
+            tmp = pBB.get( i * pixelSize + 0 ) & 0xFF;
+            pBB.put( i * pixelSize + 0, gtable[ tmp ] );
+            tmp = pBB.get( i * pixelSize + 1 ) & 0xFF;
+            pBB.put( i * pixelSize + 1, gtable[ tmp ] );
+            tmp = pBB.get( i * pixelSize + 2 ) & 0xFF;
+            pBB.put( i * pixelSize + 2, gtable[ tmp ] );
+            */
+            
+            tmp = imgData.get( i * pixelSize + 0 ) & 0xFF;
+            imgData.put( i * pixelSize + 0, gtable[ tmp ] );
+            tmp = imgData.get( i * pixelSize + 1 ) & 0xFF;
+            imgData.put( i * pixelSize + 1, gtable[ tmp ] );
+            tmp = imgData.get( i * pixelSize + 2 ) & 0xFF;
+            imgData.put( i * pixelSize + 2, gtable[ tmp ] );
+        }
+    }
+    
+    protected static AbstractTexture[] readLightmaps( BSPFile file, BSPDirectory bspDir, AppearanceFactory appFactory ) throws IOException
     {
         if ( bspDir.kLightmaps < 0 )
         {
@@ -192,15 +266,45 @@ public class BSPPrototypeLoader
         }
         
         file.seek( bspDir.kLightmaps );
-        final int num = file.lumps[ bspDir.kLightmaps ].length / ( w * h * 3 );
+        final int sizePerImage = w * h * 3;
+        final int num = file.lumps[ bspDir.kLightmaps ].length / sizePerImage;
         
-        SharedBufferedImage[] lightMaps = new SharedBufferedImage[ num ];
+        AbstractTexture[] lightMaps = new AbstractTexture[ num ];
+        
+        byte[] buffer = new byte[ 1024 ];
         
         for ( int i = 0; i < num; i++ )
         {
-            lightMaps[ i ] = SharedBufferedImage.create( w, h, 3, new int[] { 0, 1, 2 }, null );
+            AbstractTextureImage texImg0 = appFactory.createTextureImage( AbstractTextureImage.Format.RGB, w, h );
+            ByteBuffer bb = texImg0.getDataBuffer();
+            bb.position( 0 );
+            bb.limit( bb.capacity() );
             
-            file.readFully( lightMaps[ i ].getSharedData() );
+            for ( int j = 0; j < sizePerImage; j += buffer.length )
+            {
+                int rest = sizePerImage - j;
+                int length;
+                if ( rest >= buffer.length )
+                    length = buffer.length;
+                else
+                    length = rest;
+                
+                file.readFully( buffer, 0, length );
+                
+                bb.put( buffer, 0, length );
+            }
+            
+            bb.flip();
+            
+            int pos = bb.position();
+            int limit = bb.limit();
+            
+            changeGamma( texImg0, 1.2f );
+            
+            bb.position( pos );
+            bb.limit( limit );
+            
+            lightMaps[ i ] = appFactory.createTexture( texImg0, true );
         }
         
         return( lightMaps );
@@ -573,7 +677,18 @@ public class BSPPrototypeLoader
         }
         
         file.seek( bspDir.kNodes );
-        int num = file.lumps[ bspDir.kNodes ].length / ( 4 * 9 );
+        
+        int length = 0;
+        if ( file.getVersion() == 30 )
+        {
+            length = 24;
+        }
+        else if ( file.getVersion() == 46 )
+        {
+            length = ( 9 * 4 );
+        }
+        
+        int num = file.lumps[ bspDir.kNodes ].length / length;
         BSPNode[] nodes = new BSPNode[ num ];
         
         if ( file.getVersion() == 30 ) 
@@ -583,20 +698,38 @@ public class BSPPrototypeLoader
                 BSPNode node         = new BSPNode();
                 nodes[ i ]           = node;
                 
-                node.plane     = file.readInt(); // planenum
-                file.readShort(); 
-                file.readShort(); // children[2]; - negative numbers are -(leafs + 1), not nodes
+                node.plane     = file.readInt(); // index into planes array
                 
-                node.mins[ 0 ] = file.readInt();
-                node.mins[ 1 ] = file.readInt();
-                node.mins[ 2 ] = file.readInt();
+                // If > 0, then indices into nodes; otherwise, bitwise inverse = indices into leaves.
+                short child0 = file.readShort();
+                short child1 = file.readShort();
                 
-                node.maxs[ 0 ] = file.readInt();
-                node.maxs[ 1 ] = file.readInt();
-                node.maxs[ 2 ] = file.readInt();
+                // FIXME: How to use this index for leafs, but not for nodes???
                 
-                node.front     = file.readShort(); // unsigned short  firstface; 
-                node.back      = file.readShort(); // unsigned short  numfaces;   // counting both sides
+                if ( child0 <= 0 )
+                    System.out.println( child0 );
+                if ( child1 <= 0 )
+                    System.out.println( child1 );
+                
+                if ( child0 > 0 )
+                    node.front = child0;
+                else
+                    node.front = -( Integer.reverse( child0 ) >> 16 );
+                if ( child1 > 0 )
+                    node.back = child1;
+                else
+                    node.back = -( Integer.reverse( child1 ) >> 16 );
+                
+                node.mins[ 0 ] = file.readShort();
+                node.mins[ 1 ] = file.readShort();
+                node.mins[ 2 ] = file.readShort();
+                
+                node.maxs[ 0 ] = file.readShort();
+                node.maxs[ 1 ] = file.readShort();
+                node.maxs[ 2 ] = file.readShort();
+                
+                /*int firstFace = */file.readUnsignedShort();
+                /*int numFaces = */file.readUnsignedShort();// counting both sides
                 
                 //System.out.println( "      " + node.plane + " - " + node.front + " - " + node.back );
                 //System.out.println( "mins: " + node.mins[ 0 ] + " - " + node.mins[ 1 ] + " - " + node.mins[ 2 ] );
@@ -636,10 +769,22 @@ public class BSPPrototypeLoader
             return( null );
         }
         
+        int entryLength = 0;
+        if ( file.getVersion() == 30 )
+        {
+            entryLength = 26;
+        }
+        else if ( file.getVersion() == 46 )
+        {
+            entryLength = ( 12 * 4 );
+        }
+        
         file.seek( bspDir.kLeafs );
-        int num = file.lumps[ bspDir.kLeafs ].length / ( 12 * 4 );
+        int num = file.lumps[ bspDir.kLeafs ].length / entryLength;
         
         BSPLeaf[] leafs = new BSPLeaf[ num ];
+        
+        System.out.println( num );
         
         if ( file.getVersion() == 30 )
         {
@@ -648,8 +793,19 @@ public class BSPPrototypeLoader
                 BSPLeaf leaf                = new BSPLeaf();
                 leafs[ i ]                  = leaf;
                 
-                //System.out.println( "content: " + file.readInt() ); // int : contents;
-                //System.out.println( "visofs: "+ file.readInt() );   // int : visofs; // -1 = no visibility info
+                /*
+                signed int contents;            // Contents enum
+                unsigned int vis_offset;        // Something to do with visibility; -1 = no visibility info
+                signed short mins[3], maxs[3];  // Bounding box
+                unsigned short firstmarksurface, nummarksurfaces;   // Index and count into marksurfaces lump
+                unsigned char ambient_level[4]; // Ambient sound levels, indexed by ambient enum
+                */
+                
+                /*int contents = */file.readInt();
+                /*int visOffset = */file.readInt();
+                
+                //System.out.println( "contents: " + contents );
+                //System.out.println( "visOffset: "+ visOffset );
                 
                 // for frustum culling
                 leaf.mins[ 0 ]        = file.readShort();
@@ -660,10 +816,13 @@ public class BSPPrototypeLoader
                 leaf.maxs[ 1 ]        = file.readShort();
                 leaf.maxs[ 2 ]        = file.readShort();
                 
-                //System.out.println( "firstmarksurfaces: " + file.readInt() ); //int       firstmarksurface;
-                //System.out.println( "nummarksurfaces: " + file.readInt() );       //int       nummarksurfaces;
+                /*int firstMarkSurface = */file.readUnsignedShort();
+                /*int numMarkSurfaces = */file.readUnsignedShort();
                 
-                file.readFully( 4 ); // byte : ambient_level[ 4 ];
+                //System.out.println( "firstMarkSurface: " + firstMarkSurface );
+                //System.out.println( "numMarkSurfaces: " + numMarkSurfaces );
+                
+                file.readFully( 4 ); // ambient_level;
             }
         }
         else if ( file.getVersion() == 46 )
@@ -813,7 +972,7 @@ public class BSPPrototypeLoader
     /**
      * Loads the BSP scene prototype.
      */
-    private static BSPScenePrototype load( BSPFile bspFile, GeometryFactory geomFactory, float worldScale ) throws IOException, IncorrectFormatException, ParsingErrorException
+    private static BSPScenePrototype load( BSPFile bspFile, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException
     {
         final BSPDirectory bspDir;
         
@@ -831,7 +990,7 @@ public class BSPPrototypeLoader
         
         BSPVersionDataLoader loader = bspDir.getDataLoader();
         
-        BSPScenePrototype prototype = loader.loadPrototypeData( bspFile, bspDir, worldScale );
+        BSPScenePrototype prototype = loader.loadPrototypeData( bspFile, bspDir, worldScale, appFactory );
         
         loader.convertFacesToGeometries( prototype, geomFactory, worldScale );
         
@@ -841,23 +1000,38 @@ public class BSPPrototypeLoader
     /**
      * Loads the BSP scene prototype.
      */
-    public static BSPScenePrototype load( InputStream in, GeometryFactory geomFactory, float worldScale ) throws IOException, IncorrectFormatException, ParsingErrorException
+    public static BSPScenePrototype load( InputStream in, URL baseURL, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException
     {
         if ( !( in instanceof BufferedInputStream ) )
             in = new BufferedInputStream( in );
         
-        BSPFile bspFile = new BSPResource( in );
+        BSPFile bspFile = new BSPResource( in, baseURL );
         
-        return( load( bspFile, geomFactory, worldScale ) );
+        return( load( bspFile, geomFactory, worldScale, appFactory ) );
     }
     
     /**
      * Loads the BSP scene prototype.
      */
-    public static BSPScenePrototype load( String filename, GeometryFactory geomFactory, float worldScale ) throws IOException, IncorrectFormatException, ParsingErrorException
+    public static BSPScenePrototype load( URL url, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException
+    {
+        InputStream in = url.openStream();
+        
+        if ( !( in instanceof BufferedInputStream ) )
+            in = new BufferedInputStream( in );
+        
+        BSPFile bspFile = new BSPResource( url );
+        
+        return( load( bspFile, geomFactory, worldScale, appFactory ) );
+    }
+    
+    /**
+     * Loads the BSP scene prototype.
+     */
+    public static BSPScenePrototype load( String filename, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException
     {
         BSPFile bspFile = new BSPFile( filename );
         
-        return( load( bspFile, geomFactory, worldScale ) );
+        return( load( bspFile, geomFactory, worldScale, appFactory ) );
     }
 }

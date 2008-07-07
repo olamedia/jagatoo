@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -762,7 +763,7 @@ public abstract class AbstractTextureLoader
      * 
      * @return The {@link AbstractTexture} object or a null, if it was not found.
      */
-    public AbstractTexture loadTexture( URL imageURL, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, TextureFactory texFactory )
+    protected AbstractTexture loadTextureFromURL( URL imageURL, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, TextureFactory texFactory )
     {
         if ( imageURL == null )
         {
@@ -772,13 +773,12 @@ public abstract class AbstractTextureLoader
         AbstractTexture tex = null;
         String name = null;
         
-        /*
-        String cacheKey;
+        //String cacheKey;
         try
         {
             name = imageURL.toURI().toString();
             
-            cacheKey = generateCacheKey( name, acceptAlpha, loadMipmaps, flipVertically, allowStreching );
+            //cacheKey = generateCacheKey( name, acceptAlpha, loadMipmaps, flipVertically, allowStreching );
         }
         catch ( URISyntaxException e )
         {
@@ -788,6 +788,7 @@ public abstract class AbstractTextureLoader
             throw( re );
         }
         
+        /*
         if ( ( tex = checkCache( name, cacheKey ) ) != null )
         {
             return( tex );
@@ -800,19 +801,19 @@ public abstract class AbstractTextureLoader
         {
             in = imageURL.openStream();
         }
-        catch ( IOException ex )
+        catch ( Throwable ex )
         {
-            ex.printStackTrace();
-        }
-        
-        if ( !( in instanceof BufferedInputStream ) )
-        {
-            in = new BufferedInputStream( in );
+            //ex.printStackTrace();
         }
         
         if ( in == null )
         {
             return( null );
+        }
+        
+        if ( !( in instanceof BufferedInputStream ) )
+        {
+            in = new BufferedInputStream( in );
         }
         
         tex = loadTextureFromStream( (BufferedInputStream)in, flipVertically, acceptAlpha, loadMipmaps, allowStreching, texFactory );

@@ -111,7 +111,7 @@ public interface AbstractTexture extends NamableObject
                     return( org.jagatoo.loaders.textures.AbstractTextureImage.Format.RGBA );
                     
                 default:
-                    throw new Error();
+                    throw new Error( "Unsupported Format for conversion: " + this );
             }
         }
         
