@@ -166,7 +166,7 @@ public class BSPPrototypeLoader
                     }
                 }
                 
-                if ( textures[ i ] == null )
+                if ( textureName == null )
                 {
                     textureName = new String( texNameBytes );
                 }
