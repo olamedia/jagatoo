@@ -121,7 +121,7 @@ public class WADFile
     {      
         try
         {
-            //String fileName = "I:\\Half-Life\\valve\\halflife.wad";
+            //String fileName = "I:/Half-Life/valve/halflife.wad";
             FileInputStream fstream = new FileInputStream( fileName );
             DataInputStream in = new DataInputStream( fstream );
             
