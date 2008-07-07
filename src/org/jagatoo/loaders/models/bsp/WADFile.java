@@ -35,8 +35,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 
 import org.jagatoo.loaders.IncorrectFormatException;
 
@@ -47,131 +45,132 @@ import org.jagatoo.loaders.IncorrectFormatException;
  */
 public class WADFile
 {
+    // wad directory, contains info for integrated files
+    private class WADDirectory 
+    {
+        public int     offset          = 0;    // - Offset 
+        public int     compFileSize    = 0;    // - Compressed File Size 
+        public int     unCompFileSize  = 0;    // - Uncompressed File Size 
+        public byte    filetype        = 0;    // - File Type 
+        public byte    compType        = 0;    // - Compression Type 
+        public byte[]  padding         = null; // - Padding 
+        public char[]  fileName        = null; // - Filename (null)
+    }
+    
     // wad header
     private String  wadFile     = null;
-    private char[]  wadType     = null; //- Header (WAD3) 
-    private int     lumpCount   = 0;    //- Number Of Files 
-    private int     dirOffset   = 0;    //- Directory Offset 
-
+    private char[]  wadType     = null; // - Header (WAD3) 
+    private int     lumpCount   = 0;    // - Number Of Files 
+    private int     dirOffset   = 0;    // - Directory Offset 
+    
     private RandomAccessFile  in;
     
     private WADDirectory[] wadDir = null;
     
-    // wad directory, contains info for integrated files
-    private class WADDirectory 
-    {
-        private int     offset          = 0;    //- Offset 
-        private int     ompFileSize     = 0;    //- Compressed File Size 
-        private int     unCompFileSize  = 0;    //- Uncompressed File Size 
-        private byte    filetype        = 0;    //- File Type 
-        private byte    compType        = 0;    //- Compression Type 
-        private byte[]  padding         = null; //- Padding 
-        private char    fileName[]      = null;  //- Filename (null)
-    }
-
-    public String getWadFile()
-    {
-        return wadFile;
-    }
-
     public void setWadFile( String wadFile )
     {
         this.wadFile = wadFile;
     }
-
-    public char[] getWadType()
+    
+    public final String getWadFile()
     {
-        return wadType;
+        return( wadFile );
     }
-
+    
     public void setWadType( char[] wadType )
     {
         this.wadType = wadType;
     }
-
-    public int getLumpCount()
+    
+    public final char[] getWadType()
     {
-        return lumpCount;
+        return( wadType );
     }
-
+    
     public void setLumpCount( int lumpCount )
     {
         this.lumpCount = lumpCount;
     }
-
-    public int getDirOffset()
+    
+    public final int getLumpCount()
     {
-        return dirOffset;
+        return( lumpCount );
     }
-
+    
     public void setDirOffset( int dirOffset )
     {
         this.dirOffset = dirOffset;
     }
-
-    public WADDirectory[] getWadDir()
+    
+    public final int getDirOffset()
     {
-        return wadDir;
+        return( dirOffset );
     }
-
+    
     public void setWadDir( WADDirectory[] wadDir )
     {
         this.wadDir = wadDir;
     }
     
-    protected static void readWad(String fileName) throws IOException
-    {      
-       try
-       {
-           //String fileName = "I:\\Half-Life\\valve\\halflife.wad";
-           FileInputStream fstream = new FileInputStream( fileName );
-           DataInputStream in = new DataInputStream( fstream );
-
-           // read WAD header
-           byte[] nameArray = new byte[ 4 ];
-           in.readFully( nameArray );
-
-           int lumpCount = 0;
-           int dirOffset = 0;
-           
-           lumpCount = Integer.reverseBytes( in.readInt() );
-           dirOffset = Integer.reverseBytes( in.readInt() );
-
-           System.out.println ( "WadFile: " + fileName );
-           System.out.print( "desc: " + new String (nameArray ) );
-           System.out.print( " | lumps: " + lumpCount ); 
-           System.out.println( " | offset: " + dirOffset );
-
-           // read Lump Dir
-           in.skipBytes( dirOffset - ( 3 * 4) );
-
-           for ( int i = 0; i < lumpCount; i++ ) 
-           {
-               System.out.print( i + "\t| offset: " + Integer.reverseBytes( in.readInt() ) );
-               System.out.print( "\t| CompFileSize: " + Integer.reverseBytes( in.readInt() ) );
-               System.out.print( " | UnCompFileSize: " + Integer.reverseBytes( in.readInt() ) );
-               
-               System.out.print( " | FileType: " + in.readByte() );
-               System.out.print( " | CompType: " + in.readByte() );
-               System.out.print( " | Pad1: " + in.readByte() + " | Pad2: " + in.readByte() );
-
-               byte[] texName = new byte[16];
-               in.read( texName );
-               System.out.println( " | name: " + new String ( texName ).trim() );               
-           }
-           in.close();
-       } 
-       catch (Exception e)
-       {
-           System.err.println("File input error");
-       }
+    public final WADDirectory[] getWadDir()
+    {
+        return( wadDir );
     }
     
-    public WADDirectory[] readDirectory (int lumpCount)
+    protected static void readWad( String fileName ) throws IOException
+    {      
+        try
+        {
+            //String fileName = "I:\\Half-Life\\valve\\halflife.wad";
+            FileInputStream fstream = new FileInputStream( fileName );
+            DataInputStream in = new DataInputStream( fstream );
+            
+            // read WAD header
+            byte[] nameArray = new byte[ 4 ];
+            in.readFully( nameArray );
+            
+            int lumpCount = 0;
+            int dirOffset = 0;
+            
+            lumpCount = Integer.reverseBytes( in.readInt() );
+            dirOffset = Integer.reverseBytes( in.readInt() );
+            
+            System.out.println( "WadFile: " + fileName );
+            System.out.print( "desc: " + new String( nameArray ) );
+            System.out.print( " | lumps: " + lumpCount ); 
+            System.out.println( " | offset: " + dirOffset );
+            
+            // read Lump Dir
+            in.skipBytes( dirOffset - ( 3 * 4 ) );
+            
+            for ( int i = 0; i < lumpCount; i++ ) 
+            {
+                System.out.print( i + "\t| offset: " + Integer.reverseBytes( in.readInt() ) );
+                System.out.print( "\t| CompFileSize: " + Integer.reverseBytes( in.readInt() ) );
+                System.out.print( " | UnCompFileSize: " + Integer.reverseBytes( in.readInt() ) );
+                
+                System.out.print( " | FileType: " + in.readByte() );
+                System.out.print( " | CompType: " + in.readByte() );
+                System.out.print( " | Pad1: " + in.readByte() + " | Pad2: " + in.readByte() );
+                
+                byte[] texName = new byte[ 16 ];
+                in.read( texName );
+                System.out.println( " | name: " + new String( texName ).trim() );               
+            }
+            
+            in.close();
+        } 
+        catch ( Exception e )
+        {
+            System.err.println( "File input error" );
+        }
+    }
+    
+    public WADDirectory[] readDirectory( int lumpCount )
     {
-        WADDirectory[] wadDir = new WADDirectory[lumpCount];
+        WADDirectory[] wadDir = new WADDirectory[ lumpCount ];
         
-        return wadDir;
+        return( wadDir );
     }
     
     public WADFile( File file ) throws IOException, IncorrectFormatException
@@ -184,7 +183,7 @@ public class WADFile
         this.in = new RandomAccessFile( file, "r" );        
     }
     
-    public WADFile(String fileName) throws IOException, IncorrectFormatException
+    public WADFile( String fileName ) throws IOException, IncorrectFormatException
     {
         this( new File( fileName ) );
     }
