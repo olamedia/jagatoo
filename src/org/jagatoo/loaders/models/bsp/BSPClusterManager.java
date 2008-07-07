@@ -287,9 +287,6 @@ public class BSPClusterManager
     }
     
     
-    
-    
-    
     /**
      * converts the nodes for the BSP
      */

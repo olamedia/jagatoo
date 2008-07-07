@@ -171,6 +171,9 @@ public class BSPPrototypeLoader
                     textureName = new String( texNameBytes );
                 }
                 
+                if ( textureName.startsWith( "{" ) )
+                    textureName = textureName.substring( 1 );
+                
                 textures[ i ] = loadTexture( file, textureName, appFactory );
                 
                 /*int width = */file.readInt();
@@ -706,10 +709,12 @@ public class BSPPrototypeLoader
                 
                 // FIXME: How to use this index for leafs, but not for nodes???
                 
+                /*
                 if ( child0 <= 0 )
                     System.out.println( child0 );
                 if ( child1 <= 0 )
                     System.out.println( child1 );
+                */
                 
                 if ( child0 > 0 )
                     node.front = child0;
@@ -784,7 +789,7 @@ public class BSPPrototypeLoader
         
         BSPLeaf[] leafs = new BSPLeaf[ num ];
         
-        System.out.println( num );
+        //System.out.println( num );
         
         if ( file.getVersion() == 30 )
         {
