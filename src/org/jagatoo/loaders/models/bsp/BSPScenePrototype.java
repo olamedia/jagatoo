@@ -62,6 +62,7 @@
  */
 package org.jagatoo.loaders.models.bsp;
 
+import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity;
 import org.jagatoo.loaders.models.bsp.lumps.*;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.openmali.spatial.bounds.BoundingBox;
@@ -125,7 +126,7 @@ public class BSPScenePrototype
     /**
      * 
      */
-    public String           entities;
+    public BSPEntity[]      entities;
     
     /**
      * 

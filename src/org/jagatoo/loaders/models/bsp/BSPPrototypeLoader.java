@@ -71,6 +71,7 @@ import java.nio.ByteBuffer;
 
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity;
 import org.jagatoo.loaders.models.bsp.lumps.*;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
@@ -83,6 +84,7 @@ import org.jagatoo.loaders.textures.AbstractTextureImage;
  * @author David Yazel
  * @author Marvin Froehlich (aka Qudus)
  * @author Amos Wenger (aka BlueSky)
+ * @author Sebastian Thiele (aka SETIssl)
  */
 public class BSPPrototypeLoader
 {
@@ -956,7 +958,7 @@ public class BSPPrototypeLoader
         return( null );
     }
     
-    protected static String readEntities( BSPFile file, BSPDirectory bspDir ) throws IOException
+    protected static BSPEntity[] readEntities( BSPFile file, BSPDirectory bspDir ) throws IOException
     {
         if ( bspDir.kEntities < 0 )
         {
@@ -968,10 +970,21 @@ public class BSPPrototypeLoader
         file.seek( bspDir.kEntities );
         int num = file.lumps[ bspDir.kEntities ].length;
         
-        byte[] ca = file.readFully( num );
-        String s = new String( ca );
+        byte[] bytes = file.readFully( num );
         
-        return( s );
+        //System.out.println( new String( bytes ) );
+        
+        BSPEntity[] entities = BSPEntitiesParser.parseEntites( bytes );
+        
+        /*
+        for ( BSPEntity entity : entities )
+        {
+            System.out.println( entity );
+            System.out.println();
+        }
+        */
+        
+        return( entities );
     }
     
     /**
@@ -992,6 +1005,17 @@ public class BSPPrototypeLoader
             default:
                 throw new Error( "Cannot find a matching implementation of BSPDirectory for format version " + bspFile.getVersion() + "." );
         }
+        
+        /*
+        WADFile wad = new WADFile( new URL( bspFile.getBaseURL(), "halflife.wad" ) );
+        
+        System.out.println( wad.getResourceAsStream( "barreltop" ) );
+        System.out.println( wad.getResourceAsStream( "c1a1_c1b" ) );
+        System.out.println( wad.getResourceAsStream( "c1a1_flr2c" ) );
+        System.out.println( wad.getResourceAsStream( "{ladder1" ) );
+        System.out.println( wad.getResourceAsStream( "nwbarrel" ) );
+        System.out.println( wad.getResourceAsStream( "steel" ) );
+        */
         
         BSPVersionDataLoader loader = bspDir.getDataLoader();
         
