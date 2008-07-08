@@ -179,15 +179,18 @@ public class BSPPrototypeLoader
                     try
                     {
                         /*
-                        InputStream in2 = wadFile.getResourceAsStream( textureName );
-                        
-                        java.io.FileOutputStream fos = new java.io.FileOutputStream( "test.tga" );
-                        for ( int b = 0; b < 64000; b++ )
+                        if ( textureName.equals( "barreltop" ) )
                         {
-                            byte bb = (byte)in2.read();
-                            fos.write( bb );
+                            InputStream in2 = wadFile.getResourceAsStream( textureName );
+                            
+                            java.io.FileOutputStream fos = new java.io.FileOutputStream( "test_barreltop.tga" );
+                            for ( int b = 0; b < 6930; b++ )
+                            {
+                                byte bb = (byte)in2.read();
+                                fos.write( bb );
+                            }
+                            fos.close();
                         }
-                        fos.close();
                         */
                         
                         InputStream in = wadFile.getResourceAsStream( textureName );
