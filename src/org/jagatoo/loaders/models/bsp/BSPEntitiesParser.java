@@ -48,7 +48,7 @@ public class BSPEntitiesParser
     public static abstract class BSPEntity
     {
         public final String className;
-        public String className2;
+        public final String className2;
         
         protected String getFieldsString()
         {
@@ -75,9 +75,10 @@ public class BSPEntitiesParser
         
         protected abstract void parse( BufferedReader br ) throws IOException;
         
-        public BSPEntity( String className )
+        public BSPEntity( String className, String className2 )
         {
             this.className = className;
+            this.className2 = className2;
         }
     }
     
@@ -204,17 +205,19 @@ public class BSPEntitiesParser
                     {
                         this.sounds = Integer.parseInt( parseLineValue( line ) );
                     }
+                    /*
                     else if ( line.startsWith( "\"classname\"" ) )
                     {
                         this.className2 = parseLineValue( line );
                     }
+                    */
                 }
             }
         }
         
-        public BSPEntity_worldspawn()
+        public BSPEntity_worldspawn( String className2 )
         {
-            super( "worldspawn" );
+            super( "worldspawn", className2 );
         }
     }
     
@@ -260,17 +263,19 @@ public class BSPEntitiesParser
                         
                         this.origin = new Point3f( Float.parseFloat( v[0] ), Float.parseFloat( v[1] ), Float.parseFloat( v[2] ) );
                     }
+                    /*
                     else if ( line.startsWith( "\"classname\"" ) )
                     {
                         this.className2 = parseLineValue( line );
                     }
+                    */
                 }
             }
         }
         
-        public BSPEntity_Location()
+        public BSPEntity_Location( String className2 )
         {
-            super( "location" );
+            super( "location", className2 );
         }
     }
     
@@ -324,17 +329,19 @@ public class BSPEntitiesParser
                         this.lightColor = new Colorf( Float.parseFloat( v[0] ) / 255f, Float.parseFloat( v[1] ) / 255f, Float.parseFloat( v[2] ) / 255f );
                         this._light = Float.parseFloat( v[3] );
                     }
+                    /*
                     else if ( line.startsWith( "\"classname\"" ) )
                     {
                         this.className2 = parseLineValue( line );
                     }
+                    */
                 }
             }
         }
         
-        public BSPEntity_light()
+        public BSPEntity_light( String className2 )
         {
-            super( "light" );
+            super( "light", className2 );
         }
     }
     
@@ -435,17 +442,19 @@ public class BSPEntitiesParser
                     {
                         this.renderAMT = Integer.parseInt( parseLineValue( line ) );
                     }
+                    /*
                     else if ( line.startsWith( "\"classname\"" ) )
                     {
                         this.className2 = parseLineValue( line );
                     }
+                    */
                 }
             }
         }
         
-        public BSPEntity_func_pushable()
+        public BSPEntity_func_pushable( String className2 )
         {
-            super( "func_pushable" );
+            super( "func_pushable", className2 );
         }
     }
     
@@ -542,17 +551,19 @@ public class BSPEntitiesParser
                     {
                         this.angle = Float.parseFloat( parseLineValue( line ) );
                     }
+                    /*
                     else if ( line.startsWith( "\"classname\"" ) )
                     {
                         this.className2 = parseLineValue( line );
                     }
+                    */
                 }
             }
         }
         
-        public BSPEntity_func_plat()
+        public BSPEntity_func_plat( String className2 )
         {
-            super( "func_plat" );
+            super( "func_plat", className2 );
         }
     }
     
@@ -587,17 +598,19 @@ public class BSPEntitiesParser
                     {
                         this.model = parseLineValue( line );
                     }
+                    /*
                     else if ( line.startsWith( "\"classname\"" ) )
                     {
                         this.className2 = parseLineValue( line );
                     }
+                    */
                 }
             }
         }
         
-        public BSPEntity_func_ladder()
+        public BSPEntity_func_ladder( String className2 )
         {
-            super( "func_ladder" );
+            super( "func_ladder", className2 );
         }
     }
     
@@ -658,17 +671,19 @@ public class BSPEntitiesParser
                     {
                         this.renderFX = Integer.parseInt( parseLineValue( line ) );
                     }
+                    /*
                     else if ( line.startsWith( "\"classname\"" ) )
                     {
                         this.className2 = parseLineValue( line );
                     }
+                    */
                 }
             }
         }
         
-        public BSPEntity_func_wall()
+        public BSPEntity_func_wall( String className2 )
         {
-            super( "func_wall" );
+            super( "func_wall", className2 );
         }
     }
     
@@ -721,17 +736,19 @@ public class BSPEntitiesParser
                     {
                         this.angle = Float.parseFloat( parseLineValue( line ) );
                     }
+                    /*
                     else if ( line.startsWith( "\"classname\"" ) )
                     {
                         this.className2 = parseLineValue( line );
                     }
+                    */
                 }
             }
         }
         
-        public BSPEntity_decal_texture()
+        public BSPEntity_decal_texture( String className2 )
         {
-            super( "decal_texture" );
+            super( "decal_texture", className2 );
         }
     }
     
@@ -788,38 +805,38 @@ public class BSPEntitiesParser
                     
                     if ( classname.startsWith( "worldspawn" ) )
                     {
-                        entity = new BSPEntity_worldspawn();
+                        entity = new BSPEntity_worldspawn( classname );
                     }
                     else if ( classname.startsWith( "info_" ) || classname.startsWith( "weapon_" ) || classname.startsWith( "ammo_" ) || classname.startsWith( "item_" ) )
                     {
-                        entity = new BSPEntity_Location();
+                        entity = new BSPEntity_Location( classname );
                     }
                     else if ( classname.startsWith( "light" ) )
                     {
-                        entity = new BSPEntity_light();
+                        entity = new BSPEntity_light( classname );
                     }
                     else if ( classname.startsWith( "func_" ) )
                     {
                         if ( classname.startsWith( "func_pushable" ) )
                         {
-                            entity = new BSPEntity_func_pushable();
+                            entity = new BSPEntity_func_pushable( classname );
                         }
                         else if ( classname.startsWith( "func_plat" ) )
                         {
-                            entity = new BSPEntity_func_plat();
+                            entity = new BSPEntity_func_plat( classname );
                         }
                         else if ( classname.startsWith( "func_ladder" ) )
                         {
-                            entity = new BSPEntity_func_ladder();
+                            entity = new BSPEntity_func_ladder( classname );
                         }
                         else if ( classname.startsWith( "func_wall" ) )
                         {
-                            entity = new BSPEntity_func_wall();
+                            entity = new BSPEntity_func_wall( classname );
                         }
                     }
                     else if ( classname.startsWith( "infodecal" ) )
                     {
-                        entity = new BSPEntity_decal_texture();
+                        entity = new BSPEntity_decal_texture( classname );
                     }
                     
                     if ( entity == null )

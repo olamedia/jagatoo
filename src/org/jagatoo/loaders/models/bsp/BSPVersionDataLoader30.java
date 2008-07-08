@@ -141,24 +141,25 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
         
         try
         {
-        	prototype.edges = BSPPrototypeLoader.readEdges( bspFile, bspDir );
-        	prototype.surfEdges = BSPPrototypeLoader.readSurfEdges( bspFile, bspDir );
-        	
-            prototype.faces = BSPPrototypeLoader.readFaces( bspFile, bspDir );
-        	
             prototype.entities = BSPPrototypeLoader.readEntities( bspFile, bspDir );
+            prototype.wadFiles = BSPPrototypeLoader.readWADFiles( bspFile, bspDir, prototype.entities );
             prototype.planes = BSPPrototypeLoader.readPlanes( bspFile, bspDir, worldScale );
-            prototype.baseTextures = BSPPrototypeLoader.readTextures( bspFile, bspDir, appFactory );
+            prototype.baseTextures = BSPPrototypeLoader.readTextures( bspFile, bspDir, prototype.wadFiles, appFactory );
             prototype.vertices = BSPPrototypeLoader.readVertices( bspFile, bspDir );
+            //prototype.meshVertices = BSPPrototypeLoader.readMeshVertices( bspFile, bspDir );
             prototype.leafs = BSPPrototypeLoader.readLeafs( bspFile, bspDir);
             prototype.visData = BSPPrototypeLoader.readVisData( bspFile, bspDir, prototype.leafs.length );
             prototype.nodes = BSPPrototypeLoader.readNodes( bspFile, bspDir );
-            prototype.texInfos = BSPPrototypeLoader.readTexInfos( bspFile, bspDir );
-            
-            //prototype.lightMaps = BSPPrototypeLoader.readLightmaps( bspFile, bspDir, appFactory );
             //prototype.leafFaces = BSPPrototypeLoader.readLeafFaces( bspFile, bspDir );
+            prototype.texInfos = BSPPrototypeLoader.readTexInfos( bspFile, bspDir );
+            prototype.faces = BSPPrototypeLoader.readFaces( bspFile, bspDir );
+            //prototype.lightMaps = BSPPrototypeLoader.readLightmaps( bspFile, bspDir, appFactory );
+            //prototype.leafs = BSPPrototypeLoader.readLeafs( bspFile, bspDir);
+            //prototype.leafBrushes = BSPPrototypeLoader.readLeafBrushes( bspFile, bspDir);
+            prototype.edges = BSPPrototypeLoader.readEdges( bspFile, bspDir );
+            //prototype.brushSides = BSPPrototypeLoader.readBrushSides( bspFile, bspDir);
+            prototype.surfEdges = BSPPrototypeLoader.readSurfEdges( bspFile, bspDir );
             prototype.models = BSPPrototypeLoader.readModels( bspFile, bspDir );
-            //prototype.meshVertices = BSPPrototypeLoader.readMeshVertices( bspFile, bspDir );
             
             bspFile.close();
         }

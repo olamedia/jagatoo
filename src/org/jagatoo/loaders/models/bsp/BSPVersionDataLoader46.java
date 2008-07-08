@@ -59,18 +59,24 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         
         try
         {
-            prototype.faces = BSPPrototypeLoader.readFaces( bspFile, bspDir );
-            prototype.vertices = BSPPrototypeLoader.readVertices( bspFile, bspDir );
-            prototype.lightMaps = BSPPrototypeLoader.readLightmaps( bspFile, bspDir, appFactory );
-            prototype.leafs = BSPPrototypeLoader.readLeafs( bspFile, bspDir );
-            prototype.visData = BSPPrototypeLoader.readVisData( bspFile, bspDir, prototype.leafs.length );
-            prototype.baseTextures = BSPPrototypeLoader.readTextures( bspFile, bspDir, appFactory );
-            prototype.leafFaces = BSPPrototypeLoader.readLeafFaces( bspFile, bspDir );
-            prototype.meshVertices = BSPPrototypeLoader.readMeshVertices( bspFile, bspDir );
             prototype.entities = BSPPrototypeLoader.readEntities( bspFile, bspDir );
+            prototype.wadFiles = BSPPrototypeLoader.readWADFiles( bspFile, bspDir, prototype.entities );
+            prototype.baseTextures = BSPPrototypeLoader.readTextures( bspFile, bspDir, prototype.wadFiles, appFactory );
             prototype.planes = BSPPrototypeLoader.readPlanes( bspFile, bspDir, worldScale );
             prototype.nodes = BSPPrototypeLoader.readNodes( bspFile, bspDir );
+            prototype.leafs = BSPPrototypeLoader.readLeafs( bspFile, bspDir );
+            prototype.leafFaces = BSPPrototypeLoader.readLeafFaces( bspFile, bspDir );
+            //prototype.leafBrushes = BSPPrototypeLoader.readLeafBrushes( bspFile, bspDir );
             prototype.models = BSPPrototypeLoader.readModels( bspFile, bspDir );
+            //prototype.brushes = BSPPrototypeLoader.readBrushes( bspFile, bspDir );
+            //prototype.brushSides = BSPPrototypeLoader.readBrushSides( bspFile, bspDir );
+            prototype.vertices = BSPPrototypeLoader.readVertices( bspFile, bspDir );
+            prototype.meshVertices = BSPPrototypeLoader.readMeshVertices( bspFile, bspDir );
+            //prototype.shaders = BSPPrototypeLoader.readShaders( bspFile, bspDir );
+            prototype.faces = BSPPrototypeLoader.readFaces( bspFile, bspDir );
+            prototype.lightMaps = BSPPrototypeLoader.readLightmaps( bspFile, bspDir, appFactory );
+            //prototype.lightVolumes = BSPPrototypeLoader.readLightVolumes( bspFile, bspDir, appFactory );
+            prototype.visData = BSPPrototypeLoader.readVisData( bspFile, bspDir, prototype.leafs.length );
             
             bspFile.close();
         }

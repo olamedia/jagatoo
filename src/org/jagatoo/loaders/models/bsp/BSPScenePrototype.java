@@ -77,16 +77,12 @@ public class BSPScenePrototype
     /**
      * 
      */
-    public BSPFace[]        faces;
-    
-    public Object[][]       geometries;
-    
-    public BoundingBox      boundingBox;
+    public BSPEntity[]      entities;
     
     /**
      * 
      */
-    public BSPVertex[]      vertices;
+    public WADFile[]        wadFiles;
     
     /**
      * 
@@ -94,39 +90,9 @@ public class BSPScenePrototype
     public AbstractTexture[]  baseTextures;
     
     /**
-     * 
-     */
-    public AbstractTexture[]  lightMaps;
-    
-    /**
-     * 
-     */
-    public BSPVisData       visData;
-    
-    /**
-     * 
-     */
-    public BSPLeaf[]        leafs;
-    
-    /**
-     * 
-     */
-    public int[]            leafFaces;
-    
-    /**
-     * 
+     * Half-Life only Lump
      */
     public BSPTexInfo[]     texInfos;
-    
-    /**
-     * 
-     */
-    public int[]            meshVertices;
-    
-    /**
-     * 
-     */
-    public BSPEntity[]      entities;
     
     /**
      * 
@@ -141,13 +107,60 @@ public class BSPScenePrototype
     /**
      * 
      */
+    public BSPLeaf[]        leafs;
+    
+    /**
+     * 
+     */
+    public int[]            leafFaces;
+    
+    /**
+     * 
+     */
     public BSPModel[]       models;
+    
+    /**
+     * 
+     */
+    public Object[][]       geometries;
+    
+    /**
+     * 
+     */
+    public BoundingBox      boundingBox;
+    
+    /**
+     * 
+     */
+    public BSPVertex[]      vertices;
+    
+    /**
+     * 
+     */
+    public int[]            meshVertices;
     
     /**
      * Half-Life only Lump
      */
     public BSPEdge[]    edges;
     
+    /**
+     * Half-Life only Lump
+     */
     public int[]    surfEdges;
-
+    
+    /**
+     * 
+     */
+    public BSPFace[]        faces;
+    
+    /**
+     * 
+     */
+    public AbstractTexture[]  lightMaps;
+    
+    /**
+     * 
+     */
+    public BSPVisData       visData;
 }

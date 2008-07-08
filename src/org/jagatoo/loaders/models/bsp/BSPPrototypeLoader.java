@@ -68,10 +68,12 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity;
+import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity_worldspawn;
 import org.jagatoo.loaders.models.bsp.lumps.*;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
@@ -90,8 +92,121 @@ public class BSPPrototypeLoader
 {
     protected static final Boolean DEBUG = null;
     
-    private static AbstractTexture loadTexture( BSPFile file, String textureName, AppearanceFactory appFactory )
+    protected static BSPEntity[] readEntities( BSPFile file, BSPDirectory bspDir ) throws IOException
     {
+        if ( bspDir.kEntities < 0 )
+        {
+            //JAGTLog.debug( "kEntities not currently supported by ", bspDir.getClass().getSimpleName() );
+            
+            return( null );
+        }
+        
+        file.seek( bspDir.kEntities );
+        int num = file.lumps[ bspDir.kEntities ].length;
+        
+        byte[] bytes = file.readFully( num );
+        
+        //System.out.println( new String( bytes ) );
+        
+        BSPEntity[] entities = BSPEntitiesParser.parseEntites( bytes );
+        
+        /*
+        for ( BSPEntity entity : entities )
+        {
+            System.out.println( entity );
+            System.out.println();
+        }
+        */
+        
+        return( entities );
+    }
+    
+    protected static WADFile[] readWADFiles( BSPFile file, BSPDirectory bspDir, BSPEntity[] entities ) throws IOException
+    {
+        if ( entities == null )
+        {
+            throw new Error( "entities must be read before WADFiles can be read." );
+        }
+        
+        if ( file.getBaseURL() == null )
+        {
+            return( new WADFile[ 0 ] );
+        }
+        
+        ArrayList<WADFile> wadFiles = new ArrayList<WADFile>();
+        
+        for ( int i = 0; i < entities.length; i++ )
+        {
+            BSPEntity entity = entities[i];
+            
+            if ( entity.className.equals( "worldspawn" ) )
+            {
+                BSPEntity_worldspawn worldSpawn = (BSPEntity_worldspawn)entity;
+                
+                if ( worldSpawn.wads != null )
+                {
+                    for ( int j = 0; j < worldSpawn.wads.length; j++ )
+                    {
+                        URL url = new URL( file.getBaseURL(), worldSpawn.wads[j] );
+                        try
+                        {
+                            WADFile wadFile = new WADFile( url );
+                            wadFiles.add( wadFile );
+                        }
+                        catch ( IOException e )
+                        {
+                            //e.printStackTrace();
+                            System.err.println( "WAD file not found \"" + url + "\"." );
+                        }
+                    }
+                }
+            }
+        }
+        
+        return( wadFiles.toArray( new WADFile[ wadFiles.size() ] ) );
+    }
+    
+    private static AbstractTexture loadTexture( BSPFile file, String textureName, WADFile[] wadFiles, AppearanceFactory appFactory )
+    {
+        if ( ( wadFiles != null ) && ( wadFiles.length > 0 ) )
+        {
+            for ( int i = 0; i < wadFiles.length; i++ )
+            {
+                WADFile wadFile = wadFiles[i];
+                
+                if ( wadFile.containsResource( textureName ) )
+                {
+                    try
+                    {
+                        /*
+                        InputStream in2 = wadFile.getResourceAsStream( textureName );
+                        
+                        java.io.FileOutputStream fos = new java.io.FileOutputStream( "test.tga" );
+                        for ( int b = 0; b < 64000; b++ )
+                        {
+                            byte bb = (byte)in2.read();
+                            fos.write( bb );
+                        }
+                        fos.close();
+                        */
+                        
+                        InputStream in = wadFile.getResourceAsStream( textureName );
+                        
+                        AbstractTexture texture = appFactory.loadTexture( in, textureName, false, true, true, true, false );
+                        
+                        if ( texture != null )
+                        {
+                            return( texture );
+                        }
+                    }
+                    catch ( IOException e )
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+        
         URL baseURL = file.getBaseURL();
         
         if ( baseURL == null )
@@ -104,26 +219,30 @@ public class BSPPrototypeLoader
         }
         else
         {
+            String texNameForURL = textureName;
+            if ( texNameForURL.startsWith( "{" ) )
+                texNameForURL = texNameForURL.substring( 1 );
+            
             AbstractTexture texture = null;
             try
             {
-                texture = appFactory.loadTexture( new URL( baseURL, textureName + ".tga" ), false, true, true, true, false );
+                texture = appFactory.loadTexture( new URL( baseURL, texNameForURL + ".tga" ), false, true, true, true, false );
                 if ( texture == null )
-                    texture = appFactory.loadTexture( new URL( baseURL, textureName + ".jpg" ), false, true, true, true, true );
+                    texture = appFactory.loadTexture( new URL( baseURL, texNameForURL + ".jpg" ), false, true, true, true, true );
             }
             catch ( MalformedURLException e )
             {
                 e.printStackTrace();
                 
                 // Load a non existing texture to make the TextureLoader use the fallback-texture.
-                texture = appFactory.loadOrGetTexture( "error-not-existing-texture.jpg", false, true, true, true, true );
+                texture = appFactory.loadOrGetTexture( "error-not-existing-texture", false, true, true, true, true );
             }
             
             return( texture );
         }
     }
     
-    protected static AbstractTexture[] readTextures( BSPFile file, BSPDirectory bspDir, AppearanceFactory appFactory ) throws IOException
+    protected static AbstractTexture[] readTextures( BSPFile file, BSPDirectory bspDir, WADFile[] wadFiles, AppearanceFactory appFactory ) throws IOException
     {
         if ( bspDir.kTextures < 0 )
         {
@@ -173,10 +292,7 @@ public class BSPPrototypeLoader
                     textureName = new String( texNameBytes );
                 }
                 
-                if ( textureName.startsWith( "{" ) )
-                    textureName = textureName.substring( 1 );
-                
-                textures[ i ] = loadTexture( file, textureName, appFactory );
+                textures[ i ] = loadTexture( file, textureName, wadFiles, appFactory );
                 
                 /*int width = */file.readInt();
                 /*int height = */file.readInt();
@@ -207,7 +323,7 @@ public class BSPPrototypeLoader
                 String textureName = new String( ca );
                 textureName = textureName.substring( 0, textureName.indexOf( 0 ) );
                 
-                textures[ i ] = loadTexture( file, textureName, appFactory );
+                textures[ i ] = loadTexture( file, textureName, wadFiles, appFactory );
             }
         }
         
@@ -956,35 +1072,6 @@ public class BSPPrototypeLoader
         }
         
         return( null );
-    }
-    
-    protected static BSPEntity[] readEntities( BSPFile file, BSPDirectory bspDir ) throws IOException
-    {
-        if ( bspDir.kEntities < 0 )
-        {
-            //JAGTLog.debug( "kEntities not currently supported by ", bspDir.getClass().getSimpleName() );
-            
-            return( null );
-        }
-        
-        file.seek( bspDir.kEntities );
-        int num = file.lumps[ bspDir.kEntities ].length;
-        
-        byte[] bytes = file.readFully( num );
-        
-        //System.out.println( new String( bytes ) );
-        
-        BSPEntity[] entities = BSPEntitiesParser.parseEntites( bytes );
-        
-        /*
-        for ( BSPEntity entity : entities )
-        {
-            System.out.println( entity );
-            System.out.println();
-        }
-        */
-        
-        return( entities );
     }
     
     /**
