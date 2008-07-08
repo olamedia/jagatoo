@@ -31,7 +31,9 @@ package org.jagatoo.loaders.models.bsp;
 
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -128,12 +130,38 @@ public class WADFile
             in = new BufferedInputStream( in );
         }
         
-        in.skip( 3 * 4 );
+        //in.skip( 3 * 4 );
         in.skip( entry.offset );
         
         System.out.println( entry.fileName + ", " + entry.uncompFileSize );
         
         return( (BufferedInputStream)in );
+    }
+    
+    public final void exportResource( String resName, String filename ) throws IOException
+    {
+        WADDirectoryEntry entry = wadDir.get( resName.toLowerCase() );
+        
+        if ( entry == null )
+        {
+            throw new IOException( "The resource was not found in this WAD file." );
+        }
+        
+        InputStream in = wadFile.openStream();
+        if ( !( in instanceof BufferedInputStream ) )
+        {
+            in = new BufferedInputStream( in );
+        }
+        
+        //in.skip( 3 * 4 );
+        in.skip( entry.offset );
+        
+        BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( filename ) );
+        for ( int i = 0; i < entry.compFileSize; i++ )
+        {
+            out.write( (byte)in.read() );
+        }
+        out.close();
     }
     
     private HashMap<String, WADDirectoryEntry> readWADDirectory( URL wadFile ) throws IOException, IncorrectFormatException, ParsingErrorException
