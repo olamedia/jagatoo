@@ -53,20 +53,39 @@ public class WADFile
     {
         public long    offset          = 0;    // - Offset 
         public int     compFileSize    = 0;    // - Compressed File Size 
-        public int     unCompFileSize  = 0;    // - Uncompressed File Size 
+        public int     uncompFileSize  = 0;    // - Uncompressed File Size 
         public byte    fileType        = 0;    // - File Type 
         public byte    compType        = 0;    // - Compression Type 
         public byte[]  padding         = null; // - Padding 
-        public String  fileName        = null; // - Filename (null)
+        public String  fileName        = null; // - Filename (null-terminated)
+        
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public String toString()
+        {
+            return( this.getClass().getSimpleName() + " { " +
+                    "name: \"" + fileName + "\"" +
+                    "\t | offset: " + offset +
+                    "\t | compFileSize: " + compFileSize +
+                    "\t | uncompFileSize: " + uncompFileSize +
+                    "\t | fileType: " + fileType +
+                    "\t | compType: " + compType +
+                    "\t | pad1: " + padding[0] + "\t | pad2: " + padding[1] +
+                    " }"
+                  );
+        }
     }
     
-    private final URL           wadFile;
+    private final URL     wadFile;
+    private String        wadType;
     
     private final HashMap<String, WADDirectoryEntry> wadDir;
     
     public final String getWadType()
     {
-        return( "WAD3" );
+        return( wadType );
     }
     
     public final int getLumpCount()
@@ -115,7 +134,7 @@ public class WADFile
         return( (BufferedInputStream)in );
     }
     
-    private static HashMap<String, WADDirectoryEntry> readWADDirectory( URL wadFile ) throws IOException, IncorrectFormatException, ParsingErrorException
+    private HashMap<String, WADDirectoryEntry> readWADDirectory( URL wadFile ) throws IOException, IncorrectFormatException, ParsingErrorException
     {      
         try
         {
@@ -127,6 +146,8 @@ public class WADFile
             {
                 throw new IncorrectFormatException( "This is not a WAD3 file!" );
             }
+            
+            this.wadType = "WAD3";
             
             int lumpCount = Integer.reverseBytes( in.readInt() ); // - Number of files
             int dirOffset = Integer.reverseBytes( in.readInt() ); // - Directory offset
@@ -150,7 +171,7 @@ public class WADFile
                 
                 entry.offset = Integer.reverseBytes( in.readInt() );
                 entry.compFileSize = Integer.reverseBytes( in.readInt() );
-                entry.unCompFileSize = Integer.reverseBytes( in.readInt() );
+                entry.uncompFileSize = Integer.reverseBytes( in.readInt() );
                 
                 entry.fileType = in.readByte();
                 entry.compType = in.readByte();
@@ -161,17 +182,7 @@ public class WADFile
                 
                 wadDir.put( entry.fileName.toLowerCase(), entry );
                 
-                /*
-                System.out.print( i + "\t| offset: " + entry.offset );
-                System.out.print( "\t| CompFileSize: " + entry.compFileSize );
-                System.out.print( " | UnCompFileSize: " + entry.unCompFileSize );
-                
-                System.out.print( " | FileType: " + entry.fileType );
-                System.out.print( " | CompType: " + entry.compType );
-                System.out.print( " | Pad1: " + entry.padding[0] + " | Pad2: " + entry.padding[1] );
-                
-                System.out.println( " | name: " + entry.fileName );
-                */               
+                //System.out.println( entry );
             }
             
             in.close();
