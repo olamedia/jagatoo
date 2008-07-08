@@ -131,6 +131,8 @@ public class WADFile
         in.skip( 3 * 4 );
         in.skip( entry.offset );
         
+        System.out.println( entry.fileName + ", " + entry.uncompFileSize );
+        
         return( (BufferedInputStream)in );
     }
     

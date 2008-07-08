@@ -169,7 +169,7 @@ public class BSPPrototypeLoader
         return( wadFiles.toArray( new WADFile[ wadFiles.size() ] ) );
     }
     
-    private static AbstractTexture loadTexture( BSPFile file, String textureName, WADFile[] wadFiles, AppearanceFactory appFactory )
+    private static AbstractTexture loadTexture( BSPFile file, String textureName, int width, int height, WADFile[] wadFiles, AppearanceFactory appFactory )
     {
         if ( ( wadFiles != null ) && ( wadFiles.length > 0 ) )
         {
@@ -181,29 +181,30 @@ public class BSPPrototypeLoader
                 {
                     try
                     {
-                        /*
-                        if ( textureName.equals( "barreltop" ) )
+                        BufferedInputStream in = wadFile.getResourceAsStream( textureName );
+                        
+                        AbstractTextureImage textureImage0 = appFactory.createTextureImage( AbstractTextureImage.Format.RGB, width, height );
+                        ByteBuffer bb = textureImage0.getDataBuffer();
+                        
+                        System.out.println( "limit: " + bb.limit() + ", " + width + ", " + height );
+                        for ( int b = 0; b < bb.limit(); b++ )
                         {
-                            InputStream in2 = wadFile.getResourceAsStream( textureName );
-                            
-                            java.io.FileOutputStream fos = new java.io.FileOutputStream( "test_barreltop.tga" );
-                            for ( int b = 0; b < 6930; b++ )
-                            {
-                                byte bb = (byte)in2.read();
-                                fos.write( bb );
-                            }
-                            fos.close();
+                            byte byt = (byte)in.read();
+                            bb.put( byt );
                         }
-                        */
                         
-                        InputStream in = wadFile.getResourceAsStream( textureName );
+                        bb.flip();
                         
+                        return( appFactory.createTexture( textureImage0, true ) );
+                        
+                        /*
                         AbstractTexture texture = appFactory.loadTexture( in, textureName, false, true, true, true, false );
                         
                         if ( texture != null )
                         {
                             return( texture );
                         }
+                        */
                     }
                     catch ( IOException e )
                     {
@@ -298,10 +299,8 @@ public class BSPPrototypeLoader
                     textureName = new String( texNameBytes );
                 }
                 
-                textures[ i ] = loadTexture( file, textureName, wadFiles, appFactory );
-                
-                /*int width = */file.readInt();
-                /*int height = */file.readInt();
+                int width = file.readInt();
+                int height = file.readInt();
                 
                 /*int offset1 = */file.readInt();
                 /*int offset2 = */file.readInt();
@@ -314,6 +313,8 @@ public class BSPPrototypeLoader
                 System.out.print( " | ofs1: "   + offset1 +  ", ofs2: " + offset2 );
                 System.out.println( ", ofs3: " + offset3 + ", ofs4: "  + offset4 + " }" );
                 */
+                
+                textures[ i ] = loadTexture( file, textureName, width, height, wadFiles, appFactory );
             }
         }
         else if ( file.getVersion() == 46 )
@@ -329,7 +330,7 @@ public class BSPPrototypeLoader
                 String textureName = new String( ca );
                 textureName = textureName.substring( 0, textureName.indexOf( 0 ) );
                 
-                textures[ i ] = loadTexture( file, textureName, wadFiles, appFactory );
+                textures[ i ] = loadTexture( file, textureName, 128, 128, wadFiles, appFactory );
             }
         }
         
