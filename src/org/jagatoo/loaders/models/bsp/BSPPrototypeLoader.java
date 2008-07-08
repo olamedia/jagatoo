@@ -113,8 +113,11 @@ public class BSPPrototypeLoader
         /*
         for ( BSPEntity entity : entities )
         {
-            System.out.println( entity );
-            System.out.println();
+            //if ( entity.className2.startsWith( "info_" ) )
+            {
+                System.out.println( entity );
+                System.out.println();
+            }
         }
         */
         

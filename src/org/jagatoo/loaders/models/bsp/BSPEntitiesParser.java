@@ -37,6 +37,7 @@ import java.util.ArrayList;
 
 import org.openmali.vecmath2.Colorf;
 import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.Tuple3f;
 
 /**
  * Insert type comment here.
@@ -45,6 +46,14 @@ import org.openmali.vecmath2.Point3f;
  */
 public class BSPEntitiesParser
 {
+    private static final String qs( String s )
+    {
+        if ( s == null )
+            return( null );
+        
+        return( "\"" + s + "\"" );
+    }
+    
     public static abstract class BSPEntity
     {
         public final String className;
@@ -52,8 +61,8 @@ public class BSPEntitiesParser
         
         protected String getFieldsString()
         {
-            return( "    className = \"" + className + "\"\n" +
-                    "    className2 = \"" + className2 + "\"\n"
+            return( "    className = " + qs( className ) + "\n" +
+                    "    className2 = " + qs( className2 ) + "\n"
                   );
         }
         
@@ -73,7 +82,35 @@ public class BSPEntitiesParser
             return( line.substring( spacePos + 3, line.length() - 1 ) );
         }
         
-        protected abstract void parse( BufferedReader br ) throws IOException;
+        protected abstract void parseLine( String line );
+        
+        protected void parse( BufferedReader br ) throws IOException
+        {
+            String line;
+            while ( true )
+            {
+                line = br.readLine();
+                
+                if ( line.indexOf( "}" ) >= 0 )
+                    break;
+                
+                //System.out.println( line );
+                
+                if ( line.length() > 0 )
+                {
+                    /*
+                    if ( line.startsWith( "\"classname\"" ) )
+                    {
+                        this.className2 = parseLineValue( line );
+                    }
+                    else
+                    */
+                    {
+                        parseLine( line );
+                    }
+                }
+            }
+        }
         
         public BSPEntity( String className, String className2 )
         {
@@ -105,7 +142,7 @@ public class BSPEntitiesParser
                 if ( i > 0 )
                     s += ", ";
                 
-                s += "\"" + wadsFull[i] + "\"";
+                s += qs( wadsFull[i] );
             }
             
             s += " }";
@@ -124,7 +161,7 @@ public class BSPEntitiesParser
                 if ( i > 0 )
                     s += ", ";
                 
-                s += "\"" + wads[i] + "\"";
+                s += qs( wads[i] );
             }
             
             s += " }";
@@ -138,8 +175,8 @@ public class BSPEntitiesParser
             return( super.getFieldsString() +
                     "    wadsFull = " + getWadsFullString() + "\n" +
                     "    wads = " + getWadsString() + "\n" +
-                    "    chapterTitle = \"" + chapterTitle + "\"\n" +
-                    "    message = \"" + message + "\"\n" +
+                    "    chapterTitle = " + qs( chapterTitle ) + "\n" +
+                    "    message = " + qs( message ) + "\n" +
                     "    gameTitle = " + gameTitle + "\n" +
                     "    startDark = " + startDark + "\n" +
                     "    maxRange = " + maxRange + "\n" +
@@ -149,69 +186,49 @@ public class BSPEntitiesParser
         }
         
         @Override
-        protected void parse( BufferedReader br ) throws IOException
+        protected void parseLine( String line )
         {
-            String line;
-            while ( true )
+            if ( line.startsWith( "\"wad\"" ) )
             {
-                line = br.readLine();
-                
-                if ( line.indexOf( "}" ) >= 0 )
-                    break;
-                
-                //System.out.println( line );
-                
-                if ( line.length() > 0 )
+                this.wadsFull = parseLineValue( line ).split( ";" );
+                this.wads = new String[ wadsFull.length ];
+                for ( int i = 0; i < wadsFull.length; i++ )
                 {
-                    if ( line.startsWith( "\"wad\"" ) )
-                    {
-                        this.wadsFull = parseLineValue( line ).split( ";" );
-                        this.wads = new String[ wadsFull.length ];
-                        for ( int i = 0; i < wadsFull.length; i++ )
-                        {
-                            wadsFull[i] = wadsFull[i].replace( '\\', '/' );
-                            int lastSlashPos = wadsFull[i].lastIndexOf( '/' );
-                            if ( lastSlashPos >= 0 )
-                                wads[i] = wadsFull[i].substring( lastSlashPos + 1 );
-                            else
-                                wads[i] = wadsFull[i];
-                        }
-                    }
-                    else if ( line.startsWith( "\"chaptertitle\"" ) )
-                    {
-                        this.chapterTitle = parseLineValue( line );
-                    }
-                    else if ( line.startsWith( "\"message\"" ) )
-                    {
-                        this.message = parseLineValue( line );
-                    }
-                    else if ( line.startsWith( "\"gametitle\"" ) )
-                    {
-                        this.gameTitle = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"startdark\"" ) )
-                    {
-                        this.startDark = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"MaxRange\"" ) )
-                    {
-                        this.maxRange = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"linght\"" ) )
-                    {
-                        this.light = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"sounds\"" ) )
-                    {
-                        this.sounds = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    /*
-                    else if ( line.startsWith( "\"classname\"" ) )
-                    {
-                        this.className2 = parseLineValue( line );
-                    }
-                    */
+                    wadsFull[i] = wadsFull[i].replace( '\\', '/' );
+                    int lastSlashPos = wadsFull[i].lastIndexOf( '/' );
+                    if ( lastSlashPos >= 0 )
+                        wads[i] = wadsFull[i].substring( lastSlashPos + 1 );
+                    else
+                        wads[i] = wadsFull[i];
                 }
+            }
+            else if ( line.startsWith( "\"chaptertitle\"" ) )
+            {
+                this.chapterTitle = parseLineValue( line );
+            }
+            else if ( line.startsWith( "\"message\"" ) )
+            {
+                this.message = parseLineValue( line );
+            }
+            else if ( line.startsWith( "\"gametitle\"" ) )
+            {
+                this.gameTitle = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"startdark\"" ) )
+            {
+                this.startDark = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"MaxRange\"" ) )
+            {
+                this.maxRange = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"linght\"" ) )
+            {
+                this.light = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"sounds\"" ) )
+            {
+                this.sounds = Integer.parseInt( parseLineValue( line ) );
             }
         }
         
@@ -233,43 +250,40 @@ public class BSPEntitiesParser
          */
         
         public Point3f origin;
+        public Tuple3f angles = new Tuple3f( 0f, 0f, 0f );
         
         @Override
         protected String getFieldsString()
         {
             return( super.getFieldsString() +
-                    "    origin = " + origin + "\n"
+                    "    origin = " + origin + "\n" +
+                    "    angles = " + angles + "\n"
                   );
         }
         
         @Override
-        protected void parse( BufferedReader br ) throws IOException
+        protected void parseLine( String line )
         {
-            String line;
-            while ( true )
+            if ( line.startsWith( "\"origin\"" ) )
             {
-                line = br.readLine();
+                String[] v = parseLineValue( line ).split( " " );
                 
-                if ( line.indexOf( "}" ) >= 0 )
-                    break;
+                this.origin = new Point3f( Float.parseFloat( v[0] ), Float.parseFloat( v[1] ), Float.parseFloat( v[2] ) );
+            }
+            else if ( line.startsWith( "\"angles\"" ) )
+            {
+                // HL
                 
-                //System.out.println( line );
+                String[] v = parseLineValue( line ).split( " " );
                 
-                if ( line.length() > 0 )
-                {
-                    if ( line.startsWith( "\"origin\"" ) )
-                    {
-                        String[] v = parseLineValue( line ).split( " " );
-                        
-                        this.origin = new Point3f( Float.parseFloat( v[0] ), Float.parseFloat( v[1] ), Float.parseFloat( v[2] ) );
-                    }
-                    /*
-                    else if ( line.startsWith( "\"classname\"" ) )
-                    {
-                        this.className2 = parseLineValue( line );
-                    }
-                    */
-                }
+                this.angles.set( Float.parseFloat( v[0] ), Float.parseFloat( v[1] ), Float.parseFloat( v[2] ) );
+            }
+            else if ( line.startsWith( "\"angle\"" ) )
+            {
+                // Q3
+                
+                // The x-angle is the one, that will rotate around the up-vector.
+                this.angles.set( Float.parseFloat( parseLineValue( line ) ), 0f, 0f );
             }
         }
         
@@ -277,12 +291,115 @@ public class BSPEntitiesParser
         {
             super( "location", className2 );
         }
+        
+        public BSPEntity_Location( String className, String className2 )
+        {
+            super( className, className2 );
+        }
+    }
+    
+    public static class BSPEntity_info extends BSPEntity_Location
+    {
+        /*
+         * info_player_start
+         * info_player_start2
+         * info_player_deathmatch
+         */
+        
+        @Override
+        protected String getFieldsString()
+        {
+            return( super.getFieldsString() );
+        }
+        
+        @Override
+        protected void parseLine( String line )
+        {
+            super.parseLine( line );
+        }
+        
+        public BSPEntity_info( String className2 )
+        {
+            super( "info", className2 );
+        }
+    }
+    
+    public static class BSPEntity_weapon extends BSPEntity_Location
+    {
+        /*
+         * weapon_*
+         */
+        
+        @Override
+        protected String getFieldsString()
+        {
+            return( super.getFieldsString() );
+        }
+        
+        @Override
+        protected void parseLine( String line )
+        {
+            super.parseLine( line );
+        }
+        
+        public BSPEntity_weapon( String className2 )
+        {
+            super( "weapon", className2 );
+        }
+    }
+    
+    public static class BSPEntity_ammo extends BSPEntity_Location
+    {
+        /*
+         * ammo_*
+         */
+        
+        @Override
+        protected String getFieldsString()
+        {
+            return( super.getFieldsString() );
+        }
+        
+        @Override
+        protected void parseLine( String line )
+        {
+            super.parseLine( line );
+        }
+        
+        public BSPEntity_ammo( String className2 )
+        {
+            super( "ammo", className2 );
+        }
+    }
+    
+    public static class BSPEntity_item extends BSPEntity_Location
+    {
+        /*
+         * item_*
+         */
+        
+        @Override
+        protected String getFieldsString()
+        {
+            return( super.getFieldsString() );
+        }
+        
+        @Override
+        protected void parseLine( String line )
+        {
+            super.parseLine( line );
+        }
+        
+        public BSPEntity_item( String className2 )
+        {
+            super( "item", className2 );
+        }
     }
     
     public static class BSPEntity_light extends BSPEntity
     {
         public Point3f origin;
-        public int style;
+        public int style = -1;
         public Colorf lightColor;
         public float _light;
         
@@ -298,44 +415,40 @@ public class BSPEntitiesParser
         }
         
         @Override
-        protected void parse( BufferedReader br ) throws IOException
+        protected void parseLine( String line )
         {
-            String line;
-            while ( true )
+            if ( line.startsWith( "\"origin\"" ) )
             {
-                line = br.readLine();
+                String[] v = parseLineValue( line ).split( " " );
                 
-                if ( line.indexOf( "}" ) >= 0 )
-                    break;
+                this.origin = new Point3f( Float.parseFloat( v[0] ), Float.parseFloat( v[1] ), Float.parseFloat( v[2] ) );
+            }
+            else if ( line.startsWith( "\"style\"" ) )
+            {
+                this.style = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"_color\"" ) )
+            {
+                // Q3
                 
-                //System.out.println( line );
+                String[] v = parseLineValue( line ).split( " " );
                 
-                if ( line.length() > 0 )
-                {
-                    if ( line.startsWith( "\"origin\"" ) )
-                    {
-                        String[] v = parseLineValue( line ).split( " " );
-                        
-                        this.origin = new Point3f( Float.parseFloat( v[0] ), Float.parseFloat( v[1] ), Float.parseFloat( v[2] ) );
-                    }
-                    else if ( line.startsWith( "\"style\"" ) )
-                    {
-                        this.style = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"_light\"" ) )
-                    {
-                        String[] v = parseLineValue( line ).split( " " );
-                        
-                        this.lightColor = new Colorf( Float.parseFloat( v[0] ) / 255f, Float.parseFloat( v[1] ) / 255f, Float.parseFloat( v[2] ) / 255f );
-                        this._light = Float.parseFloat( v[3] );
-                    }
-                    /*
-                    else if ( line.startsWith( "\"classname\"" ) )
-                    {
-                        this.className2 = parseLineValue( line );
-                    }
-                    */
-                }
+                this.lightColor = new Colorf( Float.parseFloat( v[0] ), Float.parseFloat( v[1] ), Float.parseFloat( v[2] ) );
+            }
+            else if ( line.startsWith( "\"light\"" ) )
+            {
+                // Q3
+                
+                this._light = Float.parseFloat( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"_light\"" ) )
+            {
+                // HL
+                
+                String[] v = parseLineValue( line ).split( " " );
+                
+                this.lightColor = new Colorf( Float.parseFloat( v[0] ) / 255f, Float.parseFloat( v[1] ) / 255f, Float.parseFloat( v[2] ) / 255f );
+                this._light = Float.parseFloat( v[3] );
             }
         }
         
@@ -364,7 +477,7 @@ public class BSPEntitiesParser
         protected String getFieldsString()
         {
             return( super.getFieldsString() +
-                    "    model = \"" + model + "\"\n" +
+                    "    model = " + qs( model ) + "\n" +
                     "    delay = " + delay + "\n" +
                     "    explosion = " + explosion + "\n" +
                     "    material = " + material + "\n" +
@@ -380,75 +493,55 @@ public class BSPEntitiesParser
         }
         
         @Override
-        protected void parse( BufferedReader br ) throws IOException
+        protected void parseLine( String line )
         {
-            String line;
-            while ( true )
+            if ( line.startsWith( "\"model\"" ) )
             {
-                line = br.readLine();
-                
-                if ( line.indexOf( "}" ) >= 0 )
-                    break;
-                
-                //System.out.println( line );
-                
-                if ( line.length() > 0 )
-                {
-                    if ( line.startsWith( "\"model\"" ) )
-                    {
-                        this.model = parseLineValue( line );
-                    }
-                    else if ( line.startsWith( "\"delay\"" ) )
-                    {
-                        this.delay = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"explosion\"" ) )
-                    {
-                        this.explosion = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"material\"" ) )
-                    {
-                        this.material = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"health\"" ) )
-                    {
-                        this.health = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"rendermode\"" ) )
-                    {
-                        this.renderMode = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"renderfx\"" ) )
-                    {
-                        this.renderFX = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"buoyancy\"" ) )
-                    {
-                        this.buoyancy = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"friction\"" ) )
-                    {
-                        this.friction = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"size\"" ) )
-                    {
-                        this.size = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"rendercolor\"" ) )
-                    {
-                        this.renderColor = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"renderamt\"" ) )
-                    {
-                        this.renderAMT = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    /*
-                    else if ( line.startsWith( "\"classname\"" ) )
-                    {
-                        this.className2 = parseLineValue( line );
-                    }
-                    */
-                }
+                this.model = parseLineValue( line );
+            }
+            else if ( line.startsWith( "\"delay\"" ) )
+            {
+                this.delay = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"explosion\"" ) )
+            {
+                this.explosion = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"material\"" ) )
+            {
+                this.material = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"health\"" ) )
+            {
+                this.health = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"rendermode\"" ) )
+            {
+                this.renderMode = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"renderfx\"" ) )
+            {
+                this.renderFX = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"buoyancy\"" ) )
+            {
+                this.buoyancy = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"friction\"" ) )
+            {
+                this.friction = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"size\"" ) )
+            {
+                this.size = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"rendercolor\"" ) )
+            {
+                this.renderColor = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"renderamt\"" ) )
+            {
+                this.renderAMT = Integer.parseInt( parseLineValue( line ) );
             }
         }
         
@@ -476,7 +569,7 @@ public class BSPEntitiesParser
         protected String getFieldsString()
         {
             return( super.getFieldsString() +
-                    "    model = \"" + model + "\"\n" +
+                    "    model = " + qs( model ) + "\n" +
                     "    _minLight = " + _minLight + "\n" +
                     "    height = " + height + "\n" +
                     "    volume = " + volume + "\n" +
@@ -491,73 +584,53 @@ public class BSPEntitiesParser
         }
         
         @Override
-        protected void parse( BufferedReader br ) throws IOException
+        protected void parseLine( String line )
         {
-            String line;
-            while ( true )
+            if ( line.startsWith( "\"model\"" ) )
             {
-                line = br.readLine();
+                this.model = parseLineValue( line );
+            }
+            else if ( line.startsWith( "\"_minlight\"" ) )
+            {
+                this._minLight = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"height\"" ) )
+            {
+                this.height = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"volume\"" ) )
+            {
+                this.volume = Float.parseFloat( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"stopsnd\"" ) )
+            {
+                this.stopSound = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"movesnd\"" ) )
+            {
+                this.moveSound = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"rendercolor\"" ) )
+            {
+                String[] v = parseLineValue( line ).split( " " );
                 
-                if ( line.indexOf( "}" ) >= 0 )
-                    break;
-                
-                //System.out.println( line );
-                
-                if ( line.length() > 0 )
-                {
-                    if ( line.startsWith( "\"model\"" ) )
-                    {
-                        this.model = parseLineValue( line );
-                    }
-                    else if ( line.startsWith( "\"_minlight\"" ) )
-                    {
-                        this._minLight = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"height\"" ) )
-                    {
-                        this.height = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"volume\"" ) )
-                    {
-                        this.volume = Float.parseFloat( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"stopsnd\"" ) )
-                    {
-                        this.stopSound = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"movesnd\"" ) )
-                    {
-                        this.moveSound = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"rendercolor\"" ) )
-                    {
-                        String[] v = parseLineValue( line ).split( " " );
-                        
-                        this.renderColor = new Colorf( Float.parseFloat( v[0] ) / 255f, Float.parseFloat( v[1] ) / 255f, Float.parseFloat( v[2] ) / 255f );
-                    }
-                    else if ( line.startsWith( "\"renderamt\"" ) )
-                    {
-                        this.renderAMT = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"rendermode\"" ) )
-                    {
-                        this.renderMode = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"renderfx\"" ) )
-                    {
-                        this.renderFX = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"angle\"" ) )
-                    {
-                        this.angle = Float.parseFloat( parseLineValue( line ) );
-                    }
-                    /*
-                    else if ( line.startsWith( "\"classname\"" ) )
-                    {
-                        this.className2 = parseLineValue( line );
-                    }
-                    */
-                }
+                this.renderColor = new Colorf( Float.parseFloat( v[0] ) / 255f, Float.parseFloat( v[1] ) / 255f, Float.parseFloat( v[2] ) / 255f );
+            }
+            else if ( line.startsWith( "\"renderamt\"" ) )
+            {
+                this.renderAMT = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"rendermode\"" ) )
+            {
+                this.renderMode = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"renderfx\"" ) )
+            {
+                this.renderFX = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"angle\"" ) )
+            {
+                this.angle = Float.parseFloat( parseLineValue( line ) );
             }
         }
         
@@ -575,36 +648,16 @@ public class BSPEntitiesParser
         protected String getFieldsString()
         {
             return( super.getFieldsString() +
-                    "    model = \"" + model + "\"\n"
+                    "    model = " + qs( model ) + "\n"
                   );
         }
         
         @Override
-        protected void parse( BufferedReader br ) throws IOException
+        protected void parseLine( String line )
         {
-            String line;
-            while ( true )
+            if ( line.startsWith( "\"model\"" ) )
             {
-                line = br.readLine();
-                
-                if ( line.indexOf( "}" ) >= 0 )
-                    break;
-                
-                //System.out.println( line );
-                
-                if ( line.length() > 0 )
-                {
-                    if ( line.startsWith( "\"model\"" ) )
-                    {
-                        this.model = parseLineValue( line );
-                    }
-                    /*
-                    else if ( line.startsWith( "\"classname\"" ) )
-                    {
-                        this.className2 = parseLineValue( line );
-                    }
-                    */
-                }
+                this.model = parseLineValue( line );
             }
         }
         
@@ -626,7 +679,7 @@ public class BSPEntitiesParser
         protected String getFieldsString()
         {
             return( super.getFieldsString() +
-                    "    model = \"" + model + "\"\n" +
+                    "    model = " + qs( model ) + "\n" +
                     "    renderColor = " + renderColor + "\n" +
                     "    renderAMT = " + renderAMT + "\n" +
                     "    renderMode = " + renderMode + "\n" +
@@ -635,55 +688,64 @@ public class BSPEntitiesParser
         }
         
         @Override
-        protected void parse( BufferedReader br ) throws IOException
+        protected void parseLine( String line )
         {
-            String line;
-            while ( true )
+            if ( line.startsWith( "\"model\"" ) )
             {
-                line = br.readLine();
+                this.model = parseLineValue( line );
+            }
+            else if ( line.startsWith( "\"rendercolor\"" ) )
+            {
+                String[] v = parseLineValue( line ).split( " " );
                 
-                if ( line.indexOf( "}" ) >= 0 )
-                    break;
-                
-                //System.out.println( line );
-                
-                if ( line.length() > 0 )
-                {
-                    if ( line.startsWith( "\"model\"" ) )
-                    {
-                        this.model = parseLineValue( line );
-                    }
-                    else if ( line.startsWith( "\"rendercolor\"" ) )
-                    {
-                        String[] v = parseLineValue( line ).split( " " );
-                        
-                        this.renderColor = new Colorf( Float.parseFloat( v[0] ) / 255f, Float.parseFloat( v[1] ) / 255f, Float.parseFloat( v[2] ) / 255f );
-                    }
-                    else if ( line.startsWith( "\"renderamt\"" ) )
-                    {
-                        this.renderAMT = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"rendermode\"" ) )
-                    {
-                        this.renderMode = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    else if ( line.startsWith( "\"renderfx\"" ) )
-                    {
-                        this.renderFX = Integer.parseInt( parseLineValue( line ) );
-                    }
-                    /*
-                    else if ( line.startsWith( "\"classname\"" ) )
-                    {
-                        this.className2 = parseLineValue( line );
-                    }
-                    */
-                }
+                this.renderColor = new Colorf( Float.parseFloat( v[0] ) / 255f, Float.parseFloat( v[1] ) / 255f, Float.parseFloat( v[2] ) / 255f );
+            }
+            else if ( line.startsWith( "\"renderamt\"" ) )
+            {
+                this.renderAMT = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"rendermode\"" ) )
+            {
+                this.renderMode = Integer.parseInt( parseLineValue( line ) );
+            }
+            else if ( line.startsWith( "\"renderfx\"" ) )
+            {
+                this.renderFX = Integer.parseInt( parseLineValue( line ) );
             }
         }
         
         public BSPEntity_func_wall( String className2 )
         {
             super( "func_wall", className2 );
+        }
+    }
+    
+    public static class BSPEntity_misc_model extends BSPEntity_Location
+    {
+        public String model;
+        
+        @Override
+        protected String getFieldsString()
+        {
+            return( super.getFieldsString() +
+                    "    model = " + qs( model ) + "\n"
+                  );
+        }
+        
+        @Override
+        protected void parseLine( String line )
+        {
+            super.parseLine( line );
+            
+            if ( line.startsWith( "\"model\"" ) )
+            {
+                this.model = parseLineValue( line );
+            }
+        }
+        
+        public BSPEntity_misc_model( String className2 )
+        {
+            super( "misc_model", className2 );
         }
     }
     
@@ -702,53 +764,186 @@ public class BSPEntitiesParser
         {
             return( super.getFieldsString() +
                     "    origin = " + origin + "\n" +
-                    "    texture = \"" + texture + "\"\n" +
+                    "    texture = " + qs( texture ) + "\n" +
                     "    angle = " + angle + "\n"
                   );
         }
         
         @Override
-        protected void parse( BufferedReader br ) throws IOException
+        protected void parseLine( String line )
         {
-            String line;
-            while ( true )
+            if ( line.startsWith( "\"origin\"" ) )
             {
-                line = br.readLine();
+                String[] v = parseLineValue( line ).split( " " );
                 
-                if ( line.indexOf( "}" ) >= 0 )
-                    break;
-                
-                //System.out.println( line );
-                
-                if ( line.length() > 0 )
-                {
-                    if ( line.startsWith( "\"origin\"" ) )
-                    {
-                        String[] v = parseLineValue( line ).split( " " );
-                        
-                        this.origin = new Point3f( Float.parseFloat( v[0] ), Float.parseFloat( v[1] ), Float.parseFloat( v[2] ) );
-                    }
-                    else if ( line.startsWith( "\"texture\"" ) )
-                    {
-                        this.texture = parseLineValue( line );
-                    }
-                    else if ( line.startsWith( "\"angle\"" ) )
-                    {
-                        this.angle = Float.parseFloat( parseLineValue( line ) );
-                    }
-                    /*
-                    else if ( line.startsWith( "\"classname\"" ) )
-                    {
-                        this.className2 = parseLineValue( line );
-                    }
-                    */
-                }
+                this.origin = new Point3f( Float.parseFloat( v[0] ), Float.parseFloat( v[1] ), Float.parseFloat( v[2] ) );
+            }
+            else if ( line.startsWith( "\"texture\"" ) )
+            {
+                this.texture = parseLineValue( line );
+            }
+            else if ( line.startsWith( "\"angle\"" ) )
+            {
+                this.angle = Float.parseFloat( parseLineValue( line ) );
             }
         }
         
         public BSPEntity_decal_texture( String className2 )
         {
             super( "decal_texture", className2 );
+        }
+    }
+    
+    public abstract static class BSPEntity_target extends BSPEntity
+    {
+        public Point3f origin;
+        public String targetName;
+        
+        @Override
+        protected String getFieldsString()
+        {
+            return( super.getFieldsString() +
+                    "    origin = " + origin + "\n" +
+                    "    targetName = " + qs( targetName ) + "\n"
+                  );
+        }
+        
+        @Override
+        protected void parseLine( String line )
+        {
+            if ( line.startsWith( "\"origin\"" ) )
+            {
+                String[] v = parseLineValue( line ).split( " " );
+                
+                this.origin = new Point3f( Float.parseFloat( v[0] ), Float.parseFloat( v[1] ), Float.parseFloat( v[2] ) );
+            }
+            else if ( line.startsWith( "\"targetname\"" ) )
+            {
+                this.targetName = parseLineValue( line );
+            }
+        }
+        
+        public BSPEntity_target( String className, String className2 )
+        {
+            super( className, className2 );
+        }
+    }
+    
+    public static class BSPEntity_target_push extends BSPEntity_target
+    {
+        public String target;
+        public int spawnFlags;
+        
+        @Override
+        protected String getFieldsString()
+        {
+            return( super.getFieldsString() +
+                    "    target = " + qs( target ) + "\n" +
+                    "    spawnFlags = " + spawnFlags + "\n"
+                  );
+        }
+        
+        @Override
+        protected void parseLine( String line )
+        {
+            super.parseLine( line );
+            
+            if ( line.startsWith( "\"target\"" ) )
+            {
+                this.target = parseLineValue( line );
+            }
+            else if ( line.startsWith( "\"spawnflags\"" ) )
+            {
+                this.spawnFlags = Integer.parseInt( parseLineValue( line ) );
+            }
+        }
+        
+        public BSPEntity_target_push( String className2 )
+        {
+            super( "target_push", className2 );
+        }
+    }
+    
+    public static class BSPEntity_target_position extends BSPEntity_target
+    {
+        @Override
+        protected String getFieldsString()
+        {
+            return( super.getFieldsString() );
+        }
+        
+        @Override
+        protected void parseLine( String line )
+        {
+            super.parseLine( line );
+        }
+        
+        public BSPEntity_target_position( String className2 )
+        {
+            super( "target_position", className2 );
+        }
+    }
+    
+    public abstract static class BSPEntity_trigger extends BSPEntity
+    {
+        @Override
+        protected String getFieldsString()
+        {
+            return( super.getFieldsString() );
+        }
+        
+        @Override
+        protected void parseLine( String line )
+        {
+            super.parseLineValue( line );
+        }
+        
+        public BSPEntity_trigger( String className, String className2 )
+        {
+            super( className, className2 );
+        }
+    }
+    
+    public static class BSPEntity_trigger_multiple extends BSPEntity_trigger
+    {
+        public String model;
+        
+        @Override
+        protected String getFieldsString()
+        {
+            return( super.getFieldsString() +
+                    "    model = " + qs( model ) + "\n"
+                  );
+        }
+        
+        @Override
+        protected void parseLine( String line )
+        {
+            super.parseLine( line );
+            
+            if ( line.startsWith( "\"model\"" ) )
+            {
+                this.model = parseLineValue( line );
+            }
+        }
+        
+        public BSPEntity_trigger_multiple( String className2 )
+        {
+            super( "trigger_multiple", className2 );
+        }
+    }
+    
+    public static class BSPEntity_unknwown extends BSPEntity
+    {
+        @Override
+        protected void parseLine( String line )
+        {
+            System.out.println( line );
+        }
+        
+        public BSPEntity_unknwown( String className2 )
+        {
+            super( "unknown", className2 );
         }
     }
     
@@ -807,9 +1002,29 @@ public class BSPEntitiesParser
                     {
                         entity = new BSPEntity_worldspawn( classname );
                     }
-                    else if ( classname.startsWith( "info_" ) || classname.startsWith( "weapon_" ) || classname.startsWith( "ammo_" ) || classname.startsWith( "item_" ) )
+                    else if ( classname.startsWith( "info_" ) )
+                    {
+                        entity = new BSPEntity_info( classname );
+                    }
+                    else if ( classname.startsWith( "weapon_" ) )
+                    {
+                        entity = new BSPEntity_weapon( classname );
+                    }
+                    else if ( classname.startsWith( "ammo_" ) )
+                    {
+                        entity = new BSPEntity_ammo( classname );
+                    }
+                    else if ( classname.startsWith( "item_" ) )
+                    {
+                        entity = new BSPEntity_item( classname );
+                    }
+                    else if ( classname.startsWith( "holdable_teleporter" ) )
                     {
                         entity = new BSPEntity_Location( classname );
+                    }
+                    else if ( classname.startsWith( "misc_model" ) )
+                    {
+                        entity = new BSPEntity_misc_model( classname );
                     }
                     else if ( classname.startsWith( "light" ) )
                     {
@@ -837,6 +1052,28 @@ public class BSPEntitiesParser
                     else if ( classname.startsWith( "infodecal" ) )
                     {
                         entity = new BSPEntity_decal_texture( classname );
+                    }
+                    else if ( classname.startsWith( "target_" ) )
+                    {
+                        if ( classname.startsWith( "target_push" ) )
+                        {
+                            entity = new BSPEntity_target_push( classname );
+                        }
+                        else if ( classname.startsWith( "target_position" ) )
+                        {
+                            entity = new BSPEntity_target_position( classname );
+                        }
+                    }
+                    else if ( classname.startsWith( "trigger_" ) )
+                    {
+                        if ( classname.startsWith( "trigger_multiple" ) )
+                        {
+                            entity = new BSPEntity_trigger_multiple( classname );
+                        }
+                    }
+                    else
+                    {
+                        new BSPEntity_unknwown( classname ).parse( br );
                     }
                     
                     if ( entity == null )
