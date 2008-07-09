@@ -181,12 +181,15 @@ public class BSPPrototypeLoader
                 {
                     try
                     {
+                        AbstractTexture texture = wadFile.readTexture( textureName, HL_WAL_Palette.palette, appFactory );
+                        
+                        /*
                         BufferedInputStream in = wadFile.getResourceAsStream( textureName );
                         
                         AbstractTextureImage textureImage0 = appFactory.createTextureImage( AbstractTextureImage.Format.RGB, width, height );
                         ByteBuffer bb = textureImage0.getDataBuffer();
                         
-                        System.out.println( "limit: " + bb.limit() + ", " + width + ", " + height );
+                        //System.out.println( "limit: " + bb.limit() + ", " + width + ", " + height );
                         for ( int b = 0; b < bb.limit(); b++ )
                         {
                             byte byt = (byte)in.read();
@@ -196,15 +199,16 @@ public class BSPPrototypeLoader
                         bb.flip();
                         
                         return( appFactory.createTexture( textureImage0, true ) );
+                        */
                         
                         /*
                         AbstractTexture texture = appFactory.loadTexture( in, textureName, false, true, true, true, false );
+                        */
                         
                         if ( texture != null )
                         {
                             return( texture );
                         }
-                        */
                     }
                     catch ( IOException e )
                     {
@@ -844,11 +848,13 @@ public class BSPPrototypeLoader
                 if ( child0 > 0 )
                     node.front = child0;
                 else
-                    node.front = -( Integer.reverse( child0 ) >> 16 );
+                    //node.front = -( Integer.reverse( child0 ) >> 16 );
+                    node.front = -( child0 + 1 );
                 if ( child1 > 0 )
                     node.back = child1;
                 else
-                    node.back = -( Integer.reverse( child1 ) >> 16 );
+                    //node.back = -( Integer.reverse( child1 ) >> 16 );
+                    node.back = -( child1 + 1 );
                 
                 node.mins[ 0 ] = file.readShort();
                 node.mins[ 1 ] = file.readShort();

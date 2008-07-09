@@ -37,10 +37,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.textures.AbstractTexture;
+import org.jagatoo.loaders.textures.AbstractTextureImage;
 
 /**
  * Represents a Half-Life WAD source file.
@@ -50,6 +53,8 @@ import org.jagatoo.loaders.ParsingErrorException;
  */
 public class WADFile
 {
+    private static final int MAGIC_NUMBER_WAD3 = 0x57414433;
+    
     // wad directory, contains info for integrated files
     private static class WADDirectoryEntry 
     {
@@ -81,6 +86,7 @@ public class WADFile
     }
     
     private final URL     wadFile;
+    private int           magicNumber;
     private String        wadType;
     
     private final HashMap<String, WADDirectoryEntry> wadDir;
@@ -130,10 +136,7 @@ public class WADFile
             in = new BufferedInputStream( in );
         }
         
-        //in.skip( 3 * 4 );
         in.skip( entry.offset );
-        
-        System.out.println( entry.fileName + ", " + entry.uncompFileSize );
         
         return( (BufferedInputStream)in );
     }
@@ -153,7 +156,6 @@ public class WADFile
             in = new BufferedInputStream( in );
         }
         
-        //in.skip( 3 * 4 );
         in.skip( entry.offset );
         
         BufferedOutputStream out = new BufferedOutputStream( new FileOutputStream( filename ) );
@@ -162,6 +164,101 @@ public class WADFile
             out.write( (byte)in.read() );
         }
         out.close();
+        
+        in.close();
+    }
+    
+    public final AbstractTexture readTexture( String resName, byte[][] palette, AppearanceFactory appFactory ) throws IOException
+    {
+        if ( magicNumber == MAGIC_NUMBER_WAD3 )
+        {
+            WADDirectoryEntry entry = wadDir.get( resName.toLowerCase() );
+            
+            if ( entry == null )
+            {
+                throw new IOException( "The resource was not found in this WAD file." );
+            }
+            
+            InputStream in = wadFile.openStream();
+            if ( !( in instanceof BufferedInputStream ) )
+            {
+                in = new BufferedInputStream( in );
+            }
+            
+            DataInputStream din = new DataInputStream( in );
+            
+            //din.skip( 3 * 4 );
+            din.skip( entry.offset );
+            
+            byte[] name = new byte[ 16 ];
+            din.read( name );
+            //System.out.println( new String( name ).trim() );
+            
+            int width = Integer.reverseBytes( din.readInt() );
+            int height = Integer.reverseBytes( din.readInt() );
+            
+            //System.out.println( width );
+            //System.out.println( height );
+            
+            int[] offsets = new int[ 4 ];
+            for ( int i = 0; i < 4; i++ )
+            {
+                offsets[i] = Integer.reverseBytes( din.readInt() );
+                //System.out.println( offsets[i] );
+            }
+            
+            AbstractTextureImage[] mipmaps = new AbstractTextureImage[ 4 ];
+            
+            for ( int i = 0; i < 4; i++ )
+            {
+                //System.out.println( width + ", " + height );
+                
+                mipmaps[i] = appFactory.createTextureImage( AbstractTextureImage.Format.RGB, width, height );
+                ByteBuffer bb = mipmaps[i].getDataBuffer();
+                
+                /*
+                for ( int y = height - 1; y >= 0; y-- )
+                {
+                    for ( int x = 0; x < width; x++ )
+                    {
+                        int palIdx = in.read();
+                        
+                        int offset = y * width + x * 3;
+                        bb.put( offset + 0, palette[palIdx][0] );
+                        bb.put( offset + 1, palette[palIdx][1] );
+                        bb.put( offset + 2, palette[palIdx][2] );
+                    }
+                }
+                */
+                int size = width * height;
+                for ( int j = 0; j < size; j++ )
+                {
+                    int palIdx = in.read();
+                    
+                    bb.put( palette[palIdx][0] );
+                    bb.put( palette[palIdx][1] );
+                    bb.put( palette[palIdx][2] );
+                }
+                
+                //bb.flip();
+                bb.position( 0 );
+                bb.limit( width * height * 3 );
+                
+                width = width >> 1;
+                height = height >> 1;
+            }
+            
+            din.close();
+            
+            AbstractTexture texture = appFactory.createTexture( mipmaps[0], true );
+            //texture.setImage( 1, mipmaps[1] );
+            //texture.setImage( 2, mipmaps[2] );
+            //texture.setImage( 3, mipmaps[3] );
+            
+            return( texture );
+        }
+        
+        return( null );
     }
     
     private HashMap<String, WADDirectoryEntry> readWADDirectory( URL wadFile ) throws IOException, IncorrectFormatException, ParsingErrorException
@@ -171,12 +268,13 @@ public class WADFile
             DataInputStream in = new DataInputStream( new BufferedInputStream( wadFile.openStream() ) );
             
             // read WAD header
-            int magicNumber = in.readInt(); // "WAD3", 0x57414433
-            if ( magicNumber != 0x57414433 )
+            int magicNumber = in.readInt();
+            if ( magicNumber != MAGIC_NUMBER_WAD3 )
             {
                 throw new IncorrectFormatException( "This is not a WAD3 file!" );
             }
             
+            this.magicNumber = magicNumber;
             this.wadType = "WAD3";
             
             int lumpCount = Integer.reverseBytes( in.readInt() ); // - Number of files
