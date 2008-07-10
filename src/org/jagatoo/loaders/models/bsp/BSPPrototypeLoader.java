@@ -169,7 +169,7 @@ public class BSPPrototypeLoader
         return( wadFiles.toArray( new WADFile[ wadFiles.size() ] ) );
     }
     
-    private static AbstractTexture loadTexture( BSPFile file, String textureName, int width, int height, WADFile[] wadFiles, AppearanceFactory appFactory )
+    private static AbstractTexture loadTexture( BSPFile file, String textureName, WADFile[] wadFiles, AppearanceFactory appFactory )
     {
         if ( ( wadFiles != null ) && ( wadFiles.length > 0 ) )
         {
@@ -283,8 +283,8 @@ public class BSPPrototypeLoader
                     textureName = new String( texNameBytes );
                 }
                 
-                int width = file.readInt();
-                int height = file.readInt();
+                /*int width = */file.readInt();
+                /*int height = */file.readInt();
                 
                 /*int offset1 = */file.readInt();
                 /*int offset2 = */file.readInt();
@@ -292,13 +292,13 @@ public class BSPPrototypeLoader
                 /*int offset4 = */file.readInt();
                 
                 /*
-                System.out.print( textures[ i ] );
+                System.out.print( textureName );
                 System.out.print( " { width: "  + width + ", height: " + height );
                 System.out.print( " | ofs1: "   + offset1 +  ", ofs2: " + offset2 );
                 System.out.println( ", ofs3: " + offset3 + ", ofs4: "  + offset4 + " }" );
                 */
                 
-                textures[ i ] = loadTexture( file, textureName, width, height, wadFiles, appFactory );
+                textures[ i ] = loadTexture( file, textureName, wadFiles, appFactory );
             }
         }
         else if ( file.getVersion() == 46 )
@@ -314,7 +314,7 @@ public class BSPPrototypeLoader
                 String textureName = new String( ca );
                 textureName = textureName.substring( 0, textureName.indexOf( 0 ) );
                 
-                textures[ i ] = loadTexture( file, textureName, 128, 128, wadFiles, appFactory );
+                textures[ i ] = loadTexture( file, textureName, wadFiles, appFactory );
             }
         }
         
