@@ -170,7 +170,7 @@ public class WADFile
         in.close();
     }
     
-    public final AbstractTexture readTexture( String resName, byte[][] palette, AppearanceFactory appFactory ) throws IOException
+    public final AbstractTexture readTexture( String resName, AppearanceFactory appFactory ) throws IOException
     {
         if ( magicNumber == MAGIC_NUMBER_WAD3 )
         {
@@ -224,11 +224,10 @@ public class WADFile
              * Read the palette first...
              */
             int paletteSize = StreamUtils.readSwappedShort( din );
+            byte[][] palette = new byte[paletteSize][];
             for ( int i = 0; i < paletteSize; i++ )
             {
-                palette[i][0] = (byte)in.read();
-                palette[i][1] = (byte)in.read();
-                palette[i][2] = (byte)in.read();
+                palette[i] = new byte[] { (byte)in.read(), (byte)in.read(), (byte)in.read() };
             }
             din.close();
             

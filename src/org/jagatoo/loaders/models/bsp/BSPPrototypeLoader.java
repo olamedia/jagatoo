@@ -183,7 +183,7 @@ public class BSPPrototypeLoader
                     {
                         //AbstractTexture test = appFactory.loadTexture( new URL( file.getBaseURL(), textureName + ".tga" ), false, true, true, true, false );
                         
-                        AbstractTexture texture = wadFile.readTexture( textureName, HL_WAL_Palette.palette, appFactory );
+                        AbstractTexture texture = wadFile.readTexture( textureName, appFactory );
                         
                         if ( texture != null )
                         {
