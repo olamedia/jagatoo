@@ -49,7 +49,15 @@ public class MipmapGenerator
         int width = ti0.getWidth();
         int height = ti0.getHeight();
         
-        final int numLevels = Integer.numberOfTrailingZeros( Math.max( width, height ) ) + 1;
+        int numLevels = Integer.numberOfTrailingZeros( Math.max( width, height ) ) + 1;
+        
+        /*
+         * For some ugly texture sizes the above algorithm will compute a wrong level-count.
+         */
+        if ( ( ( width >> numLevels ) > 0 ) || ( ( height >> numLevels ) > 0 ) )
+        {
+            numLevels++;
+        }
         
         final PixelProcessor pp = PixelProcessor.selectPixelProcessor( ti0.getFormat() );
         
