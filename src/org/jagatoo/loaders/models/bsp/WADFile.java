@@ -32,6 +32,7 @@ package org.jagatoo.loaders.models.bsp;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -44,6 +45,7 @@ import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
+import org.jagatoo.util.streams.StreamUtils;
 
 /**
  * Represents a Half-Life WAD source file.
@@ -187,7 +189,6 @@ public class WADFile
             
             DataInputStream din = new DataInputStream( in );
             
-            //din.skip( 3 * 4 );
             din.skip( entry.offset );
             
             byte[] name = new byte[ 16 ];
@@ -207,6 +208,32 @@ public class WADFile
                 //System.out.println( offsets[i] );
             }
             
+            int imgDataSize0 = offsets[1] - offsets[0];
+            int imgDataSize = imgDataSize0;
+            imgDataSize0 = imgDataSize0 >> 2;
+            imgDataSize += imgDataSize0;
+            imgDataSize0 = imgDataSize0 >> 2;
+            imgDataSize += imgDataSize0;
+            imgDataSize0 = imgDataSize0 >> 2;
+            imgDataSize += imgDataSize0;
+            
+            byte[] imgData = new byte[ imgDataSize ];
+            din.read( imgData );
+            
+            /*
+             * Read the palette first...
+             */
+            int paletteSize = StreamUtils.readSwappedShort( din );
+            for ( int i = 0; i < paletteSize; i++ )
+            {
+                palette[i][0] = (byte)in.read();
+                palette[i][1] = (byte)in.read();
+                palette[i][2] = (byte)in.read();
+            }
+            din.close();
+            
+            din = new DataInputStream( new ByteArrayInputStream( imgData ) );
+            
             AbstractTextureImage[] mipmaps = new AbstractTextureImage[ 4 ];
             
             for ( int i = 0; i < 4; i++ )
@@ -221,7 +248,7 @@ public class WADFile
                 {
                     for ( int x = 0; x < width; x++ )
                     {
-                        int palIdx = in.read();
+                        int palIdx = din.read();
                         
                         int offset = y * width + x * 3;
                         bb.put( offset + 0, palette[palIdx][0] );
@@ -229,18 +256,20 @@ public class WADFile
                         bb.put( offset + 2, palette[palIdx][2] );
                     }
                 }
+                
+                //bb.flip();
                 */
+                
                 int size = width * height;
                 for ( int j = 0; j < size; j++ )
                 {
-                    int palIdx = in.read();
+                    int palIdx = din.read();
                     
                     bb.put( palette[palIdx][0] );
                     bb.put( palette[palIdx][1] );
                     bb.put( palette[palIdx][2] );
                 }
                 
-                //bb.flip();
                 bb.position( 0 );
                 bb.limit( width * height * 3 );
                 

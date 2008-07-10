@@ -173,6 +173,76 @@ public class StreamUtils
     }
     
     /**
+     * Reads two bytes from the InputStream stored in a short-value.
+     * 
+     * @param in
+     * 
+     * @return the read short.
+     * 
+     * @throws IOException
+     */
+    public static final short readSwappedShort( InputStream in ) throws IOException
+    {
+        int s2 = ( in.read() & 0xFF );
+        int s1 = ( in.read() & 0xFF ) << 8;
+        
+        return( (short)( s1 | s2 ) );
+    }
+    
+    /**
+     * Reads two bytes from the InputStream stored in a short-value.
+     * 
+     * @param in
+     * 
+     * @return the read short.
+     * 
+     * @throws IOException
+     */
+    public static final short readSwappedShort( BufferedInputStream in ) throws IOException
+    {
+        int s2 = ( in.read() & 0xFF );
+        int s1 = ( in.read() & 0xFF ) << 8;
+        
+        return( (short)( s1 | s2 ) );
+    }
+    
+    /**
+     * Reads two bytes from the InputStream, convertes them to a short
+     * and stores them to an int to preserve the sign.
+     * 
+     * @param in
+     * 
+     * @return the read unsigned short (as an int).
+     * 
+     * @throws IOException
+     */
+    public static final int readSwappedUnsignedShort( InputStream in ) throws IOException
+    {
+        int low = (int)in.read();
+        int high = (int)in.read();
+        
+        return( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
+    }
+    
+    /**
+     * Reads two bytes from the InputStream, convertes them to a short
+     * and stores them to an int to preserve the sign.
+     * 
+     * @param in
+     * 
+     * @return the read unsigned short (as an int).
+     * 
+     * @throws IOException
+     */
+    public static final int readSwappedUnsignedShort( BufferedInputStream in ) throws IOException
+    {
+        int low = (int)in.read();
+        int high = (int)in.read();
+        
+        return( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
+    }
+    
+    /**
      * Reads one (signed) int from the stream.
      * 
      * @param in
@@ -206,6 +276,44 @@ public class StreamUtils
         int i3 = ( in.read() & 0xFF ) << 16;
         int i2 = ( in.read() & 0xFF ) << 8;
         int i1 = ( in.read() & 0xFF );
+        
+        return( i4 | i3 | i2 | i1 );
+    }
+    
+    /**
+     * Reads one (signed) int from the stream.
+     * 
+     * @param in
+     * 
+     * @return the read int.
+     * 
+     * @throws IOException
+     */
+    public static final int readSwappedInt( InputStream in ) throws IOException
+    {
+        int i4 = ( in.read() & 0xFF );
+        int i3 = ( in.read() & 0xFF ) << 8;
+        int i2 = ( in.read() & 0xFF ) << 16;
+        int i1 = ( in.read() & 0xFF ) << 24;
+        
+        return( i4 | i3 | i2 | i1 );
+    }
+    
+    /**
+     * Reads one (signed) int from the stream.
+     * 
+     * @param in
+     * 
+     * @return the read int.
+     * 
+     * @throws IOException
+     */
+    public static final int readSwappedInt( BufferedInputStream in ) throws IOException
+    {
+        int i1 = ( in.read() & 0xFF );
+        int i2 = ( in.read() & 0xFF ) << 8;
+        int i3 = ( in.read() & 0xFF ) << 16;
+        int i4 = ( in.read() & 0xFF ) << 24;
         
         return( i4 | i3 | i2 | i1 );
     }

@@ -181,29 +181,9 @@ public class BSPPrototypeLoader
                 {
                     try
                     {
+                        //AbstractTexture test = appFactory.loadTexture( new URL( file.getBaseURL(), textureName + ".tga" ), false, true, true, true, false );
+                        
                         AbstractTexture texture = wadFile.readTexture( textureName, HL_WAL_Palette.palette, appFactory );
-                        
-                        /*
-                        BufferedInputStream in = wadFile.getResourceAsStream( textureName );
-                        
-                        AbstractTextureImage textureImage0 = appFactory.createTextureImage( AbstractTextureImage.Format.RGB, width, height );
-                        ByteBuffer bb = textureImage0.getDataBuffer();
-                        
-                        //System.out.println( "limit: " + bb.limit() + ", " + width + ", " + height );
-                        for ( int b = 0; b < bb.limit(); b++ )
-                        {
-                            byte byt = (byte)in.read();
-                            bb.put( byt );
-                        }
-                        
-                        bb.flip();
-                        
-                        return( appFactory.createTexture( textureImage0, true ) );
-                        */
-                        
-                        /*
-                        AbstractTexture texture = appFactory.loadTexture( in, textureName, false, true, true, true, false );
-                        */
                         
                         if ( texture != null )
                         {
