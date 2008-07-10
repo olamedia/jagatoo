@@ -44,7 +44,6 @@ import org.jagatoo.loaders.models.bsp.lumps.BSPFace;
 import org.jagatoo.loaders.models.bsp.lumps.BSPTexInfo;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVertex;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVisData;
-import org.openmali.vecmath2.Matrix4f;
 import org.openmali.vecmath2.Point3f;
 import org.openmali.vecmath2.Vertex3f;
 
@@ -215,7 +214,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
         BSPTexInfo texInfo = texInfos[ face.textureID ];
         face.textureID = texInfo.textureID;
         
-        Matrix4f m = Matrix4f.fromPool();
+        //Matrix4f m = Matrix4f.fromPool();
         Point3f p = Point3f.fromPool();
         
         for ( int i = 0; i < numVertices; i++ )
@@ -225,19 +224,26 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
             
             geomFactory.setCoordinate( ga, geomType, i, new float[] { p.getX(), p.getZ(), -p.getY() }, 0, 1 );
             
+            /*
             m.setIdentity();
             m.setRow( 0, texInfo.s );
             m.setRow( 1, texInfo.t );
             
             m.transform( p );
+            */
             
-            geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { p.getX(), p.getY() }, 0, 1 );
+            float u = p.getX() * texInfo.s[0] + p.getZ() * texInfo.s[2] + -p.getY() * texInfo.s[1] + texInfo.s[3];
+            float v = p.getX() * texInfo.t[0] + p.getZ() * texInfo.t[2] + -p.getY() * texInfo.t[1] + texInfo.t[3];
+            
+            geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { u, v }, 0, 1 );
+            
+            //geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { p.getX(), p.getY() }, 0, 1 );
             //geomFactory.setTexCoord( ga, geomType, 1, 2, i, new float[] { ps.mPoints[ i ].lightTexCoord.getS(), ps.mPoints[ i ].lightTexCoord.getT() }, 0, 1 );
             //geomFactory.setColor( ga, geomType, ps.mPoints[ i ].color.hasAlpha() ? 4 : 3, i, new float[] { ps.mPoints[ i ].color.getRed(), ps.mPoints[ i ].color.getGreen(), ps.mPoints[ i ].color.getBlue(), ps.mPoints[ i ].color.getAlpha() }, 0, 1 );
         }
         
         Point3f.toPool( p );
-        Matrix4f.toPool( m );
+        //Matrix4f.toPool( m );
         
         geomFactory.finalizeGeometry( ga, geomType, 0, numVertices, 0, 0 );
         
