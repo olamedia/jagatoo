@@ -164,7 +164,7 @@ public class AC3DSurface
      * 
      * @return The material ID
      */
-    public int getMaterial()
+    public int getMaterialIndex()
     {
         return( material );
     }

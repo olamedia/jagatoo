@@ -33,7 +33,9 @@ import java.io.IOException;
 
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
-import org.jagatoo.loaders.models.bsp.GeometryFactory.GeometryType;
+import org.jagatoo.loaders.models._util.AppearanceFactory;
+import org.jagatoo.loaders.models._util.GeometryFactory;
+import org.jagatoo.loaders.models._util.GeometryFactory.GeometryType;
 import org.jagatoo.loaders.models.bsp.lumps.BSP46Model;
 import org.jagatoo.loaders.models.bsp.lumps.BSPDirectory;
 import org.jagatoo.loaders.models.bsp.lumps.BSPFace;
@@ -68,8 +70,8 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
             prototype.leafFaces = BSPPrototypeLoader.readLeafFaces( bspFile, bspDir );
             //prototype.leafBrushes = BSPPrototypeLoader.readLeafBrushes( bspFile, bspDir );
             prototype.models = BSPPrototypeLoader.readModels( bspFile, bspDir );
-            //prototype.brushes = BSPPrototypeLoader.readBrushes( bspFile, bspDir );
-            //prototype.brushSides = BSPPrototypeLoader.readBrushSides( bspFile, bspDir );
+            prototype.brushes = BSPPrototypeLoader.readBrushes( bspFile, bspDir );
+            prototype.brushSides = BSPPrototypeLoader.readBrushSides( bspFile, bspDir );
             prototype.vertices = BSPPrototypeLoader.readVertices( bspFile, bspDir );
             prototype.meshVertices = BSPPrototypeLoader.readMeshVertices( bspFile, bspDir );
             //prototype.shaders = BSPPrototypeLoader.readShaders( bspFile, bspDir );

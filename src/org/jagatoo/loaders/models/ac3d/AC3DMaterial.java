@@ -74,36 +74,35 @@ import org.openmali.vecmath2.Colorf;
  */
 public class AC3DMaterial
 {
-    /** The index of this material */
-    private int      index;
     /** The name of the material */
-    private String   name;
+    private final String   name;
     /** The color of the material */
-    private Colorf  color;
+    private final Colorf  color;
     /** The color of ambient light reflected */
-    private Colorf  amb;
+    private final Colorf  amb;
     /** The emited color of this material */
-    private Colorf  emis;
+    private final Colorf  emis;
     /** The speculative color of the material */
-    private Colorf  spec;
+    private final Colorf  spec;
     /** The shinyness */
-    private float    shininess;
+    private final float    shininess;
     /** The translucancy of the material */
-    private float    translucency;
+    private final float    translucency;
     
     /**
-     * @return The index
+     * @return the name
      */
-    public int getIndex()
+    public String getName()
     {
-        return( index );
+        return( name );
     }
     
     /**
      * @return The color
      */
-    public Colorf getColor() {
-        return( new Colorf( color ) );
+    public Colorf getColor()
+    {
+        return( color );
     }
     
     /**
@@ -111,7 +110,7 @@ public class AC3DMaterial
      */
     public Colorf getAmbience()
     {
-        return( new Colorf( amb ) );
+        return( amb );
     }
     
     /**
@@ -119,7 +118,7 @@ public class AC3DMaterial
      */
     public Colorf getEmissive()
     {
-        return( new Colorf( emis ) );
+        return( emis );
     }
     
     /**
@@ -127,7 +126,7 @@ public class AC3DMaterial
      */
     public Colorf getSpecular()
     {
-        return( new Colorf( spec ) );
+        return( spec );
     }
     
     /**
@@ -147,14 +146,6 @@ public class AC3DMaterial
     }
     
     /**
-     * @return the name
-     */
-    public String getName()
-    {
-        return( name );
-    }
-    
-    /**
      * Creates new Material from the ac3d data lump
      * 
      * @param index The material index
@@ -166,11 +157,13 @@ public class AC3DMaterial
      * @param shininess The shininess
      * @param translucency The transluncancy
      */
-    public AC3DMaterial( int index, String name, Colorf color, Colorf ambient,
-                         Colorf emissive, Colorf specular, float shininess, float translucency )
+    public AC3DMaterial( String name,
+                         Colorf color, Colorf ambient, Colorf emissive, Colorf specular,
+                         float shininess, float translucency
+                       )
     {
-        this.index        = index;
         this.name         = new String( name );
+        
         // take copies of the color objects
         this.color        = new Colorf( color );
         this.amb          = new Colorf( ambient );
@@ -178,17 +171,5 @@ public class AC3DMaterial
         this.spec         = new Colorf( specular );
         this.shininess    = shininess;
         this.translucency = translucency;
-        
-        /*
-        System.out.println( "Created an AC3DMaterial\n" +
-                            "Index: " + index + " name: " + name + "\nColour: R: " + color.getRed() +
-                            " G: " + color.getGreen() + " B:" + color.getBlue() +
-                            "\nAmbient: R: " + amb.getRed() + " G: " + amb.getGreen() +
-                            " B: " + amb.getBlue() + "\nEmissive: R: " + emis.getRed() +
-                            " G: " + emis.getGreen() + " B: " + emis.getBlue() +
-                            "\nSpecular: R: " + spec.getRed() + " G: " + spec.getGreen() +
-                            " B: " + spec.getBlue() + "\nShininess: " + shininess +
-                            " translucency: " + translucency );
-        */
     }
 }

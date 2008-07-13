@@ -27,24 +27,41 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.bsp;
-
-import java.io.IOException;
-
-import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingErrorException;
-import org.jagatoo.loaders.models._util.AppearanceFactory;
-import org.jagatoo.loaders.models._util.GeometryFactory;
-import org.jagatoo.loaders.models.bsp.lumps.BSPDirectory;
+package org.jagatoo.loaders.models._util;
 
 /**
  * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface BSPVersionDataLoader
+public interface GeometryFactory
 {
-    public BSPScenePrototype loadPrototypeData( BSPFile bspFile, BSPDirectory bspDir, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException;
+    public static enum GeometryType
+    {
+        TRIANGLE_ARRAY,
+        TRIANGLE_STRIP_ARRAY,
+        INDEXED_TRIANGLE_ARRAY,
+        INDEXED_TRIANGLE_STRIP_ARRAY,
+        TRIANGLE_FAN_ARRAY,
+        INDEXED_TRIANGLE_FAN_ARRAY,
+        ;
+    }
     
-    public void convertFacesToGeometries( BSPScenePrototype prototype, GeometryFactory geomFactory, float worldScale );
+    public Object createGeometry( GeometryType type, int coordSize, int numVertices, int numIndices, int[] numStrips );
+    
+    public Object createInterleavedGeometry( GeometryType type, int coordSize, int numVertices, int numIndices, int[] numStrips, int features, boolean colorAlpha, int[] tuSizes, int[] vaSizes );
+    
+    public void setCoordinate( Object geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
+    
+    public void setNormal( Object geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
+    
+    public void setTexCoord( Object geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, float[] data, int offset, int num );
+    
+    public void setColor( Object geometry, GeometryType type, int colorSize, int vertexIndex, float[] data, int offset, int num );
+    
+    public void setVertexAttrib( Object geometry, GeometryType type, int attribIndex, int attribSize, int vertexIndex, float[] data, int offset, int num );
+    
+    public void setIndex( Object geometry, GeometryType type, int vertexIndex, int[] data, int offset, int num );
+    
+    public void finalizeGeometry( Object geometry, GeometryType type, int initialVertexIndex, int numValidVertices, int initialIndexIndex, int numValidIndices );
 }

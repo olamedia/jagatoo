@@ -75,20 +75,10 @@ import java.util.ArrayList;
  */
 public class AC3DModelPrototype
 {
-    /** The AC3DHeader of this model */
-    private AC3DHeader               header;
     /** The AC3DObjects in this model */
     private ArrayList<AC3DObject>    objects = new ArrayList<AC3DObject>();
     /** The AC3DMaterials in this model */
     private ArrayList<AC3DMaterial>  materials = new ArrayList<AC3DMaterial>();
-    
-    /**
-     * @return the AC3DHeader of this model
-     */
-    public AC3DHeader getHeader()
-    {
-        return( header );
-    }
     
     /**
      * Adds an object to the model
@@ -136,11 +126,8 @@ public class AC3DModelPrototype
     
     /**
      * Constructs a default AC3DModel
-     * 
-     * @param header the <CODE>AC3DHeader</CODE> to set as this model's header
      */
-    public AC3DModelPrototype( AC3DHeader header )
+    public AC3DModelPrototype()
     {
-        this.header = header;
     }
 }

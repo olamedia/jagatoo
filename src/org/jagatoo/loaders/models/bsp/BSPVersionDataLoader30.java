@@ -36,7 +36,9 @@ import java.io.IOException;
 
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
-import org.jagatoo.loaders.models.bsp.GeometryFactory.GeometryType;
+import org.jagatoo.loaders.models._util.AppearanceFactory;
+import org.jagatoo.loaders.models._util.GeometryFactory;
+import org.jagatoo.loaders.models._util.GeometryFactory.GeometryType;
 import org.jagatoo.loaders.models.bsp.lumps.BSP30Model;
 import org.jagatoo.loaders.models.bsp.lumps.BSPDirectory;
 import org.jagatoo.loaders.models.bsp.lumps.BSPEdge;

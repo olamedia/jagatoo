@@ -162,5 +162,15 @@ public class BSPScenePrototype
     /**
      * 
      */
+    public BSPBrush[]       brushes;
+    
+    /**
+     * 
+     */
+    public BSPBrushSide[]   brushSides;
+    
+    /**
+     * 
+     */
     public BSPVisData       visData;
 }

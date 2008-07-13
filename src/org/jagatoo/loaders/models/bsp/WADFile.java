@@ -43,6 +43,7 @@ import java.util.HashMap;
 
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
 import org.jagatoo.util.streams.StreamUtils;

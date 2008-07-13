@@ -71,7 +71,9 @@ import java.net.URL;
 
 import java.util.ArrayList;
 import java.util.StringTokenizer;
+import java.util.TreeSet;
 
+import org.jagatoo.loaders.models._util.GeometryFactory;
 import org.openmali.vecmath2.Colorf;
 
 /**
@@ -79,7 +81,7 @@ import org.openmali.vecmath2.Colorf;
  * 
  * @author Jeremy
  * @author Amos Wenger (aka BlueSky) [code cleaning]
- * @author Marvin Froehlich (aka Qudus) [code cleaning]
+ * @author Marvin Froehlich (aka Qudus)
  * 
  * @version 1.1
  */
@@ -88,35 +90,36 @@ public class AC3DPrototypeLoader
     /**
      * Reads the header block.
      */
-    private static AC3DHeader loadHeader( BufferedReader reader ) throws IOException
+    private static int loadHeader( BufferedReader reader ) throws IOException
     {
         String header = reader.readLine();
+        
         String filetype = header.substring( 0, 4 );
-        String versionText = header.substring( 4 );
-        //int formatVersion = header.charAt( 4 ) - 87;
-        int formatVersion = Integer.parseInt( versionText, 16 );
-        if ( !( header.substring( 0, 4 ).equals( "AC3D" ) ) )
+        
+        if ( !( filetype.equals( "AC3D" ) ) )
         {
             System.out.println( "File is not an AC3D file" );
             System.out.println( "Header read: " + header );
             
-            throw( new IOException( "File is not an AC3D file" ) );
+            throw new IOException( "File is not an AC3D file" );
         }
+        
+        String versionText = header.substring( 4 );
+        int formatVersion = Integer.parseInt( versionText, 16 );
         
         //System.out.println( "Found AC3D file of format version " + formatVersion );
         
-        return( new AC3DHeader( filetype, formatVersion ) );
+        return( formatVersion );
     }
     
     /**
      * Loads an AC3DMaterial from the data.
      * 
      * @param data The data from the file
-     * @param materialIndex The index of this material
      * 
      * @return The <CODE>AC3DMaterial</CODE>
      */
-    private static AC3DMaterial loadMaterial( String data, int materialIndex )
+    private static AC3DMaterial loadMaterial( String data )
     {
         // The name of the material
         String name;
@@ -172,7 +175,7 @@ public class AC3DPrototypeLoader
         
         //System.out.println( "Read material: " + name + " " + color + " " + amb + " " + emis + " " + spec + " " + shinyness + " " + translucency);
         
-        return( new AC3DMaterial( materialIndex, name, color, amb, emis, spec, shininess, translucency ) );
+        return( new AC3DMaterial( name, color, amb, emis, spec, shininess, translucency ) );
     }
     
     /**
@@ -257,7 +260,7 @@ public class AC3DPrototypeLoader
      * @throws IOException Thrown if there is an IO Error
      * @throws FileFormatException Thrown if the file does not match the AC3D specification
      */
-    private static AC3DObject loadObject( String line, BufferedReader reader ) throws IOException
+    private static AC3DObject loadObject( String line, BufferedReader reader, TreeSet<Integer> materialSet, GeometryFactory geomFactory ) throws IOException
     {
         // The type of the object
         int type;
@@ -270,44 +273,48 @@ public class AC3DPrototypeLoader
         // The location vector of this object
         float[] location = new float[3];
         // The objects verticies
-        float[][] verts = new float[0][0];
+        float[] vertexCoords = null;
         // Texture repeat values
         float textureRepeatX = 1, textureRepeatY = 1;
         // Texture offset values
-        float textureOffsetx = 0f, textureOffsety = 0f;
+        float textureOffsetX = 0f, textureOffsetY = 0f;
         // The object we are creating
         AC3DObject object;
         // temporary stor of surfaces
         ArrayList<AC3DSurface> tempSurfaces = new ArrayList<AC3DSurface>();
         
         StringTokenizer tokenizer = new StringTokenizer( line, " " );
-        String token, stringType;
         
+        // Skip token "OBJECT"
         tokenizer.nextToken();
-        stringType = token = tokenizer.nextToken();
-        if ( stringType.equals( "world" ) )
+        
+        String token = tokenizer.nextToken();
+        if ( token.equals( "world" ) )
         {
             type = AC3DObject.TYPE_WORLD;
         }
-        else if ( stringType.equals( "poly" ) )
+        else if ( token.equals( "poly" ) )
         {
             type = AC3DObject.TYPE_POLY;
         }
-        else if ( stringType.equals( "group" ) )
+        else if ( token.equals( "group" ) )
         {
             type = AC3DObject.TYPE_GROUP;
         }
         else
         {
-            throw( new IOException( "Object type \"" + stringType + "\" is not valid" ) );
+            throw new IOException( "Object type \"" + token + "\" is not valid" );
         }
         //System.out.println( "Object type: " + type );
         
-        while ( !( token.equals( "kids" ) ) )
+        while ( true )
         {
             line = reader.readLine();
+            
             tokenizer = new StringTokenizer( line );
+            
             token = tokenizer.nextToken();
+            
             if ( token.equals( "name" ) )
             {
                 name = tokenizer.nextToken();
@@ -328,8 +335,8 @@ public class AC3DPrototypeLoader
             }
             else if ( token.equals( "texoff" ) )
             {
-                textureOffsetx = Float.parseFloat( tokenizer.nextToken() );
-                textureOffsety = Float.parseFloat( tokenizer.nextToken() );
+                textureOffsetX = Float.parseFloat( tokenizer.nextToken() );
+                textureOffsetY = Float.parseFloat( tokenizer.nextToken() );
             }
             else if ( token.equals( "texrep" ) )
             {
@@ -355,20 +362,20 @@ public class AC3DPrototypeLoader
             }
             else if ( token.equals( "url" ) )
             {
-                System.out.println( "url tag unsuported" );
+                System.out.println( "url tag unsupported" );
             }
             else if ( token.equals( "numvert" ) )
             {
                 int numvert = Integer.parseInt( tokenizer.nextToken() );
-                verts = new float[ numvert ][ 3 ];
+                vertexCoords = new float[ numvert * 3 ];
                 
                 for ( int i = 0; i < numvert; i++ )
                 {
                     line = reader.readLine();
                     tokenizer = new StringTokenizer( line, " " );
-                    verts[ i ][ 0 ] = Float.parseFloat( tokenizer.nextToken() );
-                    verts[ i ][ 1 ] = Float.parseFloat( tokenizer.nextToken() );
-                    verts[ i ][ 2 ] = Float.parseFloat( tokenizer.nextToken() );
+                    vertexCoords[ i * 3 + 0 ] = Float.parseFloat( tokenizer.nextToken() );
+                    vertexCoords[ i * 3 + 1 ] = Float.parseFloat( tokenizer.nextToken() );
+                    vertexCoords[ i * 3 + 2 ] = Float.parseFloat( tokenizer.nextToken() );
                 }
             }
             else if ( token.equals( "numsurf" ) )
@@ -379,6 +386,11 @@ public class AC3DPrototypeLoader
                 {
                     //System.out.println( "Reading surface " + i );
                     AC3DSurface surface = loadSurface( reader );
+                    
+                    if ( surface.getMaterialIndex() >= 0 )
+                    {
+                        materialSet.add( surface.getMaterialIndex() );
+                    }
                     
                     // check we are a line, or that we have at least 3 vertecies
                     // as a poly with 3 vertecies is broked
@@ -395,13 +407,17 @@ public class AC3DPrototypeLoader
                     //System.out.println( "Loaded surface " + i );
                 }
             }
+            else if ( token.equals( "kids" ) )
+            {
+                break;
+            }
         }
         
         // at this point we should have all we need to create the object, we can
         // add the kids later
         object = new AC3DObject( type, name, textureName, rotation, location,
-                                 verts, textureRepeatX, textureRepeatY, textureOffsetx,
-                                 textureOffsety );
+                                 vertexCoords, textureRepeatX, textureRepeatY, textureOffsetX,
+                                 textureOffsetY );
         for ( AC3DSurface surf: tempSurfaces )
         {
             object.addSurface( surf );
@@ -417,15 +433,14 @@ public class AC3DPrototypeLoader
             //System.out.println( "Adding " + numKids + " to " + object.getName() + object );
             for ( int i = 0; i < numKids; i++ )
             {
-                object.addObject( loadObject( reader ) );
+                object.addObject( loadObject( reader, materialSet, geomFactory ) );
             }
         }
         else
         {
             // Something is wrong with the file, the file spec says the the
             // surfaces and kids are the last tags, we have found something else
-            throw( new IOException( "\"" + token.toString() + "\"" +
-                                     " found where only a 'kids' should be" ) );
+            throw new IOException( "\"" + token.toString() + "\"" + " found where only a 'kids' should be" );
         }
         
         return( object );
@@ -441,11 +456,11 @@ public class AC3DPrototypeLoader
      * @throws IOException Thrown if there is an IO Error
      * @throws FileFormatException Thrown if the file does not match the AC3D specification
      */
-    private static AC3DObject loadObject(BufferedReader reader) throws IOException
+    private static AC3DObject loadObject( BufferedReader reader, TreeSet<Integer> materialSet, GeometryFactory geomFactory ) throws IOException
     {
         String line = reader.readLine();
         
-        return( loadObject( line, reader ) );
+        return( loadObject( line, reader, materialSet, geomFactory ) );
     }
     
     /**
@@ -453,32 +468,30 @@ public class AC3DPrototypeLoader
      * 
      * @return The model containing the fully textured and materialed object
      */
-    public static AC3DModelPrototype load( InputStream in, URL baseURL ) throws IOException
+    public static AC3DModelPrototype load( InputStream in, URL baseURL, GeometryFactory geomFactory ) throws IOException
     {
-        //long startTime = System.currentTimeMillis();
-        
         BufferedReader reader = new BufferedReader( new InputStreamReader( in ) );
-        AC3DModelPrototype model = new AC3DModelPrototype( loadHeader( reader ) );
-        int materialCount = 0;
+        
+        /*int fileVersion = */loadHeader( reader );
+        
+        AC3DModelPrototype model = new AC3DModelPrototype();
+        
+        TreeSet<Integer> usedMaterialSet = new TreeSet<Integer>();
         
         String line;
         while ( ( line = reader.readLine() ) != null )
         {
-            //System.out.println( "Read: " + line );
             String token = new StringTokenizer( line, " " ).nextToken();
-            //System.out.println( "Token is: " + token );
+            
             if ( token.equals( "MATERIAL" ) )
             {
-                model.addMaterial( loadMaterial( line, materialCount++ ) );
+                model.addMaterial( loadMaterial( line ) );
             }
             else if ( token.equals( "OBJECT" ) )
             {
-                model.addObject( loadObject( line, reader ) );
+                model.addObject( loadObject( line, reader, usedMaterialSet, geomFactory ) );
             }
         }
-        //System.out.println( "Done" );
-        
-        //System.out.println( modelURL + " parsed in " + (System.currentTimeMillis() - startTime) + " milliseconds" );
         
         return( model );
     }

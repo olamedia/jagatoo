@@ -93,7 +93,7 @@ public class AC3DObject
     /** The location vector of this object*/
     private float[]                 location;
     /** The objects verticies */
-    private float[][]               verts;
+    private float[]                 vertexCoords;
     /** Texture repeat values*/
     private float                   textureRepeatX = 1f,
                                     textureRepeatY = 1f;
@@ -198,11 +198,11 @@ public class AC3DObject
     }
     
     /**
-     * @return The verticies
+     * @return The vertex-coords.
      */
-    public float[][] getVerticies()
+    public float[] getVertexCoords()
     {
-        return( verts );
+        return( vertexCoords );
     }
     
     /**
@@ -250,14 +250,14 @@ public class AC3DObject
      * @param textureName The texture name of the object
      * @param rotation The objects rotation
      * @param location The objects location
-     * @param verts The objects verticies
+     * @param vertexCoords The objects vertex-coordinates
      * @param textureRepeatX The texture repeat value in the x axis
      * @param textureRepeatY The texture repeat value in the y axis
      * @param textureOffsetx The texture offset in the X axis
      * @param textureOffsety The texture off set in the Y axis
      */
     public AC3DObject( int type, String name, String textureName, 
-                       float[] rotation, float[] location, float[][] verts, 
+                       float[] rotation, float[] location, float[] vertexCoords, 
                        float textureRepeatX, float textureRepeatY, 
                        float textureOffsetx, float textureOffsety )
     {
@@ -266,7 +266,7 @@ public class AC3DObject
         this.textureName    = textureName;
         this.rotation       = rotation;
         this.location       = location;
-        this.verts          = verts;
+        this.vertexCoords   = ( vertexCoords != null ) ? vertexCoords : new float[0];
         this.textureRepeatX = textureRepeatX;
         this.textureRepeatY = textureRepeatY;
         this.textureOffsetx = textureOffsetx;

@@ -72,6 +72,8 @@ import java.util.ArrayList;
 
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.models._util.AppearanceFactory;
+import org.jagatoo.loaders.models._util.GeometryFactory;
 import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity;
 import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity_worldspawn;
 import org.jagatoo.loaders.models.bsp.lumps.*;
@@ -989,6 +991,57 @@ public class BSPPrototypeLoader
         }
         
         return( leafFaces );
+    }
+    
+    protected static BSPBrush[] readBrushes( BSPFile file, BSPDirectory bspDir ) throws IOException
+    {
+        if ( bspDir.kBrushes < 0 )
+        {
+            //JAGTLog.debug( "kBrushes not currently supported by ", bspDir.getClass().getSimpleName() );
+            
+            return( null );
+        }
+        
+        file.seek( bspDir.kBrushes );
+        int num = file.lumps[ bspDir.kBrushes ].length / ( 3 * 4 );
+        
+        BSPBrush[] brushes = new BSPBrush[ num ];
+        for ( int i = 0; i < num; i++ )
+        {
+            BSPBrush brush = new BSPBrush();
+            brushes[i] = brush;
+            
+            brush.brushSide = file.readInt();
+            brush.numBrushSides = file.readInt();
+            brush.textureID = file.readInt();
+        }
+        
+        return( brushes );
+    }
+    
+    protected static BSPBrushSide[] readBrushSides( BSPFile file, BSPDirectory bspDir ) throws IOException
+    {
+        if ( bspDir.kBrushSides < 0 )
+        {
+            //JAGTLog.debug( "kBrushSides not currently supported by ", bspDir.getClass().getSimpleName() );
+            
+            return( null );
+        }
+        
+        file.seek( bspDir.kBrushSides );
+        int num = file.lumps[ bspDir.kBrushSides ].length / ( 3 * 4 );
+        
+        BSPBrushSide[] brushSides = new BSPBrushSide[ num ];
+        for ( int i = 0; i < num; i++ )
+        {
+            BSPBrushSide brushSide = new BSPBrushSide();
+            brushSides[i] = brushSide;
+            
+            brushSide.plane = file.readInt();
+            brushSide.textureID = file.readInt();
+        }
+        
+        return( brushSides );
     }
     
     protected static BSPModel[] readModels( BSPFile file, BSPDirectory bspDir ) throws IOException

@@ -27,40 +27,16 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.bsp;
-
-import java.io.InputStream;
-import java.net.URL;
-
-import org.jagatoo.loaders.textures.AbstractTexture;
-import org.jagatoo.loaders.textures.AbstractTextureImage;
+package org.jagatoo.loaders.models.bsp.lumps;
 
 /**
  * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface AppearanceFactory
+public class BSPBrushSide
 {
-    public static final int APP_TEXTURE_MODE_MODULATE = 0;
-    public static final int APP_TEXTURE_MODE_REPLACE = 1;
-    public static final int APP_TEXTURE_MODE_COMBINE = 2;
+    public int plane;
     
-    public Object createAppearance( String appID );
-    
-    public void setTexture( Object appearance, String appID, int textureUnit, AbstractTexture texture );
-    
-    public void setTextureMode( Object appearance, String appID, int textureUnit, int textureMode );
-    
-    public void applyAppearance( Object appearance, String appID, Object geometry );
-    
-    public AbstractTexture loadTexture( InputStream in, String texName, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
-    
-    public AbstractTexture loadTexture( URL url, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
-    
-    public AbstractTexture loadOrGetTexture( String texName, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
-    
-    public AbstractTextureImage createTextureImage( AbstractTextureImage.Format format, int width, int height );
-    
-    public AbstractTexture createTexture( AbstractTextureImage texImage0, boolean generateMipmaps );
+    public int textureID;
 }

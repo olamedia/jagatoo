@@ -27,41 +27,18 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.bsp;
+package org.jagatoo.loaders.models.bsp.lumps;
 
 /**
  * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface GeometryFactory
+public class BSPBrush
 {
-    public static enum GeometryType
-    {
-        TRIANGLE_ARRAY,
-        TRIANGLE_STRIP_ARRAY,
-        INDEXED_TRIANGLE_ARRAY,
-        INDEXED_TRIANGLE_STRIP_ARRAY,
-        TRIANGLE_FAN_ARRAY,
-        INDEXED_TRIANGLE_FAN_ARRAY,
-        ;
-    }
+    public int brushSide;
     
-    public Object createGeometry( GeometryType type, int coordSize, int numVertices, int numIndices, int[] numStrips );
+    public int numBrushSides;
     
-    public Object createInterleavedGeometry( GeometryType type, int coordSize, int numVertices, int numIndices, int[] numStrips, int features, boolean colorAlpha, int[] tuSizes, int[] vaSizes );
-    
-    public void setCoordinate( Object geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setNormal( Object geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setTexCoord( Object geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setColor( Object geometry, GeometryType type, int colorSize, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setVertexAttrib( Object geometry, GeometryType type, int attribIndex, int attribSize, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setIndex( Object geometry, GeometryType type, int vertexIndex, int[] data, int offset, int num );
-    
-    public void finalizeGeometry( Object geometry, GeometryType type, int initialVertexIndex, int numValidVertices, int initialIndexIndex, int numValidIndices );
+    public int textureID;
 }
