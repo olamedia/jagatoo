@@ -147,23 +147,37 @@ public class SWTMouse extends Mouse
     private void updateCenters()
     {
         // calculate center-of-component (in absolute sizes)
-        
-        los.x = control.getLocation().x;
-        los.y = control.getLocation().y;
-        
-        Composite parent = control.getParent();
-        while ( parent != null )
+        control.getDisplay().asyncExec( new Runnable()
         {
-            los.x += parent.getLocation().x;
-            los.y += parent.getLocation().y;
-            
-            parent = parent.getParent();
-        }
-        
-        centerControl.x = ( control.getSize().x / 2 ) + 1;
-        centerControl.y = ( control.getSize().y / 2 ) + 1;
-        
-        calibrationStep = 0;
+            public void run()
+            {
+                los.x = control.getLocation().x;
+                los.y = control.getLocation().y;
+                
+                Composite parent = control.getParent();
+                while ( parent != null )
+                {
+                    los.x += parent.getLocation().x;
+                    los.y += parent.getLocation().y;
+                    
+                    parent = parent.getParent();
+                }
+                
+                centerControl.x = ( control.getSize().x / 2 ) + 1;
+                centerControl.y = ( control.getSize().y / 2 ) + 1;
+                
+                parent = control.getParent();
+                while ( ( centerControl.x == 1 && centerControl.y == 1 ) && ( parent != null ) )
+                {
+                    centerControl.x = ( parent.getSize().x / 2 ) + 1;
+                    centerControl.y = ( parent.getSize().y / 2 ) + 1;
+                    
+                    parent = parent.getParent();
+                }
+                
+                calibrationStep = 0;
+            }
+        } );
     }
     
     /**
@@ -171,9 +185,20 @@ public class SWTMouse extends Mouse
      */
     private void recenter() throws InputSystemException
     {
-        control.getDisplay().setCursorLocation( los.x + calibX + centerControl.x,
-                                                los.y + calibY + centerControl.y
-                                              );
+        if ( control.getDisplay().getThread().equals( Thread.currentThread() ) )
+        {
+            control.getDisplay().setCursorLocation( los.x + calibX + centerControl.x, los.y + calibY + centerControl.y );
+        }
+        else
+        {
+            control.getDisplay().asyncExec( new Runnable()
+            {
+                public void run()
+                {
+                    control.getDisplay().setCursorLocation( los.x + calibX + centerControl.x, los.y + calibY + centerControl.y );
+                }
+            } );
+        }
     }
     
     /**
