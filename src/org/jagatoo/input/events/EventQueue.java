@@ -42,6 +42,7 @@ public class EventQueue
     
     private InputEvent[] events = new InputEvent[ 128 ];
     private int numEvents = 0;
+    private boolean hasNullEvents = false;
     
     public final int getNumEvents()
     {
@@ -68,16 +69,24 @@ public class EventQueue
         }
     }
     
-    public final void dequeueAndFire( InputSystem inputSystem )
+    public final void dequeueAndFire( InputSystem inputSystem, InputEvent.Type filteredType )
     {
-        if ( numEvents > 0 )
+        if ( numEvents == 0 )
+            return;
+        
+        synchronized ( LOCK )
         {
-            synchronized ( LOCK )
+            for ( int i = 0; i < numEvents; i++ )
             {
-                for ( int i = 0; i < numEvents; i++ )
+                final InputEvent event = events[ i ];
+                
+                if ( event == null )
                 {
-                    final InputEvent event = events[ i ];
-                    
+                    continue;
+                }
+                
+                if ( ( filteredType == null ) || ( filteredType == event.getType() ) )
+                {
                     switch ( event.getType() )
                     {
                         case KEYBOARD_EVENT:
@@ -95,10 +104,49 @@ public class EventQueue
                             ctEvent.getController().fireControllerEvent( ctEvent, true );
                             break;
                     }
+                    
+                    if ( filteredType != null )
+                    {
+                        events[ i ] = null;
+                        hasNullEvents = true;
+                    }
                 }
-                
+            }
+            
+            if ( filteredType == null )
+            {
                 numEvents = 0;
             }
+            else
+            {
+                strip();
+            }
+        }
+    }
+    
+    private final void strip()
+    {
+        if ( !hasNullEvents || ( numEvents == 0 ) )
+            return;
+        
+        synchronized ( LOCK )
+        {
+            int j = 0;
+            for ( int i = 0; i < numEvents; i++ )
+            {
+                if ( ( events[ i ] != null ) && ( i != j ) )
+                {
+                    events[ j++ ] = events[ i ];
+                }
+            }
+            
+            for ( int i = j; i < numEvents; i++ )
+            {
+                events[ i ] = null;
+            }
+            
+            numEvents = j;
+            hasNullEvents = false;
         }
     }
 }
