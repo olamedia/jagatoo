@@ -38,6 +38,7 @@ import org.jagatoo.input.devices.KeyboardFactory;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
@@ -344,7 +345,7 @@ public class JInputKeyboard extends Keyboard
     {
         collectOrFireEvents( is, null, nanoTime, true );
         
-        getEventQueue().dequeueAndFire( is );
+        getEventQueue().dequeueAndFire( is, InputEvent.Type.KEYBOARD_EVENT );
     }
     
     /**

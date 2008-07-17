@@ -41,6 +41,7 @@ import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
 import org.jagatoo.input.events.ControllerButtonReleasedEvent;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.render.InputSourceWindow;
 
 /**
@@ -189,7 +190,7 @@ public class JInputController extends Controller
     {
         collectOrFireEvents( is, null, nanoTime, true );
         
-        getEventQueue().dequeueAndFire( is );
+        getEventQueue().dequeueAndFire( is, InputEvent.Type.CONTROLLER_EVENT );
     }
     
     /**

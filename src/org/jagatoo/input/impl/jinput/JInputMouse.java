@@ -40,6 +40,7 @@ import org.jagatoo.input.devices.components.MouseAxis;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseMovedEvent;
@@ -130,7 +131,7 @@ public class JInputMouse extends Mouse
         
         try
         {
-            getEventQueue().dequeueAndFire( is );
+            getEventQueue().dequeueAndFire( is, InputEvent.Type.MOUSE_EVENT );
             
             mouse.poll();
             
@@ -283,7 +284,7 @@ public class JInputMouse extends Mouse
     {
         collectOrFireEvents( is, null, nanoTime, true );
         
-        getEventQueue().dequeueAndFire( is );
+        getEventQueue().dequeueAndFire( is, InputEvent.Type.MOUSE_EVENT );
     }
     
     /**

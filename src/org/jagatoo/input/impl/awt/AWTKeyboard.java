@@ -39,6 +39,7 @@ import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.KeyID;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
@@ -298,7 +299,7 @@ public class AWTKeyboard extends Keyboard
         {
             //notifyStatesManagersFromQueue( is, eventQueue, nanoTime );
             
-            getEventQueue().dequeueAndFire( is );
+            getEventQueue().dequeueAndFire( is, InputEvent.Type.KEYBOARD_EVENT );
             
             synchronized ( changedKeyStates )
             {

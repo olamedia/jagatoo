@@ -268,7 +268,7 @@ public class AWTMouse extends Mouse
         {
             notifyStatesManagersFromQueue( is, eventQueue, nanoTime );
             
-            getEventQueue().dequeueAndFire( is );
+            getEventQueue().dequeueAndFire( is, InputEvent.Type.MOUSE_EVENT );
             
             if ( !isAbsolute() && needsRecenter )
             {

@@ -241,7 +241,7 @@ public class SWTKeyboard extends Keyboard
         {
             notifyStatesManagersFromQueue( is, eventQueue, nanoTime );
             
-            getEventQueue().dequeueAndFire( is );
+            getEventQueue().dequeueAndFire( is, InputEvent.Type.KEYBOARD_EVENT );
         }
         catch ( Throwable t )
         {

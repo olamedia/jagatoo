@@ -36,6 +36,7 @@ import org.jagatoo.input.devices.MouseFactory;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseMovedEvent;
@@ -275,7 +276,7 @@ public class LWJGLMouse extends Mouse
     {
         collectOrFireEvents( is, null, nanoTime, true );
         
-        getEventQueue().dequeueAndFire( is );
+        getEventQueue().dequeueAndFire( is, InputEvent.Type.MOUSE_EVENT );
     }
     
     /**

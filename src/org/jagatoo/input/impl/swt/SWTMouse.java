@@ -167,7 +167,7 @@ public class SWTMouse extends Mouse
                 centerControl.y = ( control.getSize().y / 2 ) + 1;
                 
                 parent = control.getParent();
-                while ( ( centerControl.x == 1 && centerControl.y == 1 ) && ( parent != null ) )
+                while ( ( centerControl.x == 1 ) && ( centerControl.y == 1 ) && ( parent != null ) )
                 {
                     centerControl.x = ( parent.getSize().x / 2 ) + 1;
                     centerControl.y = ( parent.getSize().y / 2 ) + 1;
@@ -300,7 +300,7 @@ public class SWTMouse extends Mouse
         {
             notifyStatesManagersFromQueue( is, eventQueue, nanoTime );
             
-            getEventQueue().dequeueAndFire( is );
+            getEventQueue().dequeueAndFire( is, InputEvent.Type.MOUSE_EVENT );
         }
         catch ( Throwable t )
         {
