@@ -70,15 +70,21 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.models._util.GeometryFactory;
+import org.jagatoo.loaders.models._util.GroupType;
+import org.jagatoo.loaders.models._util.LoaderUtils;
+import org.jagatoo.loaders.models._util.NodeFactory;
+import org.jagatoo.loaders.models._util.SpecialItemsHandler;
 import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity;
 import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity_worldspawn;
 import org.jagatoo.loaders.models.bsp.lumps.*;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
+import org.jagatoo.logging.JAGTLog;
 
 /**
  * Loads the Quake 3 BSP file according to spec.
@@ -171,6 +177,19 @@ public class BSPPrototypeLoader
         return( wadFiles.toArray( new WADFile[ wadFiles.size() ] ) );
     }
     
+    private static void setupTexture( AbstractTexture texture, String textureName, AppearanceFactory appFactory )
+    {
+        if ( texture == appFactory.getFallbackTexture() )
+        {
+            JAGTLog.printlnEx( "texture not found: ", textureName, " (WAD / .tga / .jpg)" );
+        }
+        else
+        {
+            //appFactory.setTextureMagFilter( texture, TextureMagFilter.BILINEAR );
+            //appFactory.setTextureMinFilter( texture, TextureMinFilter.TRILINEAR );
+        }
+    }
+    
     private static AbstractTexture loadTexture( BSPFile file, String textureName, WADFile[] wadFiles, AppearanceFactory appFactory )
     {
         if ( ( wadFiles != null ) && ( wadFiles.length > 0 ) )
@@ -189,6 +208,8 @@ public class BSPPrototypeLoader
                         
                         if ( texture != null )
                         {
+                            setupTexture( texture, textureName, appFactory );
+                            
                             return( texture );
                         }
                     }
@@ -207,6 +228,8 @@ public class BSPPrototypeLoader
             AbstractTexture texture = appFactory.loadOrGetTexture( textureName + ".tga", false, true, true, true, false );
             if ( texture == null )
                 texture = appFactory.loadOrGetTexture( textureName + ".jpg", false, true, true, true, true );
+            
+            setupTexture( texture, textureName, appFactory );
             
             return( texture );
         }
@@ -227,9 +250,10 @@ public class BSPPrototypeLoader
             {
                 e.printStackTrace();
                 
-                // Load a non existing texture to make the TextureLoader use the fallback-texture.
-                texture = appFactory.loadOrGetTexture( "error-not-existing-texture", false, true, true, true, true );
+                texture = appFactory.getFallbackTexture();
             }
+            
+            setupTexture( texture, textureName, appFactory );
             
             return( texture );
         }
@@ -462,6 +486,8 @@ public class BSPPrototypeLoader
             texInfo.t[ 1 ] = file.readFloat();
             texInfo.t[ 2 ] = file.readFloat();
             texInfo.t[ 3 ] = file.readFloat();
+            //System.out.println( "s: " + texInfo.s[0] + ", " + texInfo.s[1] + ", " + texInfo.s[2] + ", " + texInfo.s[3] );
+            //System.out.println( "t: " + texInfo.t[0] + ", " + texInfo.t[1] + ", " + texInfo.t[2] + ", " + texInfo.t[3] );
             
             texInfo.textureID = file.readInt();
             texInfo.flags = file.readInt();
@@ -487,6 +513,7 @@ public class BSPPrototypeLoader
             num = file.lumps[ bspDir.kVertices ].length / ( 11 * 4 );
         
         BSPVertex[] vertices = new BSPVertex[ num ];
+        
         for ( int i = 0; i < num; i++ )
         {
             BSPVertex vertex              = new BSPVertex();
@@ -1100,13 +1127,13 @@ public class BSPPrototypeLoader
                 BSP46Model model = new BSP46Model();
                 models[ i ] = model;
                 
-                model.min[ 0 ]     = file.readFloat();
-                model.min[ 1 ]     = file.readFloat();
-                model.min[ 2 ]     = file.readFloat();
+                model.min[0]       = file.readFloat();
+                model.min[1]       = file.readFloat();
+                model.min[2]       = file.readFloat();
                 
-                model.max[ 0 ]     = file.readFloat();
-                model.max[ 1 ]     = file.readFloat();
-                model.max[ 2 ]     = file.readFloat();
+                model.max[0]       = file.readFloat();
+                model.max[1]       = file.readFloat();
+                model.max[2]       = file.readFloat();
                 
                 model.faceIndex    = file.readInt();
                 model.numOfFaces   = file.readInt();
@@ -1123,7 +1150,7 @@ public class BSPPrototypeLoader
     /**
      * Loads the BSP scene prototype.
      */
-    private static BSPScenePrototype load( BSPFile bspFile, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException
+    private static BSPScenePrototype load( BSPFile bspFile, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingErrorException
     {
         final BSPDirectory bspDir;
         
@@ -1139,22 +1166,13 @@ public class BSPPrototypeLoader
                 throw new Error( "Cannot find a matching implementation of BSPDirectory for format version " + bspFile.getVersion() + "." );
         }
         
-        /*
-        WADFile wad = new WADFile( new URL( bspFile.getBaseURL(), "halflife.wad" ) );
-        
-        System.out.println( wad.getResourceAsStream( "barreltop" ) );
-        System.out.println( wad.getResourceAsStream( "c1a1_c1b" ) );
-        System.out.println( wad.getResourceAsStream( "c1a1_flr2c" ) );
-        System.out.println( wad.getResourceAsStream( "{ladder1" ) );
-        System.out.println( wad.getResourceAsStream( "nwbarrel" ) );
-        System.out.println( wad.getResourceAsStream( "steel" ) );
-        */
-        
         BSPVersionDataLoader loader = bspDir.getDataLoader();
         
         BSPScenePrototype prototype = loader.loadPrototypeData( bspFile, bspDir, worldScale, appFactory );
         
         loader.convertFacesToGeometries( prototype, geomFactory, worldScale );
+        
+        BSPConverter.convert( prototype, appFactory, nodeFactory, sceneGroup, mainGroupType, worldScale, siHandler );
         
         return( prototype );
     }
@@ -1162,38 +1180,21 @@ public class BSPPrototypeLoader
     /**
      * Loads the BSP scene prototype.
      */
-    public static BSPScenePrototype load( InputStream in, URL baseURL, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException
+    public static BSPScenePrototype load( InputStream in, URL baseURL, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingErrorException
     {
         if ( !( in instanceof BufferedInputStream ) )
             in = new BufferedInputStream( in );
         
-        BSPFile bspFile = new BSPResource( in, baseURL );
+        BSPFile bspFile = new BSPFile( in, baseURL );
         
-        return( load( bspFile, geomFactory, worldScale, appFactory ) );
+        return( load( bspFile, geomFactory, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
     }
     
     /**
      * Loads the BSP scene prototype.
      */
-    public static BSPScenePrototype load( URL url, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException
+    public static BSPScenePrototype load( URL url, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingErrorException
     {
-        InputStream in = url.openStream();
-        
-        if ( !( in instanceof BufferedInputStream ) )
-            in = new BufferedInputStream( in );
-        
-        BSPFile bspFile = new BSPResource( url );
-        
-        return( load( bspFile, geomFactory, worldScale, appFactory ) );
-    }
-    
-    /**
-     * Loads the BSP scene prototype.
-     */
-    public static BSPScenePrototype load( String filename, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException
-    {
-        BSPFile bspFile = new BSPFile( filename );
-        
-        return( load( bspFile, geomFactory, worldScale, appFactory ) );
+        return( load( url.openStream(), LoaderUtils.extractBaseURL( url ), geomFactory, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
     }
 }

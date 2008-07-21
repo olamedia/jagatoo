@@ -94,7 +94,7 @@ public class AC3DSurface
     /** The vertecies on this surface */
     private int[]           surfVerts;
     /** The texture coordiantes for each vertex */
-    private float[][]       textCoords;
+    private float[]         textCoords;
     
     private Object          userObject = null;
     
@@ -107,11 +107,14 @@ public class AC3DSurface
     }
     
     /**
-     * @return True if this surface is a line
+     * Gets the vertex count, used to verify that this surface is valid
+     * e.g. that asa poly it must have more than 3 vertecies
+     * 
+     * @return The number of vertecies on this surface
      */
-    public boolean isShaded()
+    public int getVertexReferenceCount()
     {
-        return( shaded );
+        return( surfVerts.length );
     }
     
     /**
@@ -124,10 +127,15 @@ public class AC3DSurface
         return( surfVerts );
     }
     
+    public boolean hasTextureCoordinates()
+    {
+        return( textCoords != null );
+    }
+    
     /**
      * @return The texture coordinates
      */
-    public float[][] getTextureCoordinates()
+    public float[] getTextureCoordinates()
     {
         return( textCoords );
     }
@@ -160,6 +168,14 @@ public class AC3DSurface
     }
     
     /**
+     * @return True if this surface is a line
+     */
+    public boolean isShaded()
+    {
+        return( shaded );
+    }
+    
+    /**
      * Gets the material id of this surface
      * 
      * @return The material ID
@@ -167,17 +183,6 @@ public class AC3DSurface
     public int getMaterialIndex()
     {
         return( material );
-    }
-    
-    /**
-     * Gets the vertex count, used to verify that this surface is valid
-     * e.g. that asa poly it must have more than 3 vertecies
-     * 
-     * @return The number of vertecies on this surface
-     */
-    public int getVertexReferenceCount()
-    {
-        return( surfVerts.length );
     }
     
     public Object getUserObject()
@@ -195,7 +200,7 @@ public class AC3DSurface
      * @param surfVerts The index of the vertex
      * @param textCoords The texture coordinates (unmodified)
      */
-    public AC3DSurface( int type, boolean twoSided, boolean shaded, int material, int[] surfVerts, float[][] textCoords )
+    public AC3DSurface( int type, boolean twoSided, boolean shaded, int material, int[] surfVerts, float[] textCoords )
     {
         this.type        = type;
         this.twoSided    = twoSided;

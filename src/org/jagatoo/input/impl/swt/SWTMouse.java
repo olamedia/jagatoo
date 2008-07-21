@@ -461,7 +461,6 @@ public class SWTMouse extends Mouse
             {
                 public void handleEvent( org.eclipse.swt.widgets.Event _e )
                 {
-                    
                     long when = System.nanoTime() - lastGameTimeDelta;
                     
                     MouseWheelEvent e = prepareMouseWheelMovedEvent( -_e.count, false, when );

@@ -62,18 +62,14 @@
  */
 package org.jagatoo.loaders.models.bsp;
 
-import java.io.File;
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.InputStream;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
 
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.models.bsp.lumps.BSPLump;
+import org.jagatoo.util.streams.StreamUtils;
 
 /**
  * Represents a BSP source file.
@@ -83,17 +79,11 @@ import org.jagatoo.loaders.models.bsp.lumps.BSPLump;
  */
 class BSPFile
 {
-    protected final byte[]       fourBytes;
-    protected final FloatBuffer  floatBuffer;
-    protected final ByteBuffer   byteBuffer;
-    protected final IntBuffer    intBuffer;
-    protected final ShortBuffer  shortBuffer;
+    private final URL                  baseURL;
+    private final BufferedInputStream  in;
     
-    private final URL            baseURL;
-    private RandomAccessFile     in;
-    
-    private char[]               ID;
-    private int                  version;
+    private char[]                     ID;
+    private int                        version;
     
     /**
      * An array of all lumps in this directory.
@@ -105,87 +95,88 @@ class BSPFile
         return( baseURL );
     }
     
-    public RandomAccessFile getInputFile()
+    public final BufferedInputStream getInputStrema()
     {
         return( in );
     }
     
-    public void resetPointer() throws IOException
+    public final void resetPointer() throws IOException
     {
-        in.seek( 0 );
+        in.reset();
     }
     
-    public void seek(int lump) throws IOException
+    public final void seek( int lump ) throws IOException
     {
-        in.seek( lumps[ lump ].offset );
+        in.reset();
+        
+        long toSkip = lumps[ lump ].offset;
+        
+        while ( toSkip > 0 )
+        {
+            long skipped = in.skip( toSkip );
+            
+            if ( skipped > 0 )
+                toSkip -= skipped;
+            else if ( skipped < 0 )
+                toSkip = 0;
+        }
     }
     
-    public void skipBytes( int numBytes ) throws IOException
+    public final void skipBytes( int numBytes ) throws IOException
     {
-        in.skipBytes( numBytes );
+        in.skip( numBytes );
     }
     
-    public byte readByte() throws IOException
+    public final byte readByte() throws IOException
     {
-        return( in.readByte() );
+        return( (byte)in.read() );
     }
     
-    public char readChar() throws IOException
+    public final char readChar() throws IOException
     {
         return( (char)readByte() );
     }
     
-    public int readInt() throws IOException
+    public final int readInt() throws IOException
     {
-        in.read( fourBytes );
-        
-        return( intBuffer.get( 0 ) );
+        return( StreamUtils.readSwappedInt( in ) );
     }
     
-    public short readShort() throws IOException
+    public final short readShort() throws IOException
     {
-        in.read( fourBytes );
-        
-        return( shortBuffer.get( 0 ) );
+        return( StreamUtils.readSwappedShort( in ) );
     }
     
-    public int readUnsignedShort() throws IOException
+    public final int readUnsignedShort() throws IOException
     {
-        int low = in.read();
-        int high = in.read();
-        
-        int ushort = ( ( high & 0xFF ) << 8 ) | ( low & 0xFF );
-        
-        return( ushort );
+        return( StreamUtils.readSwappedUnsignedShort( in ) );
     }
     
-    public float readFloat() throws IOException
+    public final float readFloat() throws IOException
     {
-        in.read(fourBytes);
-        
-        return( floatBuffer.get( 0 ) );
+        return( Float.intBitsToFloat( StreamUtils.readSwappedInt( in ) ) );
     }
     
-    public void readFully( byte[] data ) throws IOException
+    public final void readFully( byte[] data ) throws IOException
     {
-        in.readFully( data );
+        in.read( data );
     }
     
-    public void readFully( byte[] data, int offset, int length ) throws IOException
+    public final void readFully( byte[] data, int offset, int length ) throws IOException
     {
-        in.readFully( data, offset, length );
+        in.read( data, offset, length );
     }
     
-    public byte[] readFully( int count ) throws IOException
+    public final byte[] readFully( int count ) throws IOException
     {
         byte[] data = new byte[ count ];
         
-        in.readFully( data );
+        in.read( data );
         
         return( data );
     }
     
-    public void readFully( char[] data, int count ) throws IOException
+    public final void readFully( char[] data, int count ) throws IOException
     {
         for ( int i = 0; i < count; i++ )
         {
@@ -193,19 +184,19 @@ class BSPFile
         }
     }
     
-    protected void readDirectory() throws IOException
+    protected final void readDirectory() throws IOException
     {
-    	final int lumpCount;
-    	switch ( version )
-    	{
-    	    case 46:
+        final int lumpCount;
+        switch ( version )
+        {
+            case 46:
                 lumpCount = 17;
-    	        break;
+                break;
             default:
                 lumpCount = 15;
                 break;
-    	}
-    	
+        }
+        
         this.lumps = new BSPLump[ lumpCount ];
         
         for ( int i = 0; i < lumpCount; i++ )
@@ -219,22 +210,22 @@ class BSPFile
         }
     }
     
-    public void close() throws IOException
+    public final void close() throws IOException
     {
         in.close();
     }
     
-    public char[] getID()
+    public final char[] getID()
     {
         return( ID );
     }
     
-    public int getVersion()
+    public final int getVersion()
     {
         return( version );
     }
     
-    protected void checkVersion( int version ) throws IncorrectFormatException
+    private void checkVersion( int version ) throws IncorrectFormatException
     {
         /*
         if ( version != 0x2e )
@@ -271,7 +262,7 @@ class BSPFile
         }
     }
     
-    protected void checkHeader() throws IOException, IncorrectFormatException
+    private void checkHeader() throws IOException, IncorrectFormatException
     {
         // read bsp "magic number" ( "IBSP" or "VBSP" )
         this.ID = new char[ 4 ];
@@ -298,41 +289,21 @@ class BSPFile
         checkVersion( version );
     }
     
-    protected BSPFile( URL baseURL )
+    protected BSPFile( InputStream in, URL baseURL ) throws IOException
     {
         super();
         
-        this.fourBytes = new byte[ 4 ];
-        this.byteBuffer = ByteBuffer.wrap( fourBytes );
-        this.byteBuffer.order( ByteOrder.LITTLE_ENDIAN );
-        this.floatBuffer = byteBuffer.asFloatBuffer();
-        this.intBuffer = byteBuffer.asIntBuffer();
-        this.shortBuffer = byteBuffer.asShortBuffer();
-        
         this.baseURL = baseURL;
-    }
-    
-    private static final URL createBaseURL( File file ) throws IOException
-    {
-        if ( file.isDirectory() )
-            throw new IllegalArgumentException( "You cannot pass a directory as the file parameter!" );
         
-        return( file.getAbsoluteFile().getParentFile().toURI().toURL() );
-    }
-    
-    public BSPFile( File file ) throws IOException, IncorrectFormatException
-    {
-        this( createBaseURL( file ) );
+        if ( in instanceof BufferedInputStream )
+            this.in = (BufferedInputStream)in;
+        else
+            this.in = new BufferedInputStream( in );
         
-        this.in = new RandomAccessFile( file, "r" );
+        this.in.mark( Integer.MAX_VALUE );
         
         checkHeader();
-   	 	
+        
         readDirectory();
-    }
-    
-    public BSPFile( String filename ) throws IOException, IncorrectFormatException
-    {
-        this( new File( filename ) );
     }
 }

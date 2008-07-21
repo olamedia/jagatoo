@@ -30,6 +30,7 @@
 package org.jagatoo.loaders.textures;
 
 import org.jagatoo.datatypes.NamableObject;
+import org.jagatoo.opengl.OGL;
 
 /**
  * Abstraction of a Texture.
@@ -40,11 +41,23 @@ public interface AbstractTexture extends NamableObject
 {
     public static enum Type
     {
-        TEXTURE_1D,
-        TEXTURE_2D,
-        TEXTURE_3D,
-        TEXTURE_CUBE_MAP,
+        TEXTURE_1D( OGL.GL_TEXTURE_1D ),
+        TEXTURE_2D( OGL.GL_TEXTURE_2D ),
+        TEXTURE_3D( OGL.GL_TEXTURE_3D ),
+        TEXTURE_CUBE_MAP( OGL.GL_TEXTURE_CUBE_MAP ),
         ;
+        
+        private final int glValue;
+        
+        public final int toOpenGL()
+        {
+            return( glValue );
+        }
+        
+        private Type( int glValue )
+        {
+            this.glValue = glValue;
+        }
     }
     
     public static enum Format

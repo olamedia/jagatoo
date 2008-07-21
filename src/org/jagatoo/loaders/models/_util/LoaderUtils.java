@@ -29,41 +29,41 @@
  */
 package org.jagatoo.loaders.models._util;
 
-import org.jagatoo.datatypes.NamedObject;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 /**
  * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface GeometryFactory
+public class LoaderUtils
 {
-    public static enum GeometryType
+    public static final URL extractBaseURL( URL url ) throws IOException
     {
-        TRIANGLE_ARRAY,
-        TRIANGLE_STRIP_ARRAY,
-        INDEXED_TRIANGLE_ARRAY,
-        INDEXED_TRIANGLE_STRIP_ARRAY,
-        TRIANGLE_FAN_ARRAY,
-        INDEXED_TRIANGLE_FAN_ARRAY,
-        ;
+        String file = url.getFile();
+        String proto = url.toExternalForm().substring( 0, url.toExternalForm().length() - file.length() );
+        
+        int lastSlashPos = file.lastIndexOf( '/' );
+        if ( lastSlashPos < 0 )
+            return( null );
+        else if ( lastSlashPos == file.length() - 1 )
+            throw new IllegalArgumentException( "You cannot pass a directory as the url parameter!" );
+        else
+            return( new URL( proto + file.substring( 0, lastSlashPos + 1 ) ) );
     }
     
-    public NamedObject createGeometry( String name, GeometryType type, int coordSize, int numVertices, int numIndices, int[] numStrips );
+    public static final URL extractBaseURL( File file ) throws IOException
+    {
+        if ( file.isDirectory() )
+            throw new IllegalArgumentException( "You cannot pass a directory as the file parameter!" );
+        
+        return( file.getAbsoluteFile().getParentFile().toURI().toURL() );
+    }
     
-    public NamedObject createInterleavedGeometry( String name, GeometryType type, int coordSize, int numVertices, int numIndices, int[] numStrips, int features, boolean colorAlpha, int[] tuSizes, int[] vaSizes );
-    
-    public void setCoordinate( NamedObject geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setNormal( NamedObject geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setTexCoord( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setColor( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setVertexAttrib( NamedObject geometry, GeometryType type, int attribIndex, int attribSize, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setIndex( NamedObject geometry, GeometryType type, int vertexIndex, int[] data, int offset, int num );
-    
-    public void finalizeGeometry( NamedObject geometry, GeometryType type, int initialVertexIndex, int numValidVertices, int initialIndexIndex, int numValidIndices );
+    public static final URL extractBaseURL( String filename ) throws IOException
+    {
+        return( extractBaseURL( new File( filename ) ) );
+    }
 }

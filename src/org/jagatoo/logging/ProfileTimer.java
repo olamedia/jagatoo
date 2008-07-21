@@ -249,6 +249,11 @@ public class ProfileTimer
         timer = timerInstance;
     }
     
+    public static final boolean isProfilingEnabled()
+    {
+        return( profilingEnabled );
+    }
+    
     private static synchronized ProfileContainer newContainer( LogChannel channel )
     {
         ProfileContainer c = new ProfileContainer( channel );

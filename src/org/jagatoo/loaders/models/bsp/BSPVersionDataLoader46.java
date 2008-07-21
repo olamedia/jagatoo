@@ -31,6 +31,7 @@ package org.jagatoo.loaders.models.bsp;
 
 import java.io.IOException;
 
+import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
@@ -41,7 +42,6 @@ import org.jagatoo.loaders.models.bsp.lumps.BSPDirectory;
 import org.jagatoo.loaders.models.bsp.lumps.BSPFace;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVertex;
 import org.jagatoo.loaders.models.bsp.util.PatchSurface;
-import org.openmali.spatial.bounds.BoundingBox;
 import org.openmali.vecmath2.Vertex3f;
 
 /**
@@ -97,13 +97,14 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
      * @param face 
      * @return 
      */
-    private Object convertFaceToIndexedGeom( BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, float worldScale )
+    private NamedObject convertFaceToIndexedGeom( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, float worldScale )
     {
         GeometryType geomType = GeometryType.INDEXED_TRIANGLE_ARRAY;
-        Object ga = geomFactory.createInterleavedGeometry( geomType, 3,
-                                                           face.numOfVerts, face.numMeshVerts, null,
-                                                           Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2, 2 }, null
-                                                         );
+        NamedObject ga = geomFactory.createInterleavedGeometry( "Geometry " + faceIndex,
+                                                                geomType, 3,
+                                                                face.numOfVerts, face.numMeshVerts, null,
+                                                                Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2, 2 }, null
+                                                              );
         
         for ( int i = 0; i < face.numOfVerts; i++ )
         {
@@ -130,7 +131,7 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         return( ga );
     }
     
-    private Object convertFaceToSurfacePatch( BSPFace face, BSPVertex[] vertices, GeometryFactory geomFactory, float worldScale )
+    private NamedObject convertFaceToSurfacePatch( int faceIndex, BSPFace face, BSPVertex[] vertices, GeometryFactory geomFactory, float worldScale )
     {
         BSPVertex[] control = new BSPVertex[ face.numOfVerts ];
         
@@ -142,15 +143,17 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         GeometryType geomType = GeometryType.INDEXED_TRIANGLE_ARRAY;
         
         /*
-        Object ga = geomFactory.createGeometry( geomType, 3,
-                                                ps.mPoints.length, ps.mIndices.length,
-                                                null
-                                              );
+        NamedObject ga = geomFactory.createGeometry( "Geometry " + faceIndex,
+                                                     geomType, 3,
+                                                     ps.mPoints.length, ps.mIndices.length,
+                                                     null
+                                                   );
         */
-        Object ga = geomFactory.createInterleavedGeometry( geomType, 3,
-                                                           ps.mPoints.length, ps.mIndices.length, null,
-                                                           Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2, 2 }, null
-                                                         );
+        NamedObject ga = geomFactory.createInterleavedGeometry( "Geometry " + faceIndex,
+                                                                geomType, 3,
+                                                                ps.mPoints.length, ps.mIndices.length, null,
+                                                                Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2, 2 }, null
+                                                              );
         
         for ( int i = 0; i < ps.mPoints.length; i++ )
         {
@@ -170,19 +173,39 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
     /**
      * {@inheritDoc}
      */
+    public NamedObject convertFaceToGeometry( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, float worldScale )
+    {
+        switch ( face.type )
+        {
+            case 1:
+                // regular mesh
+                return( convertFaceToIndexedGeom( faceIndex, face, vertices, meshVertices, geomFactory, worldScale ) );
+            
+            case 2:
+                return( convertFaceToSurfacePatch( faceIndex, face, vertices, geomFactory, worldScale ) );
+            
+            case 3:
+                return( convertFaceToIndexedGeom( faceIndex, face, vertices, meshVertices, geomFactory, worldScale ) );
+        }
+        
+        throw new Error();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void convertFacesToGeometries( BSPScenePrototype prototype, GeometryFactory geomFactory, float worldScale )
     {
-        //int numModels = prototype.models.length;
-        int numModels = 1;
+        int numModels = prototype.models.length;
         
-        prototype.geometries = new Object[ numModels ][];
+        prototype.geometries = new NamedObject[ numModels ][];
         
         for ( int m = 0; m < numModels; m++ )
         {
             final BSP46Model model = (BSP46Model)prototype.models[ m ];
             final int numFaces = model.numOfFaces;
             
-            Object[] geometries = new Object[ numFaces ];
+            NamedObject[] geometries = new NamedObject[ numFaces ];
             
             for ( int f = 0; f < model.numOfFaces; f++ )
             {
@@ -192,24 +215,20 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
                 {
                     case 1:
                         // regular mesh
-                        geometries[ f ] = convertFaceToIndexedGeom( face, prototype.vertices, prototype.meshVertices, geomFactory, worldScale );
+                        geometries[ f ] = convertFaceToIndexedGeom( f, face, prototype.vertices, prototype.meshVertices, geomFactory, worldScale );
                         break;
                     
                     case 2:
-                        geometries[ f ] = convertFaceToSurfacePatch( face, prototype.vertices, geomFactory, worldScale );
+                        geometries[ f ] = convertFaceToSurfacePatch( f, face, prototype.vertices, geomFactory, worldScale );
                         break;
                     
                     case 3:
-                        geometries[ f ] = convertFaceToIndexedGeom( face, prototype.vertices, prototype.meshVertices, geomFactory, worldScale );
+                        geometries[ f ] = convertFaceToIndexedGeom( f, face, prototype.vertices, prototype.meshVertices, geomFactory, worldScale );
                         break;
                 }
             }
             
-            prototype.geometries[ m ] = geometries;
-            
-            prototype.boundingBox = new BoundingBox( model.min[ 0 ] * worldScale, model.min[ 2 ] * worldScale, -model.min[ 1 ] * worldScale,
-                                                     model.max[ 0 ] * worldScale, model.max[ 2 ] * worldScale, -model.max[ 1 ] * worldScale
-                                                   );
+            prototype.geometries[m] = geometries;
         }
     }
 }

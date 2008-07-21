@@ -62,10 +62,10 @@
  */
 package org.jagatoo.loaders.models.bsp;
 
+import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity;
 import org.jagatoo.loaders.models.bsp.lumps.*;
 import org.jagatoo.loaders.textures.AbstractTexture;
-import org.openmali.spatial.bounds.BoundingBox;
 
 /**
  * Contains all data of a whole loaded BSP scene.
@@ -122,12 +122,7 @@ public class BSPScenePrototype
     /**
      * 
      */
-    public Object[][]       geometries;
-    
-    /**
-     * 
-     */
-    public BoundingBox      boundingBox;
+    public NamedObject[][]  geometries;
     
     /**
      * 

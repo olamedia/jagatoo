@@ -32,260 +32,222 @@ package org.jagatoo.loaders.models._util;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
+import org.jagatoo.opengl.enums.BlendFunction;
+import org.jagatoo.opengl.enums.BlendMode;
+import org.jagatoo.opengl.enums.ColorTarget;
+import org.jagatoo.opengl.enums.DrawMode;
+import org.jagatoo.opengl.enums.FaceCullMode;
+import org.jagatoo.opengl.enums.PerspectiveCorrectionMode;
+import org.jagatoo.opengl.enums.ShadeModel;
+import org.jagatoo.opengl.enums.TestFunction;
+import org.jagatoo.opengl.enums.TexCoordGenMode;
+import org.jagatoo.opengl.enums.TextureBoundaryMode;
+import org.jagatoo.opengl.enums.TextureCombineFunction;
+import org.jagatoo.opengl.enums.TextureCombineMode;
+import org.jagatoo.opengl.enums.TextureCombineSource;
+import org.jagatoo.opengl.enums.CompareFunction;
+import org.jagatoo.opengl.enums.TextureCompareMode;
+import org.jagatoo.opengl.enums.TextureMagFilter;
+import org.jagatoo.opengl.enums.TextureMinFilter;
+import org.jagatoo.opengl.enums.TextureMode;
+import org.openmali.vecmath2.Matrix4f;
 
 /**
  * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public abstract class AppearanceFactory
+public interface AppearanceFactory
 {
-    public static final int APP_TEXTURE_MODE_MODULATE = 0;
-    public static final int APP_TEXTURE_MODE_REPLACE = 1;
-    public static final int APP_TEXTURE_MODE_COMBINE = 2;
+    public static final int APP_FLAG_STATIC = 1;
     
-    private static final void generateColorBytes( float[] color, byte[] bytes, int b0 )
-    {
-        if ( color == null )
-            return;
-        
-        bytes[b0 + 0] = (byte)( (int)( color[0] * 255f ) & 0xFF );
-        bytes[b0 + 1] = (byte)( (int)( color[1] * 255f ) & 0xFF );
-        bytes[b0 + 2] = (byte)( (int)( color[2] * 255f ) & 0xFF );
-        
-        if ( color.length > 3 )
-            bytes[b0 + 3] = (byte)( (int)( color[3] * 255f ) & 0xFF );
-    }
+    public abstract NamedObject createTransparencyAttributes( String name );
     
-    private static final void generateFloatBytes( float f, byte[] bytes, int b0 )
-    {
-        int i = Float.floatToIntBits( f );
-        
-        bytes[b0 + 0] = (byte)( ( i & 0xFF000000 ) >> 24 );
-        bytes[b0 + 1] = (byte)( ( i & 0x00FF0000 ) >> 16 );
-        bytes[b0 + 2] = (byte)( ( i & 0x0000FF00 ) >> 8 );
-        bytes[b0 + 3] = (byte)( ( i & 0x000000FF ) >> 0 );
-    }
+    public abstract void setTransparencyAttribsSourceBlendFunc( NamedObject transpAttribs, BlendFunction srcBlendFunc );
     
-    private static final String getCompressedString( byte[] bytes )
-    {
-        char[] chars;
-        if ( ( bytes.length % 2 ) == 0 )
-            chars = new char[ bytes.length / 2 ];
-        else
-            chars = new char[ ( bytes.length + 1 ) / 2 ];
-        
-        int j = 0;
-        for ( int i = 0; i < bytes.length; i += 2 )
-        {
-            chars[j] = (char)( ( bytes[i + 0] & 0xFF ) << 8 );
-            chars[j] |= (char)( bytes[i + 1] & 0xFF );
-            
-            j++;
-        }
-        
-        return( new String( chars ) );
-    }
+    public abstract void setTransparencyAttribsDestBlendFunc( NamedObject transpAttribs, BlendFunction dstBlendFunc );
     
-    /**
-     * Generates a unique ID-String (of minimum length), that identifies
-     * an Appearance globally.<br>
-     * This String can be used to cache instances of Appearance to avoid
-     * recreation and unnecessary compares.
-     * 
-     * @return an ID-String for an Appearance.
-     */
-    public static synchronized String generateAppearanceID( // TransparencyAttributes...
-                                                            int blendingMode,
-                                                            int blendFunction,
-                                                            float transparancy,
-                                                            // Material...
-                                                            int colorTarget,
-                                                            float[] ambient,
-                                                            float[] emissive,
-                                                            float[] diffuse,
-                                                            float[] specular,
-                                                            float shininess,
-                                                            Boolean normalizeNormals,
-                                                            // ColoringAttributes...
-                                                            int shadeModel,
-                                                            float[] color,
-                                                            // RenderingAttributes...
-                                                            Boolean depthBufferEnabled,
-                                                            Boolean depthBufferWriteEnabled,
-                                                            float alphaTestValue,
-                                                            int alphaTestFunction,
-                                                            int stencilFuncSep,
-                                                            int stencilOpSep,
-                                                            int stencilMaskSep,
-                                                            int depthTestFunction,
-                                                            Boolean ignoreVertexColors,
-                                                            Boolean stencilEnabled,
-                                                            int stencilOpFail,
-                                                            int stencilOpZFail,
-                                                            int stencilOpZPass,
-                                                            int stencilTestFunction,
-                                                            int stencilRef,
-                                                            int stencilMask,
-                                                            int colorWriteMask,
-                                                            // PolygonAttributes...
-                                                            int faceCullMode,
-                                                            int drawMode,
-                                                            float polygonOffset,
-                                                            float polygonOffsetFactor,
-                                                            Boolean backfaceNormalFlip,
-                                                            Boolean anitaliasing,
-                                                            Boolean sortEnabled,
-                                                            // Line- and PointAttributes are not important!
-                                                            // Texture-units...
-                                                            String[] textureName,
-                                                            int[] boundaryModeS,
-                                                            int[] boundaryModeT,
-                                                            int[] minFilter,
-                                                            int[] magFilter,
-                                                            int[] textureMode,
-                                                            int[] perspCorrMode,
-                                                            float[][] texBlendColor,
-                                                            int[] texTransformID, // some ID for the texture transform matrix
-                                                            int[] combineRGBMode,
-                                                            int[] combineAlphaMode,
-                                                            int[][] combineRGBSource,
-                                                            int[][] combineAlphaSource,
-                                                            int[][] combineRGBFunction,
-                                                            int[][] combineAlphaFunction,
-                                                            int[] combineRGBScale,
-                                                            int[] combineAlphaScale,
-                                                            int[] compareMode,
-                                                            int[] compareFunc,
-                                                            float[] anisotropicLevel,
-                                                            int[] tcGenMode,
-                                                            int[] tcGenTexCoordMode,
-                                                            float[][] tcGenPlaneS,
-                                                            float[][] tcGenPlaneT,
-                                                            float[][] tcGenPlaneR,
-                                                            float[][] tcGenPlaneQ
-                                             )
-    {
-        /*
-         * This implementation only honors the attributes,
-         * that are currently used by loaded shapes.
-         * If more attributes are used, this implementation
-         * should be replenished.
-         */
-        
-        byte[] bytes = new byte[ 64 ];
-        byte byt;
-        int b0;
-        
-        // TransparencyAttributes...
-        b0 = 0;
-        bytes[b0 + 0] = (byte)( blendingMode & 0xFF );
-        bytes[b0 + 1] = (byte)( blendFunction & 0xFF );
-        bytes[b0 + 2] = (byte)( (int)( transparancy * 255f ) & 0xFF );
-        
-        // Material...
-        b0 = 3;
-        bytes[b0 + 0] = (byte)( colorTarget & 0xFF );
-        generateColorBytes( ambient, bytes, b0 + 1 );
-        generateColorBytes( emissive, bytes, b0 + 4 );
-        generateColorBytes( diffuse, bytes, b0 + 7 );
-        generateColorBytes( specular, bytes, b0 + 10 );
-        bytes[b0 + 13] = (byte)( (int)( shininess * 255f / 128f ) & 0xFF ); // normalize values 1..128 to a byte
-        if ( normalizeNormals != null )
-            bytes[b0 + 14] = ( normalizeNormals.booleanValue() ? (byte)1 : (byte)2 );
-        
-        // ColoringAttributes...
-        b0 = 15;
-        bytes[b0 + 0] = (byte)( shadeModel & 0xFF );
-        generateColorBytes( color, bytes, b0 + 1 );
-        
-        // RenderingAttributes...
-        b0 = 20;
-        byt = (byte)0;
-        if ( depthBufferEnabled != null )
-            byt |= ( depthBufferEnabled.booleanValue() ? ( 1 << 6 ) : ( 2 << 6 ) );
-        if ( depthBufferWriteEnabled != null )
-            byt |= ( depthBufferWriteEnabled.booleanValue() ? ( 1 << 4 ) : ( 2 << 4 ) );
-        if ( ignoreVertexColors != null )
-            byt |= ( ignoreVertexColors.booleanValue() ? ( 1 << 2 ) : ( 2 << 2 ) );
-        if ( stencilEnabled != null )
-            byt |= ( stencilEnabled.booleanValue() ? ( 1 << 0 ) : ( 2 << 0 ) );
-        bytes[b0 + 0] = byt;
-        generateFloatBytes( alphaTestValue, bytes, b0 + 1 );
-        bytes[b0 + 5] = (byte)( alphaTestFunction & 0xFF );
-        bytes[b0 + 6] = (byte)( stencilFuncSep & 0xFF );
-        bytes[b0 + 7] = (byte)( stencilOpSep & 0xFF );
-        bytes[b0 + 8] = (byte)( stencilMaskSep & 0xFF );
-        bytes[b0 + 9] = (byte)( depthTestFunction & 0xFF );
-        bytes[b0 + 10] = (byte)( stencilOpFail & 0xFF );
-        bytes[b0 + 11] = (byte)( stencilOpZFail & 0xFF );
-        bytes[b0 + 12] = (byte)( stencilOpZPass & 0xFF );
-        bytes[b0 + 13] = (byte)( stencilTestFunction & 0xFF );
-        bytes[b0 + 14] = (byte)( stencilRef & 0xFF );
-        bytes[b0 + 15] = (byte)( stencilMask & 0xFF );
-        bytes[b0 + 16] = (byte)( colorWriteMask & 0xFF );
-        
-        // PolygonAttributes...
-        b0 = 37;
-        bytes[b0 + 0] = (byte)( faceCullMode & 0xFF );
-        bytes[b0 + 1] = (byte)( drawMode & 0xFF );
-        bytes[b0 + 2] = (byte)( (int)polygonOffset & 0xFF );
-        bytes[b0 + 3] = (byte)( (int)polygonOffsetFactor & 0xFF );
-        byt = (byte)0;
-        if ( backfaceNormalFlip != null )
-            byt |= ( backfaceNormalFlip.booleanValue() ? ( 1 << 6 ) : ( 2 << 6 ) );
-        if ( anitaliasing != null )
-            byt |= ( anitaliasing.booleanValue() ? ( 1 << 4 ) : ( 2 << 4 ) );
-        if ( sortEnabled != null )
-            byt |= ( sortEnabled.booleanValue() ? ( 1 << 2 ) : ( 2 << 2 ) );
-        bytes[b0 + 4] = byt;
-        
-        /*
-        // Texture-units...
-        String[] textureName,
-        int[] boundaryModeS,
-        int[] boundaryModeT,
-        int[] minFilter,
-        int[] magFilter,
-        int[] textureMode,
-        int[] perspCorrMode,
-        float[][] texBlendColor,
-        int[] texTransformID, // some ID for the texture transform matrix
-        int[] combineRGBMode,
-        int[] combineAlphaMode,
-        int[][] combineRGBSource,
-        int[][] combineAlphaSource,
-        int[][] combineRGBFunction,
-        int[][] combineAlphaFunction,
-        int[] combineRGBScale,
-        int[] combineAlphaScale,
-        int[] compareMode,
-        int[] compareFunc,
-        float[] anisotropicLevel,
-        int[] tcGenMode,
-        int[] tcGenTexCoordMode,
-        float[][] tcGenPlaneS,
-        float[][] tcGenPlaneT,
-        float[][] tcGenPlaneR,
-        float[][] tcGenPlaneQ
-        */
-        
-        return( getCompressedString( bytes ) );
-    }
+    public abstract void setTransparencyAttribsBlendMode( NamedObject transpAttribs, BlendMode blendMode );
     
-    public abstract Object createAppearance( String appID );
+    public abstract void setTransparencyAttribsTransparency( NamedObject transpAttribs, float transparency );
     
-    public abstract void setTexture( Object appearance, String appID, int textureUnit, AbstractTexture texture );
+    public abstract void setTransparencyAttribsSortingEnabled( NamedObject transpAttribs, boolean sortingEnabled );
     
-    public abstract void setTextureMode( Object appearance, String appID, int textureUnit, int textureMode );
+    public abstract void applyTransparancyAttributes( NamedObject transpAttribs, NamedObject appearance );
     
-    public abstract void applyAppearance( Object appearance, String appID, Object geometry );
+    
+    
+    public abstract NamedObject createMaterial( String name );
+    
+    public abstract void setMaterialColorTarget( NamedObject material, ColorTarget colorTarget );
+    
+    public abstract void setMaterialAmbientColor( NamedObject material, float r, float g, float b );
+    
+    public abstract void setMaterialEmissiveColor( NamedObject material, float r, float g, float b );
+    
+    public abstract void setMaterialDiffuseColor( NamedObject material, float r, float g, float b );
+    
+    public abstract void setMaterialSpecularColor( NamedObject material, float r, float g, float b );
+    
+    public abstract void setMaterialShininess( NamedObject material, float shinines );
+    
+    public abstract void setMaterialNormalizeNormals( NamedObject material, boolean normalizeNormals );
+    
+    public abstract void setMaterialLightingEnabled( NamedObject material, boolean lightingEnabled );
+    
+    public abstract void applyMaterial( NamedObject material, NamedObject appearance );
+    
+    
+    
+    public abstract NamedObject createColoringAttributes( String name );
+    
+    public abstract void setColoringAttribsShadeModel( NamedObject coloringAttribs, ShadeModel shadeModel );
+    
+    public abstract void setColoringAttribsColor( NamedObject coloringAttribs, float[] color, int offset, int colorSize );
+    
+    public abstract void applyColoringAttributes( NamedObject coloringAttribs, NamedObject appearance );
+    
+    
+    
+    public abstract NamedObject createRenderingAttributesAttributes( String name );
+    
+    public abstract void setRenderingAttribsDepthBufferEnabled( NamedObject renderingAttribs, boolean depthBufferEnabled );
+    
+    public abstract void setRenderingAttribsDepthBufferWriteEnabled( NamedObject renderingAttribs, boolean depthBufferWriteEnabled );
+    
+    public abstract void setRenderingAttribsAlphaTestValue( NamedObject renderingAttribs, float alphaTestValue );
+    
+    public abstract void setRenderingAttribsAlphaTestFunction( NamedObject renderingAttribs, TestFunction alphaTestFunction );
+    
+    //public abstract void setRenderingAttribsStencilFuncSep( NamedObject renderingAttribs, int stencilFuncSep );
+    
+    //public abstract void setRenderingAttribsStencilOpSep( NamedObject renderingAttribs, int stencilOpSep );
+    
+    //public abstract void setRenderingAttribsStencilMaskSep( NamedObject renderingAttribs, int stencilMaskSep );
+    
+    public abstract void setRenderingAttribsDepthTestFunction( NamedObject renderingAttribs, TestFunction depthTestFunction );
+    
+    public abstract void setRenderingAttribsIgnoreVertexColors( NamedObject renderingAttribs, boolean ignoreVertexColors );
+    
+    public abstract void setRenderingAttribsStencilEnabled( NamedObject renderingAttribs, boolean stencilEnabled );
+    
+    //public abstract void setRenderingAttribsStencilOpFail( NamedObject renderingAttribs, int stencilOpFail );
+    
+    //public abstract void setRenderingAttribsStencilOpZFail( NamedObject renderingAttribs, int stencilOpZFail );
+    
+    //public abstract void setRenderingAttribsStencilOpZPass( NamedObject renderingAttribs, int stencilOpZPass );
+    
+    public abstract void setRenderingAttribsStencilTestFunction( NamedObject renderingAttribs, TestFunction stencilTestFunction );
+    
+    public abstract void setRenderingAttribsStencilRef( NamedObject renderingAttribs, int stencilRef );
+    
+    public abstract void setRenderingAttribsStencilMask( NamedObject renderingAttribs, int stencilMask );
+    
+    public abstract void setRenderingAttribsColorWriteMask( NamedObject renderingAttribs, int colorWriteMask );
+    
+    public abstract void applyRenderingAttributes( NamedObject renderingAttribs, NamedObject appearance );
+    
+    
+    
+    public abstract NamedObject createPolygonAttributes( String name );
+    
+    public abstract void setPolygonAttribsFaceCullMode( NamedObject polygonAttribs, FaceCullMode faceCullMode );
+    
+    public abstract void setPolygonAttribsDrawMode( NamedObject polygonAttribs, DrawMode drawMode );
+    
+    public abstract void setPolygonAttribsPolygonOffset( NamedObject polygonAttribs, float polygonOffset );
+    
+    public abstract void setPolygonAttribsPolygonOffsetFactor( NamedObject polygonAttribs, float polygonOffsetFactor );
+    
+    public abstract void setPolygonAttribsBackfaceNormalFlip( NamedObject polygonAttribs, boolean backfaceNormalFlip );
+    
+    public abstract void setPolygonAttribsAntialiasing( NamedObject polygonAttribs, boolean anitaliasing );
+    
+    public abstract void setPolygonAttribsSortingEnabled( NamedObject polygonAttribs, boolean sortingEnabled );
+    
+    public abstract void applyPolygonAttributes( NamedObject polygonAttribs, NamedObject appearance );
+    
+    
+    
+    public abstract void setTextureBoundaryModeS( AbstractTexture texture, TextureBoundaryMode boundaryModeS );
+    
+    public abstract void setTextureBoundaryModeT( AbstractTexture texture, TextureBoundaryMode boundaryModeT );
+    
+    public abstract void setTextureMagFilter( AbstractTexture texture, TextureMagFilter magFilter );
+    
+    public abstract void setTextureMinFilter( AbstractTexture texture, TextureMinFilter minFilter );
+    
+    public abstract void applyTexture( AbstractTexture texture, int textureUnit, NamedObject appearance );
+    
+    
+    
+    public abstract NamedObject createTextureAttributes( String name );
+    
+    public abstract void setTextureAttribsTextureMode( NamedObject textureAttribs, TextureMode textureMode );
+    
+    public abstract void setTextureAttribsPerspectiveCorrectionMode( NamedObject textureAttribs, PerspectiveCorrectionMode perspCorrMode );
+    
+    public abstract void setTextureAttribsTextureBlendColor( NamedObject textureAttribs, float[] texBlendColor, int offset, int colorSize );
+    
+    public abstract void setTextureAttribsTextureTransfrom( NamedObject textureAttribs, Matrix4f textureTransform );
+    
+    public abstract void setTextureAttribsCombineRGBMode( NamedObject textureAttribs, TextureCombineMode combineRGBMode );
+    
+    public abstract void setTextureAttribsCombineAlphaMode( NamedObject textureAttribs, TextureCombineMode combineAlphaMode );
+    
+    public abstract void setTextureAttribsCombineRGBSource( NamedObject textureAttribs, int channel, TextureCombineSource combineRGBSource );
+    
+    public abstract void setTextureAttribsCombineAlphaSource( NamedObject textureAttribs, int channel, TextureCombineSource combineAlphaSource );
+    
+    public abstract void setTextureAttribsCombineRGBFunction( NamedObject textureAttribs, int channel, TextureCombineFunction combineRGBFunction );
+    
+    public abstract void setTextureAttribsCombineAlphaFunction( NamedObject textureAttribs, int channel, TextureCombineFunction combineAlphaFunction );
+    
+    public abstract void setTextureAttribsCombineRGBScale( NamedObject textureAttribs, int combineRGBScale );
+    
+    public abstract void setTextureAttribsCombineAlphaScale( NamedObject textureAttribs, int combineAlphaScale );
+    
+    public abstract void setTextureAttribsCompareMode( NamedObject textureAttribs, TextureCompareMode compareMode );
+    
+    public abstract void setTextureAttribsCompareFunc( NamedObject textureAttribs, CompareFunction compareFunc );
+    
+    public abstract void applyTextureAttributes( NamedObject textureAttribs, int textureUnit, NamedObject appearance );
+    
+    
+    
+    public abstract NamedObject createTextureCoordGeneration( String name );
+    
+    public abstract void setTexCoordGenerationGenMode( NamedObject texCoordGen, TexCoordGenMode genMode );
+    
+    public abstract void setTexCoordGenerationNumTexGenUnits( NamedObject texCoordGen, int numTexGenUnits );
+    
+    public abstract void setTexCoordGenerationPlaneS( NamedObject texCoordGen, float[] planeS, int offset );
+    
+    public abstract void setTexCoordGenerationPlaneT( NamedObject texCoordGen, float[] planeT, int offset );
+    
+    public abstract void setTexCoordGenerationPlaneR( NamedObject texCoordGen, float[] planeR, int offset );
+    
+    public abstract void setTexCoordGenerationPlaneQ( NamedObject texCoordGen, float[] planeQ, int offset );
+    
+    public abstract void applyTextureCoordGeneration( NamedObject texCoordGen, int textureUnit, NamedObject appearance );
+    
+    
+    
+    public abstract NamedObject createAppearance( String name, int flags );
+    
+    public abstract void applyAppearance( NamedObject appearance, NamedObject geometry );
+    
+    
+    public abstract AbstractTexture getFallbackTexture();
     
     public abstract AbstractTexture loadTexture( InputStream in, String texName, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
     
     public abstract AbstractTexture loadTexture( URL url, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
+    
+    public abstract AbstractTexture loadOrGetTexture( String texName, URL baseURL, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
     
     public abstract AbstractTexture loadOrGetTexture( String texName, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
     

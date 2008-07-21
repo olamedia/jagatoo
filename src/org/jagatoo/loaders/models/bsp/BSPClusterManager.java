@@ -69,6 +69,8 @@ import org.jagatoo.loaders.models.bsp.lumps.BSPNode;
 import org.jagatoo.loaders.models.bsp.lumps.BSPPlane;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVisData;
 import org.jagatoo.logging.JAGTLog;
+import org.openmali.vecmath2.Matrix4f;
+import org.openmali.vecmath2.Point3f;
 import org.openmali.vecmath2.Tuple3f;
 import org.openmali.vecmath2.util.FloatUtils;
 
@@ -78,7 +80,7 @@ import org.openmali.vecmath2.util.FloatUtils;
  * @author Marvin Froehlich (aka Qudus)
  * @author Amos Wenger (aka BlueSky)
  */
-public class BSPClusterManager
+public class BSPClusterManager implements BSPVisibilityUpdater
 {
     private final BSPVisData       bspVisData;
     private final boolean          hasVisBitset;
@@ -91,6 +93,11 @@ public class BSPClusterManager
     
     private   boolean        usePVS = true;
     private   boolean        lastUsePVS = true;
+    
+    public final BitSet getBitSet()
+    {
+        return( shapeBitset );
+    }
     
     /**
      * Calculates which cluster the camera position is in
@@ -163,8 +170,12 @@ public class BSPClusterManager
      * 
      * @return true, if PVS has changed.
      */
-    public boolean setVisibility( Tuple3f camPos )
+    public boolean updateVisibility( Matrix4f cameraTransform )
     {
+        Point3f camPos = Point3f.fromPool();
+        
+        cameraTransform.get( camPos );
+        
         boolean usePVSChanged = ( usePVS != lastUsePVS );
         
         lastUsePVS = usePVS;
@@ -173,12 +184,16 @@ public class BSPClusterManager
         {
             shapeBitset.set( 0, shapeBitset.size() - 1 );
             
+            Point3f.toPool( camPos );
+            
             return( true );
         }
         
         int camCluster = getCluster( camPos );
         if ( lastCluster == camCluster && !usePVSChanged )
         {
+            Point3f.toPool( camPos );
+            
             return( false );
         }
         
@@ -213,6 +228,8 @@ public class BSPClusterManager
                 }
             }
         }
+        
+        Point3f.toPool( camPos );
         
         return( true );
     }

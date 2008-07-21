@@ -29,41 +29,25 @@
  */
 package org.jagatoo.loaders.models._util;
 
-import org.jagatoo.datatypes.NamedObject;
-
 /**
  * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface GeometryFactory
+public interface SpecialItemsHandler
 {
-    public static enum GeometryType
+    public static enum SpecialItemType
     {
-        TRIANGLE_ARRAY,
-        TRIANGLE_STRIP_ARRAY,
-        INDEXED_TRIANGLE_ARRAY,
-        INDEXED_TRIANGLE_STRIP_ARRAY,
-        TRIANGLE_FAN_ARRAY,
-        INDEXED_TRIANGLE_FAN_ARRAY,
+        SCENE_GROUP,
+        NESTED_TRANSFORM,
+        SHAPE,
+        MOUNT_TRANSFORM,
+        SPAWN_TRANSFORM,
+        ITEM,
+        SUB_MODEL,
+        LIGHT,
         ;
     }
     
-    public NamedObject createGeometry( String name, GeometryType type, int coordSize, int numVertices, int numIndices, int[] numStrips );
-    
-    public NamedObject createInterleavedGeometry( String name, GeometryType type, int coordSize, int numVertices, int numIndices, int[] numStrips, int features, boolean colorAlpha, int[] tuSizes, int[] vaSizes );
-    
-    public void setCoordinate( NamedObject geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setNormal( NamedObject geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setTexCoord( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setColor( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setVertexAttrib( NamedObject geometry, GeometryType type, int attribIndex, int attribSize, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setIndex( NamedObject geometry, GeometryType type, int vertexIndex, int[] data, int offset, int num );
-    
-    public void finalizeGeometry( NamedObject geometry, GeometryType type, int initialVertexIndex, int numValidVertices, int initialIndexIndex, int numValidIndices );
+    public void addSpecialItem( SpecialItemType type, String name, Object item );
 }

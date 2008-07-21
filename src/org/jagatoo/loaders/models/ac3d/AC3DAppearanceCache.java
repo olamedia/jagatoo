@@ -27,7 +27,9 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models._util;
+package org.jagatoo.loaders.models.ac3d;
+
+import java.util.HashMap;
 
 import org.jagatoo.datatypes.NamedObject;
 
@@ -36,34 +38,9 @@ import org.jagatoo.datatypes.NamedObject;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface GeometryFactory
+public class AC3DAppearanceCache
 {
-    public static enum GeometryType
-    {
-        TRIANGLE_ARRAY,
-        TRIANGLE_STRIP_ARRAY,
-        INDEXED_TRIANGLE_ARRAY,
-        INDEXED_TRIANGLE_STRIP_ARRAY,
-        TRIANGLE_FAN_ARRAY,
-        INDEXED_TRIANGLE_FAN_ARRAY,
-        ;
-    }
-    
-    public NamedObject createGeometry( String name, GeometryType type, int coordSize, int numVertices, int numIndices, int[] numStrips );
-    
-    public NamedObject createInterleavedGeometry( String name, GeometryType type, int coordSize, int numVertices, int numIndices, int[] numStrips, int features, boolean colorAlpha, int[] tuSizes, int[] vaSizes );
-    
-    public void setCoordinate( NamedObject geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setNormal( NamedObject geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setTexCoord( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setColor( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setVertexAttrib( NamedObject geometry, GeometryType type, int attribIndex, int attribSize, int vertexIndex, float[] data, int offset, int num );
-    
-    public void setIndex( NamedObject geometry, GeometryType type, int vertexIndex, int[] data, int offset, int num );
-    
-    public void finalizeGeometry( NamedObject geometry, GeometryType type, int initialVertexIndex, int numValidVertices, int initialIndexIndex, int numValidIndices );
+    public final HashMap< String, NamedObject > appearanceCache = new HashMap< String, NamedObject >();
+    public final HashMap< String, NamedObject > transAttribsCache = new HashMap< String, NamedObject >();
+    public final HashMap< String, NamedObject > polyAttribsCache = new HashMap< String, NamedObject >();
 }

@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
@@ -74,7 +75,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
         }
     }
     
-    public static BSPVisData decompressVis ( int numLeafs, byte[] visBytes )
+    public static BSPVisData decompressVis( int numLeafs, byte[] visBytes )
     {
         dumpCompressedVisData( visBytes );
         
@@ -180,7 +181,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
      * @param face 
      * @return 
      */
-    private Object convertFaceToGeometry( BSPFace face, int[] surfEdges, BSPEdge[] bspEdges, BSPVertex[] vertices, BSPTexInfo[] texInfos, GeometryFactory geomFactory, float worldScale )
+    private NamedObject convertFaceToGeometry( int faceIndex, BSPFace face, int[] surfEdges, BSPEdge[] bspEdges, BSPVertex[] vertices, BSPTexInfo[] texInfos, GeometryFactory geomFactory, float worldScale )
     {
         final int numVertices = face.numOfVerts;
         
@@ -208,10 +209,11 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
         
         GeometryType geomType = GeometryType.TRIANGLE_FAN_ARRAY;
         
-        Object ga = geomFactory.createInterleavedGeometry( geomType, 3,
-                                                           numVertices, 0, null,
-                                                           Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2 }, null
-                                                         );
+        NamedObject ga = geomFactory.createInterleavedGeometry( "Geometry " + faceIndex,
+                                                                geomType, 3,
+                                                                numVertices, 0, null,
+                                                                Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2 }, null
+                                                              );
         
         BSPTexInfo texInfo = texInfos[ face.textureID ];
         face.textureID = texInfo.textureID;
@@ -259,18 +261,18 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
     {
         int numModels = prototype.models.length;
         
-        prototype.geometries = new Object[ numModels ][];
+        prototype.geometries = new NamedObject[ numModels ][];
         
         for ( int m = 0; m < numModels; m++ )
         {
             final BSP30Model model = (BSP30Model)prototype.models[ m ];
             final int numFaces = model.numOfFaces;
             
-            Object[] geometries = new Object[ numFaces ];
+            NamedObject[] geometries = new NamedObject[ numFaces ];
             
             for ( int f = 0; f < numFaces; f++ )
             {
-                geometries[ f ] = convertFaceToGeometry( prototype.faces[ model.faceIndex + f ], prototype.surfEdges, prototype.edges, prototype.vertices, prototype.texInfos, geomFactory, worldScale );
+                geometries[ f ] = convertFaceToGeometry( f, prototype.faces[ model.faceIndex + f ], prototype.surfEdges, prototype.edges, prototype.vertices, prototype.texInfos, geomFactory, worldScale );
             }
             
             prototype.geometries[ m ] = geometries;
