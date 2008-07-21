@@ -43,7 +43,6 @@ import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseEvent;
-import org.jagatoo.input.events.MouseEventPool;
 import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
 import org.jagatoo.input.render.InputSourceWindow;
@@ -61,7 +60,7 @@ public class SWTMouse extends Mouse
     private final org.eclipse.swt.widgets.Control control;
     private final java.awt.Point centerControl = new java.awt.Point( 0, 0 );
     private final java.awt.Point los = new java.awt.Point( 0, 0 );
-    private int calibX, calibY;
+    private int calibX = 1, calibY = 1;
     
     private long lastGameTimeDelta = System.nanoTime();
     
@@ -209,7 +208,7 @@ public class SWTMouse extends Mouse
      */
     private void calibrate( int mouseX, int mouseY )
     {
-        if ( ( getCurrentX() == -1 ) || ( getCurrentY() == -1  ))
+        if ( ( getCurrentX() == -1 ) || ( getCurrentY() == -1 ) )
             return;
         
         switch ( calibrationStep )
@@ -221,12 +220,20 @@ public class SWTMouse extends Mouse
                 
                 calibrationStep = 1;
                 break;
-                
+            
             case 1:
                 calibX = ( calibX - mouseX );
                 calibY = ( calibY - mouseY );
                 //System.out.println( calibX + ", " + calibY );
                 
+                try
+                {
+                    recenter();
+                }
+                catch ( InputSystemException e )
+                {
+                    e.printStackTrace();
+                }
                 calibrationStep = -1;
                 break;
         }
@@ -263,7 +270,7 @@ public class SWTMouse extends Mouse
                 {
                     final MouseEvent moEvent = (MouseEvent)event;
                     
-                    switch( moEvent.getSubType() )
+                    switch ( moEvent.getSubType() )
                     {
                         case BUTTON_PRESSED:
                             is.notifyInputStatesManagers( this, moEvent.getComponent(), 1, +1, nanoTime );
@@ -316,7 +323,7 @@ public class SWTMouse extends Mouse
             throw( new InputSystemException( t ) );
         }
         
-        lastGameTimeDelta = System.currentTimeMillis() - nanoTime;
+        lastGameTimeDelta = System.nanoTime() - nanoTime;
     }
     
     /**
@@ -368,7 +375,6 @@ public class SWTMouse extends Mouse
         try
         {
             this.control = (org.eclipse.swt.widgets.Control)sourceWindow.getDrawable();
-            //this.control = (org.eclipse.swt.opengl.GLCanvas)sourceWindow.getDrawable();
             
             //final org.eclipse.swt.widgets.Display display = control.getDisplay();
             
@@ -425,7 +431,7 @@ public class SWTMouse extends Mouse
                         }
                     }
                     
-                    if ( ( getCurrentX() != mouseX ) || ( getCurrentY() != mouseY ) )
+                    if ( doEvent && ( ( getCurrentX() != mouseX ) || ( getCurrentY() != mouseY ) ) )
                     {
                         MouseMovedEvent e = prepareMouseMovedEvent( mouseX, mouseY, dX, dY, when );
                         
@@ -455,7 +461,10 @@ public class SWTMouse extends Mouse
             {
                 public void handleEvent( org.eclipse.swt.widgets.Event _e )
                 {
-                    MouseWheelEvent e = MouseEventPool.allocWheel( SWTMouse.this, getWheel(), -_e.count, false, ( (long)_e.time * 1000000L ) - lastGameTimeDelta, 0L );
+                    
+                    long when = System.nanoTime() - lastGameTimeDelta;
+                    
+                    MouseWheelEvent e = prepareMouseWheelMovedEvent( -_e.count, false, when );
                     
                     if ( e != null )
                         getEventQueue().enqueue( e );
