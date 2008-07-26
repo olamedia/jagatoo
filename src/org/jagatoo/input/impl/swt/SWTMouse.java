@@ -56,11 +56,13 @@ public class SWTMouse extends Mouse
 {
     private int calibrationStep = -1;
     
-    //private final org.eclipse.swt.opengl.GLCanvas control;
     private final org.eclipse.swt.widgets.Control control;
     private final java.awt.Point centerControl = new java.awt.Point( 0, 0 );
     private final java.awt.Point los = new java.awt.Point( 0, 0 );
     private int calibX = 1, calibY = 1;
+    
+    private int lastAbsoluteX = 0;
+    private int lastAbsoluteY = 0;
     
     private long lastGameTimeDelta = System.nanoTime();
     
@@ -380,7 +382,9 @@ public class SWTMouse extends Mouse
             
             control.addMouseListener( new org.eclipse.swt.events.MouseListener()
             {
-                public void mouseDoubleClick( org.eclipse.swt.events.MouseEvent _e ) {}
+                public void mouseDoubleClick( org.eclipse.swt.events.MouseEvent _e )
+                {
+                }
                 
                 public void mouseDown( org.eclipse.swt.events.MouseEvent _e )
                 {
@@ -415,10 +419,10 @@ public class SWTMouse extends Mouse
             {
                 public void mouseMove( org.eclipse.swt.events.MouseEvent _e )
                 {
-                    final int mouseX = _e.x;
-                    final int mouseY = _e.y;
-                    final int dX = ( mouseX - centerControl.x );
-                    final int dY = -( mouseY - centerControl.y );
+                    final int x = _e.x;
+                    final int y = _e.y;
+                    //final int dX = ( x - centerControl.x );
+                    //final int dY = -( y - centerControl.y );
                     final long when = System.nanoTime() - lastGameTimeDelta;
                     
                     boolean doEvent = true;
@@ -426,34 +430,56 @@ public class SWTMouse extends Mouse
                     {
                         if ( calibrationStep != -1 )
                         {
-                            calibrate( mouseX, mouseY );
+                            calibrate( x, y );
                             doEvent = false;
                         }
                     }
                     
-                    if ( doEvent && ( ( getCurrentX() != mouseX ) || ( getCurrentY() != mouseY ) ) )
+                    if ( doEvent && ( ( getCurrentX() != x ) || ( getCurrentY() != y ) ) )
                     {
-                        MouseMovedEvent e = prepareMouseMovedEvent( mouseX, mouseY, dX, dY, when );
-                        
-                        if ( e == null )
-                            return;
-                        
-                        getEventQueue().enqueue( e );
+                        if ( isAbsolute() )
+                        {
+                            final int dx = x - getCurrentX();
+                            final int dy = -( y - getCurrentY() );
+                            
+                            storePosition( x, y );
+                            
+                            MouseMovedEvent e = prepareMouseMovedEvent( x, y, dx, dy, when );
+                            
+                            if ( e == null )
+                                return;
+                            
+                            getEventQueue().enqueue( e );
+                            
+                            lastAbsoluteX = x;
+                            lastAbsoluteY = y;
+                        }
+                        else
+                        {
+                            final int dx = x - centerControl.x;
+                            final int dy = -( y - centerControl.y );
+                            
+                            if ( dx != 0 || dy != 0 )
+                            {
+                                MouseMovedEvent e = prepareMouseMovedEvent( lastAbsoluteX, lastAbsoluteY, dx, dy, when );
+                                
+                                if ( e == null )
+                                    return;
+                                
+                                getEventQueue().enqueue( e );
+                                
+                                try
+                                {
+                                    recenter();
+                                }
+                                catch ( InputSystemException ise )
+                                {
+                                    ise.printStackTrace();
+                                }
+                            }
+                        }
                     }
                     
-                    if ( !isAbsolute() && doEvent )
-                    {
-                        try
-                        {
-                            recenter();
-                        }
-                        catch ( InputSystemException ise )
-                        {
-                            ise.printStackTrace();
-                        }
-                    }
-                    
-                    storePosition( mouseX, mouseY );
                 }
             } );
             
@@ -461,6 +487,7 @@ public class SWTMouse extends Mouse
             {
                 public void handleEvent( org.eclipse.swt.widgets.Event _e )
                 {
+                    
                     long when = System.nanoTime() - lastGameTimeDelta;
                     
                     MouseWheelEvent e = prepareMouseWheelMovedEvent( -_e.count, false, when );

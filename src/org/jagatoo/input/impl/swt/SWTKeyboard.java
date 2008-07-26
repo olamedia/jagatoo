@@ -124,37 +124,89 @@ public class SWTKeyboard extends Keyboard
         CHAR_CONVERSION.put( '\r', Keys.ENTER );
         CHAR_CONVERSION.put( SWT.ESC, Keys.ESCAPE );
         CHAR_CONVERSION.put( SWT.DEL, Keys.DELETE );
+        CHAR_CONVERSION.put( SWT.TAB, Keys.TAB );
         
         KEYCODE_CONVERSION = new HashMap< Integer, org.jagatoo.input.devices.components.Key >();
         
-        // Loops though all of the registered keys in KeyCode
-        for ( KeyID keyID : KeyID.values() )
-        {
-            final org.jagatoo.input.devices.components.Key key = keyID.getKey();
-            
-            try
-            {
-                // Converts the KeyCode constant name to the SWT constant name
-                Field swtKey = SWT.class.getField( keyID.toString() );
-                int swtKeyInt = swtKey.getInt( null );
-                
-                //System.out.println( field + " " + swtKeyInt + "=" + keyInt );
-                
-                // Sets SWT index to be the KeyCode value
-                KEYCODE_CONVERSION.put( swtKeyInt, key );
-            }
-            catch ( NoSuchFieldException e )
-            {
-                if ( !CHAR_CONVERSION.containsValue( key ) )
-                {
-                    //System.out.println( "No field: " + e.getMessage() + " key code = " + keyInt );
-                }
-            }
-            catch ( Exception e )
-            {
-                e.printStackTrace();
-            }
-        }
+        KEYCODE_CONVERSION.put( Integer.valueOf( '0' ), Keys._0 );
+        KEYCODE_CONVERSION.put( Integer.valueOf( '1' ), Keys._1 );
+        KEYCODE_CONVERSION.put( Integer.valueOf( '2' ), Keys._2 );
+        KEYCODE_CONVERSION.put( Integer.valueOf( '3' ), Keys._3 );
+        KEYCODE_CONVERSION.put( Integer.valueOf( '4' ), Keys._4 );
+        KEYCODE_CONVERSION.put( Integer.valueOf( '5' ), Keys._5 );
+        KEYCODE_CONVERSION.put( Integer.valueOf( '6' ), Keys._6 );
+        KEYCODE_CONVERSION.put( Integer.valueOf( '7' ), Keys._7 );
+        KEYCODE_CONVERSION.put( Integer.valueOf( '8' ), Keys._8 );
+        KEYCODE_CONVERSION.put( Integer.valueOf( '9' ), Keys._9 );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'a' ), Keys.A );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'b' ), Keys.B );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'c' ), Keys.C );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'd' ), Keys.D );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'e' ), Keys.E );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'f' ), Keys.F );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'g' ), Keys.G );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'h' ), Keys.H );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'i' ), Keys.I );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'j' ), Keys.J );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'k' ), Keys.K );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'l' ), Keys.L );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'm' ), Keys.M );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'n' ), Keys.N );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'o' ), Keys.O );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'p' ), Keys.P );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'q' ), Keys.Q );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'r' ), Keys.R );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 's' ), Keys.S );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 't' ), Keys.T );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'u' ), Keys.U );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'v' ), Keys.V );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'w' ), Keys.W );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'x' ), Keys.X );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'y' ), Keys.Y );
+        KEYCODE_CONVERSION.put( Integer.valueOf( 'z' ), Keys.Z );
+        KEYCODE_CONVERSION.put( Integer.valueOf( '\b' ), Keys.BACK_SPACE );
+        KEYCODE_CONVERSION.put( Integer.valueOf( ' ' ), Keys.SPACE );
+        KEYCODE_CONVERSION.put( Integer.valueOf( '\r' ), Keys.ENTER );
+        
+        KEYCODE_CONVERSION.put( SWT.PRINT_SCREEN, Keys.PRINTSCREEN );
+        KEYCODE_CONVERSION.put( SWT.PAUSE, Keys.PAUSE );
+        KEYCODE_CONVERSION.put( SWT.SCROLL_LOCK, Keys.SCROLL_LOCK );
+        
+        KEYCODE_CONVERSION.put( SWT.SHIFT, Keys.LEFT_SHIFT );
+        KEYCODE_CONVERSION.put( SWT.CTRL, Keys.LEFT_CONTROL );
+        KEYCODE_CONVERSION.put( SWT.ALT, Keys.ALT );
+        KEYCODE_CONVERSION.put( SWT.CAPS_LOCK, Keys.CAPS_LOCK );
+        
+        KEYCODE_CONVERSION.put( SWT.INSERT, Keys.INSERT );
+        KEYCODE_CONVERSION.put( SWT.END, Keys.END );
+        KEYCODE_CONVERSION.put( SWT.HOME, Keys.HOME );
+        KEYCODE_CONVERSION.put( SWT.PAGE_UP, Keys.PAGE_UP );
+        KEYCODE_CONVERSION.put( SWT.PAGE_DOWN, Keys.PAGE_DOWN );
+        
+        KEYCODE_CONVERSION.put( SWT.ARROW_RIGHT, Keys.RIGHT );
+        KEYCODE_CONVERSION.put( SWT.ARROW_LEFT, Keys.LEFT );
+        KEYCODE_CONVERSION.put( SWT.ARROW_UP, Keys.UP );
+        KEYCODE_CONVERSION.put( SWT.ARROW_DOWN, Keys.DOWN );
+        
+        KEYCODE_CONVERSION.put( SWT.NUM_LOCK, Keys.NUM_LOCK );
+        
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_DIVIDE, Keys.NUMPAD_DIVIDE );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_MULTIPLY, Keys.NUMPAD_MULTIPLY );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_SUBTRACT, Keys.NUMPAD_SUBTRACT );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_ADD, Keys.NUMPAD_ADD );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_CR, Keys.NUMPAD_ENTER );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_DECIMAL, Keys.NUMPAD_DECIMAL );
+        
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_0, Keys.NUMPAD0 );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_1, Keys.NUMPAD1 );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_2, Keys.NUMPAD2 );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_3, Keys.NUMPAD3 );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_4, Keys.NUMPAD4 );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_5, Keys.NUMPAD5 );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_6, Keys.NUMPAD6 );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_7, Keys.NUMPAD7 );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_8, Keys.NUMPAD8 );
+        KEYCODE_CONVERSION.put( SWT.KEYPAD_9, Keys.NUMPAD9 );
     }
     
     /**
@@ -217,7 +269,7 @@ public class SWTKeyboard extends Keyboard
                 {
                     final KeyboardEvent kbEvent = (KeyboardEvent)event;
                     
-                    switch( kbEvent.getSubType() )
+                    switch ( kbEvent.getSubType() )
                     {
                         case PRESSED:
                             is.notifyInputStatesManagers( this, kbEvent.getComponent(), 1, +1, nanoTime );
@@ -287,7 +339,6 @@ public class SWTKeyboard extends Keyboard
         try
         {
             final org.eclipse.swt.widgets.Control control = (org.eclipse.swt.widgets.Control)sourceWindow.getDrawable();
-            //final org.eclipse.swt.opengl.GLCanvas control = (org.eclipse.swt.opengl.GLCanvas)sourceWindow.getDrawable();
             control.addKeyListener( new org.eclipse.swt.events.KeyListener()
             {
                 public void keyPressed( org.eclipse.swt.events.KeyEvent _e )
@@ -331,7 +382,7 @@ public class SWTKeyboard extends Keyboard
                     
                     if ( key != null )
                     {
-                        final int modifierMask = applyModifier( key, true );
+                        final int modifierMask = applyModifier( key, false );
                         
                         long lastWhen = lastReleasedTimes[ keyIndex ];
                         lastReleasedTimes[ keyIndex ] = when;
@@ -345,7 +396,7 @@ public class SWTKeyboard extends Keyboard
                         }
                     }
                 }
-            });
+            } );
         }
         catch ( Throwable e )
         {
