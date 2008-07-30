@@ -94,15 +94,18 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
      * Creates the indexed geometry array for the BSP face.  The lightmap tex coords are stored in
      * unit 1, the regular tex coords are stored in unit 0
      * 
+     * ATTENTION: This method messes up vertex winding!!!
+     * 
      * @param face 
      * @return 
      */
-    private NamedObject convertFaceToIndexedGeom( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, float worldScale )
+    @SuppressWarnings( "unused" )
+    private NamedObject convertFaceToIndexedStripGeom( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, float worldScale )
     {
-        GeometryType geomType = GeometryType.INDEXED_TRIANGLE_ARRAY;
+        GeometryType geomType = GeometryType.INDEXED_TRIANGLE_STRIP_ARRAY;
         NamedObject ga = geomFactory.createInterleavedGeometry( "Geometry " + faceIndex,
                                                                 geomType, 3,
-                                                                face.numOfVerts, face.numMeshVerts, null,
+                                                                face.numOfVerts, ( face.numMeshVerts / 3 ) + 2, new int[] { face.numMeshVerts },
                                                                 Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2, 2 }, null
                                                               );
         
@@ -121,8 +124,18 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
             */
         }
         
-        int[] index = new int[ face.numMeshVerts ];
-        System.arraycopy( meshVertices, face.meshVertIndex, index, 0, face.numMeshVerts );
+        int[] index = new int[ ( face.numMeshVerts / 3 ) + 2 ];
+        for ( int i = 0; i < face.numMeshVerts; i++ )
+        {
+            if ( i < 3 )
+            {
+                index[i] = meshVertices[face.meshVertIndex + i];
+            }
+            else if ( ( i % 3 ) == 2 )
+            {
+                index[2 + i / 3] = meshVertices[face.meshVertIndex + i];
+            }
+        }
         
         geomFactory.setIndex( ga, geomType, 0, index, 0, index.length );
         
@@ -171,6 +184,60 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
     }
     
     /**
+     * Creates the indexed geometry array for the BSP face.  The lightmap tex coords are stored in
+     * unit 1, the regular tex coords are stored in unit 0
+     * 
+     * @param face 
+     * @return 
+     */
+    private NamedObject convertFaceToIndexedGeom( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, float worldScale )
+    {
+        GeometryType geomType = GeometryType.INDEXED_TRIANGLE_ARRAY;
+        NamedObject ga = geomFactory.createInterleavedGeometry( "Geometry " + faceIndex,
+                                                                geomType, 3,
+                                                                face.numOfVerts, face.numMeshVerts, null,
+                                                                Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2, 2 }, null
+                                                              );
+        
+        for ( int i = 0; i < face.numOfVerts; i++ )
+        {
+            int j = face.vertexIndex + i;
+            geomFactory.setCoordinate( ga, geomType, i, new float[] { vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getZ() * worldScale, -vertices[ j ].position.getY() * worldScale }, 0, 1 );
+            geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { vertices[ j ].texCoord.getS(), vertices[ j ].texCoord.getT() }, 0, 1 );
+            geomFactory.setTexCoord( ga, geomType, 1, 2, i, new float[] { vertices[ j ].lightTexCoord.getS(), vertices[ j ].lightTexCoord.getT() }, 0, 1 );
+            
+            /*
+            if ( vertices[ j ].color.getRed() < 0f )
+                throw new Error( "illegal color + " + vertices[ j ].color );
+            
+            geomFactory.setColor( ga, geomType, vertices[ j ].color.hasAlpha() ? 4 : 3, i, new float[] { vertices[ j ].color.getRed(), vertices[ j ].color.getGreen(), vertices[ j ].color.getBlue(), vertices[ j ].color.getAlpha() }, 0, 1 );
+            */
+        }
+        
+        int[] index = new int[ face.numMeshVerts ];
+        System.arraycopy( meshVertices, face.meshVertIndex, index, 0, face.numMeshVerts );
+        
+        geomFactory.setIndex( ga, geomType, 0, index, 0, index.length );
+        
+        geomFactory.finalizeGeometry( ga, geomType, 0, face.numOfVerts, 0, index.length );
+        
+        return( ga );
+    }
+    
+    /**
+     * Creates a billboard from the given face.
+     * 
+     * @param face 
+     * @return 
+     */
+    private NamedObject convertFaceToBillboard( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, float worldScale )
+    {
+        System.out.println( "TODO: Implement the abstract creation of Billboard geometry" );
+        
+        return( null );
+    }
+    
+    /**
      * {@inheritDoc}
      */
     public NamedObject convertFaceToGeometry( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, float worldScale )
@@ -178,7 +245,6 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         switch ( face.type )
         {
             case 1:
-                // regular mesh
                 return( convertFaceToIndexedGeom( faceIndex, face, vertices, meshVertices, geomFactory, worldScale ) );
             
             case 2:
@@ -186,9 +252,12 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
             
             case 3:
                 return( convertFaceToIndexedGeom( faceIndex, face, vertices, meshVertices, geomFactory, worldScale ) );
+                
+            case 4:
+                return( convertFaceToBillboard( faceIndex, face, vertices, meshVertices, geomFactory, worldScale ) );
         }
         
-        throw new Error();
+        throw new Error( "Unsupported face type " + face.type );
     }
     
     /**
@@ -211,21 +280,7 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
             {
                 BSPFace face = prototype.faces[ model.faceIndex + f ];
                 
-                switch ( face.type )
-                {
-                    case 1:
-                        // regular mesh
-                        geometries[ f ] = convertFaceToIndexedGeom( f, face, prototype.vertices, prototype.meshVertices, geomFactory, worldScale );
-                        break;
-                    
-                    case 2:
-                        geometries[ f ] = convertFaceToSurfacePatch( f, face, prototype.vertices, geomFactory, worldScale );
-                        break;
-                    
-                    case 3:
-                        geometries[ f ] = convertFaceToIndexedGeom( f, face, prototype.vertices, prototype.meshVertices, geomFactory, worldScale );
-                        break;
-                }
+                geometries[ f ] = convertFaceToGeometry( f, face, prototype.vertices, prototype.meshVertices, geomFactory, worldScale );
             }
             
             prototype.geometries[m] = geometries;

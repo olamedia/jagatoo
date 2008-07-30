@@ -29,6 +29,7 @@
  */
 package org.jagatoo.util.arrays;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 /**
@@ -268,6 +269,31 @@ public final class ArrayUtils
             array = new float[ newCapacity ];
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
             Arrays.fill( array, oldCapacity, newCapacity - 1, paddValue );
+        }
+        
+        return( array );
+    }
+    
+    /**
+     * Ensures, the given int array has the desired length.<br>
+     * <b>The ensured array is returned!</b>
+     * 
+     * @param array the input array
+     * @param minCapacity the desired (minimal) capacity
+     * 
+     * @return the array with the ensured length
+     */
+    @SuppressWarnings( "unchecked" )
+    public static final <E> E[] ensureCapacity( E[] array, Class<?> elementType, int minCapacity )
+    {
+        final int oldCapacity = array.length;
+        
+        if ( minCapacity > oldCapacity )
+        {
+            final E[] oldArray = array;
+            final int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            array = (E[])Array.newInstance( elementType, newCapacity );
+            System.arraycopy( oldArray, 0, array, 0, oldCapacity );
         }
         
         return( array );

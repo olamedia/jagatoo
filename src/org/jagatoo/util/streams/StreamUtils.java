@@ -41,6 +41,48 @@ import java.io.InputStream;
 public class StreamUtils
 {
     /**
+     * Skips and discards the given number of bytes from the given stream.
+     * 
+     * @param in
+     * @param toSkip
+     * 
+     * @throws IOException
+     */
+    public static final void skipBytes( InputStream in, long toSkip ) throws IOException
+    {
+        while ( toSkip > 0L )
+        {
+            long skipped = in.skip( toSkip );
+            
+            if ( skipped > 0 )
+                toSkip -= skipped;
+            else if ( skipped < 0 )
+                toSkip = 0;
+        }
+    }
+    
+    /**
+     * Skips and discards the given number of bytes from the given stream.
+     * 
+     * @param in
+     * @param toSkip
+     * 
+     * @throws IOException
+     */
+    public static final void skipBytes( BufferedInputStream in, long toSkip ) throws IOException
+    {
+        while ( toSkip > 0L )
+        {
+            long skipped = in.skip( toSkip );
+            
+            if ( skipped > 0 )
+                toSkip -= skipped;
+            else if ( skipped < 0 )
+                toSkip = 0;
+        }
+    }
+    
+    /**
      * Reads one byte from the InputStream.
      * 
      * @param in

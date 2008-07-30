@@ -38,6 +38,7 @@ import org.jagatoo.image.SharedBufferedImage;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
 import org.jagatoo.loaders.textures.TextureFactory;
 import org.jagatoo.util.image.ImageUtility;
+import org.jagatoo.util.streams.StreamUtils;
 
 /**
  * Reads TGA files from an InputStream.
@@ -46,15 +47,20 @@ import org.jagatoo.util.image.ImageUtility;
  */
 public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
 {
-    private static final int HEADER_SIZE = 12;
+    private static final int HEADER_SIZE = 18;
     
     private static final int HEADER_INVALID = 0;
     private static final int HEADER_UNCOMPRESSED = 1;
     private static final int HEADER_COMPRESSED = 2;
     
-    private static final int getUnsignedByte( byte b )
+    private static final short getUnsignedByte( byte[] bytes, int byteIndex )
     {
-        return( (int)b & 0xFF );
+        return( (short)( bytes[byteIndex] & 0xFF ) );
+    }
+    
+    private static final int getUnsignedShort( byte[] bytes, int byteIndex )
+    {
+        return( ( getUnsignedByte( bytes, byteIndex + 1 ) << 8 ) + getUnsignedByte( bytes, byteIndex + 0 ) );
     }
     
     private static void readBuffer( BufferedInputStream in, byte[] buffer ) throws IOException
@@ -69,91 +75,246 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         }
     }
     
-    private static void readBuffer( BufferedInputStream in, int bytesPerPixel, boolean acceptAlpha, int bytesToRead, byte[] bb ) throws IOException
+    private static final int compareFormatHeader( BufferedInputStream in, byte[] header ) throws IOException
     {
-        byte[] buffer = new byte[ bytesPerPixel ];
-        final boolean copyAlpha = ( bytesPerPixel == 4 ) && acceptAlpha;
+        readBuffer( in, header );
         
-        int b = 0;
-        for ( int i = 0; i < bytesToRead; i += bytesPerPixel )
-        {
-            int read = in.read( buffer, 0, bytesPerPixel );
-            
-            if ( read < bytesPerPixel )
-                return;
-            
-            // Don't swap R and B, since we want to use this byte array for a SharedBufferedImage!
-            bb[ b++ ] = buffer[ 0 ];
-            bb[ b++ ] = buffer[ 1 ];
-            bb[ b++ ] = buffer[ 2 ];
-            
-            if ( copyAlpha )
-                bb[ b++ ] = buffer[ 3 ];
-        }
-    }
-    
-    private static void readBuffer( BufferedInputStream in, int bytesPerPixel, boolean acceptAlpha, int bytesToRead, ByteBuffer bb ) throws IOException
-    {
-        byte[] buffer = new byte[ bytesPerPixel ];
-        final boolean copyAlpha = ( bytesPerPixel == 4 ) && acceptAlpha;
-        
-        for ( int i = 0; i < bytesToRead; i += bytesPerPixel )
-        {
-            int read = in.read( buffer, 0, bytesPerPixel );
-            
-            if ( read < bytesPerPixel )
-                return;
-            
-            // Swap R and B, because TGA stores them swapped.
-            bb.put( buffer[ 2 ] );
-            bb.put( buffer[ 1 ] );
-            bb.put( buffer[ 0 ] );
-            
-            if ( copyAlpha )
-                bb.put( buffer[ 3 ] );
-        }
-    }
-    
-    private static final int compareFormatHeader( BufferedInputStream in ) throws IOException
-    {
+        boolean hasPalette = false;
         int result = HEADER_INVALID;
         
         /*
-         * Uncompressed TGA Header
+         * 0: Length of Image-ID (usually 0)
          */
-        //private static final byte[] uTGAcompare = new byte[] { 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        int imgIDSize = getUnsignedByte( header, 0 );
         
         /*
-         * Compressed TGA Header
+         * 1: boolean for palette
+         * 
+         * possible values:
+         * 0 = no palette
+         * 1 = has palette
          */
-        //private static final byte[] cTGAcompare = new byte[] { 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        
-        if ( (byte)in.read() != (byte)0 )
+        if ( ( header[1] != (byte)0 ) && ( header[1] != (byte)1 ) )
             return( HEADER_INVALID );
         
-        if ( (byte)in.read() != (byte)0 )
-            return( HEADER_INVALID );
-        
-        switch ( (byte)in.read() )
+        /*
+         * 2: image type
+         * 
+         * possible values:
+         * 0  = no image data
+         * 1  = indexed (palette), uncompressed
+         * 2  = RGB(A) (no palette), uncompressed
+         * 3  = monochrome (no palette), uncompressed
+         * 9  = indexed (palette), compressed (RLE)
+         * 10 = RGB(A) (no palette), compressed (RLE)
+         * 11 = monochrome, compressed (RLE)
+         */
+        switch ( getUnsignedByte( header, 2 ) )
         {
-            case (byte)2:
+            case 0:
                 result = HEADER_UNCOMPRESSED;
                 break;
-            case (byte)10:
+            case 1:
+                hasPalette = true;
+                result = HEADER_UNCOMPRESSED;
+                System.err.println( "Indexed TGA is not yet supported!" );
+                return( HEADER_INVALID );
+            case 2:
+                result = HEADER_UNCOMPRESSED;
+                break;
+            case 3:
+                result = HEADER_UNCOMPRESSED;
+                break;
+            case 9:
+                hasPalette = true;
+                result = HEADER_COMPRESSED;
+                System.err.println( "Indexed TGA is not yet supported!" );
+                return( HEADER_INVALID );
+            case 10:
+                result = HEADER_COMPRESSED;
+                break;
+            case 11:
                 result = HEADER_COMPRESSED;
                 break;
             default:
-                //result = HEADER_INVALID;
                 return( HEADER_INVALID );
         }
         
-        for ( int i = 3; i < HEADER_SIZE; i++ )
+        /*
+         * 3/4: Begin of palette data (default: 0)
+         */
+        if ( !hasPalette )
         {
-            if ( (byte)in.read() != (byte)0 )
+            if ( getUnsignedShort( header, 3 ) != 0 )
+            {
+                // No palette data, but palette offset specified!
                 return( HEADER_INVALID );
+            }
+        }
+        
+        /*
+         * 5/6: Number of colors in the palette
+         */
+        if ( !hasPalette )
+        {
+            if ( getUnsignedShort( header, 5 ) != 0 )
+            {
+                // No palette data, but palette size specified!
+                return( HEADER_INVALID );
+            }
+        }
+        
+        /*
+         * 7: Size of one palette entry in bits
+         * 
+         * possible values:
+         * 0: this value is expected, if no palette is being used.
+         * 15, 16, 24, 32
+         */
+        short paletteEntrySize = getUnsignedByte( header, 7 );
+        if ( !hasPalette )
+        {
+            if ( paletteEntrySize != 0 )
+                // No palette, but non-zero palette-entry-size!
+                return( HEADER_INVALID );
+        }
+        else
+        {
+            if ( ( paletteEntrySize != 15 ) && ( paletteEntrySize != 16 ) && ( paletteEntrySize != 24 ) && ( paletteEntrySize != 32 ) )
+                // Invalid palette-entry-size!
+                return( HEADER_INVALID );
+        }
+        
+        /*
+         * 8/9: X-coordinate of the image origin
+         * 
+         * Should always be 0
+         */
+        if ( getUnsignedShort( header, 8 ) != 0 )
+        {
+            return( HEADER_INVALID );
+        }
+        
+        /*
+         * 10/11: Y-coordinate of the image origin
+         * 
+         * Should always be 0
+         */
+        if ( getUnsignedShort( header, 10 ) != 0 )
+        {
+            return( HEADER_INVALID );
+        }
+        
+        /*
+         * 12/13: Image width
+         */
+        
+        /*
+         * 14/15: Image height
+         */
+        
+        /*
+         * 16: its per pixel (BPP)
+         */
+        switch ( getUnsignedByte( header, 16 ) )
+        {
+            case 1:
+            case 8:
+            case 15:
+            case 16:
+                System.err.println( "TGAs with non RGB or RGBA pixels are not yet supported." );
+                return( HEADER_INVALID );
+            case 24:
+            case 32:
+                break;
+            default:
+                return( HEADER_INVALID );
+        }
+        
+        /*
+         * 17: attributes
+         */
+        
+        /*
+         * If 'imgIDSize' is non-zero, we need to read the image-ID.
+         */
+        if ( imgIDSize != 0 )
+        {
+            // We don't need the image-ID. So we simply skip it.
+            StreamUtils.skipBytes( in, imgIDSize );
         }
         
         return( result );
+    }
+    
+    private static void readBuffer( BufferedInputStream in, int width, int height, int srcBytesPerPixel, boolean acceptAlpha, boolean flipVertically, byte[] bb ) throws IOException
+    {
+        byte[] buffer = new byte[ srcBytesPerPixel ];
+        final boolean copyAlpha = ( srcBytesPerPixel == 4 ) && acceptAlpha;
+        final int dstBytesPerPixel = acceptAlpha ? srcBytesPerPixel : 3;
+        final int trgLineSize = width * dstBytesPerPixel;
+        
+        int dstByteOffset = 0;
+        
+        for ( int y = 0; y < height; y++ )
+        {
+            for ( int x = 0; x < width; x++ )
+            {
+                int read = in.read( buffer, 0, srcBytesPerPixel );
+                
+                if ( read < srcBytesPerPixel )
+                    return;
+                
+                int actualByteOffset = dstByteOffset;
+                if ( !flipVertically )
+                    actualByteOffset = ( ( height - y - 1 ) * trgLineSize ) + ( x * dstBytesPerPixel );
+                
+                // Don't swap R and B, since we want to use this byte array for a SharedBufferedImage!
+                bb[actualByteOffset + 0] = buffer[0];
+                bb[actualByteOffset + 1] = buffer[1];
+                bb[actualByteOffset + 2] = buffer[2];
+                
+                if ( copyAlpha )
+                    bb[actualByteOffset + 3] = buffer[3];
+                
+                dstByteOffset += dstBytesPerPixel;
+            }
+        }
+    }
+    
+    private static void readBuffer( BufferedInputStream in, int width, int height, int srcBytesPerPixel, boolean acceptAlpha, boolean flipVertically, ByteBuffer bb, int byteOffset0 ) throws IOException
+    {
+        byte[] buffer = new byte[ srcBytesPerPixel ];
+        final boolean copyAlpha = ( srcBytesPerPixel == 4 ) && acceptAlpha;
+        final int dstBytesPerPixel = acceptAlpha ? srcBytesPerPixel : 3;
+        final int trgLineSize = width * dstBytesPerPixel;
+        
+        int dstByteOffset = 0;
+        
+        for ( int y = 0; y < height; y++ )
+        {
+            for ( int x = 0; x < width; x++ )
+            {
+                int read = in.read( buffer, 0, srcBytesPerPixel );
+                
+                if ( read < srcBytesPerPixel )
+                    return;
+                
+                int actualByteOffset = dstByteOffset;
+                if ( !flipVertically )
+                    actualByteOffset = ( ( height - y - 1 ) * trgLineSize ) + ( x * dstBytesPerPixel );
+                
+                // Swap R and B, because TGA stores them swapped.
+                bb.put( byteOffset0 + actualByteOffset + 0, buffer[2] );
+                bb.put( byteOffset0 + actualByteOffset + 1, buffer[1] );
+                bb.put( byteOffset0 + actualByteOffset + 2, buffer[0] );
+                
+                if ( copyAlpha )
+                    bb.put( byteOffset0 + actualByteOffset + 3, buffer[3] );
+                
+                dstByteOffset += dstBytesPerPixel;
+            }
+        }
     }
     
     private static void transferScaledBytes( byte[] unscaledData, int bytesPerPixel, ByteBuffer bb, int orgWidth, int orgHeight, int width, int height )
@@ -179,8 +340,10 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
     /**
      * Loads an uncompressed TGA (note, much of this code is based on NeHe's)
      * 
+     * @param header
      * @param in
      * @param acceptAlpha
+     * @param flipVertically
      * @param allowStreching
      * @param texFactory
      * 
@@ -188,19 +351,25 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
      * 
      * @throws IOException
      */
-    private AbstractTextureImage loadUncompressedTGA( BufferedInputStream in, boolean acceptAlpha, boolean allowStreching, TextureFactory texFactory ) throws IOException
+    private AbstractTextureImage loadUncompressedTGA( byte[] header, BufferedInputStream in, boolean acceptAlpha, boolean flipVertically, boolean allowStreching, TextureFactory texFactory ) throws IOException
     {
         // TGA Loading code nehe.gamedev.net)
         
-        byte[] header = new byte[ 6 ];
-        readBuffer( in, header );
-        
-        // Determine The TGA height (highbyte * 256 + lowbyte)
-        int orgHeight = ( getUnsignedByte( header[ 3 ] ) << 8 ) + getUnsignedByte( header[ 2 ] );
         // Determine The TGA width (highbyte * 256 + lowbyte)
-        int orgWidth = ( getUnsignedByte( header[ 1 ] ) << 8 ) + getUnsignedByte( header[ 0 ] );
+        int orgWidth = getUnsignedShort( header, 12 );
+        // Determine The TGA height (highbyte * 256 + lowbyte)
+        int orgHeight = getUnsignedShort( header, 14 );
         // Determine the bits per pixel
-        int bpp = getUnsignedByte( header[ 4 ] );
+        int bpp = getUnsignedByte( header, 16 );
+        
+        //boolean isOriginLeft = ( header[17] & 0x10 ) == 0;
+        boolean isOriginBottom = ( header[17] & 0x20 ) == 0;
+        //boolean isOriginLowerLeft =  isOriginLeft && isOriginBottom;
+        
+        if ( !isOriginBottom )
+        {
+            flipVertically = !flipVertically;
+        }
         
         // Make sure all information is valid
         if ( ( orgWidth <= 0 ) || ( orgHeight <= 0 ) || ( ( bpp != 24 ) && ( bpp != 32 ) ) )
@@ -211,7 +380,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         // Compute the number of BYTES per pixel
         int bytesPerPixel = ( bpp / 8 );
         // Compute the total amout ofmemory needed to store data
-        int imageSize = orgWidth * orgHeight * bytesPerPixel;
+        //int imageSize = orgWidth * orgHeight * bytesPerPixel;
         
         int width = ImageUtility.roundUpPower2( orgWidth );
         int height = ImageUtility.roundUpPower2( orgHeight );
@@ -221,16 +390,18 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         //bb.position( 0 );
         bb.limit( bb.capacity() );
         
+        final int byteOffset0 = bb.position();
+        
         if ( ( ( width != orgWidth ) || ( height != orgHeight ) ) && allowStreching )
         {
             byte[] imageData = new byte[ orgWidth * orgHeight * ( acceptAlpha ? bytesPerPixel : 3 ) ];
-            readBuffer( in, bytesPerPixel, acceptAlpha, imageSize, imageData );
+            readBuffer( in, orgWidth, orgHeight, bytesPerPixel, acceptAlpha, flipVertically, imageData );
             
             transferScaledBytes( imageData, ( acceptAlpha ? bytesPerPixel : 3 ), bb, orgWidth, orgHeight, width, height );
         }
         else
         {
-            readBuffer( in, bytesPerPixel, acceptAlpha, imageSize, bb );
+            readBuffer( in, orgWidth, orgHeight, bytesPerPixel, acceptAlpha, flipVertically, bb, byteOffset0 );
         }
         
         bb.position( 0 );
@@ -242,8 +413,10 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
     /**
      * Loads COMPRESSED TGAs
      * 
+     * @param header
      * @param in
      * @param acceptAlpha
+     * @param flipVertically
      * @param allowStreching
      * @param texFactory
      * 
@@ -251,17 +424,23 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
      * 
      * @throws IOException
      */
-    private AbstractTextureImage loadCompressedTGA( BufferedInputStream in, boolean acceptAlpha, boolean allowStreching, TextureFactory texFactory ) throws IOException
+    private AbstractTextureImage loadCompressedTGA( byte[] header, BufferedInputStream in, boolean acceptAlpha, boolean flipVertically, boolean allowStreching, TextureFactory texFactory ) throws IOException
     {
-        byte[] header = new byte[ 6 ];
-        readBuffer( in, header );
-        
-        // Determine The TGA height (highbyte * 256 + lowbyte)
-        int orgHeight = ( getUnsignedByte( header[ 3 ] ) << 8 ) + getUnsignedByte( header[ 2 ] );
         // Determine The TGA width (highbyte * 256 + lowbyte)
-        int orgWidth = ( getUnsignedByte( header[ 1 ] ) << 8 ) + getUnsignedByte( header[ 0 ] );
+        int orgWidth = getUnsignedShort( header, 12 );
+        // Determine The TGA height (highbyte * 256 + lowbyte)
+        int orgHeight = getUnsignedShort( header, 14 );
         // Determine the bits per pixel
-        int bpp = getUnsignedByte( header[ 4 ] );
+        int bpp = getUnsignedByte( header, 16 );
+        
+        //boolean isOriginLeft = ( header[17] & 0x10 ) == 0;
+        boolean isOriginBottom = ( header[17] & 0x20 ) == 0;
+        //boolean isOriginLowerLeft =  isOriginLeft && isOriginBottom;
+        
+        if ( !isOriginBottom )
+        {
+            flipVertically = !flipVertically;
+        }
         
         // Make sure all information is valid
         if ( ( orgWidth <= 0 ) || ( orgHeight <= 0 ) || ( ( bpp != 24 ) && ( bpp != 32 ) ) )
@@ -294,6 +473,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         final int byteOffset0 = bb.position();
         
         final int dstBytesPerPixel = image.getFormat().getPixelSize();
+        final int trgLineSize = orgWidth * dstBytesPerPixel;
         
         byte[] imageData = null;
         int dstByteOffset = 0;
@@ -308,7 +488,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
             int chunkHeader = 0;
             try
             {
-                chunkHeader = getUnsignedByte( (byte)in.read() );
+                chunkHeader = (byte)in.read() & 0xFF;
             }
             catch ( IOException e )
             {
@@ -348,26 +528,30 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
                 
                 // write to memory
                 
+                int x = currentPixel % orgWidth;
+                int y = currentPixel / orgWidth;
+                
+                int actualByteOffset = dstByteOffset;
+                if ( !flipVertically )
+                    actualByteOffset = ( ( height - y - 1 ) * trgLineSize ) + ( x * dstBytesPerPixel );
+                
                 if ( imageData == null )
                 {
-                    // Flip R and B color values around in the process.
-                    bb.put( colorBuffer[ 2 ] );
-                    bb.put( colorBuffer[ 1 ] );
-                    bb.put( colorBuffer[ 0 ] );
+                    // Swap R and B, because TGA stores them swapped.
+                    bb.put( byteOffset0 + actualByteOffset + 0, colorBuffer[2] );
+                    bb.put( byteOffset0 + actualByteOffset + 1, colorBuffer[1] );
+                    bb.put( byteOffset0 + actualByteOffset + 2, colorBuffer[0] );
                     
                     // if its a 32 bpp image
                     if ( dstBytesPerPixel == 4 )
-                    {
-                        // copy the 4th byte
-                        bb.put( colorBuffer[ 3 ] );
-                    }
+                        bb.put( byteOffset0 + actualByteOffset + 3, colorBuffer[3] );
                 }
                 else
                 {
-                    System.arraycopy( colorBuffer, 0, imageData, dstByteOffset, dstBytesPerPixel );
-                    
-                    dstByteOffset += dstBytesPerPixel;
+                    System.arraycopy( colorBuffer, 0, imageData, actualByteOffset, dstBytesPerPixel );
                 }
+                
+                dstByteOffset += dstBytesPerPixel;
                 
                 // Increase current pixel by 1
                 currentPixel++;
@@ -403,7 +587,9 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
             return( null );
         }
         
-        final int headerType = compareFormatHeader( in );
+        byte[] header = new byte[ HEADER_SIZE ];
+        
+        final int headerType = compareFormatHeader( in, header );
         
         if ( headerType == HEADER_INVALID )
             return( null );
@@ -412,13 +598,13 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         
         if ( headerType == HEADER_UNCOMPRESSED )
         {
-            // If so, jump to Uncompressed TGA loading code
-            image = loadUncompressedTGA( in, acceptAlpha, allowStreching, texFactory );
+            // If so, jump to uncompressed TGA loading code
+            image = loadUncompressedTGA( header, in, acceptAlpha, flipVertically, allowStreching, texFactory );
         }
         else if ( headerType == HEADER_COMPRESSED )
         {
-            // If so, jump to Compressed TGA loading code
-            image = loadCompressedTGA( in, acceptAlpha, allowStreching, texFactory );
+            // If so, jump to compressed TGA loading code
+            image = loadCompressedTGA( header, in, acceptAlpha, flipVertically, allowStreching, texFactory );
         }
         // If header matches neither type
         else

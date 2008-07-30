@@ -101,8 +101,10 @@ public class BSPConverter
         transAttrFlames = appFactory.createTransparencyAttributes( "" );
         appFactory.setTransparencyAttribsBlendMode( transAttrFlames, BlendMode.BLENDED );
         appFactory.setTransparencyAttribsTransparency( transAttrFlames, 0f );
-        appFactory.setTransparencyAttribsSourceBlendFunc( transAttrFlames, BlendFunction.ONE );
-        appFactory.setTransparencyAttribsDestBlendFunc( transAttrFlames, BlendFunction.ONE );
+        //appFactory.setTransparencyAttribsSourceBlendFunc( transAttrFlames, BlendFunction.ONE );
+        //appFactory.setTransparencyAttribsDestBlendFunc( transAttrFlames, BlendFunction.ONE );
+        appFactory.setTransparencyAttribsSourceBlendFunc( transAttrFlames, BlendFunction.SRC_ALPHA );
+        appFactory.setTransparencyAttribsDestBlendFunc( transAttrFlames, BlendFunction.ONE_MINUS_SRC_ALPHA );
         appFactory.setTransparencyAttribsSortingEnabled( transAttrFlames, true );
         
         mainMat = appFactory.createMaterial( "" );
@@ -120,10 +122,17 @@ public class BSPConverter
     private static NamedObject convertFaceToShape( int faceIndex, BSPFace face, NamedObject geometry, AbstractTexture[] baseTextures, AbstractTexture[] lightMaps, NodeFactory nodeFactory, BoundsType boundsType, AppearanceFactory appFactory, HashMap<String, NamedObject> appCache )
     //private static NamedObject convertFaceToShape( BSPScenePrototype prototype, NodeFactory nodeFactory, AppearanceFactory appFactory, HashMap<String, Object> appCache )
     {
+        if ( geometry == null )
+        {
+            return( null );
+        }
+        
         final String appKey;
         
-        String baseTexName = baseTextures[ face.textureID ].getName();
-        boolean isFlameTex = ( ( face.textureID >= 0 ) && ( ( baseTexName.indexOf( "flame1side" ) >= 0 ) || ( baseTexName.indexOf( "flame1dark" ) >= 0 ) ) );
+        //String baseTexName = baseTextures[ face.textureID ].getName();
+        //boolean isFlameTex = ( ( face.textureID >= 0 ) && ( ( baseTexName.indexOf( "flame1side" ) >= 0 ) || ( baseTexName.indexOf( "flame1dark" ) >= 0 ) ) );
+        //boolean isFlameTex = ( ( face.textureID >= 0 ) && ( baseTexName.indexOf( "flame" ) >= 0 ) );
+        boolean isFlameTex = ( face.textureID >= 0 ) && ( baseTextures[ face.textureID ].getFormat().hasAlpha() );
         
         if ( face.lightmapID < 0 )
         {

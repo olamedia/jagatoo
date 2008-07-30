@@ -111,20 +111,12 @@ class BSPFile
         
         long toSkip = lumps[ lump ].offset;
         
-        while ( toSkip > 0 )
-        {
-            long skipped = in.skip( toSkip );
-            
-            if ( skipped > 0 )
-                toSkip -= skipped;
-            else if ( skipped < 0 )
-                toSkip = 0;
-        }
+        StreamUtils.skipBytes( in, toSkip );
     }
     
     public final void skipBytes( int numBytes ) throws IOException
     {
-        in.skip( numBytes );
+        StreamUtils.skipBytes( in, numBytes );
     }
     
     public final byte readByte() throws IOException

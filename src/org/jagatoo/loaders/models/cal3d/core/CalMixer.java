@@ -129,7 +129,7 @@ public class CalMixer {
     /** Scrubs an animation cycle to a position (fraction through animation).
      *  This is achieved internally using an animation cycle.
      */
-    public synchronized CalAnimation scrubToPosition(String id, float position) {
+    public final CalAnimation scrubToPosition(String id, float position) {
         return scrubToPosition(id, position, 1);
     }
     
@@ -169,7 +169,7 @@ public class CalMixer {
     /** Scrubs an animation cycle to a specific time.
      *  This is achieved internally using an animation cycle.
      */
-    public synchronized CalAnimation scrubToTime(String id, float time) {
+    public final CalAnimation scrubToTime(String id, float time) {
         return scrubToTime(id, time, 1);
     }
     

@@ -938,7 +938,7 @@ public class BSPEntitiesParser
         @Override
         protected void parseLine( String line )
         {
-            System.out.println( line );
+            //System.out.println( line );
         }
         
         public BSPEntity_unknwown( String className2 )
