@@ -277,6 +277,8 @@ public class LWJGLMouse extends Mouse
         collectOrFireEvents( is, null, nanoTime, true );
         
         getEventQueue().dequeueAndFire( is, InputEvent.Type.MOUSE_EVENT );
+        
+        handleClickedEvents( nanoTime, is.getMouseButtonClickThreshold() );
     }
     
     /**

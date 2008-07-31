@@ -104,7 +104,6 @@ public abstract class CommandsRegistry< C extends Command >
         return( (Command)values()[ commandID ] );
     }
     
-    @SuppressWarnings( "unchecked" )
     public final Object[] values()
     {
         if ( ( commands == null ) || ( commandsList.size() != commands.length ) )

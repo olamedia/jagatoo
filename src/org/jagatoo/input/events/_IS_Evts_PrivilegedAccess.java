@@ -27,64 +27,22 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.listeners;
-
-import org.jagatoo.input.devices.components.MouseButton;
-import org.jagatoo.input.events.MouseButtonClickedEvent;
-import org.jagatoo.input.events.MouseButtonEvent;
-import org.jagatoo.input.events.MouseButtonPressedEvent;
-import org.jagatoo.input.events.MouseButtonReleasedEvent;
-import org.jagatoo.input.events.MouseMovedEvent;
-import org.jagatoo.input.events.MouseStoppedEvent;
-import org.jagatoo.input.events.MouseWheelEvent;
+package org.jagatoo.input.events;
 
 /**
- * Simple adapter class that implements MouseListener.
+ * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public abstract class MouseAdapter implements MouseListener, MouseStopListener
+public class _IS_Evts_PrivilegedAccess
 {
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseButtonPressed( MouseButtonPressedEvent e, MouseButton button ) {}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseButtonReleased( MouseButtonReleasedEvent e, MouseButton button ) {}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseButtonClicked( MouseButtonClickedEvent e, MouseButton button, int clickCount ) {}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, boolean state ) {}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseMoved( MouseMovedEvent e, int x, int y, int dx, int dy ) {}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseWheelMoved( MouseWheelEvent e, int wheelDelta ) {}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public long getMouseStopDelay()
+    public static final void incClickCount( MouseButtonClickedEvent e, long when )
     {
-        return( 500000000L );
+        e.incClickCount( when );
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseStopped( MouseStoppedEvent e, int x, int y ) {}
+    public static final void setWhen( InputEvent e, long when )
+    {
+        e.setWhen( when );
+    }
 }

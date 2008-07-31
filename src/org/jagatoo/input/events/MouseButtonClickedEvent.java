@@ -30,92 +30,79 @@
 package org.jagatoo.input.events;
 
 import org.jagatoo.input.devices.Mouse;
-import org.jagatoo.input.devices.components.DeviceComponent;
+import org.jagatoo.input.devices.components.MouseButton;
 
 /**
- * Stores the details associated with a mouse event.
+ * Stores details assotiated with a mouse-clicked-event.
+ * This may be a single-click or a double-click or what ever.
+ * Refer to the {@link #getClickCount()} method to know about it.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public abstract class MouseEvent extends InputEvent
+public class MouseButtonClickedEvent extends MouseButtonEvent
 {
-    public enum SubType
+    private int clickCount = 0;
+    
+    /**
+     * Incremenets the clickCount of this event.
+     * 
+     * @param when
+     */
+    final void incClickCount( long when )
     {
-        BUTTON_PRESSED,
-        BUTTON_RELEASED,
-        BUTTON_CLICKED,
-        WHEEL_MOVED,
-        MOVED,
-        STOPPED;
+        this.clickCount++;
+        this.setWhen( when );
     }
     
     /**
-     * The MouseDevice, that caused the event.
+     * @return the number of clicks.
      */
-    private Mouse mouse;
-    
-    private SubType subType;
-    
-    
-    /**
-     * The MouseDevice, that caused the event.
-     */
-    public final Mouse getMouse()
+    public final int getClickCount()
     {
-        return( mouse );
-    }
-    
-    public final SubType getSubType()
-    {
-        return( subType );
+        return( clickCount );
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public abstract String toString();
-    
-    /**
-     * Sets the fields of this MouseEvent to match the given MouseEvent.
-     */
-    protected void set( Mouse mouse, SubType subType, DeviceComponent component, long when, long lastWhen )
+    public String toString()
     {
-        super.set( component, when, lastWhen );
-        
-        this.mouse = mouse;
-        this.subType = subType;
+        return( "MouseButtonClickedEvent( pos = (" + getX() + ", " + getY() + "), " +
+                "button = " + getButton() + ", " +
+                "buttonsState = " + getMouse().getButtonsState() + ", " +
+                "clickCount = " + getClickCount() + ", " +
+                "when = " + getWhen() + ", " +
+                "lastWhen = " + getLastWhen() +
+                " )"
+              );
     }
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
      */
-    protected void set( MouseEvent e )
+    protected void set( Mouse mouse, MouseButton button, int clickCount, long when, long lastWhen )
     {
-        super.set( e );
+        super.set( mouse, SubType.BUTTON_CLICKED, button, when, lastWhen );
         
-        this.mouse = e.mouse;
-        this.subType = e.subType;
+        this.clickCount = clickCount;
     }
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
      */
-    public MouseEvent( Mouse mouse, SubType subType, DeviceComponent component, long when, long lastWhen )
+    public MouseButtonClickedEvent( Mouse mouse, MouseButton button, int clickCount, long when, long lastWhen )
     {
-        super( Type.MOUSE_EVENT, component, when, lastWhen );
+        super( mouse, SubType.BUTTON_CLICKED, button, when, lastWhen );
         
-        this.subType = subType;
-        this.mouse = mouse;
+        this.clickCount = clickCount;
     }
     
     /**
      * Creates a MouseEvent with default values.
      */
-    protected MouseEvent( SubType subType )
+    protected MouseButtonClickedEvent()
     {
-        super( Type.MOUSE_EVENT, null, -1L, -1L );
-        
-        this.subType = subType;
+        super( SubType.BUTTON_CLICKED );
     }
 }

@@ -270,6 +270,8 @@ public class AWTMouse extends Mouse
             
             getEventQueue().dequeueAndFire( is, InputEvent.Type.MOUSE_EVENT );
             
+            handleClickedEvents( nanoTime, is.getMouseButtonClickThreshold() );
+            
             if ( !isAbsolute() && needsRecenter )
             {
                 //recenter();

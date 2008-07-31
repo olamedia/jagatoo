@@ -46,6 +46,7 @@ import org.jagatoo.input.handlers.InputHandler;
 import org.jagatoo.input.listeners.InputListener;
 import org.jagatoo.input.listeners.InputStateListener;
 import org.jagatoo.input.managers.InputStatesManager;
+import org.jagatoo.input.managers._IS_Mgrs_PrivilegedAccess;
 import org.jagatoo.input.render.InputSourceWindow;
 import org.jagatoo.logging.LogChannel;
 import org.jagatoo.util.arrays.ArrayUtils;
@@ -80,6 +81,8 @@ public class InputSystem
     
     private InputStatesManager[] statesManagers = null;
     private final ArrayList< InputHandler< ? > > inputHandlers = new ArrayList< InputHandler< ? > >();
+    
+    private long clickThreshold = 150L * 1000000L;
     
     /**
      * Sets the instance to be used as the singleton instance.
@@ -187,7 +190,7 @@ public class InputSystem
         {
             for ( int i = 0; i < statesManagers.length; i++ )
             {
-                statesManagers[ i ].internalUpdateState( device, comp, state, delta, nanoTime );
+                _IS_Mgrs_PrivilegedAccess.internalUpdateState( statesManagers[ i ], device, comp, state, delta, nanoTime );
             }
         }
     }
@@ -571,6 +574,26 @@ public class InputSystem
         }
         
         return( false );
+    }
+    
+    
+    /**
+     * Sets the threshold delay for collecting mouse-clicked-events.
+     * 
+     * @param threshold in nano-seconds
+     */
+    public void setMouseButtonClickThreshold( long threshold )
+    {
+        this.clickThreshold = threshold;
+    }
+    
+    /**
+     * @return the threshold delay for collecting mouse-clicked-events
+     * in nano-seconds.
+     */
+    public final long getMouseButtonClickThreshold()
+    {
+        return( clickThreshold );
     }
     
     

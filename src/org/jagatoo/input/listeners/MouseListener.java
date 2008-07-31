@@ -30,6 +30,7 @@
 package org.jagatoo.input.listeners;
 
 import org.jagatoo.input.devices.components.MouseButton;
+import org.jagatoo.input.events.MouseButtonClickedEvent;
 import org.jagatoo.input.events.MouseButtonEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
@@ -61,6 +62,15 @@ public interface MouseListener
      * @param button
      */
     public void onMouseButtonReleased( MouseButtonReleasedEvent e, MouseButton button );
+    
+    /**
+     * Invoked when a button click was registered by the mouse device.
+     * 
+     * @param e the MouseEvent with all assotiated data
+     * @param button
+     * @param clickCount
+     */
+    public void onMouseButtonClicked( MouseButtonClickedEvent e, MouseButton button, int clickCount );
     
     /**
      * Invoked when a button state-change was registered by the mouse device.

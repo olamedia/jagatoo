@@ -41,6 +41,7 @@ import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyStateEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
+import org.jagatoo.input.events.MouseButtonClickedEvent;
 import org.jagatoo.input.events.MouseButtonEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
@@ -85,6 +86,11 @@ public abstract class InputAdapter implements InputListener
      * {@inheritDoc}
      */
     public void onMouseButtonReleased( MouseButtonReleasedEvent e, MouseButton button ) {}
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void onMouseButtonClicked( MouseButtonClickedEvent e, MouseButton button, int clickCount ) {}
     
     /**
      * {@inheritDoc}

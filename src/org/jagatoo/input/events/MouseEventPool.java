@@ -45,17 +45,20 @@ public final class MouseEventPool
     private static ArrayList< MouseMovedEvent > instances_moved = new ArrayList< MouseMovedEvent >( 64 );
     private static ArrayList< MouseButtonPressedEvent > instances_pressed = new ArrayList< MouseButtonPressedEvent >( 64 );
     private static ArrayList< MouseButtonReleasedEvent > instances_released = new ArrayList< MouseButtonReleasedEvent >( 64 );
+    private static ArrayList< MouseButtonClickedEvent > instances_clicked = new ArrayList< MouseButtonClickedEvent >( 16 );
     private static ArrayList< MouseWheelEvent > instances_wheel = new ArrayList< MouseWheelEvent >( 64 );
     private static ArrayList< MouseStoppedEvent > instances_stopped = new ArrayList< MouseStoppedEvent >( 64 );
     private static int n_moved = 0;
     private static int n_pressed = 0;
     private static int n_released = 0;
+    private static int n_clicked = 0;
     private static int n_stopped = 0;
     private static int n_wheel = 0;
     
     private static final Object LOCK_moved = new Object();
     private static final Object LOCK_pressed = new Object();
     private static final Object LOCK_released = new Object();
+    private static final Object LOCK_clicked = new Object();
     private static final Object LOCK_stopped = new Object();
     private static final Object LOCK_wheel = new Object();
     
@@ -170,6 +173,44 @@ public final class MouseEventPool
         {
             instances_released.add( e );
             n_released++;
+        }
+    }
+    
+    public static MouseButtonClickedEvent allocClicked()
+    {
+        synchronized ( LOCK_clicked )
+        {
+            if ( n_clicked > 0 )
+            {
+                MouseButtonClickedEvent e = instances_clicked.remove( --n_clicked );
+                
+                return( e );
+            }
+            else
+            {
+                return( new MouseButtonClickedEvent() );
+            }
+        }
+    }
+    
+    public static MouseButtonClickedEvent allocClicked( Mouse mouse, MouseButton button, long when, long lastWhen )
+    {
+        final MouseButtonClickedEvent e = allocClicked();
+        
+        e.set( mouse, button, 1, when, lastWhen );
+        
+        return( e );
+    }
+    
+    public static void freeClicked( MouseButtonClickedEvent e )
+    {
+        if ( e == null )
+            return;
+        
+        synchronized ( LOCK_clicked )
+        {
+            instances_clicked.add( e );
+            n_clicked++;
         }
     }
     

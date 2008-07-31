@@ -39,6 +39,7 @@ import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseButtons;
 import org.jagatoo.input.devices.components.MouseWheel;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.events.MouseButtonClickedEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
 import org.jagatoo.input.events.MouseEvent;
@@ -46,6 +47,7 @@ import org.jagatoo.input.events.MouseEventPool;
 import org.jagatoo.input.events.MouseMovedEvent;
 import org.jagatoo.input.events.MouseStoppedEvent;
 import org.jagatoo.input.events.MouseWheelEvent;
+import org.jagatoo.input.events._IS_Evts_PrivilegedAccess;
 import org.jagatoo.input.listeners.MouseListener;
 import org.jagatoo.input.listeners.MouseStopListener;
 import org.jagatoo.input.managers.MouseStopManager;
@@ -76,6 +78,8 @@ public abstract class Mouse extends InputDevice
     private final ArrayList< MouseListener > listeners = new ArrayList< MouseListener >();
     private final ArrayList< MouseStopListener > stopListeners = new ArrayList< MouseStopListener >();
     private int numListeners = 0;
+    
+    private final MouseButtonClickedEvent[] clickedEvents;
     
     private long lastWhen_buttonPressed = -1L;
     private long lastWhen_buttonReleased = -1L;
@@ -476,6 +480,15 @@ public abstract class Mouse extends InputDevice
         
         MouseButtonReleasedEvent e = MouseEventPool.allocReleased( this, button, when, lastWhen_buttonReleased );
         
+        if ( clickedEvents[ button.getIndex() ] == null )
+        {
+            clickedEvents[ button.getIndex() ] = MouseEventPool.allocClicked( this, button, when, lastWhen_buttonReleased );
+        }
+        else
+        {
+            _IS_Evts_PrivilegedAccess.incClickCount( clickedEvents[ button.getIndex() ], when );
+        }
+        
         lastWhen_buttonReleased = when;
         
         return( e );
@@ -507,6 +520,53 @@ public abstract class Mouse extends InputDevice
         
         if ( consumeEvent )
             MouseEventPool.freeReleased( e );
+    }
+    
+    /**
+     * Fires a {@link MouseButtonClickedEvent} and pushes it back to the pool,
+     * if consumeEvent is true.
+     * 
+     * @param e
+     * @param consumeEvent
+     */
+    public final void fireOnMouseButtonClicked( MouseButtonClickedEvent e, boolean consumeEvent )
+    {
+        if ( !isEnabled() || !hasListener() )
+        {
+            if ( consumeEvent )
+                MouseEventPool.freeClicked( e );
+            return;
+        }
+        
+        for ( int i = 0; i < listeners.size(); i++ )
+        {
+            listeners.get( i ).onMouseButtonClicked( e, e.getButton(), e.getClickCount() );
+        }
+        
+        if ( consumeEvent )
+            MouseEventPool.freeClicked( e );
+    }
+    
+    /**
+     * Checks, if there are pending clicked-events and compares their when-times
+     * with the current when and threshold and fires the events, if necessary.
+     * 
+     * @param when
+     * @param threshold
+     */
+    protected final void handleClickedEvents( long when, long threshold )
+    {
+        for ( int i = 0; i < clickedEvents.length; i++ )
+        {
+            MouseButtonClickedEvent e = clickedEvents[ i ];
+            
+            if ( ( e != null ) && ( e.getWhen() < ( when - threshold ) ) )
+            {
+                clickedEvents[ i ] = null;
+                
+                fireOnMouseButtonClicked( e, true );
+            }
+        }
     }
     
     /**
@@ -655,6 +715,9 @@ public abstract class Mouse extends InputDevice
             case BUTTON_RELEASED:
                 fireOnMouseButtonReleased( (MouseButtonReleasedEvent)e, consumeEvent );
                 break;
+            case BUTTON_CLICKED:
+                fireOnMouseButtonClicked( (MouseButtonClickedEvent)e, consumeEvent );
+                break;
             case MOVED:
                 fireOnMouseMoved( (MouseMovedEvent)e, consumeEvent );
                 break;
@@ -756,10 +819,12 @@ public abstract class Mouse extends InputDevice
         this.yAxis = new MouseAxis( this, 'Y', "Mouse-Y-Axis" );
         yAxis.setValue( sourceWindow.getHeight() / 2 );
         this.buttons = new MouseButton[ numButtons ];
+        this.clickedEvents = new MouseButtonClickedEvent[ numButtons ];
         
         for ( int i = 0; i < buttons.length; i++ )
         {
             buttons[ i ] = MouseButtons.getByIndex( i );
+            clickedEvents[ i ] = null;
         }
         
         if ( hasWheel )

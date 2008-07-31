@@ -45,6 +45,7 @@ import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyStateEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
+import org.jagatoo.input.events.MouseButtonClickedEvent;
 import org.jagatoo.input.events.MouseButtonEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
@@ -194,6 +195,10 @@ class CommandDispatcher implements InputListener
     public void onMouseButtonReleased( MouseButtonReleasedEvent e, MouseButton button )
     {
         processInputEvent( Boolean.FALSE, button );
+    }
+    
+    public void onMouseButtonClicked( MouseButtonClickedEvent e, MouseButton button, int clickCount )
+    {
     }
     
     public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, boolean state )

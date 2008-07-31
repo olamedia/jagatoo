@@ -310,6 +310,8 @@ public class SWTMouse extends Mouse
             notifyStatesManagersFromQueue( is, eventQueue, nanoTime );
             
             getEventQueue().dequeueAndFire( is, InputEvent.Type.MOUSE_EVENT );
+            
+            handleClickedEvents( nanoTime, is.getMouseButtonClickThreshold() );
         }
         catch ( Throwable t )
         {

@@ -55,6 +55,7 @@ import org.jagatoo.input.events.KeyPressedEvent;
 import org.jagatoo.input.events.KeyReleasedEvent;
 import org.jagatoo.input.events.KeyStateEvent;
 import org.jagatoo.input.events.KeyTypedEvent;
+import org.jagatoo.input.events.MouseButtonClickedEvent;
 import org.jagatoo.input.events.MouseButtonEvent;
 import org.jagatoo.input.events.MouseButtonPressedEvent;
 import org.jagatoo.input.events.MouseButtonReleasedEvent;
@@ -160,6 +161,12 @@ public class InputTest implements InputListener, InputHotPlugListener
     {
         if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_MOUSE_EVENTS ) )
             System.out.println( "Button released: " + e.getButton() + ", " + e.getX() + ", " + e.getY() );
+    }
+    
+    public void onMouseButtonClicked( MouseButtonClickedEvent e, MouseButton button, int clickCount )
+    {
+        if ( isDebugFlagSet( DEBUG_MASK_EVENTS ) && isDebugFlagSet( DEBUG_MASK_MOUSE_EVENTS ) )
+            System.out.println( "Button clicked: " + e.getButton() + ", " + e.getX() + ", " + e.getY() + ", clickCount = " + clickCount );
     }
     
     public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, boolean state )
@@ -576,7 +583,6 @@ public class InputTest implements InputListener, InputHotPlugListener
         hotplugManager.stop( true );
     }
     
-    @SuppressWarnings("unused")
     private void startLWJGL() throws Throwable
     {
         org.lwjgl.opengl.Display.setDisplayMode( new org.lwjgl.opengl.DisplayMode( 1024, 768 ) );

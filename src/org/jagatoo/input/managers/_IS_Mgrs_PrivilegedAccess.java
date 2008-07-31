@@ -27,64 +27,22 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.input.listeners;
+package org.jagatoo.input.managers;
 
-import org.jagatoo.input.devices.components.MouseButton;
-import org.jagatoo.input.events.MouseButtonClickedEvent;
-import org.jagatoo.input.events.MouseButtonEvent;
-import org.jagatoo.input.events.MouseButtonPressedEvent;
-import org.jagatoo.input.events.MouseButtonReleasedEvent;
-import org.jagatoo.input.events.MouseMovedEvent;
-import org.jagatoo.input.events.MouseStoppedEvent;
-import org.jagatoo.input.events.MouseWheelEvent;
+import org.jagatoo.input.devices.InputDevice;
+import org.jagatoo.input.devices.components.DeviceComponent;
 
 /**
- * Simple adapter class that implements MouseListener.
+ * This class provides access to methods, that should not be public,
+ * but need to be accessible from other packages inside the input-system-tree.
+ * Java doesn't provide suitable modifiers for this.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public abstract class MouseAdapter implements MouseListener, MouseStopListener
+public class _IS_Mgrs_PrivilegedAccess
 {
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseButtonPressed( MouseButtonPressedEvent e, MouseButton button ) {}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseButtonReleased( MouseButtonReleasedEvent e, MouseButton button ) {}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseButtonClicked( MouseButtonClickedEvent e, MouseButton button, int clickCount ) {}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseButtonStateChanged( MouseButtonEvent e, MouseButton button, boolean state ) {}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseMoved( MouseMovedEvent e, int x, int y, int dx, int dy ) {}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseWheelMoved( MouseWheelEvent e, int wheelDelta ) {}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public long getMouseStopDelay()
+    public static final void internalUpdateState( final InputStatesManager statesManager, final InputDevice device, final DeviceComponent comp, final int state, final int delta, long nanoTime )
     {
-        return( 500000000L );
+        statesManager.internalUpdateState( device, comp, state, delta, nanoTime );
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void onMouseStopped( MouseStoppedEvent e, int x, int y ) {}
 }

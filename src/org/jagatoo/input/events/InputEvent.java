@@ -74,7 +74,15 @@ public abstract class InputEvent
     }
     
     /**
-     * The time that the event occured (if a timestamps are being used).
+     * Sets the time that the event occured (if a timestamps are being used).
+     */
+    final void setWhen( long when )
+    {
+        this.when = when;
+    }
+    
+    /**
+     * @return the time that the event occured (if a timestamps are being used).
      */
     public final long getWhen()
     {

@@ -193,7 +193,7 @@ public class InputStatesManager
         }
     }
     
-    public final void internalUpdateState( final InputDevice device, final DeviceComponent comp, final int state, final int delta, long nanoTime )
+    final void internalUpdateState( final InputDevice device, final DeviceComponent comp, final int state, final int delta, long nanoTime )
     {
         if ( comp.getType() == DeviceComponent.Type.MOUSE_WHEEL )
         {

@@ -29,7 +29,6 @@
  */
 package org.jagatoo.input.impl.swt;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 
 import org.eclipse.swt.SWT;
@@ -38,7 +37,6 @@ import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.KeyboardFactory;
 import org.jagatoo.input.devices.components.Key;
-import org.jagatoo.input.devices.components.KeyID;
 import org.jagatoo.input.devices.components.Keys;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.events.InputEvent;
