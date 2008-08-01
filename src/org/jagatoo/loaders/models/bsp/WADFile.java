@@ -280,6 +280,7 @@ public class WADFile
             din.close();
             
             AbstractTexture texture = appFactory.createTexture( mipmaps[0], true );
+            texture.setName( new String( name ).trim() );
             //texture.setImage( 1, mipmaps[1] );
             //texture.setImage( 2, mipmaps[2] );
             //texture.setImage( 3, mipmaps[3] );
