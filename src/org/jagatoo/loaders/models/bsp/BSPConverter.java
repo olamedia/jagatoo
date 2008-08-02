@@ -248,16 +248,10 @@ public class BSPConverter
             {
                 BSPFace face = faces[ model.faceIndex + f ];
                 
-                //System.out.println( baseTextures[ face.textureID ].getName() );
-                
                 NamedObject shape = null;
                 
-                if ( ( baseTextures[ face.textureID ].getName().length() >= 10 ) 
-                	&& baseTextures[ face.textureID ].getName().substring( 0, 10 ).equals( "aaatrigger" ) )
-                {
-                	shape = null;
-                }
-                else 
+                //System.out.println( baseTextures[ face.textureID ].getName() );
+                if ( !baseTextures[ face.textureID ].getName().startsWith( "aaatrigger" ) )
                 {
                 	shape = convertFaceToShape( f, face, geometries[ m ][ f ], baseTextures, lightMaps, nodeFactory, nodeBoundsType, appFactory, appCache );
                 }
