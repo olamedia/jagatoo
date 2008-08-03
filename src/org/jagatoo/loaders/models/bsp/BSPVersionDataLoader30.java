@@ -47,6 +47,7 @@ import org.jagatoo.loaders.models.bsp.lumps.BSPFace;
 import org.jagatoo.loaders.models.bsp.lumps.BSPTexInfo;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVertex;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVisData;
+import org.jagatoo.loaders.textures.AbstractTexture;
 import org.openmali.vecmath2.Point3f;
 import org.openmali.vecmath2.Vertex3f;
 
@@ -181,7 +182,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
      * @param face 
      * @return 
      */
-    private NamedObject convertFaceToGeometry( int faceIndex, BSPFace face, int[] surfEdges, BSPEdge[] bspEdges, BSPVertex[] vertices, BSPTexInfo[] texInfos, GeometryFactory geomFactory, float worldScale )
+    private NamedObject convertFaceToGeometry( int faceIndex, BSPFace face, int[] surfEdges, BSPEdge[] bspEdges, BSPVertex[] vertices, BSPTexInfo[] texInfos, AbstractTexture[] baseTextures, GeometryFactory geomFactory, float worldScale )
     {
         final int numVertices = face.numOfVerts;
         
@@ -224,20 +225,20 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
         for ( int i = 0; i < numVertices; i++ )
         {
             p.set( control[ i ].position );
-            p.mul( worldScale );
             
-            geomFactory.setCoordinate( ga, geomType, i, new float[] { p.getX(), p.getZ(), -p.getY() }, 0, 1 );
+            //geomFactory.setCoordinate( ga, geomType, i, new float[] { p.getX(), p.getZ(), -p.getY() }, 0, 1 );
+            geomFactory.setCoordinate( ga, geomType, i, new float[] { p.getX() * worldScale, p.getZ() * worldScale, -p.getY() * worldScale }, 0, 1 );
             
-            /*
-            m.setIdentity();
-            m.setRow( 0, texInfo.s );
-            m.setRow( 1, texInfo.t );
+            //float u = p.getX() * texInfo.s[0] + p.getZ() * texInfo.s[2] + -p.getY() * texInfo.s[1] + texInfo.s[3];
+            //float v = p.getX() * texInfo.t[0] + p.getZ() * texInfo.t[2] + -p.getY() * texInfo.t[1] + texInfo.t[3];
+            float u = p.getX() * texInfo.s[0] + p.getY() * texInfo.s[1] + p.getZ() * texInfo.s[2] + texInfo.s[3];
+            float v = p.getX() * texInfo.t[0] + p.getY() * texInfo.t[1] + p.getZ() * texInfo.t[2] + texInfo.t[3];
             
-            m.transform( p );
-            */
-            
-            float u = p.getX() * texInfo.s[0] + p.getZ() * texInfo.s[2] + -p.getY() * texInfo.s[1] + texInfo.s[3];
-            float v = p.getX() * texInfo.t[0] + p.getZ() * texInfo.t[2] + -p.getY() * texInfo.t[1] + texInfo.t[3];
+            if ( face.textureID >= 0 )
+            {
+                u /= baseTextures[ face.textureID ].getWidth();
+                v /= baseTextures[ face.textureID ].getHeight();
+            }
             
             geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { u, v }, 0, 1 );
             
@@ -272,7 +273,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
             
             for ( int f = 0; f < numFaces; f++ )
             {
-                geometries[ f ] = convertFaceToGeometry( f, prototype.faces[ model.faceIndex + f ], prototype.surfEdges, prototype.edges, prototype.vertices, prototype.texInfos, geomFactory, worldScale );
+                geometries[ f ] = convertFaceToGeometry( f, prototype.faces[ model.faceIndex + f ], prototype.surfEdges, prototype.edges, prototype.vertices, prototype.texInfos, prototype.baseTextures, geomFactory, worldScale );
             }
             
             prototype.geometries[ m ] = geometries;

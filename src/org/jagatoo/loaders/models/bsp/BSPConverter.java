@@ -129,14 +129,12 @@ public class BSPConverter
         
         final String appKey;
         
-        //String baseTexName = baseTextures[ face.textureID ].getName();
-        //boolean isFlameTex = ( ( face.textureID >= 0 ) && ( ( baseTexName.indexOf( "flame1side" ) >= 0 ) || ( baseTexName.indexOf( "flame1dark" ) >= 0 ) ) );
-        //boolean isFlameTex = ( ( face.textureID >= 0 ) && ( baseTexName.indexOf( "flame" ) >= 0 ) );
-        boolean isFlameTex = ( face.textureID >= 0 ) && ( baseTextures[ face.textureID ].getFormat().hasAlpha() );
+        String baseTexName = baseTextures[ face.textureID ].getName();
+        boolean isTranslucentTex = ( face.textureID >= 0 ) && ( baseTextures[ face.textureID ].getFormat().hasAlpha() || ( baseTexName.indexOf( "flame" ) >= 0 ) );
         
         if ( face.lightmapID < 0 )
         {
-            if ( isFlameTex )
+            if ( isTranslucentTex )
             {
                 appKey = "appB-" + face.textureID;
             }
@@ -162,7 +160,7 @@ public class BSPConverter
             
             if ( face.lightmapID < 0 )
             {
-                if ( isFlameTex )
+                if ( isTranslucentTex )
                 {
                     appFactory.applyTextureAttributes( texAttrModu, 0, app );
                     appFactory.applyTransparancyAttributes( transAttrFlames, app );
@@ -305,9 +303,9 @@ public class BSPConverter
     
     private static final Matrix4f getTransformFromEntity( BSPEntity_Location entLoc, float worldScale )
     {
-        float angleX = FastMath.toRad( entLoc.angles.getY() );
-        float angleY = FastMath.toRad( entLoc.angles.getX() );
-        float angleZ = FastMath.toRad( -entLoc.angles.getZ() );
+        float angleX = FastMath.toRad( entLoc.angles.getX() );
+        float angleY = FastMath.toRad( entLoc.angles.getY() );
+        float angleZ = FastMath.toRad( entLoc.angles.getZ() );
         
         Matrix4f trans = new Matrix4f();
         trans.setIdentity();

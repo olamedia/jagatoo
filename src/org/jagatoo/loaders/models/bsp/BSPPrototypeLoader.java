@@ -182,6 +182,7 @@ public class BSPPrototypeLoader
         if ( texture == appFactory.getFallbackTexture() )
         {
             JAGTLog.printlnEx( "texture not found: ", textureName, " (WAD / .tga / .jpg)" );
+            System.out.println( "missing texture: " + textureName );
         }
         else
         {
