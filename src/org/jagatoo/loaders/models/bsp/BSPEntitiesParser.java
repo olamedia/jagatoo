@@ -470,7 +470,7 @@ public class BSPEntitiesParser
         public int buoyancy;
         public int friction;
         public int size;
-        public int renderColor;
+        public Colorf renderColor;
         public int renderAMT;
         
         @Override
@@ -537,7 +537,17 @@ public class BSPEntitiesParser
             }
             else if ( line.startsWith( "\"rendercolor\"" ) )
             {
-                this.renderColor = Integer.parseInt( parseLineValue( line ) );
+                String[] v = parseLineValue( line ).split( " " );
+                
+                if ( v.length == 3 )
+                {
+                    this.renderColor = new Colorf( Float.parseFloat( v[0] ) / 255f, Float.parseFloat( v[1] ) / 255f, Float.parseFloat( v[2] ) / 255f );
+                }
+                else
+                {
+                    float value = Float.parseFloat( v[0] ) / 255f;
+                    this.renderColor = new Colorf( value, value, value );
+                }
             }
             else if ( line.startsWith( "\"renderamt\"" ) )
             {
@@ -698,7 +708,15 @@ public class BSPEntitiesParser
             {
                 String[] v = parseLineValue( line ).split( " " );
                 
-                this.renderColor = new Colorf( Float.parseFloat( v[0] ) / 255f, Float.parseFloat( v[1] ) / 255f, Float.parseFloat( v[2] ) / 255f );
+                if ( v.length == 3 )
+                {
+                    this.renderColor = new Colorf( Float.parseFloat( v[0] ) / 255f, Float.parseFloat( v[1] ) / 255f, Float.parseFloat( v[2] ) / 255f );
+                }
+                else
+                {
+                    float value = Float.parseFloat( v[0] ) / 255f;
+                    this.renderColor = new Colorf( value, value, value );
+                }
             }
             else if ( line.startsWith( "\"renderamt\"" ) )
             {
