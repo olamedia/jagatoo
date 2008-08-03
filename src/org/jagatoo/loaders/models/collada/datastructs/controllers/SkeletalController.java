@@ -45,8 +45,8 @@ import org.jagatoo.loaders.models.collada.datastructs.geometries.LibraryGeometri
 import org.jagatoo.loaders.models.collada.datastructs.geometries.Mesh;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.MeshSources;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.TrianglesGeometry;
-import org.jagatoo.loaders.models.collada.jibx.XMLController;
-import org.jagatoo.loaders.models.collada.jibx.XMLSkin;
+import org.jagatoo.loaders.models.collada.stax.XMLController;
+import org.jagatoo.loaders.models.collada.stax.XMLSkin;
 import org.jagatoo.logging.JAGTLog;
 import org.openmali.vecmath2.Point3f;
 

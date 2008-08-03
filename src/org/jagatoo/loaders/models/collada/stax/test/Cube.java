@@ -27,48 +27,40 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.collada;
+package org.jagatoo.loaders.models.collada.stax.test;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.io.InputStream;
 
-import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.datastructs.materials.LibraryMaterials;
-import org.jagatoo.loaders.models.collada.datastructs.materials.Material;
-import org.jagatoo.loaders.models.collada.stax.XMLLibraryMaterials;
-import org.jagatoo.loaders.models.collada.stax.XMLMaterial;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.loaders.models.collada.stax.XMLCOLLADA;
+import org.jagatoo.logging.ConsoleLog;
 import org.jagatoo.logging.JAGTLog;
 
-/**
- * Loader for LibraryMaterials
- * 
- * @author Amos Wenger (aka BlueSky)
- */
-public class LibraryMaterialsLoader
-{
+public class Cube {
+    
     /**
-     * Load LibraryMaterials
-     * 
-     * @param colladaFile
-     *            The collada file to add them to
-     * @param libMaterials
-     *            The JAXB data to load from
+     * @param args
+     * @throws JiBXException
      */
-    static void loadLibraryMaterials( AssetFolder colladaFile, XMLLibraryMaterials libMaterials )
-    {
-        LibraryMaterials colLibMaterials = colladaFile.getLibraryMaterials();
-        HashMap<String, Material> colMaterials = colLibMaterials.getMaterials();
+    public static void main(String[] args) throws Exception {
+        InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream( "org/jagatoo/loaders/models/collada/jibx/models/cube.dae" );
+        XMLInputFactory xmlif = XMLInputFactory.newInstance();
+        XMLStreamReader reader = xmlif.createXMLStreamReader( stream );
+
+        JAGTLog.getLogManager().registerLog( new ConsoleLog() );
+        XMLCOLLADA coll = new XMLCOLLADA();
+        long t1 = System.nanoTime();
+        coll.parse( reader );
+        long t2 = System.nanoTime();
         
-        Collection<XMLMaterial> materials = libMaterials.materials.values();
+        long t3 = System.nanoTime();
         
-        JAGTLog.increaseIndentation();
-        for ( XMLMaterial material : materials )
-        {
-            Material colMaterial = new Material( colladaFile, material.id, material.instanceEffect.url );
-            JAGTLog.debug( "TT] Found material [", colMaterial.getId(), ":", colMaterial.getEffect(), "]" );
-            colMaterials.put( colMaterial.getId(), colMaterial );
-        }
+        System.out.println("Unmarshalling context creation time = "+((t2 - t1) / 1000000)+" ms");
+        System.out.println("Unmarshalling time                  = "+((t3 - t2) / 1000000)+" ms");
         
-        JAGTLog.decreaseIndentation();
+        System.exit(0);
+        
     }
 }

@@ -39,14 +39,14 @@ import javax.xml.stream.XMLStreamReader;
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.datastructs.ColladaProtoypeModel;
-import org.jagatoo.loaders.models.collada.jibx.XMLCOLLADA;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryAnimations;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryControllers;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryEffects;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryGeometries;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryImages;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryMaterials;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryVisualScenes;
+import org.jagatoo.loaders.models.collada.stax.XMLCOLLADA;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryAnimations;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryControllers;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryEffects;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryGeometries;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryImages;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryMaterials;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryVisualScenes;
 import org.jagatoo.logging.JAGTLog;
 
 /**

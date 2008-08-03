@@ -27,60 +27,29 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.collada.datastructs.geometries;
-
-import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.stax.XMLGeometry;
+package org.jagatoo.loaders.models.collada.stax;
 
 /**
- * COLLADA Polygons Geometry contains geometry loaded from a COLLADA
- * file which has the "polygon" format
+ * Utils about IDREFs.
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class PolygonsGeometry extends Geometry
-{
-    /** The Polygons in this geometry */
-    private final Mesh[] polygons;
+public class XMLIDREFUtils {
     
     /**
-     * @return the polygons.
+     * Parse an IDREF, which means, currently,
+     * to remove the trailing "#" if any.
+     * @param idref
+     * @return the parsed String
      */
-    public final Mesh[] getPolygons()
-    {
-        return( polygons );
+    public static String parse(String idref) {
+        
+        if(idref.startsWith("#")) {
+            idref = idref.substring(1);
+        }
+        
+        return idref;
+        
     }
     
-    @Override
-    public PolygonsGeometry copy()
-    {
-        PolygonsGeometry newGeom = new PolygonsGeometry( this.getFile(), this.getId() + "-copy", this.getName(), this.getPolygons().length, this.getGeometry() );
-        
-        /*
-         * FIXME:
-         * A PolygonsGeometry has several "meshes" (one per poly), unlike a TriangleGeometry
-         * thus Geometry should be changed, and this copy() method.
-         * That's for later, when we implement tesselation.
-         */
-        newGeom.setMesh( this.getMesh().copy() );
-        
-        return( newGeom );
-    }
-    
-    /**
-     * Creates a new COLLADA Polygons Geometry.
-     * 
-     * @param file The given AssetFolder to load from
-     * @param id {@inheritDoc}
-     * @param name {@inheritDoc}
-     * @param polygonCount The number of polygons that should be
-     * in that PolygonsGeometry
-     * @param geometry the geometry
-     */
-    public PolygonsGeometry( AssetFolder file, String id, String name, int polygonCount, XMLGeometry geometry )
-    {
-        super( file, id, name, geometry );
-        
-        this.polygons = new Mesh[ polygonCount ];
-    }
 }

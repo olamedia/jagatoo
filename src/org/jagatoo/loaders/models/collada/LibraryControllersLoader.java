@@ -33,8 +33,8 @@ import java.util.Collection;
 
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalController;
-import org.jagatoo.loaders.models.collada.jibx.XMLController;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryControllers;
+import org.jagatoo.loaders.models.collada.stax.XMLController;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryControllers;
 import org.jagatoo.logging.JAGTLog;
 
 /**

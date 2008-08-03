@@ -40,12 +40,12 @@ import org.jagatoo.loaders.models.collada.datastructs.effects.LibraryEffects;
 import org.jagatoo.loaders.models.collada.datastructs.effects.Profile;
 import org.jagatoo.loaders.models.collada.datastructs.effects.ProfileCommon;
 import org.jagatoo.loaders.models.collada.datastructs.images.Surface;
-import org.jagatoo.loaders.models.collada.jibx.XMLEffect;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryEffects;
-import org.jagatoo.loaders.models.collada.jibx.XMLProfileCOMMON;
-import org.jagatoo.loaders.models.collada.jibx.XMLProfileCOMMON_NewParam;
-import org.jagatoo.loaders.models.collada.jibx.XMLSampler2D;
-import org.jagatoo.loaders.models.collada.jibx.XMLSurface;
+import org.jagatoo.loaders.models.collada.stax.XMLEffect;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryEffects;
+import org.jagatoo.loaders.models.collada.stax.XMLProfileCOMMON;
+import org.jagatoo.loaders.models.collada.stax.XMLProfileCOMMON_NewParam;
+import org.jagatoo.loaders.models.collada.stax.XMLSampler2D;
+import org.jagatoo.loaders.models.collada.stax.XMLSurface;
 import org.jagatoo.logging.JAGTLog;
 
 /**

@@ -27,48 +27,63 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.collada;
+package org.jagatoo.loaders.models.collada.stax;
 
-import java.util.Collection;
-import java.util.HashMap;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
-import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.datastructs.materials.LibraryMaterials;
-import org.jagatoo.loaders.models.collada.datastructs.materials.Material;
-import org.jagatoo.loaders.models.collada.stax.XMLLibraryMaterials;
-import org.jagatoo.loaders.models.collada.stax.XMLMaterial;
 import org.jagatoo.logging.JAGTLog;
 
 /**
- * Loader for LibraryMaterials
+ * A Binding of a Vertex Input
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class LibraryMaterialsLoader
-{
-    /**
-     * Load LibraryMaterials
-     * 
-     * @param colladaFile
-     *            The collada file to add them to
-     * @param libMaterials
-     *            The JAXB data to load from
-     */
-    static void loadLibraryMaterials( AssetFolder colladaFile, XMLLibraryMaterials libMaterials )
+public class XMLBindVertexInput {
+    
+    public String inputSemantic = null;
+    public int inputSet;
+    public String semantic = null;
+    
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
     {
-        LibraryMaterials colLibMaterials = colladaFile.getLibraryMaterials();
-        HashMap<String, Material> colMaterials = colLibMaterials.getMaterials();
         
-        Collection<XMLMaterial> materials = libMaterials.materials.values();
-        
-        JAGTLog.increaseIndentation();
-        for ( XMLMaterial material : materials )
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
         {
-            Material colMaterial = new Material( colladaFile, material.id, material.instanceEffect.url );
-            JAGTLog.debug( "TT] Found material [", colMaterial.getId(), ":", colMaterial.getEffect(), "]" );
-            colMaterials.put( colMaterial.getId(), colMaterial );
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "input_semantic" ) )
+            {
+                inputSemantic = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "semantic" ) )
+            {
+                semantic = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "input_set" ) )
+            {
+                inputSet = Integer.parseInt( parser.getAttributeValue( i ) );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
         }
         
-        JAGTLog.decreaseIndentation();
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "bind_vertex_input" ) )
+                        return;
+                    break;
+                }
+            }
+        }
     }
+    
 }

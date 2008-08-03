@@ -27,48 +27,30 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.collada;
+package org.jagatoo.loaders.models.collada.stax;
 
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.StringTokenizer;
 
-import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.datastructs.materials.LibraryMaterials;
-import org.jagatoo.loaders.models.collada.datastructs.materials.Material;
-import org.jagatoo.loaders.models.collada.stax.XMLLibraryMaterials;
-import org.jagatoo.loaders.models.collada.stax.XMLMaterial;
-import org.jagatoo.logging.JAGTLog;
+import org.openmali.vecmath2.Colorf;
 
 /**
- * Loader for LibraryMaterials
+ * Container for a 4-component color definition :
+ * Red, Green, Blue, Alpha-transparency.
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class LibraryMaterialsLoader
-{
-    /**
-     * Load LibraryMaterials
-     * 
-     * @param colladaFile
-     *            The collada file to add them to
-     * @param libMaterials
-     *            The JAXB data to load from
-     */
-    static void loadLibraryMaterials( AssetFolder colladaFile, XMLLibraryMaterials libMaterials )
-    {
-        LibraryMaterials colLibMaterials = colladaFile.getLibraryMaterials();
-        HashMap<String, Material> colMaterials = colLibMaterials.getMaterials();
-        
-        Collection<XMLMaterial> materials = libMaterials.materials.values();
-        
-        JAGTLog.increaseIndentation();
-        for ( XMLMaterial material : materials )
-        {
-            Material colMaterial = new Material( colladaFile, material.id, material.instanceEffect.url );
-            JAGTLog.debug( "TT] Found material [", colMaterial.getId(), ":", colMaterial.getEffect(), "]" );
-            colMaterials.put( colMaterial.getId(), colMaterial );
-        }
-        
-        JAGTLog.decreaseIndentation();
+public class XMLColor4 {
+    
+    public Colorf color;
+    
+    public XMLColor4(String str) {
+        StringTokenizer tknz = new StringTokenizer(str);
+        color = new Colorf(
+                Float.parseFloat(tknz.nextToken()),
+                Float.parseFloat(tknz.nextToken()),
+                Float.parseFloat(tknz.nextToken()),
+                Float.parseFloat(tknz.nextToken())
+        );
     }
+    
 }

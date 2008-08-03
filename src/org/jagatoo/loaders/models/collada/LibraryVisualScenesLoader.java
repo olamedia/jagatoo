@@ -43,13 +43,13 @@ import org.jagatoo.loaders.models.collada.datastructs.visualscenes.LibraryVisual
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.MatrixTransform;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.Node;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.Scene;
-import org.jagatoo.loaders.models.collada.jibx.XMLBindMaterial;
-import org.jagatoo.loaders.models.collada.jibx.XMLInstanceController;
-import org.jagatoo.loaders.models.collada.jibx.XMLInstanceGeometry;
-import org.jagatoo.loaders.models.collada.jibx.XMLInstanceMaterial;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryVisualScenes;
-import org.jagatoo.loaders.models.collada.jibx.XMLNode;
-import org.jagatoo.loaders.models.collada.jibx.XMLVisualScene;
+import org.jagatoo.loaders.models.collada.stax.XMLBindMaterial;
+import org.jagatoo.loaders.models.collada.stax.XMLInstanceController;
+import org.jagatoo.loaders.models.collada.stax.XMLInstanceGeometry;
+import org.jagatoo.loaders.models.collada.stax.XMLInstanceMaterial;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryVisualScenes;
+import org.jagatoo.loaders.models.collada.stax.XMLNode;
+import org.jagatoo.loaders.models.collada.stax.XMLVisualScene;
 import org.jagatoo.logging.JAGTLog;
 import org.openmali.vecmath2.Vector3f;
 

@@ -33,7 +33,7 @@ import java.util.ArrayList;
 
 import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
-import org.jagatoo.loaders.models.collada.jibx.XMLNode;
+import org.jagatoo.loaders.models.collada.stax.XMLNode;
 import org.jagatoo.logging.JAGTLog;
 import org.openmali.FastMath;
 import org.openmali.vecmath2.Matrix4f;

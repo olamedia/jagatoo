@@ -34,8 +34,8 @@ import java.util.HashMap;
 
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.datastructs.images.LibraryImages;
-import org.jagatoo.loaders.models.collada.jibx.XMLImage;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryImages;
+import org.jagatoo.loaders.models.collada.stax.XMLImage;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryImages;
 import org.jagatoo.logging.JAGTLog;
 
 /**

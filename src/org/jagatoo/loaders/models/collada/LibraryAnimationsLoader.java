@@ -42,10 +42,10 @@ import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrameQuat4f;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.Controller;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalController;
-import org.jagatoo.loaders.models.collada.jibx.XMLAnimation;
-import org.jagatoo.loaders.models.collada.jibx.XMLChannel;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryAnimations;
-import org.jagatoo.loaders.models.collada.jibx.XMLChannel.ChannelType;
+import org.jagatoo.loaders.models.collada.stax.XMLAnimation;
+import org.jagatoo.loaders.models.collada.stax.XMLChannel;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryAnimations;
+import org.jagatoo.loaders.models.collada.stax.XMLChannel.ChannelType;
 import org.jagatoo.logging.JAGTLog;
 
 /**

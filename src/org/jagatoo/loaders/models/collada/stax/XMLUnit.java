@@ -27,60 +27,46 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.collada.datastructs.geometries;
+package org.jagatoo.loaders.models.collada.stax;
 
-import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.stax.XMLGeometry;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
 
 /**
- * COLLADA Polygons Geometry contains geometry loaded from a COLLADA
- * file which has the "polygon" format
+ * The Unit used in a COLLADA file for lengths.
+ * Child of Asset.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class PolygonsGeometry extends Geometry
-{
-    /** The Polygons in this geometry */
-    private final Mesh[] polygons;
+public class XMLUnit {
+    
+    public float meter;
+    public String name = null;
     
     /**
-     * @return the polygons.
+     * it should already be at a start element.
+     * @param parser
      */
-    public final Mesh[] getPolygons()
+    public void parse( XMLStreamReader parser )
     {
-        return( polygons );
-    }
-    
-    @Override
-    public PolygonsGeometry copy()
-    {
-        PolygonsGeometry newGeom = new PolygonsGeometry( this.getFile(), this.getId() + "-copy", this.getName(), this.getPolygons().length, this.getGeometry() );
-        
-        /*
-         * FIXME:
-         * A PolygonsGeometry has several "meshes" (one per poly), unlike a TriangleGeometry
-         * thus Geometry should be changed, and this copy() method.
-         * That's for later, when we implement tesselation.
-         */
-        newGeom.setMesh( this.getMesh().copy() );
-        
-        return( newGeom );
-    }
-    
-    /**
-     * Creates a new COLLADA Polygons Geometry.
-     * 
-     * @param file The given AssetFolder to load from
-     * @param id {@inheritDoc}
-     * @param name {@inheritDoc}
-     * @param polygonCount The number of polygons that should be
-     * in that PolygonsGeometry
-     * @param geometry the geometry
-     */
-    public PolygonsGeometry( AssetFolder file, String id, String name, int polygonCount, XMLGeometry geometry )
-    {
-        super( file, id, name, geometry );
-        
-        this.polygons = new Mesh[ polygonCount ];
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "name" ) )
+            {
+                name = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "meter" ) )
+            {
+                meter = Float.parseFloat( parser.getAttributeValue( i ) );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported XMLUnit Attribute Tag: ", attr.getLocalPart() );
+            }
+        }
     }
 }

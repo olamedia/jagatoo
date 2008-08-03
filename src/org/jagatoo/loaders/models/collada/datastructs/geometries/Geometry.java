@@ -30,7 +30,7 @@
 package org.jagatoo.loaders.models.collada.datastructs.geometries;
 
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.jibx.XMLGeometry;
+import org.jagatoo.loaders.models.collada.stax.XMLGeometry;
 
 /**
  * A COLLADA Geometry. For now, only polygons with a constant number of

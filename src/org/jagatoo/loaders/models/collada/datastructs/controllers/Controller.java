@@ -31,7 +31,7 @@ package org.jagatoo.loaders.models.collada.datastructs.controllers;
 
 import org.jagatoo.loaders.models.collada.datastructs.geometries.GeometryProvider;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.LibraryGeometries;
-import org.jagatoo.loaders.models.collada.jibx.XMLController;
+import org.jagatoo.loaders.models.collada.stax.XMLController;
 
 /**
  * A COLLADA Controller.

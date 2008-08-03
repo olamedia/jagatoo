@@ -27,48 +27,41 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.collada;
+package org.jagatoo.loaders.models.collada.stax;
 
-import java.util.Collection;
-import java.util.HashMap;
-
-import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.datastructs.materials.LibraryMaterials;
-import org.jagatoo.loaders.models.collada.datastructs.materials.Material;
-import org.jagatoo.loaders.models.collada.stax.XMLLibraryMaterials;
-import org.jagatoo.loaders.models.collada.stax.XMLMaterial;
-import org.jagatoo.logging.JAGTLog;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 /**
- * Loader for LibraryMaterials
+ * A float element.
+ * Used in ShadingParameters.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class LibraryMaterialsLoader
-{
-    /**
-     * Load LibraryMaterials
-     * 
-     * @param colladaFile
-     *            The collada file to add them to
-     * @param libMaterials
-     *            The JAXB data to load from
-     */
-    static void loadLibraryMaterials( AssetFolder colladaFile, XMLLibraryMaterials libMaterials )
+public class XMLFloat {
+    
+    public float _float;
+    
+    public void parse( XMLStreamReader parser, String endTag ) throws XMLStreamException
     {
-        LibraryMaterials colLibMaterials = colladaFile.getLibraryMaterials();
-        HashMap<String, Material> colMaterials = colLibMaterials.getMaterials();
-        
-        Collection<XMLMaterial> materials = libMaterials.materials.values();
-        
-        JAGTLog.increaseIndentation();
-        for ( XMLMaterial material : materials )
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
         {
-            Material colMaterial = new Material( colladaFile, material.id, material.instanceEffect.url );
-            JAGTLog.debug( "TT] Found material [", colMaterial.getId(), ":", colMaterial.getEffect(), "]" );
-            colMaterials.put( colMaterial.getId(), colMaterial );
+            switch ( event )
+            {
+                case XMLStreamConstants.CHARACTERS:
+                {
+                    _float = Float.parseFloat( parser.getText() );
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( endTag ) )
+                        return;
+                    break;
+                }
+            }
         }
-        
-        JAGTLog.decreaseIndentation();
     }
 }

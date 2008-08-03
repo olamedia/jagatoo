@@ -30,7 +30,7 @@
 package org.jagatoo.loaders.models.collada.datastructs.geometries;
 
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.jibx.XMLGeometry;
+import org.jagatoo.loaders.models.collada.stax.XMLGeometry;
 
 /**
  * COLLADA Geometry which has been loaded from a COLLADA file with

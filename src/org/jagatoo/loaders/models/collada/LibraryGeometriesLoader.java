@@ -40,12 +40,12 @@ import org.jagatoo.loaders.models.collada.datastructs.geometries.Mesh;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.MeshDataInfo;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.MeshSources;
 import org.jagatoo.loaders.models.collada.datastructs.geometries.TrianglesGeometry;
-import org.jagatoo.loaders.models.collada.jibx.XMLGeometry;
-import org.jagatoo.loaders.models.collada.jibx.XMLInput;
-import org.jagatoo.loaders.models.collada.jibx.XMLLibraryGeometries;
-import org.jagatoo.loaders.models.collada.jibx.XMLMesh;
-import org.jagatoo.loaders.models.collada.jibx.XMLSource;
-import org.jagatoo.loaders.models.collada.jibx.XMLTriangles;
+import org.jagatoo.loaders.models.collada.stax.XMLGeometry;
+import org.jagatoo.loaders.models.collada.stax.XMLInput;
+import org.jagatoo.loaders.models.collada.stax.XMLLibraryGeometries;
+import org.jagatoo.loaders.models.collada.stax.XMLMesh;
+import org.jagatoo.loaders.models.collada.stax.XMLSource;
+import org.jagatoo.loaders.models.collada.stax.XMLTriangles;
 import org.jagatoo.logging.JAGTLog;
 
 /**

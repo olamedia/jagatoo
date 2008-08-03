@@ -27,60 +27,56 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.collada.datastructs.geometries;
+package org.jagatoo.loaders.models.collada.stax;
 
-import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.stax.XMLGeometry;
+import java.util.StringTokenizer;
 
 /**
- * COLLADA Polygons Geometry contains geometry loaded from a COLLADA
- * file which has the "polygon" format
+ * Utils to read Matrix from a COLLADA file.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class PolygonsGeometry extends Geometry
-{
-    /** The Polygons in this geometry */
-    private final Mesh[] polygons;
+public class XMLMatrixUtils {
     
     /**
-     * @return the polygons.
-     */
-    public final Mesh[] getPolygons()
-    {
-        return( polygons );
-    }
-    
-    @Override
-    public PolygonsGeometry copy()
-    {
-        PolygonsGeometry newGeom = new PolygonsGeometry( this.getFile(), this.getId() + "-copy", this.getName(), this.getPolygons().length, this.getGeometry() );
-        
-        /*
-         * FIXME:
-         * A PolygonsGeometry has several "meshes" (one per poly), unlike a TriangleGeometry
-         * thus Geometry should be changed, and this copy() method.
-         * That's for later, when we implement tesselation.
-         */
-        newGeom.setMesh( this.getMesh().copy() );
-        
-        return( newGeom );
-    }
-    
-    /**
-     * Creates a new COLLADA Polygons Geometry.
+     * Read a Blender-COLLADA row-major matrix and
+     * returns a column-major Vecmath matrix.
      * 
-     * @param file The given AssetFolder to load from
-     * @param id {@inheritDoc}
-     * @param name {@inheritDoc}
-     * @param polygonCount The number of polygons that should be
-     * in that PolygonsGeometry
-     * @param geometry the geometry
+     * This is no longer used.  As far as I can 
+     * tell by the collada specification all matrices are
+     * column major.
+     * 
+     * @param str
+     * @return the 4x4 XML matrix
      */
-    public PolygonsGeometry( AssetFolder file, String id, String name, int polygonCount, XMLGeometry geometry )
-    {
-        super( file, id, name, geometry );
-        
-        this.polygons = new Mesh[ polygonCount ];
+    public static XMLMatrix4x4 readRowMajor(String str) {
+        XMLMatrix4x4 matrix = new XMLMatrix4x4();
+        StringTokenizer tknz = new StringTokenizer(str);
+        for(int y = 0; y < 4; y++) {
+            for(int x = 0; x < 4; x++) {
+                matrix.matrix4f.set(x, y, Float.parseFloat(tknz.nextToken()));
+            }
+        }
+        return matrix;
     }
+    
+    
+    /**
+     * Read a Blender-COLLADA column-major matrix and
+     * returns a column-major Vecmath matrix.
+     * @param str
+     * @return the 4x4 XML matrix
+     */
+    public static XMLMatrix4x4 readColumnMajor(String str) {
+        XMLMatrix4x4 matrix = new XMLMatrix4x4();
+        StringTokenizer tknz = new StringTokenizer(str);
+        for(int x = 0; x < 4; x++) {
+            for(int y = 0; y < 4; y++) {
+                matrix.matrix4f.set(x, y, Float.parseFloat(tknz.nextToken()));
+            }
+        }
+        return matrix;
+    }
+    
 }
