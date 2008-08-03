@@ -45,7 +45,7 @@ public class Cube {
      * @throws JiBXException
      */
     public static void main(String[] args) throws Exception {
-        InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream( "org/jagatoo/loaders/models/collada/jibx/models/cube.dae" );
+        InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream( "org/jagatoo/loaders/models/collada/stax/models/cube.dae" );
         XMLInputFactory xmlif = XMLInputFactory.newInstance();
         XMLStreamReader reader = xmlif.createXMLStreamReader( stream );
 
@@ -53,6 +53,7 @@ public class Cube {
         XMLCOLLADA coll = new XMLCOLLADA();
         long t1 = System.nanoTime();
         coll.parse( reader );
+        reader.close();
         long t2 = System.nanoTime();
         
         long t3 = System.nanoTime();

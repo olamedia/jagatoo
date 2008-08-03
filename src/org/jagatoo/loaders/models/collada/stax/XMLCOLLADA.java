@@ -127,7 +127,5 @@ public class XMLCOLLADA {
         
         if ( asset == null )
             JAGTLog.exception( this.getClass().getSimpleName(), ": missing asset." );
-        
-        parser.close();
     }
 }

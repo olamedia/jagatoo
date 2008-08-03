@@ -34,6 +34,7 @@ import java.net.URL;
 import java.util.List;
 
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.jagatoo.loaders.ParsingErrorException;
@@ -49,6 +50,8 @@ import org.jagatoo.loaders.models.collada.stax.XMLLibraryMaterials;
 import org.jagatoo.loaders.models.collada.stax.XMLLibraryVisualScenes;
 import org.jagatoo.logging.JAGTLog;
 
+import com.ctc.wstx.stax.WstxInputFactory;
+
 /**
  * This is a really simple COLLADA file loader. Its features are limited for now
  * but improving every minute :)
@@ -57,6 +60,14 @@ import org.jagatoo.logging.JAGTLog;
  */
 public class COLLADALoader
 {
+    private static final XMLInputFactory factory;
+    
+    static
+    {
+        factory = XMLInputFactory.newInstance();
+        //factory.configureForSpeed(); (if using a WstxInputFactory)
+        factory.setProperty( XMLInputFactory.IS_COALESCING, true );
+    }
     
     /**
      * Create a new COLLADA Loader.
@@ -86,10 +97,20 @@ public class COLLADALoader
             
             long l1 = System.nanoTime();
 
-            XMLInputFactory xmlif = XMLInputFactory.newInstance();
-            XMLStreamReader reader = xmlif.createXMLStreamReader( stream );
+            XMLStreamReader reader = factory.createXMLStreamReader( stream );
             XMLCOLLADA collada = new XMLCOLLADA();
-            collada.parse( reader );
+            try
+            {
+                collada.parse( reader );
+            }
+            catch ( XMLStreamException e )
+            {
+                e.printStackTrace();
+            }
+            finally
+            {
+                reader.close();
+            }
             
             long l2 = System.nanoTime();
             JAGTLog.debug( "TT] Took ", ( ( l2 - l1 ) / 1000000 ), " milliseconds to parse" );
