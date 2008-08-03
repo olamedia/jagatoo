@@ -89,7 +89,7 @@ public class LogManager
     {
         private final LogChannel channel;
         private final int type;
-        private final StringBuffer buf = new StringBuffer();
+        private final StringBuilder sb = new StringBuilder();
         
         public LogWriter( LogChannel channel, int type )
         {
@@ -127,29 +127,29 @@ public class LogManager
                 
                 if ( ch == 13 )
                 {
-                    internalPrint( channel, type, new String[] { buf.toString() }, true );
-                    buf.setLength( 0 );
+                    internalPrint( channel, type, new String[] { sb.toString() }, true );
+                    sb.setLength( 0 );
                 }
                 else if ( ch >= 32 )
                 {
-                    buf.append( ch );
+                    sb.append( ch );
                 }
             }
         }
     }
     
-    private ArrayList<LogInterface> logs;
+    private final ArrayList<LogInterface> logs;
     private int minRegisteredLogLevel = -Integer.MAX_VALUE;
     private int registeredChannels = 0;
     private long startTime;
     private boolean timestampsEnabled = false;
     private boolean channelsVisible = false;
     private boolean lastNewLine = true;
-    private HashSet<String> debugPackageFilter = new HashSet<String>();
+    private final HashSet<String> debugPackageFilter = new HashSet<String>();
     
     private String indentationString = "    ";
     private int indentation = 0;
-    private final StringBuffer strBuff = new StringBuffer();
+    private final StringBuilder strBuff = new StringBuilder();
     
     private static LogManager instance = null;
     
@@ -332,10 +332,7 @@ public class LogManager
         
         for ( int i = 0; i < message.length; i++ )
         {
-            if ( message[ i ] != null )
-                strBuff.append( message[ i ].toString() );
-            else
-                strBuff.append( "null" );
+            strBuff.append( String.valueOf( message[ i ] ) );
         }
         
         if ( ( prefix1 != null ) && ( prefix2 != null ) )
