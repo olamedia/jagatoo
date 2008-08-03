@@ -37,6 +37,7 @@ import java.io.DataInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -88,11 +89,17 @@ public class WADFile
         }
     }
     
-    private final URL     wadFile;
+    private final URL     wadResource;
+    private final String  wadFilename;
     private int           magicNumber;
     private String        wadType;
     
     private final HashMap<String, WADDirectoryEntry> wadDir;
+    
+    public final String getWADFilename()
+    {
+        return( wadFilename );
+    }
     
     public final String getWadType()
     {
@@ -133,7 +140,7 @@ public class WADFile
             return( null );
         }
         
-        InputStream in = wadFile.openStream();
+        InputStream in = wadResource.openStream();
         if ( !( in instanceof BufferedInputStream ) )
         {
             in = new BufferedInputStream( in );
@@ -153,7 +160,7 @@ public class WADFile
             throw new IOException( "The resource was not found in this WAD file." );
         }
         
-        InputStream in = wadFile.openStream();
+        InputStream in = wadResource.openStream();
         if ( !( in instanceof BufferedInputStream ) )
         {
             in = new BufferedInputStream( in );
@@ -182,7 +189,7 @@ public class WADFile
                 throw new IOException( "The resource was not found in this WAD file." );
             }
             
-            InputStream in = wadFile.openStream();
+            InputStream in = wadResource.openStream();
             if ( !( in instanceof BufferedInputStream ) )
             {
                 in = new BufferedInputStream( in );
@@ -192,8 +199,8 @@ public class WADFile
             
             din.skip( entry.offset );
             
-            byte[] name = new byte[ 16 ];
-            din.read( name );
+            byte[] nameBytes = new byte[ 16 ];
+            din.read( nameBytes );
             //System.out.println( new String( name ).trim() );
             
             int width = Integer.reverseBytes( din.readInt() );
@@ -280,10 +287,25 @@ public class WADFile
             din.close();
             
             AbstractTexture texture = appFactory.createTexture( mipmaps[0], true );
-            texture.setName( new String( name ).trim() );
             //texture.setImage( 1, mipmaps[1] );
             //texture.setImage( 2, mipmaps[2] );
             //texture.setImage( 3, mipmaps[3] );
+            
+            String name = new String( nameBytes ).trim();
+            texture.setName( name );
+            
+            // Xith-sepcific name-setter!
+            try
+            {
+                String resName2 = this.getWadType() + "://" + this.getWADFilename() + "/" + name;
+                
+                Method m = texture.getClass().getMethod( "setResourceName", String.class );
+                m.invoke( texture, resName2 );
+            }
+            catch ( Throwable t )
+            {
+                t.printStackTrace();
+            }
             
             return( texture );
         }
@@ -357,12 +379,25 @@ public class WADFile
         }
     }
     
-    public WADFile( URL wadFile ) throws IOException, IncorrectFormatException, ParsingErrorException
+    private static final String getWADFileSimpleName( URL wadResource )
+    {
+        String filePath = wadResource.getFile();
+        
+        int lastSlashPos = filePath.lastIndexOf( '/' );
+        
+        if ( lastSlashPos == -1 )
+            return( filePath );
+        else
+            return( filePath.substring( lastSlashPos + 1 ) );
+    }
+    
+    public WADFile( URL wadResource ) throws IOException, IncorrectFormatException, ParsingErrorException
     {
         super();
         
-        this.wadFile = wadFile;
+        this.wadResource = wadResource;
+        this.wadFilename = getWADFileSimpleName( wadResource );
         
-        this.wadDir = readWADDirectory( wadFile );
+        this.wadDir = readWADDirectory( wadResource );
     }
 }
