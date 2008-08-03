@@ -29,43 +29,45 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * An Input contains instructions on how to read
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLInput {
+public class XMLInput
+{
     
-    public int offset = 0;
+    public int offset = -1;
     
-    public static enum Semantic {
-        VERTEX,
-        NORMAL,
-        TEXCOORD,
-        COLOR,
-        INPUT,
-        OUTPUT,
-        INTERPOLATION,
-        JOINT,
-        INV_BIND_MATRIX,
-        WEIGHT,
-        POSITION,
-        OTHER
+    public static enum Semantic
+    {
+        VERTEX, NORMAL, TEXCOORD, COLOR, INPUT, OUTPUT, INTERPOLATION, JOINT, INV_BIND_MATRIX, WEIGHT, POSITION, OTHER
     }
     
-    public String semantic;
+    public String semantic = null;
     
-    public String source;
+    public String source = null;
     
     /**
      * Try to recognize the semantic name.
      * If unknown, return Semantic.OTHER
      * @return the semantic
      */
-    public Semantic recognizeSemantic() {
+    public Semantic recognizeSemantic()
+    {
         
-        Semantic sem = Semantic.valueOf(semantic);
-        if(sem == null) {
+        Semantic sem = Semantic.valueOf( semantic );
+        if ( sem == null )
+        {
             sem = Semantic.OTHER;
         }
         
@@ -73,4 +75,57 @@ public class XMLInput {
         
     }
     
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        doParsing( parser );
+        
+        Location loc = parser.getLocation();
+        if ( semantic == null )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing semantic." );
+        
+        if ( source == null )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing source." );
+    }
+    
+    private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "offset" ) )
+            {
+                offset = Integer.parseInt( parser.getAttributeValue( i ).trim() );
+            }
+            else if ( attr.getLocalPart().equals( "semantic" ) )
+            {
+                semantic = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "source" ) )
+            {
+                source = XMLIDREFUtils.parse( parser.getAttributeValue( i ) );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "input" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

@@ -29,14 +29,39 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
 /**
  * A float element.
  * Used in ShadingParameters.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLFloat {
     
     public float _float;
     
+    public void parse( XMLStreamReader parser, String endTag ) throws XMLStreamException
+    {
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.CHARACTERS:
+                {
+                    _float = Float.parseFloat( parser.getText() );
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( endTag ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

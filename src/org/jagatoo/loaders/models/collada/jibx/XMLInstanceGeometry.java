@@ -29,17 +29,89 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * An instance of a Geometry.
  * Child of Node.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLInstanceGeometry {
+public class XMLInstanceGeometry
+{
     
     public String name = null;
     public String sid = null;
     public String url = null;
     public XMLBindMaterial bindMaterial = null;
     
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        doParsing( parser );
+        
+        Location loc = parser.getLocation();
+        if ( url == null )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing url." );
+    }
+    
+    private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "sid" ) )
+            {
+                sid = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "name" ) )
+            {
+                name = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "url" ) )
+            {
+                url = XMLIDREFUtils.parse( parser.getAttributeValue( i ) );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "bind_material" ) )
+                    {
+                        if ( bindMaterial != null )
+                            JAGTLog.exception( this.getClass().getSimpleName(), " Too Many tag: ", parser.getLocalName() );
+                        
+                        bindMaterial = new XMLBindMaterial();
+                        bindMaterial.parse( parser );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "instance_geometry" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

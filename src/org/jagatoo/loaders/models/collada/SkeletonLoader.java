@@ -61,7 +61,7 @@ public class SkeletonLoader
     {
         boneList.add( bone );
         
-        if ( node.childrenList == null )
+        if ( node.childrenList == null || ( node.childrenList != null && node.childrenList.isEmpty() ) )
         {
             JAGTLog.debug( "=====================================" );
             JAGTLog.debug( "[[Bone]] " + bone.getName() );

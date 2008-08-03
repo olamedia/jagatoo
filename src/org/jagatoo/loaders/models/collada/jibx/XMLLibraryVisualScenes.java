@@ -32,6 +32,13 @@ package org.jagatoo.loaders.models.collada.jibx;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * The library of visual scenes in a COLLADA file.
  * Which means, a "repository" of visual scenes
@@ -40,18 +47,64 @@ import java.util.HashMap;
  * Child of COLLADA.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLLibraryVisualScenes {
+public class XMLLibraryVisualScenes
+{
     
-    private ArrayList<XMLVisualScene> scenesList = null;
-    public HashMap<String, XMLVisualScene> scenes = null;
+    private ArrayList< XMLVisualScene > scenesList = new ArrayList< XMLVisualScene >();
+    public HashMap< String, XMLVisualScene > scenes = null;
     
-    public void readVisualScenes() {
-        scenes = new HashMap<String, XMLVisualScene>();
-        for (XMLVisualScene scene : scenesList) {
-            scenes.put(scene.id, scene);
+    public void readVisualScenes()
+    {
+        scenes = new HashMap< String, XMLVisualScene >();
+        for ( XMLVisualScene scene: scenesList )
+        {
+            scenes.put( scene.id, scene );
         }
         scenesList = null;
+    }
+    
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        doParsing( parser );
+        
+        Location loc = parser.getLocation();
+        if ( scenesList.isEmpty() )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing geometry." );
+        
+        readVisualScenes();
+    }
+    
+    private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "visual_scene" ) )
+                    {
+                        XMLVisualScene scene = new XMLVisualScene();
+                        scene.parse( parser );
+                        scenesList.add( scene );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "library_visual_scenes" ) )
+                        return;
+                    break;
+                }
+            }
+        }
     }
     
 }

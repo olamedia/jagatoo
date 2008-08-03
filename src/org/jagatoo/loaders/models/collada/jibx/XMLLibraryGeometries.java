@@ -32,21 +32,30 @@ package org.jagatoo.loaders.models.collada.jibx;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * A library of Geometries, that one COLLADA
  * file contains.
  * Child of COLLADA.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLLibraryGeometries {
+public class XMLLibraryGeometries
+{
     
     /**
      * This field is written by JiBX and then parsed by the
      * readGeometries() method and then the geometryMap HashMap
      * is written.
      */
-    private ArrayList<XMLGeometry> geometriesList = null;
+    private ArrayList< XMLGeometry > geometriesList = new ArrayList< XMLGeometry >();
     
     /**
      * A map of all geometries, which is filled by the readGeometries()
@@ -54,18 +63,61 @@ public class XMLLibraryGeometries {
      * key = ID
      * value = Geometry
      */
-    public HashMap<String, XMLGeometry> geometries = null;
+    public HashMap< String, XMLGeometry > geometries = null;
     
     /**
      * Called just after geometries has been read, fill
      * the geometryMap.
      */
-    public void readGeometries() {
-        geometries = new HashMap<String, XMLGeometry>();
-        for (XMLGeometry geometry : geometriesList) {
-            geometries.put(geometry.id, geometry);
+    public void readGeometries()
+    {
+        geometries = new HashMap< String, XMLGeometry >();
+        for ( XMLGeometry geometry: geometriesList )
+        {
+            geometries.put( geometry.id, geometry );
         }
         geometriesList = null;
     }
     
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        doParsing( parser );
+        
+        Location loc = parser.getLocation();
+        if ( geometriesList.isEmpty() )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing geometry." );
+        
+        readGeometries();
+    }
+    
+    private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "geometry" ) )
+                    {
+                        XMLGeometry geom = new XMLGeometry();
+                        geom.parse( parser );
+                        geometriesList.add( geom );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "library_geometries" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

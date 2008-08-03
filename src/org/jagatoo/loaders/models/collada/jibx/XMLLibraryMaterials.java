@@ -32,20 +32,29 @@ package org.jagatoo.loaders.models.collada.jibx;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * A Library of Materials.
  * Child of COLLADA.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLLibraryMaterials {
+public class XMLLibraryMaterials
+{
     
     /**
      * This field is written by JiBX and then parsed by the
      * readMaterials() method and then the materialMap HashMap
      * is written.
      */
-    private ArrayList<XMLMaterial> materialsList = null;
+    private ArrayList< XMLMaterial > materialsList = new ArrayList< XMLMaterial >();
     
     /**
      * A map of all materials, which is filled by the readMaterials()
@@ -53,18 +62,61 @@ public class XMLLibraryMaterials {
      * key = ID
      * value = Material
      */
-    public HashMap<String, XMLMaterial> materials = null;
+    public HashMap< String, XMLMaterial > materials;
     
     /**
      * Called just after materials has been read, fill
      * the materialMap.
      */
-    public void readMaterials() {
-        materials = new HashMap<String, XMLMaterial>();
-        for (XMLMaterial material : materialsList) {
-            materials.put(material.id, material);
+    public void readMaterials()
+    {
+        materials = new HashMap< String, XMLMaterial >();
+        for ( XMLMaterial material: materialsList )
+        {
+            materials.put( material.id, material );
         }
         materialsList = null;
     }
     
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        doParsing( parser );
+        
+        Location loc = parser.getLocation();
+        if ( materialsList.isEmpty() )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing materials." );
+        
+        readMaterials();
+    }
+    
+    private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "material" ) )
+                    {
+                        XMLMaterial material = new XMLMaterial();
+                        material.parse( parser );
+                        materialsList.add( material );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "library_materials" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

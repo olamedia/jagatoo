@@ -29,12 +29,20 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * A Technique used to define the Appearance of an object in
  * the ProfileCOMMON.
  * Child of ProfileCOMMON.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLProfileCOMMON_Technique {
     
@@ -46,4 +54,77 @@ public class XMLProfileCOMMON_Technique {
     public XMLShadingParameters phong = null;
     public XMLShadingParameters blinn = null;
     
+    private void checkVars( String name )
+    {
+        if ( constant != null || lambert != null || phong != null || blinn != null )
+        {
+            JAGTLog.exception( this.getClass().getSimpleName(), " too many ", name, " tags." );
+        }
+    }
+    
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "sid" ) )
+            {
+                sid = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "id" ) )
+            {
+                id = parser.getAttributeValue( i );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "constant" ) )
+                    {
+                        checkVars( "constant" );
+                        constant = new XMLShadingParameters();
+                        constant.parse( parser, "constant" );
+                    }
+                    else if ( localName.equals( "lambert" ) )
+                    {
+                        checkVars( "lambert" );
+                        lambert = new XMLShadingParameters();
+                        lambert.parse( parser, "lambert" );
+                    }
+                    else if ( localName.equals( "phong" ) )
+                    {
+                        checkVars( "phong" );
+                        phong = new XMLShadingParameters();
+                        phong.parse( parser, "phong" );
+                    }
+                    else if ( localName.equals( "blinn" ) )
+                    {
+                        checkVars( "blinn" );
+                        blinn = new XMLShadingParameters();
+                        blinn.parse( parser, "blinn" );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "technique" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

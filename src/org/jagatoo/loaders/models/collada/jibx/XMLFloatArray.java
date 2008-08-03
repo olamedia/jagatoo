@@ -31,15 +31,23 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.StringTokenizer;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * An array of Floats.
  * Child of Source.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLFloatArray {
     
-    public int count;
+    public int count = -1;
     public String id;
     
     public float[] floats;
@@ -54,4 +62,47 @@ public class XMLFloatArray {
         return floats;
     }
     
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {        
+        
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "id" ) )
+            {
+                id = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "count" ) )
+            {
+                count = Integer.parseInt( parser.getAttributeValue( i ).trim() );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    break;
+                }
+                case XMLStreamConstants.CHARACTERS:
+                {
+                    floats = toArray( parser.getText() );
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "float_array" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

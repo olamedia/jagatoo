@@ -35,12 +35,18 @@ import java.util.StringTokenizer;
  * Utils to read Matrix from a COLLADA file.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLMatrixUtils {
     
     /**
      * Read a Blender-COLLADA row-major matrix and
      * returns a column-major Vecmath matrix.
+     * 
+     * This is no longer used.  As far as I can 
+     * tell by the collada specification all matrices are
+     * column major.
+     * 
      * @param str
      * @return the 4x4 XML matrix
      */

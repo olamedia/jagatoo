@@ -29,6 +29,12 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * A 2D Sampler.
  * Child of NewParam in ProfileGLES, ProfileCG, ProfileGLSL and ProfileCOMMON.
@@ -49,6 +55,42 @@ public class XMLSampler2D {
     }
     
     public Filter minFilter = Filter.LINEAR_MIPMAP_LINEAR;
-    public Filter maxFilter = Filter.LINEAR_MIPMAP_LINEAR;
+    public Filter magFilter = Filter.LINEAR_MIPMAP_LINEAR;
     
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "source" ) )
+                    {
+                        source = StAXHelper.parseText( parser );
+                    }
+                    else if ( localName.equals( "minfilter" ) )
+                    {
+                        minFilter = Filter.valueOf( StAXHelper.parseText( parser ).trim() );
+                    }
+                    else if ( localName.equals( "magfilter" ) )
+                    {
+                        magFilter = Filter.valueOf( StAXHelper.parseText( parser ).trim() );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "sampler2D" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

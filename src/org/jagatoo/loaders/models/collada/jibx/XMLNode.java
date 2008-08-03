@@ -32,6 +32,13 @@ package org.jagatoo.loaders.models.collada.jibx;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.logging.JAGTLog;
 import org.openmali.FastMath;
 import org.openmali.vecmath2.Matrix4f;
 import org.openmali.vecmath2.Point3f;
@@ -44,11 +51,14 @@ import org.openmali.vecmath2.util.MatrixUtils;
  * Child of VisualScene or Node.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLNode {
     
-    public ArrayList<String> layers = null;
+    public ArrayList< String > layers = null;
     public String sid = null;
+    public XMLAsset asset = null;
+    
     public static enum Type {
         NODE,
         JOINT
@@ -58,14 +68,10 @@ public class XMLNode {
     public String name = null;
     
     public XMLMatrix4x4 matrix = new XMLMatrix4x4();
-    public ArrayList<XMLInstanceGeometry> instanceGeometries = null;
-    public ArrayList<XMLInstanceController> instanceControllers = null;
+    public ArrayList< XMLInstanceGeometry > instanceGeometries = new ArrayList< XMLInstanceGeometry >();
+    public ArrayList< XMLInstanceController > instanceControllers = new ArrayList< XMLInstanceController >();
     
-    public ArrayList<XMLNode> childrenList = null;
-    
-    //private String translateString;
-    //private String rotateString;
-    //private String scaleString;
+    public ArrayList< XMLNode > childrenList = new ArrayList< XMLNode >();
     
     public static ArrayList<String> parseLayerList(String str) {
         ArrayList<String> layers = new ArrayList<String>();
@@ -135,4 +141,99 @@ public class XMLNode {
         //JAGTLog.debug( "Mat after scale of ", scale, ": \n", matrix.matrix4f );
     }
     
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "id" ) )
+            {
+                id = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "name" ) )
+            {
+                name = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "sid" ) )
+            {
+                sid = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "type" ) )
+            {
+                type = Type.valueOf( parser.getAttributeValue( i ).trim() );
+            }
+            else if ( attr.getLocalPart().equals( "layer" ) )
+            {
+                layers = parseLayerList( parser.getAttributeValue( i ) );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "asset" ) )
+                    {
+                        if ( asset != null )
+                            throw new ParsingErrorException( this.getClass().getSimpleName() + " Too MANY: " + parser.getLocalName() );
+                        
+                        asset = new XMLAsset();
+                        asset.parse( parser );
+                    }
+                    else if ( localName.equals( "node" ) )
+                    {
+                        XMLNode n = new XMLNode();
+                        n.parse( parser );
+                        childrenList.add( n );
+                    }
+                    else if ( localName.equals( "matrix" ) )
+                    {
+                        matrix = XMLMatrixUtils.readColumnMajor( StAXHelper.parseText( parser ) );   
+                    }
+                    else if ( localName.equals( "rotate" ) )
+                    {
+                        applyRotate( StAXHelper.parseText( parser ) );
+                    }
+                    else if ( localName.equals( "translate" ) )
+                    {
+                        applyTranslate( StAXHelper.parseText( parser ) );
+                    }
+                    else if ( localName.equals( "scale" ) )
+                    {
+                        applyScale( StAXHelper.parseText( parser ) );
+                    }
+                    else if ( localName.equals( "instance_geometry" ) )
+                    {
+                        XMLInstanceGeometry instGeom = new XMLInstanceGeometry();
+                        instGeom.parse( parser );
+                        instanceGeometries.add( instGeom );
+                    }
+                    else if ( localName.equals( "instance_controller" ) )
+                    {
+                        XMLInstanceController instCont = new XMLInstanceController();
+                        instCont.parse( parser );
+                        instanceControllers.add( instCont );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "node" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

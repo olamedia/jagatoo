@@ -4,11 +4,9 @@
 	<classpathentry kind="src" path="test/src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/openmali"/>
-	<classpathentry exported="true" kind="lib" path="third-party/xml/jibx/jibx-run.jar" sourcepath="/home/bluesky/Desktop/jibx_1_1_5.zip"/>
 	<classpathentry kind="lib" path="third-party/groovy/groovy-all-1.1-BETA-1.jar"/>
 	<classpathentry kind="lib" path="third-party/commons-io-1.2.jar"/>
 	<classpathentry kind="lib" path="third-party/commons-lang-2.1.jar"/>
-	<classpathentry kind="lib" path="third-party/xml/xstream/xstream-1.2.1.jar"/>
 	<classpathentry kind="lib" path="third-party/xml/jdom.jar"/>
 	<classpathentry kind="lib" path="third-party/lwjgl/lwjgl.jar">
 		<attributes>
@@ -35,5 +33,8 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="jagatoo/third-party/swt/linux"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="third-party/xml/xstream/xstream-1.2.1.jar"/>
+	<classpathentry kind="lib" path="third-party/xml/woodstox/stax-api-1.0.1.jar"/>
+	<classpathentry kind="lib" path="third-party/xml/woodstox/wstx-asl-3.2.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

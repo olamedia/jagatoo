@@ -31,8 +31,14 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.StringTokenizer;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
+import org.jagatoo.logging.JAGTLog;
 
 /**
  * A COLLADA Channel.
@@ -41,6 +47,7 @@ import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
  *
  * @author Amos Wenger (aka BlueSky)
  * @author Matias Leone (aka Maguila)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLChannel {
 
@@ -132,7 +139,39 @@ public class XMLChannel {
 
             }
         }
-
     }
-
+    
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "source" ) )
+            {
+                source = XMLIDREFUtils.parse( parser.getAttributeValue( i ) );
+            }
+            else if ( attr.getLocalPart().equals( "target" ) )
+            {
+                target = XMLIDREFUtils.parse( parser.getAttributeValue( i ) );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "channel" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

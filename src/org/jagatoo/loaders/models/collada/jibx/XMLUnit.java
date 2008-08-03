@@ -29,15 +29,44 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * The Unit used in a COLLADA file for lengths.
  * Child of Asset.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLUnit {
     
     public float meter;
     public String name = null;
     
+    /**
+     * it should already be at a start element.
+     * @param parser
+     */
+    public void parse( XMLStreamReader parser )
+    {
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "name" ) )
+            {
+                name = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "meter" ) )
+            {
+                meter = Float.parseFloat( parser.getAttributeValue( i ) );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported XMLUnit Attribute Tag: ", attr.getLocalPart() );
+            }
+        }
+    }
 }

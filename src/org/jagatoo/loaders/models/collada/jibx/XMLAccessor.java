@@ -31,19 +31,92 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.ArrayList;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * Accessor contains the information needed
  * to interpret a Source's data.
  * Child of TechniqueCommon.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLAccessor {
+public class XMLAccessor
+{
     
-    public int count;
-    public String source;
-    public int stride;
+    public int count = -1;
+    public String source = null;
+    public int stride = 1;
     
-    public ArrayList<XMLParam> params;
+    public ArrayList< XMLParam > params = new ArrayList< XMLParam >();
+    
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        doParsing( parser );
+        Location loc = parser.getLocation();
+        if ( source == null )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing source." );
+        
+        if ( count == -1 )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing count." );
+    }
+    
+    private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "source" ) )
+            {
+                source = XMLIDREFUtils.parse( parser.getAttributeValue( i ) );
+            }
+            else if ( attr.getLocalPart().equals( "count" ) )
+            {
+                count = Integer.parseInt( parser.getAttributeValue( i ).trim() );
+            }
+            else if ( attr.getLocalPart().equals( "stride" ) )
+            {
+                stride = Integer.parseInt( parser.getAttributeValue( i ).trim() );
+            }
+            else
+            {
+                Location loc = parser.getLocation();
+                JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "param" ) )
+                    {
+                        XMLParam param = new XMLParam();
+                        param.parse( parser );
+                    }
+                    else
+                    {
+                        Location loc = parser.getLocation();
+                        JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "accessor" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
     
 }

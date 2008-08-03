@@ -32,40 +32,92 @@ package org.jagatoo.loaders.models.collada.jibx;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * A library of animations.
  *
  * Child of COLLADA.
  *
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLLibraryAnimations {
-
+public class XMLLibraryAnimations
+{
+    
     /**
      * This field is written by JiBX and then parsed by the
      * readAnimations() method and then the animationMap HashMap
      * is written.
      */
-    private ArrayList<XMLAnimation> animationsList = null;
-
+    private ArrayList< XMLAnimation > animationsList = new ArrayList< XMLAnimation >();
+    
     /**
      * A map of all animations, which is filled by the readAnimations()
      * method just after the animations ArrayList has been written.
      * key = ID
      * value = Animation
      */
-    public HashMap<String, XMLAnimation> animations = null;
-
+    public HashMap< String, XMLAnimation > animations = null;
+    
     /**
      * Called just after animations has been read, fill
      * the animationMap.
      */
-    public void readAnimations() {
-        animations = new HashMap<String, XMLAnimation>();
-        for (XMLAnimation animation : animationsList) {
-            animations.put(animation.id, animation);
+    public void readAnimations()
+    {
+        animations = new HashMap< String, XMLAnimation >();
+        for ( XMLAnimation animation: animationsList )
+        {
+            animations.put( animation.id, animation );
         }
         animationsList = null;
     }
-
+    
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        doParsing( parser );
+        
+        Location loc = parser.getLocation();
+        if ( animationsList.isEmpty() )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing animations." );
+        
+        readAnimations();
+    }
+    
+    private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "animation" ) )
+                    {
+                        XMLAnimation anim = new XMLAnimation();
+                        anim.parse( parser );
+                        animationsList.add( anim );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "library_animations" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

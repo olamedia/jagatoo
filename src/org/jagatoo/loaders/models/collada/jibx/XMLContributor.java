@@ -29,11 +29,18 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * Contributor information about a COLLADA file.
  * Child of Asset.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLContributor {
     
@@ -43,4 +50,48 @@ public class XMLContributor {
     public String copyright = null;
     public String sourceData = null;
     
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "author" ) )
+                    {
+                        author = StAXHelper.parseText( parser );
+                    }
+                    else if ( localName.equals( "authoring_tool" ) )
+                    {
+                        authoringTool = StAXHelper.parseText( parser );
+                    }
+                    else if ( localName.equals( "comments" ) )
+                    {
+                        comments = StAXHelper.parseText( parser );
+                    }
+                    else if ( localName.equals( "copyright" ) )
+                    {
+                        copyright = StAXHelper.parseText( parser );
+                    }
+                    else if ( localName.equals( "source_data" ) )
+                    {
+                        sourceData = StAXHelper.parseText( parser );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "contributor" ) )
+                        return;
+                    break;
+                }
+            } // end switch
+        }
+    }
 }

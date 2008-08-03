@@ -29,15 +29,61 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * A Binding of a Vertex Input
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLBindVertexInput {
     
     public String inputSemantic = null;
     public int inputSet;
     public String semantic = null;
+    
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "input_semantic" ) )
+            {
+                inputSemantic = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "semantic" ) )
+            {
+                semantic = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "input_set" ) )
+            {
+                inputSet = Integer.parseInt( parser.getAttributeValue( i ) );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "bind_vertex_input" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
     
 }

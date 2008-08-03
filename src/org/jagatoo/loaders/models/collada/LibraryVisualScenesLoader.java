@@ -96,7 +96,7 @@ public class LibraryVisualScenesLoader
                     
                     MatrixTransform transform = new MatrixTransform( node.matrix.matrix4f );
                     
-                    if ( node.instanceGeometries != null )
+                    if ( node.instanceGeometries != null && !node.instanceGeometries.isEmpty() )
                     {
                     	JAGTLog.debug( "TT] A geometry node!" );
                     	
@@ -105,7 +105,7 @@ public class LibraryVisualScenesLoader
                             colNode = newCOLLADAGeometryInstanceNode( colladaFile, node, transform, instanceGeometry.url, instanceGeometry.bindMaterial );
                         }
                     }
-                    else if ( node.instanceControllers != null )
+                    else if ( node.instanceControllers != null && !node.instanceControllers.isEmpty() )
                     {
                     	JAGTLog.debug( "TT] A controller node!" );
                     	

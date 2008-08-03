@@ -31,7 +31,13 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.ArrayList;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
 import org.jagatoo.loaders.IncorrectFormatException;
+import org.jagatoo.logging.JAGTLog;
 
 /**
  * A COLLADA Sampler.
@@ -39,12 +45,13 @@ import org.jagatoo.loaders.IncorrectFormatException;
  * Child of Animation
  *
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLSampler {
 
     public String id = null;
 
-    public ArrayList<XMLInput> inputs = null;
+    public ArrayList< XMLInput > inputs = new ArrayList< XMLInput >();
 
     /**
      * Search the input with the specified semantic
@@ -60,4 +67,51 @@ public class XMLSampler {
     	throw new IncorrectFormatException( "Could not find input with semantic " + semantic );
     }
 
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "id" ) )
+            {
+                id = parser.getAttributeValue( i );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "input" ) )
+                    {
+                        XMLInput input = new XMLInput();
+                        input.parse( parser );
+
+                        if ( input.offset != -1 )
+                            JAGTLog.exception( "Sampler inputs should not have an offset set." );
+
+                        inputs.add( input );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "sampler" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

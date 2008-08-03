@@ -31,19 +31,73 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.ArrayList;
 
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * A Library of Effects.
  * Child of COLLADA.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLLibraryEffects {
+public class XMLLibraryEffects
+{
     
     /**
      * This field is written by JiBX and then parsed by the
      * readEffects() method and then the effectMap HashMap
      * is written.
      */
-    public ArrayList<XMLEffect> effects = null;
+    public ArrayList< XMLEffect > effects = new ArrayList< XMLEffect >();
     
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        doParsing( parser );
+        
+        Location loc = parser.getLocation();
+        if ( effects.isEmpty() )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing effects." );
+        
+    }
+    
+    private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "effect" ) )
+                    {
+                        XMLEffect effect = new XMLEffect();
+                        effect.parse( parser );
+                        effects.add( effect );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.ATTRIBUTE:
+                {
+                    JAGTLog.exception( this.getClass().getSimpleName(), ": No Attribute tag support." );
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "library_effects" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

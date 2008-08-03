@@ -29,11 +29,19 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * A geometry contained in a COLLADA file.
  * Child of LibraryGeometries.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLGeometry {
     
@@ -48,5 +56,78 @@ public class XMLGeometry {
      * a convex_mesh. Please use Mesh instead.
      */
     public Object convexMesh = null;
+    
+    public void parseAttributes( XMLStreamReader parser )
+    {
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "id" ) )
+            {
+                id = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "name" ) )
+            {
+                name = parser.getAttributeValue( i );
+            }
+        }
+    }
+    
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "id" ) )
+            {
+                id = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "name" ) )
+            {
+                name = parser.getAttributeValue( i );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", parser.getLocalName() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "geometry" ) )
+                    {
+                        parseAttributes( parser );
+                    }
+                    else if ( localName.equals( "asset" ) )
+                    {
+                        asset = new XMLAsset();
+                        asset.parse( parser );
+                    }
+                    else if ( localName.equals( "mesh" ) )
+                    {
+                        mesh = new XMLMesh();
+                        mesh.parse( parser );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "geometry" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
     
 }

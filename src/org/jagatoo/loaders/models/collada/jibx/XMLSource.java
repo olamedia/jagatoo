@@ -29,6 +29,14 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * Declares a data repository that provides values
  * according to the semantics of an <input> element
@@ -36,12 +44,15 @@ package org.jagatoo.loaders.models.collada.jibx;
  * Child of Morph, Animation, Mesh, ConvexMesh, Skin, Spline
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLSource {
+public class XMLSource
+{
     
     public XMLAsset asset = null;
     
     public String id = null;
+    public String name = null;
     
     /*
      * From the COLLADA doc : No more than one of
@@ -55,7 +66,6 @@ public class XMLSource {
     public XMLNameArray nameArray = null;
     public XMLIDREFArray idrefArray = null;
     
-    
     /**
      * TechniqueCommon, as a child of Source, contains an acessor,
      * which contains the information needed to read a Source.
@@ -63,13 +73,171 @@ public class XMLSource {
      * Child of Source.
      * 
      * @author Amos Wenger (aka BlueSky)
+     * @author Joe LaFata (aka qbproger)
      */
-    public static class TechniqueCommon {
+    public static class TechniqueCommon
+    {
         
-        public XMLAccessor accessor;
+        public XMLAccessor accessor = null;
+        
+        public void parse( XMLStreamReader parser ) throws XMLStreamException
+        {
+            try
+            {
+                for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+                {
+                    switch ( event )
+                    {
+                        case XMLStreamConstants.START_ELEMENT:
+                        {
+                            if ( parser.getLocalName().equals( "accessor" ) )
+                            {
+                                accessor = new XMLAccessor();
+                                accessor.parse( parser );
+                            }
+                            else
+                            {
+                                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                            }
+                            break;
+                        }
+                        case XMLStreamConstants.END_ELEMENT:
+                        {
+                            if ( parser.getLocalName().equals( "technique_common" ) )
+                                return;
+                            break;
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                if ( accessor == null )
+                    JAGTLog.exception( this.getClass().getSimpleName(), ": missing accessor." );
+            }
+            
+        }
         
     }
     
     public XMLSource.TechniqueCommon techniqueCommon = null;
+    
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        Location loc = parser.getLocation();
+        if ( !doParsing( parser ) )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing any array." );
+    }
+    
+    private boolean doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        boolean arrayParsed = false;
+        
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "id" ) )
+            {
+                id = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "name" ) )
+            {
+                name = parser.getAttributeValue( i );
+            }
+            else
+            {
+                JAGTLog.println( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    
+                    if ( localName.equals( "asset" ) )
+                    {
+                        asset = new XMLAsset();
+                        asset.parse( parser );
+                    }
+                    else if ( localName.equals( "float_array" ) )
+                    {
+                        if ( arrayParsed )
+                        {
+                            JAGTLog.exception( this.getClass().getSimpleName(), " array already processed" );
+                        }
+                        
+                        floatArray = new XMLFloatArray();
+                        floatArray.parse( parser );
+                        arrayParsed = true;
+                    }
+                    else if ( localName.equals( "int_array" ) )
+                    {
+                        if ( arrayParsed )
+                        {
+                            JAGTLog.exception( this.getClass().getSimpleName(), " array already processed" );
+                        }
+                        
+                        intArray = new XMLIntArray();
+                        intArray.parse( parser, "int_array" );
+                        arrayParsed = true;
+                    }
+                    else if ( localName.equals( "bool_array" ) )
+                    {
+                        if ( arrayParsed )
+                        {
+                            JAGTLog.exception( this.getClass().getSimpleName(), " array already processed" );
+                        }
+                        
+                        boolArray = new XMLBoolArray();
+                        boolArray.parse( parser );
+                        arrayParsed = true;
+                    }
+                    else if ( localName.equals( "Name_array" ) )
+                    {
+                        if ( arrayParsed )
+                        {
+                            JAGTLog.exception( this.getClass().getSimpleName(), " array already processed" );
+                        }
+                        
+                        nameArray = new XMLNameArray();
+                        nameArray.parse( parser );
+                        arrayParsed = true;
+                    }
+                    else if ( localName.equals( "IDREF_array" ) )
+                    {
+                        if ( arrayParsed )
+                        {
+                            JAGTLog.exception( this.getClass().getSimpleName(), " array already processed" );
+                        }
+                        
+                        idrefArray = new XMLIDREFArray();
+                        idrefArray.parse( parser );
+                        arrayParsed = true;
+                    }
+                    else if ( localName.equals( "technique_common" ) )
+                    {
+                        techniqueCommon = new TechniqueCommon();
+                        techniqueCommon.parse( parser );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "source" ) )
+                        return arrayParsed;
+                    break;
+                }
+            }
+        }
+        return arrayParsed;
+    }
     
 }

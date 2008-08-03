@@ -35,6 +35,7 @@ import org.openmali.vecmath2.Matrix4f;
  * A column-major matrix
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLMatrix4x4 {
     
@@ -50,5 +51,4 @@ public class XMLMatrix4x4 {
         this.matrix4f.setIdentity();
         
     }
-    
 }

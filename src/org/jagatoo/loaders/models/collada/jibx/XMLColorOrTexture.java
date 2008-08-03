@@ -29,16 +29,77 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * A Color or Texture used in ShadingParameters.
  * Child of ShadingParameters (Constant, Lambert,
  * Phong, or Blinn shading)
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLColorOrTexture {
+public class XMLColorOrTexture
+{
     
     public XMLColor4 color4 = null;
     public XMLTexture texture = null;
     
+    private void checkVars( String name )
+    {
+        if ( color4 != null || texture != null )
+        {
+            JAGTLog.exception( this.getClass().getSimpleName(), " invalid ", name, " tag." );
+        }
+    }
+    
+    public void parse( XMLStreamReader parser, String endTag ) throws XMLStreamException
+    {
+        doParsing( parser, endTag );
+        
+        Location loc = parser.getLocation();
+        if ( texture == null && color4 == null )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing texture or color." );
+    }
+    
+    private void doParsing( XMLStreamReader parser, String endTag ) throws XMLStreamException
+    {
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "color4" ) )
+                    {
+                        checkVars( "color" );
+                        color4 = new XMLColor4( StAXHelper.parseText( parser ) );
+                    }
+                    else if ( localName.equals( "texture" ) )
+                    {
+                        checkVars( "texture" );
+                        
+                        texture = new XMLTexture();
+                        texture.parse( parser );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( endTag ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

@@ -29,11 +29,18 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * Parameters for a Constan, Lambert, Phong, or Blinn shading.
  * Child of ProfileCOMMON_Technique
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLShadingParameters {
     
@@ -47,4 +54,73 @@ public class XMLShadingParameters {
     public XMLColorOrTexture transparent = null;
     public XMLFloat transparency = null;
     
+    public void parse( XMLStreamReader parser, String endTag ) throws XMLStreamException
+    {
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "emission" ) )
+                    {
+                        emission = new XMLColorOrTexture();
+                        emission.parse( parser, "emission" );
+                    }
+                    else if ( localName.equals( "ambient" ) )
+                    {
+                        ambient = new XMLColorOrTexture();
+                        ambient.parse( parser, "ambient" );
+                    }
+                    else if ( localName.equals( "diffuse" ) )
+                    {
+                        diffuse = new XMLColorOrTexture();
+                        diffuse.parse( parser, "diffuse" );
+                    }
+                    else if ( localName.equals( "specular" ) )
+                    {
+                        specular = new XMLColorOrTexture();
+                        specular.parse( parser, "specular" );
+                    }
+                    else if ( localName.equals( "shininess" ) )
+                    {
+                        shininess = new XMLFloat();
+                        shininess.parse( parser, "shininess" );
+                    }
+                    else if ( localName.equals( "reflective" ) )
+                    {
+                        reflective = new XMLColorOrTexture();
+                        reflective.parse( parser, "reflective" );
+                    }
+                    else if ( localName.equals( "reflectivity" ) )
+                    {
+                        reflectivity = new XMLFloat();
+                        reflectivity.parse( parser, "reflectivity" );
+                    }
+                    else if ( localName.equals( "transparent" ) )
+                    {
+                        transparent = new XMLColorOrTexture();
+                        transparent.parse( parser, "transparent" );
+                    }
+                    else if ( localName.equals( "transparency" ) )
+                    {
+                        transparency = new XMLFloat();
+                        transparency.parse( parser, "transparency" );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( endTag ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

@@ -31,10 +31,16 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.ArrayList;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.Influence;
+import org.jagatoo.logging.JAGTLog;
 import org.openmali.vecmath2.Matrix4f;
 
 /**
@@ -42,28 +48,30 @@ import org.openmali.vecmath2.Matrix4f;
  * Child of Controller.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLSkin {
+public class XMLSkin
+{
     
     /**
      * This source defines a joint/bone for each vertex and each joint
      */
     private static final String SKIN_JOINTS_SOURCE = "skin-joints";
     
-	/**
-	 * This source defines a weight for each vertex and each joint
-	 */
+    /**
+     * This source defines a weight for each vertex and each joint
+     */
     private static final String SKIN_WEIGHTS_SOURCE = "skin-weights";
-
-	public String source = null;
+    
+    public String source = null;
     
     // Here we instantiate it because if not read, it should be identity
     // (so the COLLADA doc says)
-    public XMLMatrix4x4 bindShapeMatrix = new XMLMatrix4x4();
+    public XMLMatrix4x4 bindShapeMatrix = null;
     
-    public ArrayList<XMLSource> sources = null;
-    public ArrayList<XMLInput> jointsInputs = null;
-    public XMLVertexWeights vertexWeights = new XMLVertexWeights();
+    public ArrayList< XMLSource > sources = new ArrayList< XMLSource >();
+    public ArrayList< XMLInput > jointsInputs = null;
+    public XMLVertexWeights vertexWeights = null;
     
     private Influence[][] influences = null;
     
@@ -71,28 +79,32 @@ public class XMLSkin {
      * Search the "skin-joints" source.
      * Maybe there is a better way get that
      */
-    public XMLSource getJointsSource() {
-        for (XMLSource source : sources) {
-            if ( source.id.endsWith( SKIN_JOINTS_SOURCE ) ) {
+    public XMLSource getJointsSource()
+    {
+        for ( XMLSource source: sources )
+        {
+            if ( source.id.endsWith( SKIN_JOINTS_SOURCE ) )
+            {
                 return source;
             }
         }
-        throw new IncorrectFormatException( "Could not find source " + 
-                SKIN_JOINTS_SOURCE + " in library_controllers" );
+        throw new IncorrectFormatException( "Could not find source " + SKIN_JOINTS_SOURCE + " in library_controllers" );
     }
     
     /**
      * Search the "skin-weights" source.
      * Maybe there is a better way get that
      */
-    public XMLSource getWeightsSource() {
-        for (XMLSource source : sources) {
-            if ( source.id.endsWith( SKIN_WEIGHTS_SOURCE ) ) {
+    public XMLSource getWeightsSource()
+    {
+        for ( XMLSource source: sources )
+        {
+            if ( source.id.endsWith( SKIN_WEIGHTS_SOURCE ) )
+            {
                 return source;
             }
         }
-        throw new IncorrectFormatException( "Could not find source " + 
-                SKIN_WEIGHTS_SOURCE + " in library_controllers" );
+        throw new IncorrectFormatException( "Could not find source " + SKIN_WEIGHTS_SOURCE + " in library_controllers" );
     }
     
     /**
@@ -118,24 +130,24 @@ public class XMLSkin {
         int vIndex = 0;
         for ( int i = 0; i < vertexWeights.vcount.ints.length; i++ )
         {
-            final int numBones = vertexWeights.vcount.ints[i];
+            final int numBones = vertexWeights.vcount.ints[ i ];
             
-            influences[i] = new Influence[numBones];
+            influences[ i ] = new Influence[ numBones ];
             
             for ( int j = 0; j < numBones; j++ )
             {
-                final int boneIndex = vertexWeights.v.ints[vIndex + j * 2 + 0];
-                final int weightIndex = vertexWeights.v.ints[vIndex + j * 2 + 1];
+                final int boneIndex = vertexWeights.v.ints[ vIndex + j * 2 + 0 ];
+                final int weightIndex = vertexWeights.v.ints[ vIndex + j * 2 + 1 ];
                 
-                final float weight = weightsSource.floatArray.floats[weightIndex];
+                final float weight = weightsSource.floatArray.floats[ weightIndex ];
                 
                 if ( boneIndex == -1 )
                 {
-                    influences[i][j] = new Influence( bindShapeMatrix.matrix4f, weight );
+                    influences[ i ][ j ] = new Influence( bindShapeMatrix.matrix4f, weight );
                 }
                 else
                 {
-                    final String boneSourceId = jointsSource.idrefArray.idrefs[boneIndex];
+                    final String boneSourceId = jointsSource.idrefArray.idrefs[ boneIndex ];
                     final Bone bone = skeleton.getBoneBySourceId( boneSourceId );
                     
                     /*
@@ -144,7 +156,7 @@ public class XMLSkin {
                     */
                     Matrix4f m = new Matrix4f( bone.getAbsoluteTransformation() );
                     
-                    influences[i][j] = new Influence( m, weight );
+                    influences[ i ][ j ] = new Influence( m, weight );
                 }
             }
             
@@ -159,6 +171,115 @@ public class XMLSkin {
      */
     public Influence[] getInfluencesForVertex( int vertexIndex )
     {
-    	return( influences[vertexIndex] );
+        return( influences[ vertexIndex ] );
+    }
+    
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        doParsing( parser );
+        
+        if ( source == null )
+            JAGTLog.exception( this.getClass().getSimpleName(), " missing attribute source." );
+        
+        if ( jointsInputs == null )
+            JAGTLog.exception( this.getClass().getSimpleName(), " missing joint." );
+        
+        if ( vertexWeights == null )
+            JAGTLog.exception( this.getClass().getSimpleName(), " missing vertex weights." );
+        
+        if ( sources.size() < 3 )
+            JAGTLog.exception( this.getClass().getSimpleName(), " not enough sources." );
+    }
+    
+    private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "source" ) )
+            {
+                source = XMLIDREFUtils.parse( parser.getAttributeValue( i ) );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "source" ) )
+                    {
+                        XMLSource src = new XMLSource();
+                        src.parse( parser );
+                        sources.add( src );
+                    }
+                    else if ( localName.equals( "bind_shape_matrix" ) )
+                    {
+                        if ( bindShapeMatrix != null )
+                            JAGTLog.exception( this.getClass().getSimpleName(), " too many bind_shape_matrix tags." );
+                        
+                        bindShapeMatrix = XMLMatrixUtils.readColumnMajor( StAXHelper.parseText( parser ) );
+                    }
+                    else if ( localName.equals( "joints" ) )
+                    {
+                        jointsInputs = getJointInputs( parser );
+                    }
+                    else if ( localName.equals( "vertex_weights" ) )
+                    {
+                        vertexWeights = new XMLVertexWeights();
+                        vertexWeights.parse( parser );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "skin" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
+    
+    public ArrayList< XMLInput > getJointInputs( XMLStreamReader parser ) throws XMLStreamException
+    {
+        ArrayList< XMLInput > inputs = new ArrayList< XMLInput >();
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "input" ) )
+                    {
+                        XMLInput input = new XMLInput();
+                        input.parse( parser );
+                        inputs.add( input );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported XMLJoint Start tag: ", parser.getLocalName() );
+                    }
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "joints" ) )
+                        return inputs;
+                    break;
+                }
+            }
+        }
+        return null;
     }
 }

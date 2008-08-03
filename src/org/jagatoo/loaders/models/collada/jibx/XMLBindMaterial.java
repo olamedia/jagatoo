@@ -31,13 +31,22 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.ArrayList;
 
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * A Binding to a Material.
  * Child of InstanceGeometry and InstanceController.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLBindMaterial {
+public class XMLBindMaterial
+{
     
     /**
      * A TechniqueCommon, as a child of BindMaterial contains
@@ -45,13 +54,94 @@ public class XMLBindMaterial {
      * Child of BindMaterial.
      * 
      * @author Amos Wenger (aka BlueSky)
+     * @author Joe LaFata (aka qbproger)
      */
-    public static class TechniqueCommon {
+    public static class TechniqueCommon
+    {
         
-        public ArrayList<XMLInstanceMaterial> instanceMaterials = null;
+        public ArrayList< XMLInstanceMaterial > instanceMaterials = new ArrayList< XMLInstanceMaterial >();
+        
+        public void parse( XMLStreamReader parser ) throws XMLStreamException
+        {
+            doParsing( parser );
+            if ( instanceMaterials.isEmpty() )
+                JAGTLog.exception( this.getClass().getSimpleName(), ": missing Instance Material." );
+        }
+        
+        private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+        {
+            for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+            {
+                switch ( event )
+                {
+                    case XMLStreamConstants.START_ELEMENT:
+                    {
+                        String localName = parser.getLocalName();
+                        if ( localName.equals( "instance_material" ) )
+                        {
+                            XMLInstanceMaterial instMat = new XMLInstanceMaterial();
+                            instMat.parse( parser );
+                            instanceMaterials.add( instMat );
+                        }
+                        else
+                        {
+                            JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                        }
+                        break;
+                    }
+                    case XMLStreamConstants.END_ELEMENT:
+                    {
+                        if ( parser.getLocalName().equals( "technique_common" ) )
+                            return;
+                        break;
+                    }
+                }
+            }
+        }
         
     }
     
     public XMLBindMaterial.TechniqueCommon techniqueCommon;
     
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        doParsing( parser );
+        
+        Location loc = parser.getLocation();
+        if ( techniqueCommon == null )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing techniqueCommon." );
+    }
+    
+    private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "technique_common" ) )
+                    {
+                        if ( techniqueCommon != null )
+                            JAGTLog.exception( this.getClass().getSimpleName(), " too many ", parser.getLocalName(), " tags." );
+                        
+                        techniqueCommon = new TechniqueCommon();
+                        techniqueCommon.parse( parser );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "bind_material" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

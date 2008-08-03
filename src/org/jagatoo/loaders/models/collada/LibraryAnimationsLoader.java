@@ -138,7 +138,7 @@ public class LibraryAnimationsLoader
             {
                 Bone bone = it.next();
                 
-                JAGTLog.debug( "Loading animations for bone " + bone.getName() );
+                JAGTLog.debug( "Loading animations for bone ", bone.getName() );
                 
                 JAGTLog.increaseIndentation();
                 
@@ -149,7 +149,7 @@ public class LibraryAnimationsLoader
                 {
                     if ( animCount < MAX_ANIMATIONS_PER_BONE && animation.getTargetBone().equals( bone.getName() ) )
                     {
-                        JAGTLog.debug( "Loading animation "+animation.name+" of type ", animation.getType(),
+                        JAGTLog.debug( "Loading animation ", animation.name, " of type ", animation.getType(),
                                        ( animation.getType() == ChannelType.ROTATE ? ( " and of axis " + animation.getRotationAxis() ) : "" ) );
                         if ( animation.getType() == null )
                             animation.channels.get( 0 ).type = XMLChannel.ChannelType.SCALE;

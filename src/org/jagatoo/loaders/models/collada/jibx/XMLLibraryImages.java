@@ -32,20 +32,29 @@ package org.jagatoo.loaders.models.collada.jibx;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * A Library of Images.
  * Child of COLLADA
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLLibraryImages {
+public class XMLLibraryImages
+{
     
     /**
      * This field is written by JiBX and then parsed by the
      * readImages() method and then the imageMap HashMap
      * is written.
      */
-    private ArrayList<XMLImage> imagesList = null;
+    private ArrayList< XMLImage > imagesList = new ArrayList< XMLImage >();
     
     /**
      * A map of all images, which is filled by the readImages()
@@ -53,18 +62,61 @@ public class XMLLibraryImages {
      * key = ID
      * value = Image
      */
-    public HashMap<String, XMLImage> images = null;
+    public HashMap< String, XMLImage > images = null;
     
     /**
      * Called just after images has been read, fill
      * the imageMap.
      */
-    public void readImages() {
-        images = new HashMap<String, XMLImage>();
-        for (XMLImage image : imagesList) {
-            images.put(image.id, image);
+    public void readImages()
+    {
+        images = new HashMap< String, XMLImage >();
+        for ( XMLImage image: imagesList )
+        {
+            images.put( image.id, image );
         }
         imagesList = null;
     }
     
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        doParsing( parser );
+        
+        Location loc = parser.getLocation();
+        if ( imagesList.isEmpty() )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing images." );
+        
+        readImages();
+    }
+    
+    private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "image" ) )
+                    {
+                        XMLImage img = new XMLImage();
+                        img.parse( parser );
+                        imagesList.add( img );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "library_images" ) )
+                        return;
+                    break;
+                }
+            }
+        }
+    }
 }

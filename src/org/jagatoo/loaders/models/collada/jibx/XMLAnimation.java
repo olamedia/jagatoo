@@ -31,9 +31,15 @@ package org.jagatoo.loaders.models.collada.jibx;
 
 import java.util.ArrayList;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
 import org.jagatoo.loaders.models.collada.jibx.XMLChannel.ChannelType;
+import org.jagatoo.logging.JAGTLog;
 
 /**
  * A COLLADA animation.
@@ -41,6 +47,7 @@ import org.jagatoo.loaders.models.collada.jibx.XMLChannel.ChannelType;
  * Child of LibraryAnimations.
  *
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
 public class XMLAnimation {
 
@@ -104,6 +111,75 @@ public class XMLAnimation {
      */
     public KeyFrame.Axis getRotationAxis() {
         return channels.get( 0 ).getRotationAxis();
+    }
+    
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "id" ) )
+            {
+                id = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "name" ) )
+            {
+                name = parser.getAttributeValue( i );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    String localName = parser.getLocalName();
+                    if ( localName.equals( "asset" ) )
+                    {
+                        if ( asset != null )
+                            JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " too many: ", parser.getLocalName(), " tags." );
+                        
+                        asset = new XMLAsset();
+                        asset.parse( parser );
+                    }
+                    else if ( localName.equals( "sampler" ) )
+                    {
+                        XMLSampler sampler = new XMLSampler();
+                        sampler.parse( parser );
+                        samplers.add( sampler );
+                    }
+                    else if ( localName.equals( "source" ) )
+                    {
+                        XMLSource src = new XMLSource();
+                        src.parse( parser );
+                        sources.add( src );
+                    }
+                    else if ( localName.equals( "channel" ) )
+                    {
+                        XMLChannel channel = new XMLChannel();
+                        channel.parse( parser );
+                        channels.add( channel );
+                    }
+                    else
+                    {
+                        JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "animation" ) )
+                        return;
+                    break;
+                }
+            }
+        }
     }
 
 }

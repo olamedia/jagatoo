@@ -332,7 +332,10 @@ public class LogManager
         
         for ( int i = 0; i < message.length; i++ )
         {
-            strBuff.append( message[ i ].toString() );
+            if ( message[ i ] != null )
+                strBuff.append( message[ i ].toString() );
+            else
+                strBuff.append( "null" );
         }
         
         if ( ( prefix1 != null ) && ( prefix2 != null ) )

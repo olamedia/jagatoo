@@ -29,6 +29,14 @@
  */
 package org.jagatoo.loaders.models.collada.jibx;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.Location;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.jagatoo.logging.JAGTLog;
+
 /**
  * A param is instruction on how to interpret
  * a part of a Source. It has a type and a name.
@@ -37,40 +45,114 @@ package org.jagatoo.loaders.models.collada.jibx;
  * Child of Accessor.
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Joe LaFata (aka qbproger)
  */
-public class XMLParam {
+public class XMLParam
+{
     
-    public static enum Type {
-        /** Boolean */ _bool,
-        /** Float */ _float,
-        /** Integer */ _int,
-        /** Name (String) */ _Name,
-        /** IDREF (String) */ _IDREF,
-        /** 4x4 float matrix */ _float4x4
+    public static enum Type
+    {
+        /** Boolean */
+        _bool,
+        /** Float */
+        _float,
+        /** Integer */
+        _int,
+        /** Name (String) */
+        _Name,
+        /** IDREF (String) */
+        _IDREF,
+        /** 4x4 float matrix */
+        _float4x4
     }
     
-    public XMLParam.Type type;
+    public XMLParam.Type type = null;
     
-    public static enum Name {
-        /** X coordinate */ X,
-        /** Y coordinate */ Y,
-        /** T coordinate */ Z,
-        /** U coordinate for texture mapping */ S,
-        /** V coordinate for texture mapping */ T,
-        /** Red component for color */ R,
-        /** Green component for color */ G,
-        /** Blue component for color */ B,
-        /** Alpha component for color */ A,
-        /** Time. Used for anims */ TIME,
-        /** Angle. In degrees. */ ANGLE,
-        /** Weight */ WEIGHT,
-        /** Joint */ JOINT
+    public static enum Name
+    {
+        /** X coordinate */
+        X,
+        /** Y coordinate */
+        Y,
+        /** T coordinate */
+        Z,
+        /** U coordinate for texture mapping */
+        S,
+        /** V coordinate for texture mapping */
+        T,
+        /** Red component for color */
+        R,
+        /** Green component for color */
+        G,
+        /** Blue component for color */
+        B,
+        /** Alpha component for color */
+        A,
+        /** Time. Used for anims */
+        TIME,
+        /** Angle. In degrees. */
+        ANGLE,
+        /** Weight */
+        WEIGHT,
+        /** Joint */
+        JOINT
     }
     
-    public Name name;
+    public Name name = null;
     
-    public static Type readTypeString(String typeString) {
-        return Type.valueOf("_"+typeString);
+    public static Type readTypeString( String typeString )
+    {
+        return Type.valueOf( "_" + typeString );
+    }
+    
+    public void parse( XMLStreamReader parser ) throws XMLStreamException
+    {
+        doParsing( parser );
+        
+        Location loc = parser.getLocation();
+        if ( name == null )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing name." );
+        
+        if ( type == null )
+            JAGTLog.exception( loc.getLineNumber(), ":", loc.getColumnNumber(), " ", this.getClass().getSimpleName(), ": missing type." );
+    }
+    
+    private void doParsing( XMLStreamReader parser ) throws XMLStreamException
+    {
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "name" ) )
+            {
+                name = Name.valueOf( parser.getAttributeValue( i ).trim() );
+            }
+            else if ( attr.getLocalPart().equals( "type" ) )
+            {
+                type = readTypeString( parser.getAttributeValue( i ).trim() );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+        
+        for ( int event = parser.next(); event != XMLStreamConstants.END_DOCUMENT; event = parser.next() )
+        {
+            switch ( event )
+            {
+                case XMLStreamConstants.START_ELEMENT:
+                {
+                    JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT:
+                {
+                    if ( parser.getLocalName().equals( "param" ) )
+                        return;
+                    break;
+                }
+            }
+        }
     }
     
 }

@@ -33,6 +33,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
+
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.datastructs.ColladaProtoypeModel;
@@ -45,10 +48,6 @@ import org.jagatoo.loaders.models.collada.jibx.XMLLibraryImages;
 import org.jagatoo.loaders.models.collada.jibx.XMLLibraryMaterials;
 import org.jagatoo.loaders.models.collada.jibx.XMLLibraryVisualScenes;
 import org.jagatoo.logging.JAGTLog;
-import org.jibx.runtime.BindingDirectory;
-import org.jibx.runtime.IBindingFactory;
-import org.jibx.runtime.IUnmarshallingContext;
-import org.jibx.runtime.JiBXException;
 
 /**
  * This is a really simple COLLADA file loader. Its features are limited for now
@@ -58,32 +57,12 @@ import org.jibx.runtime.JiBXException;
  */
 public class COLLADALoader
 {
-    /** The unmarshalling context used to read COLLADA files */
-    private IUnmarshallingContext unmarshallingContext;
     
     /**
      * Create a new COLLADA Loader.
      */
     public COLLADALoader() throws ParsingErrorException
     {
-        IBindingFactory factory;
-        
-        try
-        {
-            factory = BindingDirectory.getFactory( XMLCOLLADA.class );
-            
-            long t1 = System.nanoTime();
-            
-            this.unmarshallingContext = factory.createUnmarshallingContext();
-            
-            long t2 = System.nanoTime();
-            
-            JAGTLog.debug( "Unmarshalling context creation time = ", ( ( t2 - t1 ) / 1000000L ), " ms" );
-        }
-        catch ( JiBXException e )
-        {
-            throw new ParsingErrorException( e );
-        }
     }
     
     /**
@@ -106,9 +85,12 @@ public class COLLADALoader
             JAGTLog.increaseIndentation();
             
             long l1 = System.nanoTime();
-            // The second argument of unmarshalDocument is null, cause it's up to the unmarshaller
-            // to figure out the encoding of the file.
-            XMLCOLLADA collada = (XMLCOLLADA)unmarshallingContext.unmarshalDocument( stream, null );
+
+            XMLInputFactory xmlif = XMLInputFactory.newInstance();
+            XMLStreamReader reader = xmlif.createXMLStreamReader( stream );
+            XMLCOLLADA collada = new XMLCOLLADA();
+            collada.parse( reader );
+            
             long l2 = System.nanoTime();
             JAGTLog.debug( "TT] Took ", ( ( l2 - l1 ) / 1000000 ), " milliseconds to parse" );
             
