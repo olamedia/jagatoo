@@ -158,6 +158,7 @@ public class BSPPrototypeLoader
                 {
                     for ( int j = 0; j < worldSpawn.wads.length; j++ )
                     {
+                        //System.out.println( "######### wad: " + worldSpawn.wads[j] );
                         URL url = new URL( file.getBaseURL(), worldSpawn.wads[j] );
                         try
                         {

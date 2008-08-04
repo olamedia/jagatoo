@@ -74,6 +74,8 @@ import org.jagatoo.loaders.textures.AbstractTexture;
  */
 public class BSPScenePrototype
 {
+    public final int        sourceBSPVersion;
+    
     /**
      * 
      */
@@ -168,4 +170,9 @@ public class BSPScenePrototype
      * 
      */
     public BSPVisData       visData;
+    
+    public BSPScenePrototype( int sourceBSPVersion )
+    {
+        this.sourceBSPVersion = sourceBSPVersion;
+    }
 }

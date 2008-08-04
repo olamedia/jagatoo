@@ -140,7 +140,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
      */
     public BSPScenePrototype loadPrototypeData( BSPFile bspFile, BSPDirectory bspDir, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException
     {
-        BSPScenePrototype prototype = new BSPScenePrototype();
+        BSPScenePrototype prototype = new BSPScenePrototype( bspFile.getVersion() );
         
         try
         {

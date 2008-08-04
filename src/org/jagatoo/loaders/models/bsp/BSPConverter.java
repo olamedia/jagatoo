@@ -71,6 +71,7 @@ public class BSPConverter
     private static NamedObject texAttrRepl = null;
     private static NamedObject texAttrModu = null;
     private static NamedObject texAttrComb = null;
+    private static NamedObject transAttrSimple = null;
     private static NamedObject transAttrFlames = null;
     private static NamedObject mainMat = null;
     private static NamedObject mainPA = null;
@@ -98,6 +99,10 @@ public class BSPConverter
         appFactory.setTextureAttribsCombineRGBFunction( texAttrComb, 1, TextureCombineFunction.SRC_COLOR );
         appFactory.setTextureAttribsCombineRGBScale( texAttrComb, 2 );
         
+        transAttrSimple = appFactory.createTransparencyAttributes( "" );
+        appFactory.setTransparencyAttribsBlendMode( transAttrSimple, BlendMode.BLENDED );
+        appFactory.setTransparencyAttribsTransparency( transAttrSimple, 0f );
+        
         transAttrFlames = appFactory.createTransparencyAttributes( "" );
         appFactory.setTransparencyAttribsBlendMode( transAttrFlames, BlendMode.BLENDED );
         appFactory.setTransparencyAttribsTransparency( transAttrFlames, 0f );
@@ -119,7 +124,7 @@ public class BSPConverter
         appFactory.setColoringAttribsShadeModel( mainCA, ShadeModel.GOURAUD );
     }
     
-    private static NamedObject convertFaceToShape( int faceIndex, BSPFace face, NamedObject geometry, AbstractTexture[] baseTextures, AbstractTexture[] lightMaps, NodeFactory nodeFactory, BoundsType boundsType, AppearanceFactory appFactory, HashMap<String, NamedObject> appCache )
+    private static NamedObject convertFaceToShape( int sourceBSPVersion, int faceIndex, BSPFace face, NamedObject geometry, AbstractTexture[] baseTextures, AbstractTexture[] lightMaps, NodeFactory nodeFactory, BoundsType boundsType, AppearanceFactory appFactory, HashMap<String, NamedObject> appCache )
     //private static NamedObject convertFaceToShape( BSPScenePrototype prototype, NodeFactory nodeFactory, AppearanceFactory appFactory, HashMap<String, Object> appCache )
     {
         if ( geometry == null )
@@ -131,6 +136,11 @@ public class BSPConverter
         
         String baseTexName = baseTextures[ face.textureID ].getName();
         boolean isTranslucentTex = ( face.textureID >= 0 ) && ( baseTextures[ face.textureID ].getFormat().hasAlpha() || ( baseTexName.indexOf( "flame" ) >= 0 ) );
+        
+        if ( baseTexName.startsWith( "{" ) )
+        {
+            isTranslucentTex = true;
+        }
         
         if ( face.lightmapID < 0 )
         {
@@ -163,7 +173,10 @@ public class BSPConverter
                 if ( isTranslucentTex )
                 {
                     appFactory.applyTextureAttributes( texAttrModu, 0, app );
-                    appFactory.applyTransparancyAttributes( transAttrFlames, app );
+                    if ( sourceBSPVersion == 30 )
+                        appFactory.applyTransparancyAttributes( transAttrFlames, app );
+                    else
+                        appFactory.applyTransparancyAttributes( transAttrFlames, app );
                 }
                 else
                 {
@@ -186,7 +199,7 @@ public class BSPConverter
         return( nodeFactory.createShape( "Shape" + faceIndex, geometry, app, boundsType ) );
     }
     
-    private static Object[] convertFacesToShapes( BSPModel[] models, BSPFace[] faces, NamedObject[][] geometries, AbstractTexture[] baseTextures, AbstractTexture[] lightMaps, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, float worldScale, SpecialItemsHandler siHandler )
+    private static Object[] convertFacesToShapes( int sourceBSPVersion, BSPModel[] models, BSPFace[] faces, NamedObject[][] geometries, AbstractTexture[] baseTextures, AbstractTexture[] lightMaps, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, float worldScale, SpecialItemsHandler siHandler )
     {
         initAppearanceComponents( appFactory );
         
@@ -251,7 +264,7 @@ public class BSPConverter
                 //System.out.println( baseTextures[ face.textureID ].getName() );
                 if ( !baseTextures[ face.textureID ].getName().startsWith( "aaatrigger" ) )
                 {
-                	shape = convertFaceToShape( f, face, geometries[ m ][ f ], baseTextures, lightMaps, nodeFactory, nodeBoundsType, appFactory, appCache );
+                	shape = convertFaceToShape( sourceBSPVersion, f, face, geometries[ m ][ f ], baseTextures, lightMaps, nodeFactory, nodeBoundsType, appFactory, appCache );
                 }
                 
                 if ( shape == null )
@@ -378,7 +391,7 @@ public class BSPConverter
      */
     public static void convert( BSPScenePrototype prototype, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, float worldScale, SpecialItemsHandler siHandler )
     {
-        Object[] result = convertFacesToShapes( prototype.models, prototype.faces, prototype.geometries, prototype.baseTextures, prototype.lightMaps, appFactory, nodeFactory, sceneGroup, mainGroupType, worldScale, siHandler );
+        Object[] result = convertFacesToShapes( prototype.sourceBSPVersion, prototype.models, prototype.faces, prototype.geometries, prototype.baseTextures, prototype.lightMaps, appFactory, nodeFactory, sceneGroup, mainGroupType, worldScale, siHandler );
         
         NamedObject bspTreeGroup = (NamedObject)result[0];
         BitSet faceBitset = (BitSet)result[1];
