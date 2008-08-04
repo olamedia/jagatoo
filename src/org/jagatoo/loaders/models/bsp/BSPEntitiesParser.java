@@ -446,9 +446,10 @@ public class BSPEntitiesParser
                 // HL
                 
                 String[] v = parseLineValue( line ).split( " " );
-                
+
                 this.lightColor = new Colorf( Float.parseFloat( v[0] ) / 255f, Float.parseFloat( v[1] ) / 255f, Float.parseFloat( v[2] ) / 255f );
-                this._light = Float.parseFloat( v[3] );
+                if ( v.length < 3 )
+                	this._light = Float.parseFloat( v[3] );
             }
         }
         
@@ -1096,7 +1097,7 @@ public class BSPEntitiesParser
                     
                     if ( entity == null )
                     {
-                        System.out.println( "Unrecognized entity classname \"" + classname + "\"." );
+                        //System.out.println( "Unrecognized entity classname \"" + classname + "\"." );
                     }
                     else
                     {
