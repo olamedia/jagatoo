@@ -124,7 +124,7 @@ public class BSPConverter
         appFactory.setColoringAttribsShadeModel( mainCA, ShadeModel.GOURAUD );
     }
     
-    private static NamedObject convertFaceToShape( int sourceBSPVersion, int faceIndex, BSPFace face, NamedObject geometry, AbstractTexture[] baseTextures, AbstractTexture[] lightMaps, NodeFactory nodeFactory, BoundsType boundsType, AppearanceFactory appFactory, HashMap<String, NamedObject> appCache )
+    private static NamedObject convertFaceToShape( int sourceBSPVersion, int faceIndex, BSPFace face, NamedObject geometry, AbstractTexture[][] baseTextures, AbstractTexture[] lightMaps, NodeFactory nodeFactory, BoundsType boundsType, AppearanceFactory appFactory, HashMap<String, NamedObject> appCache )
     //private static NamedObject convertFaceToShape( BSPScenePrototype prototype, NodeFactory nodeFactory, AppearanceFactory appFactory, HashMap<String, Object> appCache )
     {
         if ( geometry == null )
@@ -134,8 +134,8 @@ public class BSPConverter
         
         final String appKey;
         
-        String baseTexName = baseTextures[ face.textureID ].getName();
-        boolean isTranslucentTex = ( face.textureID >= 0 ) && ( baseTextures[ face.textureID ].getFormat().hasAlpha() || ( baseTexName.indexOf( "flame" ) >= 0 ) );
+        String baseTexName = baseTextures[ face.textureID ][0].getName();
+        boolean isTranslucentTex = ( face.textureID >= 0 ) && ( baseTextures[ face.textureID ][0].getFormat().hasAlpha() || ( baseTexName.indexOf( "flame" ) >= 0 ) );
         
         if ( baseTexName.startsWith( "{" ) )
         {
@@ -164,7 +164,7 @@ public class BSPConverter
             app = appFactory.createAppearance( appKey, AppearanceFactory.APP_FLAG_STATIC );
             
             if ( face.textureID >= 0 )
-                appFactory.applyTexture( baseTextures[ face.textureID ], 0, app );
+                appFactory.applyTexture( baseTextures[ face.textureID ][0], 0, app );
             else
                 appFactory.applyTexture( appFactory.getFallbackTexture(), 0, app );
             
@@ -199,7 +199,7 @@ public class BSPConverter
         return( nodeFactory.createShape( "Shape" + faceIndex, geometry, app, boundsType ) );
     }
     
-    private static Object[] convertFacesToShapes( int sourceBSPVersion, BSPModel[] models, BSPFace[] faces, NamedObject[][] geometries, AbstractTexture[] baseTextures, AbstractTexture[] lightMaps, AbstractTexture[] skyTextures, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, float worldScale, SpecialItemsHandler siHandler )
+    private static Object[] convertFacesToShapes( int sourceBSPVersion, BSPModel[] models, BSPFace[] faces, NamedObject[][] geometries, AbstractTexture[][] baseTextures, AbstractTexture[] lightMaps, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, float worldScale, SpecialItemsHandler siHandler )
     {
         initAppearanceComponents( appFactory );
         
@@ -263,27 +263,37 @@ public class BSPConverter
                 
                 NamedObject shape;
                 
-                if ( baseTextures[ face.textureID ].getName().startsWith( "sky" ) )
+                String baseTexName = baseTextures[ face.textureID ][0].getName();
+                if ( baseTexName.startsWith( "sky" ) )
                 {
                     shape = nodeFactory.createDummyNode();
                     
                     if ( !skyboxPublished )
                     {
-                        Object skybox = nodeFactory.createSkyBox( skyTextures[0], skyTextures[1], skyTextures[2], skyTextures[3], skyTextures[4], skyTextures[5] );
+                        AbstractTexture[] skyTextures = baseTextures[ face.textureID ];
+                        Object skybox = nodeFactory.createSkyBox( skyTextures[1], skyTextures[2], skyTextures[3], skyTextures[4], skyTextures[5], skyTextures[6] );
                         siHandler.addSpecialItem( SpecialItemType.SKYBOX, null, skybox );
                         
                         skyboxPublished = true;
                     }
                 }
-                else if ( !baseTextures[ face.textureID ].getName().startsWith( "aaatrigger" ) )
+                else if ( baseTexName.startsWith( "aaatrigger" ) )
+                {
+                    shape = nodeFactory.createDummyNode();
+                }
+                else
                 {
                     shape = convertFaceToShape( sourceBSPVersion, f, face, geometries[ m ][ f ], baseTextures, lightMaps, nodeFactory, nodeBoundsType, appFactory, appCache );
                     
                     siHandler.addSpecialItem( SpecialItemType.SHAPE, shape.getName(), shape );
-                }
-                else
-                {
-                    shape = nodeFactory.createDummyNode();
+                    
+                    if ( baseTexName.startsWith( "+" ) )
+                    {
+                        NamedObject appearance = nodeFactory.getAppearanceFromShape( shape );
+                        BSPTextureAnimator animator = new BSPTextureAnimator( baseTextures[ face.textureID ], appearance, 0, appFactory, 10f );
+                        
+                        shape = (NamedObject)siHandler.addSpecialItem( SpecialItemType.TEXTURE_ANIMATOR, null, new Object[] { animator, shape } );
+                    }
                 }
                 
                 nodeFactory.addNodeToGroup( shape, modelGroup );
@@ -401,7 +411,7 @@ public class BSPConverter
      */
     public static void convert( BSPScenePrototype prototype, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, float worldScale, SpecialItemsHandler siHandler )
     {
-        Object[] result = convertFacesToShapes( prototype.sourceBSPVersion, prototype.models, prototype.faces, prototype.geometries, prototype.baseTextures, prototype.lightMaps, prototype.skyTextures, appFactory, nodeFactory, sceneGroup, mainGroupType, worldScale, siHandler );
+        Object[] result = convertFacesToShapes( prototype.sourceBSPVersion, prototype.models, prototype.faces, prototype.geometries, prototype.baseTextures, prototype.lightMaps, appFactory, nodeFactory, sceneGroup, mainGroupType, worldScale, siHandler );
         
         NamedObject bspTreeGroup = (NamedObject)result[0];
         BitSet faceBitset = (BitSet)result[1];

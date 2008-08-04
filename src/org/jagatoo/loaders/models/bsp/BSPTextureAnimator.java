@@ -27,29 +27,65 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models._util;
+package org.jagatoo.loaders.models.bsp;
+
+import org.jagatoo.datatypes.NamedObject;
+import org.jagatoo.loaders.models._util.AppearanceFactory;
+import org.jagatoo.loaders.textures.AbstractTexture;
 
 /**
  * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface SpecialItemsHandler
+public final class BSPTextureAnimator
 {
-    public static enum SpecialItemType
+    private final AbstractTexture[] animFrames;
+    private final int numFrames;
+    private final NamedObject appearance;
+    private final int textureUnit;
+    
+    private final AppearanceFactory appFactory;
+    
+    private final long frameTime;
+    
+    private long initialGameNanos = -1L;
+    private int lastFrame = 0;
+    
+    private final void setFrame( int frame )
     {
-        SCENE_GROUP,
-        NESTED_TRANSFORM,
-        SHAPE,
-        MOUNT_TRANSFORM,
-        SPAWN_TRANSFORM,
-        ITEM,
-        SUB_MODEL,
-        LIGHT,
-        SKYBOX,
-        TEXTURE_ANIMATOR,
-        ;
+        appFactory.applyTexture( animFrames[frame], textureUnit, appearance );
+        
+        lastFrame = frame;
     }
     
-    public Object addSpecialItem( SpecialItemType type, String name, Object item );
+    public final void update( long gameNanos )
+    {
+        if ( initialGameNanos < 0L )
+        {
+            initialGameNanos = gameNanos;
+            
+            //setFrame( 0 );
+            
+            return;
+        }
+        
+        int frame = (int)( ( ( gameNanos - initialGameNanos ) / frameTime ) % numFrames );
+        if ( frame != lastFrame )
+        {
+            setFrame( frame );
+        }
+    }
+    
+    public BSPTextureAnimator( AbstractTexture[] animFrames, NamedObject appearance, int textureUnit, AppearanceFactory appFactory, float fps )
+    {
+        this.animFrames = animFrames;
+        this.numFrames = animFrames.length/* - 1*/; // The last frame in the array is the "off-frame"!
+        this.appearance = appearance;
+        this.textureUnit = textureUnit;
+        
+        this.appFactory = appFactory;
+        
+        this.frameTime = (long)( ( 1f / fps ) * 1000000000L );
+    }
 }

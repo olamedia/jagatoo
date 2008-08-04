@@ -78,6 +78,12 @@ public interface NodeFactory
     
     
     
+    public NamedObject getGeometryFromShape( NamedObject shape );
+    
+    public NamedObject getAppearanceFromShape( NamedObject shape );
+    
+    
+    
     public NamedObject createAmbientLightNode( String name );
     
     public void setAmbientLightColor( NamedObject ambientLight, float r, float g, float b );

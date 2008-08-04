@@ -63,7 +63,7 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         {
             prototype.entities = BSPPrototypeLoader.readEntities( bspFile, bspDir );
             prototype.wadFiles = BSPPrototypeLoader.readWADFiles( bspFile, bspDir, prototype.entities );
-            prototype.baseTextures = BSPPrototypeLoader.readTextures( bspFile, bspDir, prototype.wadFiles, prototype.entities, appFactory, prototype.skyTextures );
+            prototype.baseTextures = BSPPrototypeLoader.readTextures( bspFile, bspDir, prototype.wadFiles, prototype.entities, appFactory );
             prototype.planes = BSPPrototypeLoader.readPlanes( bspFile, bspDir, worldScale );
             prototype.nodes = BSPPrototypeLoader.readNodes( bspFile, bspDir );
             prototype.leafs = BSPPrototypeLoader.readLeafs( bspFile, bspDir );

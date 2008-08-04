@@ -89,12 +89,7 @@ public class BSPScenePrototype
     /**
      * 
      */
-    public AbstractTexture[]  baseTextures;
-    
-    /**
-     * 
-     */
-    public AbstractTexture[]  skyTextures = new AbstractTexture[ 6 ];
+    public AbstractTexture[][]  baseTextures;
     
     /**
      * Half-Life only Lump

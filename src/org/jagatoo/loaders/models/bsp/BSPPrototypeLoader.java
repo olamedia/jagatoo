@@ -192,7 +192,7 @@ public class BSPPrototypeLoader
         }
     }
     
-    private static AbstractTexture loadTexture( BSPFile file, String textureName, WADFile[] wadFiles, BSPEntity[] entities, AppearanceFactory appFactory, AbstractTexture[] skyTextures )
+    private static AbstractTexture[] loadTexture( BSPFile file, String textureName, WADFile[] wadFiles, BSPEntity[] entities, AppearanceFactory appFactory )
     {
         if ( ( wadFiles != null ) && ( wadFiles.length > 0 ) )
         {
@@ -206,17 +206,17 @@ public class BSPPrototypeLoader
                     {
                         //AbstractTexture test = appFactory.loadTexture( new URL( file.getBaseURL(), textureName + ".tga" ), false, true, true, true, false );
                         
-                        AbstractTexture texture;
+                        AbstractTexture[] textures;
                         if ( ( file.getVersion() == 30 ) && ( textureName.startsWith( "sky" ) ) )
-                            texture = wadFile.readSkyTextures( textureName, appFactory, file.getBaseURL(), entities, skyTextures );
+                            textures = wadFile.readSkyTextures( textureName, appFactory, file.getBaseURL(), entities );
                         else
-                            texture = wadFile.readTexture( textureName, appFactory );
+                            textures = wadFile.readTexture( textureName, appFactory );
                         
-                        if ( texture != null )
+                        if ( textures != null )
                         {
-                            setupTexture( texture, textureName, appFactory );
+                            setupTexture( textures[0], textureName, appFactory );
                             
-                            return( texture );
+                            return( textures );
                         }
                     }
                     catch ( IOException e )
@@ -237,7 +237,7 @@ public class BSPPrototypeLoader
             
             setupTexture( texture, textureName, appFactory );
             
-            return( texture );
+            return( new AbstractTexture[] { texture } );
         }
         else
         {
@@ -261,11 +261,11 @@ public class BSPPrototypeLoader
             
             setupTexture( texture, textureName, appFactory );
             
-            return( texture );
+            return( new AbstractTexture[] { texture } );
         }
     }
     
-    protected static AbstractTexture[] readTextures( BSPFile file, BSPDirectory bspDir, WADFile[] wadFiles, BSPEntity[] entities, AppearanceFactory appFactory, AbstractTexture[] skyTextures ) throws IOException
+    protected static AbstractTexture[][] readTextures( BSPFile file, BSPDirectory bspDir, WADFile[] wadFiles, BSPEntity[] entities, AppearanceFactory appFactory ) throws IOException
     {
         if ( bspDir.kTextures < 0 )
         {
@@ -277,16 +277,17 @@ public class BSPPrototypeLoader
         file.seek( bspDir.kTextures );
         
         int textureCount = 0;
+        AbstractTexture[][] textures = null;
         if ( file.getVersion() == 30 )
         {
             textureCount = file.readInt();
+            textures = new AbstractTexture[ textureCount ][];
         }
         else if ( file.getVersion() == 46 )
         {
             textureCount = file.lumps[ bspDir.kTextures ].length / ( 64 + 2 * 4 );
+            textures = new AbstractTexture[ textureCount ][ 1 ];
         }
-        
-        AbstractTexture[] textures = new AbstractTexture[ textureCount ];
         
         if ( file.getVersion() == 30 )
         {
@@ -330,7 +331,7 @@ public class BSPPrototypeLoader
                 System.out.println( ", ofs3: " + offset3 + ", ofs4: "  + offset4 + " }" );
                 */
                 
-                textures[ i ] = loadTexture( file, textureName, wadFiles, entities, appFactory, skyTextures );
+                textures[ i ] = loadTexture( file, textureName, wadFiles, entities, appFactory );
             }
         }
         else if ( file.getVersion() == 46 )
@@ -348,7 +349,7 @@ public class BSPPrototypeLoader
                 
                 //System.out.println( textureName + ", " + flags + ", " + content );
                 
-                textures[ i ] = loadTexture( file, textureName, wadFiles, entities, appFactory, skyTextures );
+                textures[ i ] = loadTexture( file, textureName, wadFiles, entities, appFactory );
             }
         }
         

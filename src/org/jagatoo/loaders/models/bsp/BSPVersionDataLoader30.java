@@ -147,7 +147,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
             prototype.entities = BSPPrototypeLoader.readEntities( bspFile, bspDir );
             prototype.wadFiles = BSPPrototypeLoader.readWADFiles( bspFile, bspDir, prototype.entities );
             prototype.planes = BSPPrototypeLoader.readPlanes( bspFile, bspDir, worldScale );
-            prototype.baseTextures = BSPPrototypeLoader.readTextures( bspFile, bspDir, prototype.wadFiles, prototype.entities, appFactory, prototype.skyTextures );
+            prototype.baseTextures = BSPPrototypeLoader.readTextures( bspFile, bspDir, prototype.wadFiles, prototype.entities, appFactory );
             prototype.vertices = BSPPrototypeLoader.readVertices( bspFile, bspDir );
             //prototype.meshVertices = BSPPrototypeLoader.readMeshVertices( bspFile, bspDir );
             prototype.leafs = BSPPrototypeLoader.readLeafs( bspFile, bspDir);
@@ -182,7 +182,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
      * @param face 
      * @return 
      */
-    private NamedObject convertFaceToGeometry( int faceIndex, BSPFace face, int[] surfEdges, BSPEdge[] bspEdges, BSPVertex[] vertices, BSPTexInfo[] texInfos, AbstractTexture[] baseTextures, GeometryFactory geomFactory, float worldScale )
+    private NamedObject convertFaceToGeometry( int faceIndex, BSPFace face, int[] surfEdges, BSPEdge[] bspEdges, BSPVertex[] vertices, BSPTexInfo[] texInfos, AbstractTexture[][] baseTextures, GeometryFactory geomFactory, float worldScale )
     {
         final int numVertices = face.numOfVerts;
         
@@ -236,8 +236,8 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
             
             if ( face.textureID >= 0 )
             {
-                u /= baseTextures[ face.textureID ].getWidth();
-                v /= baseTextures[ face.textureID ].getHeight();
+                u /= baseTextures[ face.textureID ][0].getWidth();
+                v /= baseTextures[ face.textureID ][0].getHeight();
             }
             
             geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { u, v }, 0, 1 );
