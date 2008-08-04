@@ -180,10 +180,10 @@ public class BSPPrototypeLoader
     
     private static void setupTexture( AbstractTexture texture, String textureName, AppearanceFactory appFactory )
     {
-        if ( texture == appFactory.getFallbackTexture() )
+        if ( appFactory.isFallbackTexture( texture ) )
         {
             JAGTLog.printlnEx( "texture not found: ", textureName, " (WAD / .tga / .jpg)" );
-            System.out.println( "missing texture: " + textureName );
+            System.err.println( "missing texture: " + textureName );
         }
         else
         {
@@ -192,7 +192,7 @@ public class BSPPrototypeLoader
         }
     }
     
-    private static AbstractTexture loadTexture( BSPFile file, String textureName, WADFile[] wadFiles, AppearanceFactory appFactory )
+    private static AbstractTexture loadTexture( BSPFile file, String textureName, WADFile[] wadFiles, BSPEntity[] entities, AppearanceFactory appFactory, AbstractTexture[] skyTextures )
     {
         if ( ( wadFiles != null ) && ( wadFiles.length > 0 ) )
         {
@@ -206,7 +206,11 @@ public class BSPPrototypeLoader
                     {
                         //AbstractTexture test = appFactory.loadTexture( new URL( file.getBaseURL(), textureName + ".tga" ), false, true, true, true, false );
                         
-                        AbstractTexture texture = wadFile.readTexture( textureName, appFactory );
+                        AbstractTexture texture;
+                        if ( ( file.getVersion() == 30 ) && ( textureName.startsWith( "sky" ) ) )
+                            texture = wadFile.readSkyTextures( textureName, appFactory, file.getBaseURL(), entities, skyTextures );
+                        else
+                            texture = wadFile.readTexture( textureName, appFactory );
                         
                         if ( texture != null )
                         {
@@ -261,7 +265,7 @@ public class BSPPrototypeLoader
         }
     }
     
-    protected static AbstractTexture[] readTextures( BSPFile file, BSPDirectory bspDir, WADFile[] wadFiles, AppearanceFactory appFactory ) throws IOException
+    protected static AbstractTexture[] readTextures( BSPFile file, BSPDirectory bspDir, WADFile[] wadFiles, BSPEntity[] entities, AppearanceFactory appFactory, AbstractTexture[] skyTextures ) throws IOException
     {
         if ( bspDir.kTextures < 0 )
         {
@@ -326,7 +330,7 @@ public class BSPPrototypeLoader
                 System.out.println( ", ofs3: " + offset3 + ", ofs4: "  + offset4 + " }" );
                 */
                 
-                textures[ i ] = loadTexture( file, textureName, wadFiles, appFactory );
+                textures[ i ] = loadTexture( file, textureName, wadFiles, entities, appFactory, skyTextures );
             }
         }
         else if ( file.getVersion() == 46 )
@@ -342,7 +346,7 @@ public class BSPPrototypeLoader
                 String textureName = new String( ca );
                 textureName = textureName.substring( 0, textureName.indexOf( 0 ) );
                 
-                textures[ i ] = loadTexture( file, textureName, wadFiles, appFactory );
+                textures[ i ] = loadTexture( file, textureName, wadFiles, entities, appFactory, skyTextures );
             }
         }
         

@@ -31,6 +31,7 @@ package org.jagatoo.loaders.models._util;
 
 import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.models.bsp.BSPVisibilityUpdater;
+import org.jagatoo.loaders.textures.AbstractTexture;
 import org.openmali.spatial.PlaneIndicator;
 import org.openmali.spatial.bounds.BoundsType;
 import org.openmali.vecmath2.Matrix3f;
@@ -112,4 +113,8 @@ public interface NodeFactory
     
     
     public void addNodeToGroup( NamedObject node, NamedObject group );
+    
+    
+    
+    public Object createSkyBox( AbstractTexture texFront, AbstractTexture texRight, AbstractTexture texBack, AbstractTexture texLeft, AbstractTexture texTop, AbstractTexture texBottom );
 }

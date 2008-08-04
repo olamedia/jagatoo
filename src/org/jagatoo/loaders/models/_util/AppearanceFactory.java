@@ -243,6 +243,8 @@ public interface AppearanceFactory
     
     public abstract AbstractTexture getFallbackTexture();
     
+    public abstract boolean isFallbackTexture( AbstractTexture texture );
+    
     public abstract AbstractTexture loadTexture( InputStream in, String texName, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
     
     public abstract AbstractTexture loadTexture( URL url, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );

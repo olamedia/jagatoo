@@ -92,6 +92,11 @@ public class BSPScenePrototype
     public AbstractTexture[]  baseTextures;
     
     /**
+     * 
+     */
+    public AbstractTexture[]  skyTextures = new AbstractTexture[ 6 ];
+    
+    /**
      * Half-Life only Lump
      */
     public BSPTexInfo[]     texInfos;

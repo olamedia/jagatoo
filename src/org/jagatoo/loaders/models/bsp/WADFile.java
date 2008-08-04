@@ -45,6 +45,8 @@ import java.util.HashMap;
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
+import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity;
+import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity_worldspawn;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
 import org.jagatoo.util.streams.StreamUtils;
@@ -209,102 +211,79 @@ public class WADFile
         }
     }
     
-    private void readSkyTexture( DataInputStream din, byte[][] palette, int width, int height, ByteBuffer bb ) throws IOException
+    private void readSkyTextures( BSPEntity[] entities, DataInputStream din, byte[][] palette, int width, int height, AbstractTexture sampleTexture, AppearanceFactory appFactory, URL baseURL, AbstractTexture[] skyTextures ) throws IOException
     {
-        /*
-        String skyname;
-        String skyfilename;
-        String skypathname;
-        byte[] tga_data;
-        int sky_index;
-        
-        // convert the mip palette based bitmap to RGB format...
-        pos = 0;
-        for (i = 0; i < size; i++)
+        BSPEntity_worldspawn entity_worlspawn = null;
+        for ( int i = 0; i < entities.length; i++ )
         {
-            rgba[pos++] = palette[indices[i]*3];
-            rgba[pos++] = palette[indices[i]*3 + 1];
-            rgba[pos++] = palette[indices[i]*3 + 2];
+            //if ( entities[i].className2.equals( "worldspawn" ) )
+            if ( entities[i] instanceof BSPEntity_worldspawn )
+            {
+                entity_worlspawn = (BSPEntity_worldspawn)entities[i];
+                break;
+            }
         }
         
-        textures[texture_index] = new Texture(rgba, width, height, GL_RGB, nearest);
+        String skyName = null;
         
-        textures[texture_index]->flags = TEXTURE_SKY;
-        
-        bool skyname_found = FALSE;
-        
-        int ent_index = -1;
-        
-        if ((ent_index = FindEntityByClassname(ent_index, "worldspawn")) != -1)
+        if ( entity_worlspawn != null )
         {
-            char *value;
-            
             // look for a worldspawn "skyname" key...
-            value = ValueForKey(&entities[ent_index], "skyname");
-            if (value[0])
-            {
-                strncpy(skyname, value, 64);
-                skyname_found = TRUE;
-            }
-            
+            skyName = entity_worlspawn.skyName;
             // didn't find it?  then look for a "message" key and use that as skyname
-            if (!skyname_found)
-            {
-                value = ValueForKey(&entities[ent_index], "message");
-                if (value[0])
-                {
-                    strncpy(skyname, value, 64);
-                    skyname_found = TRUE;
-                }
-            }
+            if ( skyName == null )
+                skyName = entity_worlspawn.message;
         }
         
-        if (skyname_found)
+        if ( skyName != null )
         {
-            for (sky_index = 0; sky_index < 6; sky_index++)
+            final boolean FLIP_SKYBOX_TEXTURES = false;
+            
+            String[] skys = { "ft", "rt", "bk", "lf", "up", "dn" };
+            
+            for ( int sky_index = 0; sky_index < 6; sky_index++ )
             {
-                tga_data = NULL;
+                String skyFilename = "gfx/env/" + skyName + skys[sky_index];
                 
-                strcpy(skyfilename, "gfx/env/");
-                strcat(skyfilename, skyname);
-                strcat(skyfilename, skys[sky_index]);
-                strcat(skyfilename, ".tga");
-                
+                /*
                 // see if sky texture is in a MOD directory first...
-                for (int mod_index = 0; mod_index < config.num_mods; mod_index++)
+                for ( int mod_index = 0; mod_index < config.num_mods; mod_index++ )
                 {
-                    strcpy(skypathname, config.mods[mod_index].dir);
-                    strcat(skypathname, skyfilename);
+                    String skyPathname = config.mods[mod_index].dir + skyFilename;
                     
-                    if (FileTime(skypathname) != -1)
+                    skyTextures[sky_index] = appFactory.loadOrGetTexture( skyPathname + ".tga", baseURL, FLIP_SKYBOX_TEXTURES, false, false, true, false );
+                    if ( skyTextures[sky_index] == null )
+                        skyTextures[sky_index] = appFactory.loadOrGetTexture( skyPathname + ".jpg", baseURL, FLIP_SKYBOX_TEXTURES, false, false, true, false );
+                    
+                    if ( skyTextures[sky_index] != null )
                     {
-                        tga_data = TGA_Load(skypathname, &width, &height);
                         break;  // break out of for loop
                     }
                 }
+                */
                 
-                if (tga_data == NULL)
+                if ( skyTextures[sky_index] == null )
                 {
-                    // load the sky texture from PAK file...
-                    tga_data = TGA_LoadPak(skyfilename, &width, &height);
+                    skyTextures[sky_index] = appFactory.loadOrGetTexture( skyFilename + ".tga", baseURL, FLIP_SKYBOX_TEXTURES, false, false, true, false );
+                    if ( skyTextures[sky_index] == null )
+                        skyTextures[sky_index] = appFactory.loadOrGetTexture( skyFilename + ".jpg", baseURL, FLIP_SKYBOX_TEXTURES, false, false, true, false );
                 }
                 
-                if (!tga_data)
-                    Error("Error loading sky texture: %s\n", skyfilename);
-                
-                sky_textures[sky_index] = new Texture(tga_data, width, height, GL_RGB, nearest);
-                
-                sky_textures[sky_index]->flags = TEXTURE_SKY;
-                
-                free(tga_data);
+                if ( skyTextures[sky_index] == null )
+                {
+                    skyTextures[sky_index] = sampleTexture;
+                    
+                    System.err.println( "missing sky-texture: " + skyFilename + " (.tga / .jpg)" );
+                }
             }
         }
         else
         {
-            for (sky_index = 0; sky_index < 6; sky_index++)
-                sky_textures[sky_index] = textures[texture_index];
+            for ( int sky_index = 0; sky_index < 6; sky_index++ )
+            {
+                skyTextures[sky_index] = sampleTexture;
+            }
         }
-        */
     }
     
     private void readSpecialTexture( DataInputStream din, byte[][] palette, int width, int height, ByteBuffer bb ) throws IOException
@@ -325,22 +304,25 @@ public class WADFile
         }
     }
     
-    private void readRegularTexture( DataInputStream din, byte[][] palette, int width, int height, ByteBuffer bb ) throws IOException
+    private void readRegularTexture( DataInputStream din, byte[][] palette, int width, int height, boolean changeGamme, ByteBuffer bb ) throws IOException
     {
-        float gamma = 1.0f;
-        float f, inf;
-        
-        for ( int i = 0; i < palette.length; i++ )
+        if ( changeGamme )
         {
-            for ( int j = 0; j < 3; j++ )
+            float gamma = 1.0f;
+            float f, inf;
+            
+            for ( int i = 0; i < palette.length; i++ )
             {
-                f = (float)FastMath.pow( ( ( palette[i][j] & 0xFF ) + 1 ) / 256f, gamma );
-                inf = f * 255.0f + 0.5f;
-                if ( inf < 0 )
-                    inf = 0f;
-                if ( inf > 255f )
-                    inf = 255f;
-                palette[i][j] = (byte)inf;
+                for ( int j = 0; j < 3; j++ )
+                {
+                    f = (float)FastMath.pow( ( ( palette[i][j] & 0xFF ) + 1 ) / 256f, gamma );
+                    inf = f * 255.0f + 0.5f;
+                    if ( inf < 0 )
+                        inf = 0f;
+                    if ( inf > 255f )
+                        inf = 255f;
+                    palette[i][j] = (byte)inf;
+                }
             }
         }
         
@@ -356,7 +338,36 @@ public class WADFile
         }
     }
     
-    public final AbstractTexture readTexture( String resName, AppearanceFactory appFactory ) throws IOException
+    private final AbstractTexture createNewTexture( AbstractTextureImage mipmap0, byte[] nameBytes, AppearanceFactory appFactory, boolean isSkyTexture )
+    {
+        AbstractTexture texture = appFactory.createTexture( mipmap0, true && !isSkyTexture );
+        if ( !isSkyTexture )
+        {
+            //texture.setImage( 1, mipmaps[1] );
+            //texture.setImage( 2, mipmaps[2] );
+            //texture.setImage( 3, mipmaps[3] );
+        }
+        
+        String name = new String( nameBytes ).trim();
+        texture.setName( name );
+        
+        // Xith-specific name-setter!
+        try
+        {
+            String resName2 = this.getWadType() + "://" + this.getWADFilename() + "/" + name;
+            
+            Method m = texture.getClass().getMethod( "setResourceName", String.class );
+            m.invoke( texture, resName2 );
+        }
+        catch ( Throwable t )
+        {
+            t.printStackTrace();
+        }
+        
+        return( texture );
+    }
+    
+    private final AbstractTexture readTexture( String resName, AppearanceFactory appFactory, URL baseURL, BSPEntity[] entities, AbstractTexture[] skyTextures ) throws IOException
     {
         if ( magicNumber == MAGIC_NUMBER_WAD3 )
         {
@@ -423,9 +434,10 @@ public class WADFile
             
             din = new DataInputStream( new ByteArrayInputStream( imgData ) );
             
-            AbstractTextureImage[] mipmaps = new AbstractTextureImage[ 4 ];
+            int numMipmaps = isSkyTexture ? 1 : 4;
+            AbstractTextureImage[] mipmaps = new AbstractTextureImage[ numMipmaps ];
             
-            for ( int i = 0; i < 4; i++ )
+            for ( int i = 0; i < numMipmaps; i++ )
             {
                 //System.out.println( width + ", " + height );
                 
@@ -438,11 +450,11 @@ public class WADFile
                 if ( isTransparentTexture )
                     readTransparentTexture( din, palette, width, height, bb );
                 else if ( isSkyTexture )
-                    readSkyTexture( din, palette, width, height, bb );
+                    readRegularTexture( din, palette, width, height, false, bb );
                 else if ( isSpecialTexture )
                     readSpecialTexture( din, palette, width, height, bb );
                 else
-                    readRegularTexture( din, palette, width, height, bb );
+                    readRegularTexture( din, palette, width, height, true, bb );
                 
                 bb.position( 0 );
                 if ( mipmaps[i].getFormat().hasAlpha() )
@@ -456,34 +468,27 @@ public class WADFile
             
             din.close();
             
-            AbstractTexture texture = appFactory.createTexture( mipmaps[0], true && !isSkyTexture );
-            if ( !isSkyTexture )
-            {
-                //texture.setImage( 1, mipmaps[1] );
-                //texture.setImage( 2, mipmaps[2] );
-                //texture.setImage( 3, mipmaps[3] );
-            }
+            AbstractTexture texture = createNewTexture( mipmaps[0], nameBytes, appFactory, isSkyTexture );
             
-            String name = new String( nameBytes ).trim();
-            texture.setName( name );
-            
-            // Xith-specific name-setter!
-            try
+            if ( isSkyTexture )
             {
-                String resName2 = this.getWadType() + "://" + this.getWADFilename() + "/" + name;
-                
-                Method m = texture.getClass().getMethod( "setResourceName", String.class );
-                m.invoke( texture, resName2 );
-            }
-            catch ( Throwable t )
-            {
-                t.printStackTrace();
+                readSkyTextures( entities, din, palette, width, height, texture, appFactory, baseURL, skyTextures );
             }
             
             return( texture );
         }
         
         return( null );
+    }
+    
+    public final AbstractTexture readTexture( String resName, AppearanceFactory appFactory ) throws IOException
+    {
+        return( readTexture( resName, appFactory, null, null, null ) );
+    }
+    
+    public final AbstractTexture readSkyTextures( String resName, AppearanceFactory appFactory, URL baseURL, BSPEntity[] entities, AbstractTexture[] skyTextures ) throws IOException
+    {
+        return( readTexture( resName, appFactory, baseURL, entities, skyTextures ) );
     }
     
     private HashMap<String, WADDirectoryEntry> readWADDirectory( URL wadFile ) throws IOException, IncorrectFormatException, ParsingErrorException

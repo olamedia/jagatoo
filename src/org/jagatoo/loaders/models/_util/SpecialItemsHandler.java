@@ -46,6 +46,7 @@ public interface SpecialItemsHandler
         ITEM,
         SUB_MODEL,
         LIGHT,
+        SKYBOX,
         ;
     }
     

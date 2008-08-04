@@ -124,7 +124,8 @@ public class BSPEntitiesParser
         public String[] wadsFull;
         public String[] wads;
         public String chapterTitle;
-        public String message;
+        public String skyName = null;
+        public String message = null;
         public int gameTitle;
         public int startDark;
         public int maxRange;
@@ -176,6 +177,7 @@ public class BSPEntitiesParser
                     "    wadsFull = " + getWadsFullString() + "\n" +
                     "    wads = " + getWadsString() + "\n" +
                     "    chapterTitle = " + qs( chapterTitle ) + "\n" +
+                    "    skyName = " + qs( skyName ) + "\n" +
                     "    message = " + qs( message ) + "\n" +
                     "    gameTitle = " + gameTitle + "\n" +
                     "    startDark = " + startDark + "\n" +
@@ -205,6 +207,10 @@ public class BSPEntitiesParser
             else if ( line.startsWith( "\"chaptertitle\"" ) )
             {
                 this.chapterTitle = parseLineValue( line );
+            }
+            else if ( line.startsWith( "\"skyname\"" ) )
+            {
+                this.skyName = parseLineValue( line );
             }
             else if ( line.startsWith( "\"message\"" ) )
             {
@@ -446,10 +452,10 @@ public class BSPEntitiesParser
                 // HL
                 
                 String[] v = parseLineValue( line ).split( " " );
-
+                
                 this.lightColor = new Colorf( Float.parseFloat( v[0] ) / 255f, Float.parseFloat( v[1] ) / 255f, Float.parseFloat( v[2] ) / 255f );
-                if ( v.length < 3 )
-                	this._light = Float.parseFloat( v[3] );
+                if ( v.length > 3 )
+                    this._light = Float.parseFloat( v[3] );
             }
         }
         
