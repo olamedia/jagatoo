@@ -456,10 +456,13 @@ public class WADFile
             
             din.close();
             
-            AbstractTexture texture = appFactory.createTexture( mipmaps[0], true );
-            //texture.setImage( 1, mipmaps[1] );
-            //texture.setImage( 2, mipmaps[2] );
-            //texture.setImage( 3, mipmaps[3] );
+            AbstractTexture texture = appFactory.createTexture( mipmaps[0], true && !isSkyTexture );
+            if ( !isSkyTexture )
+            {
+                //texture.setImage( 1, mipmaps[1] );
+                //texture.setImage( 2, mipmaps[2] );
+                //texture.setImage( 3, mipmaps[3] );
+            }
             
             String name = new String( nameBytes ).trim();
             texture.setName( name );
