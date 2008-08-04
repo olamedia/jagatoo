@@ -237,7 +237,7 @@ public class WADFile
         
         if ( skyName != null )
         {
-            final boolean FLIP_SKYBOX_TEXTURES = false;
+            final boolean FLIP_SKYBOX_TEXTURES = true;
             
             String[] skys = { "ft", "rt", "bk", "lf", "up", "dn" };
             
