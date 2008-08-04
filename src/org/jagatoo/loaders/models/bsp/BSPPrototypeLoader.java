@@ -340,11 +340,13 @@ public class BSPPrototypeLoader
             for ( int i = 0; i < textureCount; i++ )
             {     
                 file.readFully( ca ); // q3 - something...
-                file.readInt();
-                file.readInt();
+                /*int flags = */file.readInt();
+                /*int content = */file.readInt();
                 
                 String textureName = new String( ca );
                 textureName = textureName.substring( 0, textureName.indexOf( 0 ) );
+                
+                //System.out.println( textureName + ", " + flags + ", " + content );
                 
                 textures[ i ] = loadTexture( file, textureName, wadFiles, entities, appFactory, skyTextures );
             }

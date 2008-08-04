@@ -211,6 +211,128 @@ public class WADFile
         }
     }
     
+    private void flipTextureHorizontally( AbstractTextureImage ti )
+    {
+        int pixelSize = ti.getPixelSize();
+        int w = ti.getWidth();
+        int wh = w / 2;
+        int lineSize = w * pixelSize;
+        int h = ti.getHeight();
+        
+        ByteBuffer bb = ti.getDataBuffer();
+        final int pos0 = bb.position();
+        final int limit0 = bb.limit();
+        
+        byte[] pixel1 = new byte[ pixelSize ];
+        byte[] pixel2 = new byte[ pixelSize ];
+        
+        for ( int y = 0; y < h; y++ )
+        {
+            int posBase = y * lineSize;
+            
+            for ( int x = 0; x < wh; x++ )
+            {
+                int pos1 = posBase + x * pixelSize;
+                int pos2 = posBase + lineSize - x * pixelSize - pixelSize;
+                
+                bb.position( pos0 + pos1 );
+                bb.get( pixel1, 0, pixelSize );
+                
+                bb.position( pos0 + pos2 );
+                bb.get( pixel2, 0, pixelSize );
+                
+                bb.position( pos0 + pos1 );
+                bb.put( pixel2, 0, pixelSize );
+                
+                bb.position( pos0 + pos2 );
+                bb.put( pixel1, 0, pixelSize );
+            }
+        }
+        
+        bb.position( pos0 );
+        bb.limit( limit0 );
+    }
+    
+    private void rotateTextureBy90Degree( AbstractTextureImage ti )
+    {
+        int pixelSize = ti.getPixelSize();
+        int w = ti.getWidth();
+        int lineSize = w * pixelSize;
+        int h = ti.getHeight();
+        
+        ByteBuffer bb = ti.getDataBuffer();
+        final int pos0 = bb.position();
+        final int limit0 = bb.limit();
+        
+        byte[] pixel = new byte[ pixelSize ];
+        byte[] bytes = new byte[ h * lineSize ];
+        
+        for ( int y = 0; y < h; y++ )
+        {
+            int posBase = y * lineSize;
+            
+            for ( int x = 0; x < w; x++ )
+            {
+                int pos1 = posBase + x * pixelSize;
+                
+                int x2 = y;
+                int y2 = h - 1 - x;
+                int pos2 = y2 * lineSize + x2 * pixelSize;
+                
+                bb.position( pos0 + pos1 );
+                bb.get( pixel, 0, pixelSize );
+                
+                System.arraycopy( pixel, 0, bytes, pos2, pixelSize );
+            }
+        }
+        
+        bb.position( pos0 );
+        bb.put( bytes, 0, h * lineSize );
+        
+        bb.position( pos0 );
+        bb.limit( limit0 );
+    }
+    
+    private void rotateTextureByMinus90Degree( AbstractTextureImage ti )
+    {
+        int pixelSize = ti.getPixelSize();
+        int w = ti.getWidth();
+        int lineSize = w * pixelSize;
+        int h = ti.getHeight();
+        
+        ByteBuffer bb = ti.getDataBuffer();
+        final int pos0 = bb.position();
+        final int limit0 = bb.limit();
+        
+        byte[] pixel = new byte[ pixelSize ];
+        byte[] bytes = new byte[ h * lineSize ];
+        
+        for ( int y = 0; y < h; y++ )
+        {
+            int posBase = y * lineSize;
+            
+            for ( int x = 0; x < w; x++ )
+            {
+                int pos1 = posBase + x * pixelSize;
+                
+                int x2 = w - 1 - y;
+                int y2 = x;
+                int pos2 = y2 * lineSize + x2 * pixelSize;
+                
+                bb.position( pos0 + pos1 );
+                bb.get( pixel, 0, pixelSize );
+                
+                System.arraycopy( pixel, 0, bytes, pos2, pixelSize );
+            }
+        }
+        
+        bb.position( pos0 );
+        bb.put( bytes, 0, h * lineSize );
+        
+        bb.position( pos0 );
+        bb.limit( limit0 );
+    }
+    
     private void readSkyTextures( BSPEntity[] entities, DataInputStream din, byte[][] palette, int width, int height, AbstractTexture sampleTexture, AppearanceFactory appFactory, URL baseURL, AbstractTexture[] skyTextures ) throws IOException
     {
         BSPEntity_worldspawn entity_worlspawn = null;
@@ -274,6 +396,23 @@ public class WADFile
                     skyTextures[sky_index] = sampleTexture;
                     
                     System.err.println( "missing sky-texture: " + skyFilename + " (.tga / .jpg)" );
+                }
+                else
+                {
+                    /*
+                     * HL-SkyBoxes-Textures are designed as if the SkyBox was
+                     * viewed from outside. This is dumb! The textures need to
+                     * be transformed to become actual SkyBox-Textures.
+                     */
+                    
+                    flipTextureHorizontally( skyTextures[sky_index].getImage( 0 ) );
+                    
+                    if ( sky_index < 4 )
+                        ;//flipTextureHorizontally( skyTextures[sky_index].getImage( 0 ) );
+                    else if ( sky_index < 5 )
+                        rotateTextureByMinus90Degree( skyTextures[sky_index].getImage( 0 ) );
+                    else
+                        rotateTextureBy90Degree( skyTextures[sky_index].getImage( 0 ) );
                 }
             }
         }
