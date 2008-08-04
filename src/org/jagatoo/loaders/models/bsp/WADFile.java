@@ -535,7 +535,7 @@ public class WADFile
                 
                 wadDir.put( entry.fileName.toLowerCase(), entry );
                 
-                //if ( getWADFilename().equals( "cs_office.wad" ) )
+                //if ( getWADFilename().equals( "cs_dust.wad" ) )
                 //    System.out.println( entry.fileName );
                 
                 //System.out.println( entry );

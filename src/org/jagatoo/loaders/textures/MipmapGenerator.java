@@ -46,26 +46,28 @@ public class MipmapGenerator
      */
     public static void createMipMaps( AbstractTextureImage ti0, AbstractTexture tex, TextureFactory texFactory )
     {
+        final PixelProcessor pp = PixelProcessor.selectPixelProcessor( ti0.getFormat() );
+        
         int width = ti0.getWidth();
         int height = ti0.getHeight();
         
-        int numLevels = Integer.numberOfTrailingZeros( Math.max( width, height ) ) + 1;
+        int lineSize = pp.getLineSize( width );
         
         /*
-         * For some ugly texture sizes the above algorithm will compute a wrong level-count.
-         */
+        int numLevels = Integer.numberOfTrailingZeros( Math.max( width, height ) ) + 1;
+        
+        // For some ugly texture sizes the above algorithm will compute a wrong level-count.
         if ( ( ( width >> numLevels ) > 0 ) || ( ( height >> numLevels ) > 0 ) )
         {
             numLevels++;
         }
-        
-        final PixelProcessor pp = PixelProcessor.selectPixelProcessor( ti0.getFormat() );
-        
-        int lineSize = pp.getLineSize( width );
+        */
         
         AbstractTextureImage ti = ti0;
         
-        for ( int level = 1; level < numLevels; level++ )
+        //for ( int level = 1; level < numLevels; level++ )
+        int level = 1;
+        while ( ( width > 1 ) || ( height > 1 ) )
         {
             /*
             // Limit to 8 to avoid unecessarily small mipmaps!
@@ -81,7 +83,7 @@ public class MipmapGenerator
             lineSize = pp.getLineSize( width );
             
             ti = pp.calcMipMap( ti, 0, width, height, lineSize, texFactory );
-            tex.setImage( level, ti );
+            tex.setImage( level++, ti );
         }
     }
 }
