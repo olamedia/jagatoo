@@ -211,6 +211,28 @@ public class WADFile
         }
     }
     
+    private void readGlassTexture( DataInputStream din, byte[][] palette, int width, int height, ByteBuffer bb ) throws IOException
+    {
+        byte r, g, b, a;
+        
+        // convert the mip palette based bitmap to RGB format...
+        int size = width * height;
+        for ( int i = 0; i < size; i++ )
+        {
+            int palIdx = din.read();
+            
+            r = palette[palIdx][0];
+            g = palette[palIdx][1];
+            b = palette[palIdx][2];
+            a = (byte)127;
+            
+            bb.put( r );
+            bb.put( g );
+            bb.put( b );
+            bb.put( a );
+        }
+    }
+    
     private void flipTextureHorizontally( AbstractTextureImage ti )
     {
         int pixelSize = ti.getPixelSize();
@@ -577,6 +599,7 @@ public class WADFile
             
             boolean isAnimatedTexture = resName.startsWith( "+" );
             boolean isTransparentTexture = resName.startsWith( "{" );
+            boolean isGlassTexture = resName.startsWith( "glass" );
             boolean isSkyTexture = resName.startsWith( "sky" );
             boolean isSpecialTexture = resName.startsWith( "clip" ) || resName.startsWith( "origin" ) || resName.startsWith( "aatrigger" );
             
@@ -589,7 +612,7 @@ public class WADFile
             {
                 //System.out.println( width + ", " + height );
                 
-                if ( isTransparentTexture || isSpecialTexture )
+                if ( isTransparentTexture || isGlassTexture || isSpecialTexture )
                     mipmaps[i] = appFactory.createTextureImage( AbstractTextureImage.Format.RGBA, width, height );
                 else
                     mipmaps[i] = appFactory.createTextureImage( AbstractTextureImage.Format.RGB, width, height );
@@ -597,6 +620,8 @@ public class WADFile
                 
                 if ( isTransparentTexture )
                     readTransparentTexture( din, palette, width, height, bb );
+                else if ( isGlassTexture )
+                    readGlassTexture( din, palette, width, height, bb );
                 else if ( isSkyTexture )
                     readRegularTexture( din, palette, width, height, false, bb );
                 else if ( isSpecialTexture )

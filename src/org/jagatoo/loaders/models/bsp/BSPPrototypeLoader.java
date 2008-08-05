@@ -741,7 +741,7 @@ public class BSPPrototypeLoader
         return( null );
     }
     
-    protected static BSPVisData readVisData( BSPFile file, BSPDirectory bspDir, int leafCount) throws IOException
+    protected static BSPVisData readVisData( BSPFile file, BSPDirectory bspDir, int leafCount ) throws IOException
     {
         if ( bspDir.kVisData < 0 )
         {
@@ -755,13 +755,15 @@ public class BSPPrototypeLoader
         
         if ( file.getVersion() == 30 ) 
         {
-            /*
-            byte[] visBytes = file.readFully( file.lumps[ bspDir.kVisData ].length ); // 282
-            visData = BSPVersionDataLoader30.decompressVis( leafCount, visBytes );
-            */
-            
             visData = new BSPVisData();
-            visData.pBitsets = null;
+            
+            visData.numOfClusters = leafCount;
+            visData.bytesPerCluster = ( visData.numOfClusters - 1 ) / 8;
+            
+            //System.out.println( visData.numOfClusters + ", " + visData.bytesPerCluster );
+            
+            byte[] compressed = file.readFully( file.lumps[ bspDir.kVisData ].length );
+            visData.pBitsets = BSPVersionDataLoader30.decompressVis( visData.numOfClusters, compressed );
         }
         else if ( file.getVersion() == 46 )
         {
@@ -769,6 +771,8 @@ public class BSPPrototypeLoader
             
             visData.numOfClusters = file.readInt();
             visData.bytesPerCluster = file.readInt();
+            
+            //System.out.println( visData.numOfClusters + ", " + visData.bytesPerCluster );
             
             visData.pBitsets = file.readFully( visData.bytesPerCluster * visData.numOfClusters );
         }
