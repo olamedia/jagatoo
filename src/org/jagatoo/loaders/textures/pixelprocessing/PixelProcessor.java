@@ -32,9 +32,10 @@ package org.jagatoo.loaders.textures.pixelprocessing;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 
-import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
 import org.jagatoo.loaders.textures.TextureFactory;
+import org.jagatoo.opengl.enums.TextureFormat;
+import org.jagatoo.opengl.enums.TextureImageFormat;
 
 /**
  * Pixel Processor.
@@ -61,11 +62,11 @@ public abstract class PixelProcessor
         return( ( x * getPixelSize() ) + ( y * getLineSize( width ) ) );
     }
     
-    public abstract AbstractTextureImage.Format getTextureImageFormat();
+    public abstract TextureImageFormat getTextureImageFormat();
     
     public abstract int readImageData( BufferedImage img, int startX, int startY, int width, int height, ByteBuffer trg, int trgOffset, boolean flipVertically );
     
-    public AbstractTextureImage createTextureImage( BufferedImage img, int orgWidth, int orgHeight, AbstractTexture.Format format, boolean flipVertically, TextureFactory texFactory )
+    public AbstractTextureImage createTextureImage( BufferedImage img, int orgWidth, int orgHeight, TextureFormat format, boolean flipVertically, TextureFactory texFactory )
     {
         int width = img.getWidth();
         int height = img.getHeight();
@@ -142,7 +143,7 @@ public abstract class PixelProcessor
         this.pixelSize = pixelSize;
     }
     
-    public static final PixelProcessor selectPixelProcessor( AbstractTextureImage.Format tiFormat )
+    public static final PixelProcessor selectPixelProcessor( TextureImageFormat tiFormat )
     {
         switch ( tiFormat )
         {
@@ -158,11 +159,11 @@ public abstract class PixelProcessor
                 return( PixelProcessorRGBA.getInstance() );
                 
             default:
-                throw( new Error( "PixelProcessor for format " + tiFormat + " not (yet) available" ) );
+                throw new Error( "PixelProcessor for format " + tiFormat + " not (yet) available" );
         }
     }
     
-    public static final PixelProcessor selectPixelProcessor( AbstractTexture.Format texFormat )
+    public static final PixelProcessor selectPixelProcessor( TextureFormat texFormat )
     {
         switch ( texFormat )
         {
@@ -177,7 +178,7 @@ public abstract class PixelProcessor
                 return( PixelProcessorRGBA.getInstance() );
                 
             default:
-                throw( new Error( "PixelProcessor for format not (yet) available" ) );
+                throw new Error( "PixelProcessor for format not (yet) available" );
         }
     }
     
@@ -192,7 +193,7 @@ public abstract class PixelProcessor
      * 
      * @throws IllegalArgumentException if the format is unknown.
      */
-    public static final PixelProcessor selectPixelProcessor( BufferedImage img, AbstractTexture.Format texFormat )
+    public static final PixelProcessor selectPixelProcessor( BufferedImage img, TextureFormat texFormat )
     {
         boolean imgHasAlpha = img.getColorModel().hasAlpha();
         boolean imgIsGrey = img.getColorModel().getNumColorComponents() == 1;
@@ -228,7 +229,7 @@ public abstract class PixelProcessor
                 }
                 
             default:
-                throw( new IllegalArgumentException( "Unsupported format: " + texFormat ) );
+                throw new IllegalArgumentException( "Unsupported format: " + texFormat );
         }
     }
     

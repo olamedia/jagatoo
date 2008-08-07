@@ -31,6 +31,11 @@ package org.jagatoo.loaders.textures;
 
 import java.nio.ByteBuffer;
 
+import org.jagatoo.opengl.enums.TextureFormat;
+import org.jagatoo.opengl.enums.TextureImageFormat;
+import org.jagatoo.opengl.enums.TextureImageInternalFormat;
+import org.jagatoo.opengl.enums.TextureType;
+
 /**
  * The {@link TextureFactory} creates instances of {@link AbstractTextureImage}.
  * 
@@ -53,7 +58,7 @@ public abstract class TextureFactory
      * 
      * @return the new AbstractTextureImage.
      */
-    protected abstract AbstractTextureImage createTextureImageImpl( int width, int height, int orgWidth, int orgHeight, int pixelSize, int dataSize, AbstractTextureImage.InternalFormat internalFormat, AbstractTextureImage.Format format );
+    protected abstract AbstractTextureImage createTextureImageImpl( int width, int height, int orgWidth, int orgHeight, int pixelSize, int dataSize, TextureImageInternalFormat internalFormat, TextureImageFormat format );
     
     /**
      * Creates an instance of {@link AbstractTextureImage} with an initialized
@@ -70,7 +75,7 @@ public abstract class TextureFactory
      * 
      * @return the new AbstractTextureImage.
      */
-    public final AbstractTextureImage createTextureImage( int width, int height, int orgWidth, int orgHeight, int pixelSize, int dataSizeHint, AbstractTextureImage.InternalFormat internalFormat, AbstractTextureImage.Format format )
+    public final AbstractTextureImage createTextureImage( int width, int height, int orgWidth, int orgHeight, int pixelSize, int dataSizeHint, TextureImageInternalFormat internalFormat, TextureImageFormat format )
     {
         if ( ( width < 1 ) || ( height < 1 ) || ( orgWidth < 1 ) || ( orgHeight < 1 ) )
             throw new IllegalArgumentException( "Illegal size " + width + "x" + height + ", " + orgWidth + "x" + orgHeight );
@@ -109,7 +114,7 @@ public abstract class TextureFactory
      * 
      * @return the new AbstractTextureImage.
      */
-    public final AbstractTextureImage createTextureImage( int width, int height, int orgWidth, int orgHeight, int pixelSize, AbstractTextureImage.InternalFormat internalFormat, AbstractTextureImage.Format format )
+    public final AbstractTextureImage createTextureImage( int width, int height, int orgWidth, int orgHeight, int pixelSize, TextureImageInternalFormat internalFormat, TextureImageFormat format )
     {
         return( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, -1, internalFormat, format ) );
     }
@@ -127,9 +132,9 @@ public abstract class TextureFactory
      * 
      * @return the new AbstractTextureImage.
      */
-    public final AbstractTextureImage createTextureImage( int width, int height, int orgWidth, int orgHeight, int pixelSize, AbstractTextureImage.Format format )
+    public final AbstractTextureImage createTextureImage( int width, int height, int orgWidth, int orgHeight, int pixelSize, TextureImageFormat format )
     {
-        return( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, AbstractTextureImage.InternalFormat.getFallbackInternalFormat( format ), format ) );
+        return( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, TextureImageInternalFormat.getFallbackInternalFormat( format ), format ) );
     }
     
     /**
@@ -147,9 +152,9 @@ public abstract class TextureFactory
      */
     public final AbstractTextureImage createTextureImage( int width, int height, int orgWidth, int orgHeight, int pixelSize, boolean withAlphaChannel )
     {
-        AbstractTextureImage.Format format = withAlphaChannel ? AbstractTextureImage.Format.RGBA : AbstractTextureImage.Format.RGB;
+        TextureImageFormat format = withAlphaChannel ? TextureImageFormat.RGBA : TextureImageFormat.RGB;
         
-        return( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, AbstractTextureImage.InternalFormat.getFallbackInternalFormat( format ), format ) );
+        return( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, TextureImageInternalFormat.getFallbackInternalFormat( format ), format ) );
     }
     
     /**
@@ -169,20 +174,20 @@ public abstract class TextureFactory
         if ( pixelSize >= 8 )
             pixelSize /= 8;
         
-        final AbstractTextureImage.Format format;
+        final TextureImageFormat format;
         switch ( pixelSize )
         {
             case 1:
-                format = AbstractTextureImage.Format.DEPTH;
+                format = TextureImageFormat.DEPTH;
                 break;
             case 2:
-                format = AbstractTextureImage.Format.LUMINANCE_ALPHA;
+                format = TextureImageFormat.LUMINANCE_ALPHA;
                 break;
             case 3:
-                format = AbstractTextureImage.Format.RGB;
+                format = TextureImageFormat.RGB;
                 break;
             case 4:
-                format = AbstractTextureImage.Format.RGBA;
+                format = TextureImageFormat.RGBA;
                 break;
             default:
                 throw new Error( "Unsupported pixel-size: " + pixelSize );
@@ -199,7 +204,7 @@ public abstract class TextureFactory
      * 
      * @return the new texture.
      */
-    protected abstract AbstractTexture createTextureImpl( AbstractTexture.Type type, AbstractTexture.Format format );
+    protected abstract AbstractTexture createTextureImpl( TextureType type, TextureFormat format );
     
     /**
      * Creates a new {@link AbstractTexture} instance.
@@ -209,7 +214,7 @@ public abstract class TextureFactory
      * 
      * @return the new texture.
      */
-    public final AbstractTexture createTexture( AbstractTexture.Type type, AbstractTexture.Format format )
+    public final AbstractTexture createTexture( TextureType type, TextureFormat format )
     {
         return( createTextureImpl( type, format ) );
     }
@@ -221,9 +226,9 @@ public abstract class TextureFactory
      * 
      * @return the new texture.
      */
-    public final AbstractTexture createTexture( AbstractTexture.Format format )
+    public final AbstractTexture createTexture( TextureFormat format )
     {
-        return( createTexture( AbstractTexture.Type.TEXTURE_2D, format ) );
+        return( createTexture( TextureType.TEXTURE_2D, format ) );
     }
     
     /**
@@ -233,9 +238,9 @@ public abstract class TextureFactory
      * 
      * @return the new texture.
      */
-    public final AbstractTexture createTexture( AbstractTextureImage.Format imageFormat )
+    public final AbstractTexture createTexture( TextureImageFormat imageFormat )
     {
-        return( createTexture( AbstractTexture.Type.TEXTURE_2D, AbstractTexture.Format.getFormat( imageFormat ) ) );
+        return( createTexture( TextureType.TEXTURE_2D, TextureFormat.getFormat( imageFormat ) ) );
     }
     
     /**
@@ -249,6 +254,6 @@ public abstract class TextureFactory
      */
     public final AbstractTexture createTexture( boolean withAlphaChannel )
     {
-        return( createTexture( AbstractTexture.Type.TEXTURE_2D, withAlphaChannel ? AbstractTexture.Format.RGBA : AbstractTexture.Format.RGB ) );
+        return( createTexture( TextureType.TEXTURE_2D, withAlphaChannel ? TextureFormat.RGBA : TextureFormat.RGB ) );
     }
 }

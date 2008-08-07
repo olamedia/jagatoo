@@ -151,6 +151,8 @@ public class BSPScenePrototype
      */
     public BSPFace[]        faces;
     
+    public byte[]           lightMapData;
+    
     /**
      * 
      */

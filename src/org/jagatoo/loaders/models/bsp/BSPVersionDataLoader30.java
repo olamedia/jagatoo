@@ -30,6 +30,7 @@
 package org.jagatoo.loaders.models.bsp;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.IncorrectFormatException;
@@ -44,6 +45,9 @@ import org.jagatoo.loaders.models.bsp.lumps.BSPFace;
 import org.jagatoo.loaders.models.bsp.lumps.BSPTexInfo;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVertex;
 import org.jagatoo.loaders.textures.AbstractTexture;
+import org.jagatoo.loaders.textures.AbstractTextureImage;
+import org.jagatoo.opengl.enums.TextureImageFormat;
+import org.openmali.FastMath;
 import org.openmali.vecmath2.Point3f;
 import org.openmali.vecmath2.Vertex3f;
 
@@ -86,7 +90,8 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
             //prototype.leafFaces = BSPPrototypeLoader.readLeafFaces( bspFile, bspDir );
             prototype.texInfos = BSPPrototypeLoader.readTexInfos( bspFile, bspDir );
             prototype.faces = BSPPrototypeLoader.readFaces( bspFile, bspDir );
-            //prototype.lightMaps = BSPPrototypeLoader.readLightmaps( bspFile, bspDir, appFactory );
+            prototype.lightMaps = new AbstractTexture[ prototype.faces.length ];
+            prototype.lightMapData = BSPPrototypeLoader.readLightmapData( bspFile, bspDir );
             //prototype.leafs = BSPPrototypeLoader.readLeafs( bspFile, bspDir);
             //prototype.leafBrushes = BSPPrototypeLoader.readLeafBrushes( bspFile, bspDir);
             prototype.edges = BSPPrototypeLoader.readEdges( bspFile, bspDir );
@@ -112,7 +117,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
      * @param face 
      * @return 
      */
-    private NamedObject convertFaceToGeometry( int faceIndex, BSPFace face, int[] surfEdges, BSPEdge[] bspEdges, BSPVertex[] vertices, BSPTexInfo[] texInfos, AbstractTexture[][] baseTextures, GeometryFactory geomFactory, float worldScale )
+    private NamedObject convertFaceToGeometry( int faceIndex, BSPFace face, int[] surfEdges, BSPEdge[] bspEdges, BSPVertex[] vertices, BSPTexInfo[] texInfos, AbstractTexture[][] baseTextures, byte[] lightMapData, AbstractTexture[] lightMaps, AppearanceFactory appFactory, GeometryFactory geomFactory, float worldScale )
     {
         final int numVertices = face.numOfVerts;
         
@@ -140,10 +145,19 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
         
         GeometryType geomType = GeometryType.TRIANGLE_FAN_ARRAY;
         
+        /*
+         * TODO: ATTENTION!
+         * 
+         * This must be removed to show lightmaps.
+         * But since lightmaps are not currently working, we disable
+         * them through this line.
+         */
+        face.lightmapID = -1;
+        
         NamedObject ga = geomFactory.createInterleavedGeometry( "Geometry " + faceIndex,
                                                                 geomType, 3,
                                                                 numVertices, 0, null,
-                                                                Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2 }, null
+                                                                Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, ( face.lightmapID >= 0 ) ? new int[] { 2, 2 } : new int[] { 2 }, null
                                                               );
         
         BSPTexInfo texInfo = texInfos[ face.textureID ];
@@ -151,6 +165,11 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
         
         //Matrix4f m = Matrix4f.fromPool();
         Point3f p = Point3f.fromPool();
+        
+        float min_u = Float.MAX_VALUE;
+        float max_u = -Float.MAX_VALUE;
+        float min_v = Float.MAX_VALUE;
+        float max_v = -Float.MAX_VALUE;
         
         for ( int i = 0; i < numVertices; i++ )
         {
@@ -170,15 +189,52 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
                 v /= baseTextures[ face.textureID ][0].getHeight();
             }
             
-            geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { u, v }, 0, 1 );
+            if ( u < min_u )
+                min_u = u;
+            if ( u > max_u )
+                max_u = u;
+            if ( v < min_v )
+                min_v = v;
+            if ( v > max_v )
+                max_v = v;
             
-            //geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { p.getX(), p.getY() }, 0, 1 );
-            //geomFactory.setTexCoord( ga, geomType, 1, 2, i, new float[] { ps.mPoints[ i ].lightTexCoord.getS(), ps.mPoints[ i ].lightTexCoord.getT() }, 0, 1 );
-            //geomFactory.setColor( ga, geomType, ps.mPoints[ i ].color.hasAlpha() ? 4 : 3, i, new float[] { ps.mPoints[ i ].color.getRed(), ps.mPoints[ i ].color.getGreen(), ps.mPoints[ i ].color.getBlue(), ps.mPoints[ i ].color.getAlpha() }, 0, 1 );
+            geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { u, v }, 0, 1 );
         }
         
         Point3f.toPool( p );
-        //Matrix4f.toPool( m );
+        
+        if ( face.lightmapID >= 0 )
+        {
+            int lightMapWidth = (int)FastMath.ceil( max_u / 16f ) - (int)FastMath.floor( min_u / 16f ) + 1;
+            int lightMapHeight = (int)FastMath.ceil( max_v / 16f ) - (int)FastMath.floor( min_v / 16f ) + 1;
+            
+            //System.out.println( lightMapWidth + "x" + lightMapHeight );
+            
+            int lightMapDataOffset = face.lightmapID;
+            face.lightmapID = faceIndex;
+            
+            AbstractTextureImage texImg0 = appFactory.createTextureImage( TextureImageFormat.RGB, lightMapWidth, lightMapHeight );
+            
+            ByteBuffer bb = texImg0.getDataBuffer();
+            bb.position( 0 );
+            bb.put( lightMapData, lightMapDataOffset, lightMapWidth * lightMapHeight * 3 );
+            bb.flip();
+            
+            lightMaps[faceIndex] = appFactory.createTexture( texImg0, true );
+            
+            for ( int i = 0; i < numVertices; i++ )
+            {
+                p = control[ i ].position;
+                
+                float u = p.getX() * texInfo.s[0] + p.getY() * texInfo.s[1] + p.getZ() * texInfo.s[2] + texInfo.s[3];
+                float v = p.getX() * texInfo.t[0] + p.getY() * texInfo.t[1] + p.getZ() * texInfo.t[2] + texInfo.t[3];
+                
+                u /= lightMapWidth;
+                v /= lightMapHeight;
+                
+                geomFactory.setTexCoord( ga, geomType, 1, 2, i, new float[] { u, v }, 0, 1 );
+            }
+        }
         
         geomFactory.finalizeGeometry( ga, geomType, 0, numVertices, 0, 0 );
         
@@ -188,7 +244,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
     /**
      * {@inheritDoc}
      */
-    public void convertFacesToGeometries( BSPScenePrototype prototype, GeometryFactory geomFactory, float worldScale )
+    public void convertFacesToGeometries( BSPScenePrototype prototype, AppearanceFactory appFactory, GeometryFactory geomFactory, float worldScale )
     {
         int numModels = prototype.models.length;
         
@@ -203,7 +259,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
             
             for ( int f = 0; f < numFaces; f++ )
             {
-                geometries[ f ] = convertFaceToGeometry( f, prototype.faces[ model.faceIndex + f ], prototype.surfEdges, prototype.edges, prototype.vertices, prototype.texInfos, prototype.baseTextures, geomFactory, worldScale );
+                geometries[ f ] = convertFaceToGeometry( f, prototype.faces[ model.faceIndex + f ], prototype.surfEdges, prototype.edges, prototype.vertices, prototype.texInfos, prototype.baseTextures, prototype.lightMapData, prototype.lightMaps, appFactory, geomFactory, worldScale );
             }
             
             prototype.geometries[ m ] = geometries;

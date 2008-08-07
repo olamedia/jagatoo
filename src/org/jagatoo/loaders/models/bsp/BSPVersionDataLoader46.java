@@ -263,7 +263,7 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
     /**
      * {@inheritDoc}
      */
-    public void convertFacesToGeometries( BSPScenePrototype prototype, GeometryFactory geomFactory, float worldScale )
+    public void convertFacesToGeometries( BSPScenePrototype prototype, AppearanceFactory appFactory, GeometryFactory geomFactory, float worldScale )
     {
         int numModels = prototype.models.length;
         

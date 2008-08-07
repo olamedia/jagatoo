@@ -50,6 +50,7 @@ import org.jagatoo.opengl.enums.TextureCombineMode;
 import org.jagatoo.opengl.enums.TextureCombineSource;
 import org.jagatoo.opengl.enums.CompareFunction;
 import org.jagatoo.opengl.enums.TextureCompareMode;
+import org.jagatoo.opengl.enums.TextureImageFormat;
 import org.jagatoo.opengl.enums.TextureMagFilter;
 import org.jagatoo.opengl.enums.TextureMinFilter;
 import org.jagatoo.opengl.enums.TextureMode;
@@ -253,7 +254,7 @@ public interface AppearanceFactory
     
     public abstract AbstractTexture loadOrGetTexture( String texName, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, boolean acceptFallbackTexture );
     
-    public abstract AbstractTextureImage createTextureImage( AbstractTextureImage.Format format, int width, int height );
+    public abstract AbstractTextureImage createTextureImage( TextureImageFormat format, int width, int height );
     
     public abstract AbstractTexture createTexture( AbstractTextureImage texImage0, boolean generateMipmaps );
 }

@@ -34,7 +34,7 @@ import java.awt.image.ColorModel;
 import java.awt.image.Raster;
 import java.nio.ByteBuffer;
 
-import org.jagatoo.loaders.textures.AbstractTextureImage;
+import org.jagatoo.opengl.enums.TextureImageFormat;
 
 /**
  * Luminance Pixel Processor
@@ -52,9 +52,9 @@ public class PixelProcessorLUM extends PixelProcessor
     }
     
     @Override
-    public final AbstractTextureImage.Format getTextureImageFormat()
+    public final TextureImageFormat getTextureImageFormat()
     {
-        return( AbstractTextureImage.Format.LUMINANCE );
+        return( TextureImageFormat.LUMINANCE );
     }
     
     @Override

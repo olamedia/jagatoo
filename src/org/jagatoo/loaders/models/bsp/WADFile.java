@@ -49,6 +49,7 @@ import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity;
 import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity_worldspawn;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
+import org.jagatoo.opengl.enums.TextureImageFormat;
 import org.jagatoo.util.streams.StreamUtils;
 import org.openmali.FastMath;
 
@@ -613,9 +614,9 @@ public class WADFile
                 //System.out.println( width + ", " + height );
                 
                 if ( isTransparentTexture || isGlassTexture || isSpecialTexture )
-                    mipmaps[i] = appFactory.createTextureImage( AbstractTextureImage.Format.RGBA, width, height );
+                    mipmaps[i] = appFactory.createTextureImage( TextureImageFormat.RGBA, width, height );
                 else
-                    mipmaps[i] = appFactory.createTextureImage( AbstractTextureImage.Format.RGB, width, height );
+                    mipmaps[i] = appFactory.createTextureImage( TextureImageFormat.RGB, width, height );
                 ByteBuffer bb = mipmaps[i].getDataBuffer();
                 
                 if ( isTransparentTexture )

@@ -37,6 +37,8 @@ import java.nio.ByteBuffer;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
 import org.jagatoo.loaders.textures.TextureFactory;
+import org.jagatoo.opengl.enums.TextureImageFormat;
+import org.jagatoo.opengl.enums.TextureImageInternalFormat;
 
 /**
  * Reads compressed DDS files.
@@ -141,8 +143,8 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
         */
 
         LinePostProcessing lpp = null;
-        AbstractTextureImage.Format texImgFormat;
-        AbstractTextureImage.InternalFormat internalFormat = AbstractTextureImage.InternalFormat.RGBA;
+        TextureImageFormat texImgFormat;
+        TextureImageInternalFormat internalFormat = TextureImageInternalFormat.RGBA;
         int blockSize = 0;
         int ddsPixelSize = 0;
         int icPixelSize = 0;
@@ -154,21 +156,21 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
             case 0x31545844: // FOURCC_DXT1
                 // DXT1's compression ratio is 8:1
                 readAlpha = acceptAlpha;
-                texImgFormat = AbstractTextureImage.Format.RGBA_DXT1;
+                texImgFormat = TextureImageFormat.RGBA_DXT1;
                 blockSize = 8;
                 break;
             
             case 0x33545844: // FOURCC_DXT3
                 // DXT3's compression ratio is 4:1
                 readAlpha = acceptAlpha;
-                texImgFormat = AbstractTextureImage.Format.RGBA_DXT3;
+                texImgFormat = TextureImageFormat.RGBA_DXT3;
                 blockSize = 16;
                 break;
             
             case 0x34545844: // FOURCC_DXT5
                 // DXT5's compression ratio is 4:1
                 readAlpha = acceptAlpha;
-                texImgFormat = AbstractTextureImage.Format.RGBA_DXT5;
+                texImgFormat = TextureImageFormat.RGBA_DXT5;
                 blockSize = 16;
                 break;
             
@@ -181,8 +183,8 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
                         if ( ( header[ HEADER_FIELD_PIXEL_FORMAT_R_BIT_MASK ] == 0xe0 ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_G_BIT_MASK ] == 0x1c ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_B_BIT_MASK ] == 0x03 ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_RGB_ALPHA_BIT_MASK ] == 0x00 ) )
                         {
                             readAlpha = false;
-                            texImgFormat = AbstractTextureImage.Format.RGB;
-                            internalFormat = AbstractTextureImage.InternalFormat.R3_G3_B2;
+                            texImgFormat = TextureImageFormat.RGB;
+                            internalFormat = TextureImageInternalFormat.R3_G3_B2;
                             icPixelSize = 3;
                             lpp = LinePostProcessing_R3G3B2.instance;
                             break;
@@ -196,8 +198,8 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
                         if ( ( header[ HEADER_FIELD_PIXEL_FORMAT_R_BIT_MASK ] == 0x0f00 ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_G_BIT_MASK ] == 0x00f0 ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_B_BIT_MASK ] == 0x000f ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_RGB_ALPHA_BIT_MASK ] == 0x0000 ) )
                         {
                             readAlpha = false;
-                            texImgFormat = AbstractTextureImage.Format.RGB;
-                            internalFormat = AbstractTextureImage.InternalFormat.RGB4;
+                            texImgFormat = TextureImageFormat.RGB;
+                            internalFormat = TextureImageInternalFormat.RGB4;
                             icPixelSize = 3;
                             lpp = LinePostProcessing_X4R4G4B4.instance;
                             break;
@@ -206,8 +208,8 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
                         if ( ( header[ HEADER_FIELD_PIXEL_FORMAT_R_BIT_MASK ] == 0xf800 ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_G_BIT_MASK ] == 0x07e0 ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_B_BIT_MASK ] == 0x001f ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_RGB_ALPHA_BIT_MASK ] == 0x0000 ) )
                         {
                             readAlpha = false;
-                            texImgFormat = AbstractTextureImage.Format.RGB;
-                            internalFormat = AbstractTextureImage.InternalFormat.RGB5;
+                            texImgFormat = TextureImageFormat.RGB;
+                            internalFormat = TextureImageInternalFormat.RGB5;
                             icPixelSize = 3;
                             lpp = LinePostProcessing_R5G6B5.instance;
                             break;
@@ -216,8 +218,8 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
                         if ( ( header[ HEADER_FIELD_PIXEL_FORMAT_R_BIT_MASK ] == 0x7c00 ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_G_BIT_MASK ] == 0x03e0 ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_B_BIT_MASK ] == 0x001f ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_RGB_ALPHA_BIT_MASK ] == 0x0000 ) )
                         {
                             readAlpha = false;
-                            texImgFormat = AbstractTextureImage.Format.RGB;
-                            internalFormat = AbstractTextureImage.InternalFormat.RGB5;
+                            texImgFormat = TextureImageFormat.RGB;
+                            internalFormat = TextureImageInternalFormat.RGB5;
                             icPixelSize = 3;
                             lpp = LinePostProcessing_X1R5G5B5.instance;
                             break;
@@ -226,8 +228,8 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
                         if ( ( header[ HEADER_FIELD_PIXEL_FORMAT_R_BIT_MASK ] == 0x7c00 ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_G_BIT_MASK ] == 0x03e0 ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_B_BIT_MASK ] == 0x001f ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_RGB_ALPHA_BIT_MASK ] == 0x8000 ) )
                         {
                             readAlpha = false;
-                            texImgFormat = AbstractTextureImage.Format.RGBA;
-                            internalFormat = AbstractTextureImage.InternalFormat.RGB5_A1;
+                            texImgFormat = TextureImageFormat.RGBA;
+                            internalFormat = TextureImageInternalFormat.RGB5_A1;
                             icPixelSize = 4;
                             lpp = LinePostProcessing_A1R5G5B5.instance;
                             break;
@@ -236,8 +238,8 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
                         if ( ( header[ HEADER_FIELD_PIXEL_FORMAT_R_BIT_MASK ] == 0x0f00 ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_G_BIT_MASK ] == 0x00f0 ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_B_BIT_MASK ] == 0x000f ) && ( header[ HEADER_FIELD_PIXEL_FORMAT_RGB_ALPHA_BIT_MASK ] == 0xf000 ) )
                         {
                             readAlpha = acceptAlpha;
-                            texImgFormat = AbstractTextureImage.Format.RGBA;
-                            internalFormat = AbstractTextureImage.InternalFormat.RGBA4;
+                            texImgFormat = TextureImageFormat.RGBA;
+                            internalFormat = TextureImageInternalFormat.RGBA4;
                             icPixelSize = 4;
                             lpp = LinePostProcessing_A4R4G4B4.instance;
                             break;

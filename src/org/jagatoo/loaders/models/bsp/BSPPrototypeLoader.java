@@ -85,6 +85,7 @@ import org.jagatoo.loaders.models.bsp.lumps.*;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
 import org.jagatoo.logging.JAGTLog;
+import org.jagatoo.opengl.enums.TextureImageFormat;
 
 /**
  * Loads the Quake 3 BSP file according to spec.
@@ -398,19 +399,8 @@ public class BSPPrototypeLoader
             return( null );
         }
         
-        int w = 0;
-        int h = 0;
-        
-        if ( file.getVersion() == 30 )
-        {
-            w = 16;
-            h = 16;
-        }
-        else if ( file.getVersion() == 46 )
-        {
-            w = 128;
-            h = 128;
-        }
+        int w = 128;
+        int h = 128;
         
         file.seek( bspDir.kLightmaps );
         final int sizePerImage = w * h * 3;
@@ -422,7 +412,7 @@ public class BSPPrototypeLoader
         
         for ( int i = 0; i < num; i++ )
         {
-            AbstractTextureImage texImg0 = appFactory.createTextureImage( AbstractTextureImage.Format.RGB, w, h );
+            AbstractTextureImage texImg0 = appFactory.createTextureImage( TextureImageFormat.RGB, w, h );
             ByteBuffer bb = texImg0.getDataBuffer();
             bb.position( 0 );
             bb.limit( bb.capacity() );
@@ -455,6 +445,20 @@ public class BSPPrototypeLoader
         }
         
         return( lightMaps );
+    }
+    
+    protected static byte[] readLightmapData( BSPFile file, BSPDirectory bspDir ) throws IOException
+    {
+        if ( bspDir.kLightmaps < 0 )
+        {
+            //JAGTLog.debug( "kLightmaps not currently supported by ", bspDir.getClass().getSimpleName() );
+            
+            return( null );
+        }
+        
+        file.seek( bspDir.kLightmaps );
+        
+        return( file.readFully( file.lumps[ bspDir.kLightmaps ].length ) );
     }
     
     /**
@@ -683,8 +687,6 @@ public class BSPPrototypeLoader
                 // lighting info
                 /*byte[] styles = */file.readFully( 4 ); // byte styles[ MAXLIGHTMAPS ] : #define MAXLIGHTMAPS 4
                 face.lightmapID = file.readInt();   // int lightofs : start of [ numstyles * surfsize ] samples
-                
-                face.lightmapID = -1; // TODO: Remove me!
             }
             
             return( faces );
@@ -1183,7 +1185,7 @@ public class BSPPrototypeLoader
         
         BSPScenePrototype prototype = loader.loadPrototypeData( bspFile, bspDir, worldScale, appFactory );
         
-        loader.convertFacesToGeometries( prototype, geomFactory, worldScale );
+        loader.convertFacesToGeometries( prototype, appFactory, geomFactory, worldScale );
         
         BSPConverter.convert( prototype, appFactory, nodeFactory, sceneGroup, mainGroupType, worldScale, siHandler );
         

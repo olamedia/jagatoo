@@ -88,6 +88,7 @@ import org.jagatoo.opengl.enums.BlendMode;
 import org.jagatoo.opengl.enums.DrawMode;
 import org.jagatoo.opengl.enums.FaceCullMode;
 import org.jagatoo.opengl.enums.ShadeModel;
+import org.jagatoo.opengl.enums.TextureFormat;
 import org.jagatoo.opengl.enums.TextureMode;
 import org.openmali.spatial.bounds.BoundsType;
 import org.openmali.vecmath2.Matrix4f;
@@ -284,7 +285,7 @@ public class AC3DPrototypeLoader
             translucency = translucencies.get( surface.getMaterialIndex() ).floatValue();
         }
         
-        final boolean isTransparent = ( ( translucency > 0f ) || ( ( texture != null ) && ( texture.getFormat() == AbstractTexture.Format.RGBA ) ) );
+        final boolean isTransparent = ( ( translucency > 0f ) || ( ( texture != null ) && ( texture.getFormat() == TextureFormat.RGBA ) ) );
         
         final String transAttribsCacheKey = String.valueOf( isTransparent ) + String.valueOf( translucency );
         final String polyAttribsCacheKey = String.valueOf( surface.isTwoSided() ) + "-" + String.valueOf( surface.isLine() );

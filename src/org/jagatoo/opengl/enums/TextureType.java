@@ -27,24 +27,33 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.bsp;
+package org.jagatoo.opengl.enums;
 
-import java.io.IOException;
-
-import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingErrorException;
-import org.jagatoo.loaders.models._util.AppearanceFactory;
-import org.jagatoo.loaders.models._util.GeometryFactory;
-import org.jagatoo.loaders.models.bsp.lumps.BSPDirectory;
+import org.jagatoo.opengl.OGL;
 
 /**
- * Insert type comment here.
+ * {@link TextureType} is an enum-abstraction of the different texture-types,
+ * that are supported by OpenGL.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface BSPVersionDataLoader
+public enum TextureType
 {
-    public BSPScenePrototype loadPrototypeData( BSPFile bspFile, BSPDirectory bspDir, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException;
+    TEXTURE_1D( OGL.GL_TEXTURE_1D ),
+    TEXTURE_2D( OGL.GL_TEXTURE_2D ),
+    TEXTURE_3D( OGL.GL_TEXTURE_3D ),
+    TEXTURE_CUBE_MAP( OGL.GL_TEXTURE_CUBE_MAP ),
+    ;
     
-    public void convertFacesToGeometries( BSPScenePrototype prototype, AppearanceFactory appFactory, GeometryFactory geomFactory, float worldScale );
+    private final int glValue;
+    
+    public final int toOpenGL()
+    {
+        return( glValue );
+    }
+    
+    private TextureType( int glValue )
+    {
+        this.glValue = glValue;
+    }
 }

@@ -30,7 +30,8 @@
 package org.jagatoo.loaders.textures;
 
 import org.jagatoo.datatypes.NamableObject;
-import org.jagatoo.opengl.OGL;
+import org.jagatoo.opengl.enums.TextureFormat;
+import org.jagatoo.opengl.enums.TextureType;
 
 /**
  * Abstraction of a Texture.
@@ -39,101 +40,6 @@ import org.jagatoo.opengl.OGL;
  */
 public interface AbstractTexture extends NamableObject
 {
-    public static enum Type
-    {
-        TEXTURE_1D( OGL.GL_TEXTURE_1D ),
-        TEXTURE_2D( OGL.GL_TEXTURE_2D ),
-        TEXTURE_3D( OGL.GL_TEXTURE_3D ),
-        TEXTURE_CUBE_MAP( OGL.GL_TEXTURE_CUBE_MAP ),
-        ;
-        
-        private final int glValue;
-        
-        public final int toOpenGL()
-        {
-            return( glValue );
-        }
-        
-        private Type( int glValue )
-        {
-            this.glValue = glValue;
-        }
-    }
-    
-    public static enum Format
-    {
-        /**
-         * An opaque colored texture without alpha channel. 
-         */
-        RGB( false ),
-        
-        /**
-         * A transparent colored texture with alpha channel. 
-         */
-        RGBA( true ),
-        
-        /**
-         * Texture type with only luminance (not RGB, no alpha channel).
-         */
-        LUMINANCE( false ),
-        
-        /**
-         * Texture type with depth information.
-         */
-        DEPTH( false );
-        
-        private final boolean hasAlpha;
-        
-        public final boolean hasAlpha()
-        {
-            return( hasAlpha );
-        }
-        
-        public static final Format getFormat( org.jagatoo.loaders.textures.AbstractTextureImage.Format tiFormat )
-        {
-            switch ( tiFormat )
-            {
-                case RGB:
-                    return( org.jagatoo.loaders.textures.AbstractTexture.Format.RGB );
-                    
-                case DEPTH:
-                    return( org.jagatoo.loaders.textures.AbstractTexture.Format.DEPTH );
-                    
-                case LUMINANCE:
-                    return( org.jagatoo.loaders.textures.AbstractTexture.Format.LUMINANCE );
-                    
-                default:
-                    return( org.jagatoo.loaders.textures.AbstractTexture.Format.RGBA );
-            }
-        }
-        
-        public final AbstractTextureImage.Format getDefaultTextureImageFormat()
-        {
-            switch ( this )
-            {
-                case DEPTH:
-                    return( org.jagatoo.loaders.textures.AbstractTextureImage.Format.DEPTH );
-                    
-                case LUMINANCE:
-                    return( org.jagatoo.loaders.textures.AbstractTextureImage.Format.LUMINANCE );
-                    
-                case RGB:
-                    return( org.jagatoo.loaders.textures.AbstractTextureImage.Format.RGB );
-                    
-                case RGBA:
-                    return( org.jagatoo.loaders.textures.AbstractTextureImage.Format.RGBA );
-                    
-                default:
-                    throw new Error( "Unsupported Format for conversion: " + this );
-            }
-        }
-        
-        private Format( boolean hasAlpha )
-        {
-            this.hasAlpha = hasAlpha;
-        }
-    }
-    
     /**
      * Sets the key-String, by which this texture has been cached in the TextureLoader.
      */
@@ -157,7 +63,7 @@ public interface AbstractTexture extends NamableObject
     /**
      * @return the Texture's {@link Type}.
      */
-    public Type getType();
+    public TextureType getType();
     
     /**
      * @return the Texture's actual width.
@@ -172,7 +78,7 @@ public interface AbstractTexture extends NamableObject
     /**
      * @return the Texture's {@link Format}.
      */
-    public Format getFormat();
+    public TextureFormat getFormat();
     
     public void setImage( int level, AbstractTextureImage image );
     
