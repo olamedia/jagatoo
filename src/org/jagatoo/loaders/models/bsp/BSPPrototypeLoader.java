@@ -63,6 +63,7 @@
 package org.jagatoo.loaders.models.bsp;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -176,6 +177,20 @@ public class BSPPrototypeLoader
             }
         }
         
+        URL url = new URL( file.getBaseURL(), file.getName().concat( ".wad" ) );
+        if ( (new File ( url.getPath() ).exists () ) )
+        {
+            try
+            {
+                WADFile wadFile = new WADFile( url );
+                wadFiles.add( wadFile );
+            }
+            catch ( IOException e )
+            {
+                //e.printStackTrace();
+                System.err.println( "WAD file not found \"" + url + "\"." );
+            }
+        }   
         return( wadFiles.toArray( new WADFile[ wadFiles.size() ] ) );
     }
     
@@ -1195,12 +1210,12 @@ public class BSPPrototypeLoader
     /**
      * Loads the BSP scene prototype.
      */
-    public static BSPScenePrototype load( InputStream in, URL baseURL, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingErrorException
+    public static BSPScenePrototype load( InputStream in, URL baseURL, String fileName, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingErrorException
     {
         if ( !( in instanceof BufferedInputStream ) )
             in = new BufferedInputStream( in );
         
-        BSPFile bspFile = new BSPFile( in, baseURL );
+        BSPFile bspFile = new BSPFile( in, baseURL, fileName );
         
         return( load( bspFile, geomFactory, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
     }
@@ -1210,6 +1225,6 @@ public class BSPPrototypeLoader
      */
     public static BSPScenePrototype load( URL url, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingErrorException
     {
-        return( load( url.openStream(), LoaderUtils.extractBaseURL( url ), geomFactory, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
+        return( load( url.openStream(), LoaderUtils.extractBaseURL( url ), LoaderUtils.extractFileName( url ) , geomFactory, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
     }
 }
