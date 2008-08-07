@@ -256,5 +256,7 @@ public interface AppearanceFactory
     
     public abstract AbstractTextureImage createTextureImage( TextureImageFormat format, int width, int height );
     
+    public AbstractTextureImage createTextureImage( TextureImageFormat format, int orgWidth, int orgHeight, int width, int height );
+    
     public abstract AbstractTexture createTexture( AbstractTextureImage texImage0, boolean generateMipmaps );
 }

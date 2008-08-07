@@ -42,6 +42,8 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 
+import org.jagatoo.image.BufferedImageFactory;
+import org.jagatoo.image.SharedBufferedImage;
 import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.ParsingErrorException;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
@@ -50,6 +52,7 @@ import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity_worldspawn;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.loaders.textures.AbstractTextureImage;
 import org.jagatoo.opengl.enums.TextureImageFormat;
+import org.jagatoo.util.image.ImageUtility;
 import org.jagatoo.util.streams.StreamUtils;
 import org.openmali.FastMath;
 
@@ -182,12 +185,35 @@ public class WADFile
         in.close();
     }
     
-    private void readTransparentTexture( DataInputStream din, byte[][] palette, int width, int height, ByteBuffer bb ) throws IOException
+    private static void transferScaledBytes( byte[] unscaledData, int bytesPerPixel, ByteBuffer bb, int orgWidth, int orgHeight, int width, int height )
     {
+        SharedBufferedImage sbi = BufferedImageFactory.createSharedBufferedImage( orgWidth, orgHeight, bytesPerPixel, null, unscaledData );
+        
+        SharedBufferedImage sbi_scaled = ImageUtility.scaleImage( sbi, width, height, (bytesPerPixel == 4 ) );
+        
+        byte[] scaledData = sbi_scaled.getSharedData();
+        
+        for ( int i = 0; i < scaledData.length; i += bytesPerPixel )
+        {
+            // Swap R and B.
+            bb.put( scaledData[ i + 2 ] );
+            bb.put( scaledData[ i + 1 ] );
+            bb.put( scaledData[ i + 0 ] );
+            
+            if ( bytesPerPixel == 4 )
+                bb.put( scaledData[ i + 3 ] );
+        }
+    }
+    
+    private void readTransparentTexture( DataInputStream din, byte[][] palette, int orgWidth, int orgHeight, int width, int height, ByteBuffer bb, byte[] pixelData ) throws IOException
+    {
+        final boolean needsPostScaling = ( pixelData != null );
+        
         byte r, g, b, a;
         
         // convert the mip palette based bitmap to RGB format...
-        int size = width * height;
+        int size = orgWidth * orgHeight;
+        int pos = 0;
         for ( int i = 0; i < size; i++ )
         {
             int palIdx = din.read();
@@ -205,19 +231,39 @@ public class WADFile
                 a = (byte)0;
             }
             
-            bb.put( r );
-            bb.put( g );
-            bb.put( b );
-            bb.put( a );
+            if ( !needsPostScaling )
+            {
+                bb.put( r );
+                bb.put( g );
+                bb.put( b );
+                bb.put( a );
+            }
+            else
+            {
+                pixelData[pos + 2] = r;
+                pixelData[pos + 1] = g;
+                pixelData[pos + 0] = b;
+                pixelData[pos + 3] = a;
+                
+                pos += 4;
+            }
+        }
+        
+        if ( needsPostScaling )
+        {
+            transferScaledBytes( pixelData, 4, bb, orgWidth, orgHeight, width, height );
         }
     }
     
-    private void readGlassTexture( DataInputStream din, byte[][] palette, int width, int height, ByteBuffer bb ) throws IOException
+    private void readGlassTexture( DataInputStream din, byte[][] palette, int orgWidth, int orgHeight, int width, int height, ByteBuffer bb, byte[] pixelData ) throws IOException
     {
+        final boolean needsPostScaling = ( pixelData != null );
+        
         byte r, g, b, a;
         
         // convert the mip palette based bitmap to RGB format...
-        int size = width * height;
+        int size = orgWidth * orgHeight;
+        int pos = 0;
         for ( int i = 0; i < size; i++ )
         {
             int palIdx = din.read();
@@ -227,10 +273,27 @@ public class WADFile
             b = palette[palIdx][2];
             a = (byte)127;
             
-            bb.put( r );
-            bb.put( g );
-            bb.put( b );
-            bb.put( a );
+            if ( !needsPostScaling )
+            {
+                bb.put( r );
+                bb.put( g );
+                bb.put( b );
+                bb.put( a );
+            }
+            else
+            {
+                pixelData[pos + 2] = r;
+                pixelData[pos + 1] = g;
+                pixelData[pos + 0] = b;
+                pixelData[pos + 3] = a;
+                
+                pos += 4;
+            }
+        }
+        
+        if ( needsPostScaling )
+        {
+            transferScaledBytes( pixelData, 4, bb, orgWidth, orgHeight, width, height );
         }
     }
     
@@ -356,7 +419,7 @@ public class WADFile
         bb.limit( limit0 );
     }
     
-    private AbstractTexture[] readSkyTextures( BSPEntity[] entities, DataInputStream din, byte[][] palette, int width, int height, AbstractTexture sampleTexture, AppearanceFactory appFactory, URL baseURL ) throws IOException
+    private AbstractTexture[] readSkyTextures( BSPEntity[] entities, DataInputStream din, byte[][] palette, AbstractTexture sampleTexture, AppearanceFactory appFactory, URL baseURL ) throws IOException
     {
         BSPEntity_worldspawn entity_worlspawn = null;
         for ( int i = 0; i < entities.length; i++ )
@@ -456,27 +519,50 @@ public class WADFile
         }
     }
     
-    private void readSpecialTexture( DataInputStream din, byte[][] palette, int width, int height, ByteBuffer bb ) throws IOException
+    private void readSpecialTexture( DataInputStream din, byte[][] palette, int orgWidth, int orgHeight, int width, int height, ByteBuffer bb, byte[] pixelData ) throws IOException
     {
+        final boolean needsPostScaling = ( pixelData != null );
+        
         final byte special_texture_transparency = (byte)0;
         
         // convert the mip palette based bitmap to RGB format...
-        int size = width * height;
+        int size = orgWidth * orgHeight;
+        int pos = 0;
         for ( int i = 0; i < size; i++ )
         {
             int palIdx = din.read();
             
-            bb.put( palette[palIdx][0] );
-            bb.put( palette[palIdx][1] );
-            bb.put( palette[palIdx][2] );
-            
-            bb.put( special_texture_transparency );
+            if ( !needsPostScaling )
+            {
+                bb.put( palette[palIdx][0] );
+                bb.put( palette[palIdx][1] );
+                bb.put( palette[palIdx][2] );
+                
+                bb.put( special_texture_transparency );
+            }
+            else
+            {
+                pixelData[pos + 2] = palette[palIdx][0];
+                pixelData[pos + 1] = palette[palIdx][1];
+                pixelData[pos + 0] = palette[palIdx][2];
+                
+                pixelData[pos + 3] = special_texture_transparency;
+                
+                pos += 4;
+            }
+        }
+        
+        if ( needsPostScaling )
+        {
+            transferScaledBytes( pixelData, 4, bb, orgWidth, orgHeight, width, height );
         }
     }
     
-    private void readRegularTexture( DataInputStream din, byte[][] palette, int width, int height, boolean changeGamme, ByteBuffer bb ) throws IOException
+    private void readRegularTexture( DataInputStream din, byte[][] palette, int orgWidth, int orgHeight, int width, int height, boolean changeGamma, ByteBuffer bb, byte[] pixelData ) throws IOException
     {
-        if ( changeGamme )
+        final boolean needsPostScaling = ( pixelData != null );
+        
+        if ( changeGamma )
         {
             float gamma = 1.0f;
             float f, inf;
@@ -497,14 +583,31 @@ public class WADFile
         }
         
         // convert the mip palette based bitmap to RGB format...
-        int size = width * height;
+        int size = orgWidth * orgHeight;
+        int pos = 0;
         for ( int j = 0; j < size; j++ )
         {
             int palIdx = din.read();
             
-            bb.put( palette[palIdx][0] );
-            bb.put( palette[palIdx][1] );
-            bb.put( palette[palIdx][2] );
+            if ( !needsPostScaling )
+            {
+                bb.put( palette[palIdx][0] );
+                bb.put( palette[palIdx][1] );
+                bb.put( palette[palIdx][2] );
+            }
+            else
+            {
+                pixelData[pos + 2] = palette[palIdx][0];
+                pixelData[pos + 1] = palette[palIdx][1];
+                pixelData[pos + 0] = palette[palIdx][2];
+                
+                pos += 3;
+            }
+        }
+        
+        if ( needsPostScaling )
+        {
+            transferScaledBytes( pixelData, 3, bb, orgWidth, orgHeight, width, height );
         }
     }
     
@@ -562,11 +665,13 @@ public class WADFile
             din.read( nameBytes );
             //System.out.println( new String( name ).trim() );
             
-            int width = Integer.reverseBytes( din.readInt() );
-            int height = Integer.reverseBytes( din.readInt() );
+            int orgWidth = Integer.reverseBytes( din.readInt() );
+            int orgHeight = Integer.reverseBytes( din.readInt() );
             
-            //System.out.println( width );
-            //System.out.println( height );
+            int width = ImageUtility.roundUpPower2( orgWidth );
+            int height = ImageUtility.roundUpPower2( orgHeight );
+            
+            //System.out.println( orgWidth + "x" + orgHeight + ", " + width + "x" + height );
             
             int[] offsets = new int[ 4 ];
             for ( int i = 0; i < 4; i++ )
@@ -614,21 +719,27 @@ public class WADFile
                 //System.out.println( width + ", " + height );
                 
                 if ( isTransparentTexture || isGlassTexture || isSpecialTexture )
-                    mipmaps[i] = appFactory.createTextureImage( TextureImageFormat.RGBA, width, height );
+                    mipmaps[i] = appFactory.createTextureImage( TextureImageFormat.RGBA, orgWidth, orgHeight, width, height );
                 else
-                    mipmaps[i] = appFactory.createTextureImage( TextureImageFormat.RGB, width, height );
+                    mipmaps[i] = appFactory.createTextureImage( TextureImageFormat.RGB, orgWidth, orgHeight, width, height );
                 ByteBuffer bb = mipmaps[i].getDataBuffer();
                 
+                byte[] pixelData = null;
+                if ( ( orgWidth != width ) || ( orgHeight != height ) )
+                {
+                    pixelData = new byte[ orgWidth * orgHeight * mipmaps[i].getPixelSize() ];
+                }
+                
                 if ( isTransparentTexture )
-                    readTransparentTexture( din, palette, width, height, bb );
+                    readTransparentTexture( din, palette, orgWidth, orgHeight, width, height, bb, pixelData );
                 else if ( isGlassTexture )
-                    readGlassTexture( din, palette, width, height, bb );
+                    readGlassTexture( din, palette, orgWidth, orgHeight, width, height, bb, pixelData );
                 else if ( isSkyTexture )
-                    readRegularTexture( din, palette, width, height, false, bb );
+                    readRegularTexture( din, palette, orgWidth, orgHeight, width, height, false, bb, pixelData );
                 else if ( isSpecialTexture )
-                    readSpecialTexture( din, palette, width, height, bb );
+                    readSpecialTexture( din, palette, orgWidth, orgHeight, width, height, bb, pixelData );
                 else
-                    readRegularTexture( din, palette, width, height, true, bb );
+                    readRegularTexture( din, palette, orgWidth, orgHeight, width, height, true, bb, pixelData );
                 
                 bb.position( 0 );
                 if ( mipmaps[i].getFormat().hasAlpha() )
@@ -636,6 +747,8 @@ public class WADFile
                 else
                     bb.limit( width * height * 3 );
                 
+                orgWidth = orgWidth >> 1;
+                orgHeight = orgHeight >> 1;
                 width = width >> 1;
                 height = height >> 1;
             }
@@ -688,7 +801,7 @@ public class WADFile
             }
             else if ( isSkyTexture )
             {
-                AbstractTexture[] skyTextures = readSkyTextures( entities, din, palette, width, height, texture, appFactory, baseURL );
+                AbstractTexture[] skyTextures = readSkyTextures( entities, din, palette, texture, appFactory, baseURL );
                 
                 return( new AbstractTexture[] { texture, skyTextures[0], skyTextures[1], skyTextures[2], skyTextures[3], skyTextures[4], skyTextures[5] } );
             }

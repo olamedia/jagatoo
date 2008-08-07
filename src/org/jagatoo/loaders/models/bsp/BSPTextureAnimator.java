@@ -80,7 +80,7 @@ public final class BSPTextureAnimator
     public BSPTextureAnimator( AbstractTexture[] animFrames, NamedObject appearance, int textureUnit, AppearanceFactory appFactory, float fps )
     {
         this.animFrames = animFrames;
-        this.numFrames = animFrames.length/* - 1*/; // The last frame in the array is the "off-frame"!
+        this.numFrames = animFrames.length - 1; // The last frame in the array is the "off-frame"!
         this.appearance = appearance;
         this.textureUnit = textureUnit;
         

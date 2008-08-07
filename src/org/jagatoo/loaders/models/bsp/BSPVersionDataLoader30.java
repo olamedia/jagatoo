@@ -185,8 +185,13 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
             
             if ( face.textureID >= 0 )
             {
-                u /= baseTextures[ face.textureID ][0].getWidth();
-                v /= baseTextures[ face.textureID ][0].getHeight();
+                int orgWidth = baseTextures[ face.textureID ][0].getImage( 0 ).getOriginalWidth();
+                int orgHeight = baseTextures[ face.textureID ][0].getImage( 0 ).getOriginalHeight();
+                //int width = baseTextures[ face.textureID ][0].getWidth();
+                //int height = baseTextures[ face.textureID ][0].getHeight();
+                
+                u /= orgWidth;
+                v /= orgHeight;
             }
             
             if ( u < min_u )
