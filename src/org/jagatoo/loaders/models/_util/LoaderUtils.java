@@ -67,9 +67,10 @@ public class LoaderUtils
         return( extractBaseURL( new File( filename ) ) );
     }
     
-    public static final String extractFileName( URL url )
+    public static final String extractFilenameWithoutExt( URL url )
     {
         String fileName = url.getFile();
-        return fileName.substring( fileName.lastIndexOf( "/" ) + 1, fileName.length() - 4 );
+        
+        return( fileName.substring( fileName.lastIndexOf( "/" ) + 1, fileName.length() - 4 ) );
     }
 }

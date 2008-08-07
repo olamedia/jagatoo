@@ -82,7 +82,7 @@ class BSPFile
     private final URL                  baseURL;
     private final BufferedInputStream  in;
     
-    private String                     fileName;
+    private final String               filename;
     private char[]                     ID;
     private int                        version;
     
@@ -91,9 +91,9 @@ class BSPFile
      */
     protected BSPLump[] lumps;
     
-    public String getName()
+    public final String getName()
     {
-        return( fileName );
+        return( filename );
     }
     
     public final URL getBaseURL()
@@ -287,12 +287,12 @@ class BSPFile
         checkVersion( version );
     }
     
-    protected BSPFile( InputStream in, URL baseURL, String fileName) throws IOException
+    protected BSPFile( InputStream in, String filename, URL baseURL ) throws IOException
     {
         super();
         
+        this.filename = filename;
         this.baseURL = baseURL;
-        this.fileName = fileName;
         
         if ( in instanceof BufferedInputStream )
             this.in = (BufferedInputStream)in;
