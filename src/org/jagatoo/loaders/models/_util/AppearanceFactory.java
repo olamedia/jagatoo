@@ -93,7 +93,7 @@ public interface AppearanceFactory
     
     public abstract void setMaterialSpecularColor( NamedObject material, float r, float g, float b );
     
-    public abstract void setMaterialShininess( NamedObject material, float shinines );
+    public abstract void setMaterialShininess( NamedObject material, float shininess );
     
     public abstract void setMaterialNormalizeNormals( NamedObject material, boolean normalizeNormals );
     

@@ -1,5 +1,9 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2003-2008, Xith3D Project Group all rights reserved.
+ * 
+ * Portions based on the Java3D interface, Copyright by Sun Microsystems.
+ * Many thanks to the developers of Java3D and Sun Microsystems for their
+ * innovation and design.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,31 +31,34 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models._util;
+package org.jagatoo.loaders.models.tds.chunks.processors;
+
+import org.jagatoo.opengl.enums.FaceCullMode;
+import org.jagatoo.loaders.models._util.AnimationFactory;
+import org.jagatoo.loaders.models._util.AppearanceFactory;
+import org.jagatoo.loaders.models._util.GeometryFactory;
+import org.jagatoo.loaders.models._util.NodeFactory;
+import org.jagatoo.loaders.models._util.SpecialItemsHandler;
+import org.jagatoo.loaders.models.tds.TDSFile;
+import org.jagatoo.loaders.models.tds.internal.ModelContext;
+
+import java.io.IOException;
 
 /**
- * Insert type comment here.
+ * Handles the indication of 2 sided shape
  * 
+ * @author Kevin Glass
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface SpecialItemsHandler
+public class TwoSideProcessor extends ChunkProcessor
 {
-    public static enum SpecialItemType
+    @Override
+    public void process( TDSFile file, AppearanceFactory appFactory, GeometryFactory geomFactory, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, ModelContext context, int length ) throws IOException
     {
-        SCENE_GROUP,
-        NESTED_TRANSFORM,
-        SHAPE,
-        NAMED_OBJECT,
-        MOUNT_TRANSFORM,
-        SPAWN_TRANSFORM,
-        ITEM,
-        SUB_MODEL,
-        LIGHT,
-        SKYBOX,
-        TEXTURE_ANIMATOR,
-        ANIMATION_CONTROLLERS,
-        ;
+        context.faceCullMode = FaceCullMode.NONE;
     }
     
-    public Object addSpecialItem( SpecialItemType type, String name, Object item );
+    public TwoSideProcessor()
+    {
+    }
 }

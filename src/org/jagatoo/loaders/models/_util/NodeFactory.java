@@ -34,8 +34,12 @@ import org.jagatoo.loaders.models.bsp.BSPVisibilityUpdater;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.openmali.spatial.PlaneIndicator;
 import org.openmali.spatial.bounds.BoundsType;
+import org.openmali.vecmath2.AxisAngle3f;
 import org.openmali.vecmath2.Matrix3f;
 import org.openmali.vecmath2.Matrix4f;
+import org.openmali.vecmath2.Quaternion4f;
+import org.openmali.vecmath2.Tuple3f;
+import org.openmali.vecmath2.Vector3f;
 
 /**
  * Insert type comment here.
@@ -75,6 +79,12 @@ public interface NodeFactory
     
     
     public NamedObject createShape( String name, NamedObject geometry, NamedObject appearance, BoundsType boundsType );
+    
+    
+    
+    public void applyGeometryToShape( NamedObject geometry, NamedObject shape );
+    
+    public void applyAppearanceToShape( NamedObject appearance, NamedObject shape );
     
     
     
@@ -123,4 +133,22 @@ public interface NodeFactory
     
     
     public Object createSkyBox( AbstractTexture texFront, AbstractTexture texRight, AbstractTexture texBack, AbstractTexture texLeft, AbstractTexture texTop, AbstractTexture texBottom );
+    
+    
+    
+    public NamedObject transformShapeOrGeometry( NamedObject shapeOrGeom, Matrix4f transform );
+    
+    public NamedObject transformShapeOrGeometry( NamedObject shapeOrGeom, Vector3f translation, Matrix3f rotation, Tuple3f scale );
+    
+    public NamedObject transformShapeOrGeometry( NamedObject shapeOrGeom, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
+    
+    public NamedObject transformShapeOrGeometry( NamedObject shapeOrGeom, Vector3f translation, AxisAngle3f rotation, Tuple3f scale );
+    
+    public NamedObject translateShapeOrGeometry( NamedObject shapeOrGeom, Vector3f translation );
+    
+    public NamedObject translateShapeOrGeometry( NamedObject shapeOrGeom, float translationX, float translationY, float translationZ );
+    
+    public NamedObject rotateShapeOrGeometry( NamedObject shapeOrGeom, Matrix3f rotation );
+    
+    public NamedObject scaleShapeOrGeometry( NamedObject shapeOrGeom, Tuple3f scale );
 }

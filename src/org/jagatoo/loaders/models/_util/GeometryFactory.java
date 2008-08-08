@@ -30,6 +30,10 @@
 package org.jagatoo.loaders.models._util;
 
 import org.jagatoo.datatypes.NamedObject;
+import org.openmali.vecmath2.Colorf;
+import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.TexCoordf;
+import org.openmali.vecmath2.Vector3f;
 
 /**
  * Insert type comment here.
@@ -55,11 +59,19 @@ public interface GeometryFactory
     
     public void setCoordinate( NamedObject geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
     
+    public void setCoordinate( NamedObject geometry, GeometryType type, int vertexIndex, Point3f[] data, int offset, int num );
+    
     public void setNormal( NamedObject geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
+    
+    public void setNormal( NamedObject geometry, GeometryType type, int vertexIndex, Vector3f[] data, int offset, int num );
     
     public void setTexCoord( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, float[] data, int offset, int num );
     
+    public void setTexCoord( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, TexCoordf<?>[] data, int offset, int num );
+    
     public void setColor( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, float[] data, int offset, int num );
+    
+    public void setColor( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, Colorf[] data, int offset, int num );
     
     public void setVertexAttrib( NamedObject geometry, GeometryType type, int attribIndex, int attribSize, int vertexIndex, float[] data, int offset, int num );
     

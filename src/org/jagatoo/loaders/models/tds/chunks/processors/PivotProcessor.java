@@ -1,5 +1,9 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2003-2008, Xith3D Project Group all rights reserved.
+ * 
+ * Portions based on the Java3D interface, Copyright by Sun Microsystems.
+ * Many thanks to the developers of Java3D and Sun Microsystems for their
+ * innovation and design.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,31 +31,39 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models._util;
+package org.jagatoo.loaders.models.tds.chunks.processors;
+
+import java.io.IOException;
+import org.openmali.vecmath2.Point3f;
+import org.jagatoo.loaders.models._util.AnimationFactory;
+import org.jagatoo.loaders.models._util.AppearanceFactory;
+import org.jagatoo.loaders.models._util.GeometryFactory;
+import org.jagatoo.loaders.models._util.NodeFactory;
+import org.jagatoo.loaders.models._util.SpecialItemsHandler;
+import org.jagatoo.loaders.models.tds.TDSFile;
+import org.jagatoo.loaders.models.tds.internal.ModelContext;
 
 /**
- * Insert type comment here.
+ * A processor to handle the pivot information
  * 
+ * @author Kevin Glass
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface SpecialItemsHandler
+public class PivotProcessor extends ChunkProcessor
 {
-    public static enum SpecialItemType
+    @Override
+    public void process( TDSFile file, AppearanceFactory appFactory, GeometryFactory geomFactory, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, ModelContext context, int length ) throws IOException
     {
-        SCENE_GROUP,
-        NESTED_TRANSFORM,
-        SHAPE,
-        NAMED_OBJECT,
-        MOUNT_TRANSFORM,
-        SPAWN_TRANSFORM,
-        ITEM,
-        SUB_MODEL,
-        LIGHT,
-        SKYBOX,
-        TEXTURE_ANIMATOR,
-        ANIMATION_CONTROLLERS,
-        ;
+        float x = file.readFloat();
+        float y = file.readFloat();
+        float z = file.readFloat();
+        
+        context.pivot = new Point3f( x, y, z );
+        //context.pivot = new Point3f( x, z, -y );
+        //System.out.println( "Read pivot: " + context.pivot );
     }
     
-    public Object addSpecialItem( SpecialItemType type, String name, Object item );
+    public PivotProcessor()
+    {
+    }
 }

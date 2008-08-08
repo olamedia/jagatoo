@@ -29,29 +29,40 @@
  */
 package org.jagatoo.loaders.models._util;
 
+import org.jagatoo.datatypes.NamedObject;
+import org.openmali.vecmath2.AxisAngle3f;
+import org.openmali.vecmath2.Matrix3f;
+import org.openmali.vecmath2.Matrix4f;
+import org.openmali.vecmath2.Quaternion4f;
+import org.openmali.vecmath2.Tuple3f;
+import org.openmali.vecmath2.Vector3f;
+
 /**
  * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface SpecialItemsHandler
+public interface AnimationFactory
 {
-    public static enum SpecialItemType
+    public static enum AnimationType
     {
-        SCENE_GROUP,
-        NESTED_TRANSFORM,
-        SHAPE,
-        NAMED_OBJECT,
-        MOUNT_TRANSFORM,
-        SPAWN_TRANSFORM,
-        ITEM,
-        SUB_MODEL,
-        LIGHT,
-        SKYBOX,
-        TEXTURE_ANIMATOR,
-        ANIMATION_CONTROLLERS,
-        ;
+        VERTEX_KEY_FRAMES,
+        TRANSFORM_KEY_FRAMES,
+        SKELETAL,
+        WEIGHTED_SKELETAL,
     }
     
-    public Object addSpecialItem( SpecialItemType type, String name, Object item );
+    public Object createTransformKeyFrame( float time, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
+    
+    public Object createTransformKeyFrame( float time, Vector3f translation, AxisAngle3f rotation, Tuple3f scale );
+    
+    public Object createTransformKeyFrame( float time, Vector3f translation, Matrix3f rotation, Tuple3f scale );
+    
+    public Object createTransformKeyFrame( float time, Matrix4f transform );
+    
+    public void transformTransformKeyFrame( Matrix4f transform, Object frame );
+    
+    public void transformTransformKeyFrames( Matrix4f transform, Object[] frames );
+    
+    public Object createAnimationController( AnimationType animType, Object[] keyFrames, NamedObject target );
 }

@@ -1,5 +1,9 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2003-2008, Xith3D Project Group all rights reserved.
+ * 
+ * Portions based on the Java3D interface, Copyright by Sun Microsystems.
+ * Many thanks to the developers of Java3D and Sun Microsystems for their
+ * innovation and design.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -27,31 +31,30 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models._util;
+package org.jagatoo.loaders.models.tds.internal;
+
+import java.util.ArrayList;
 
 /**
- * Insert type comment here.
+ * A collection of faces
  * 
- * @author Marvin Froehlich (aka Qudus)
+ * @author Kevin Glass
  */
-public interface SpecialItemsHandler
+public class Surface
 {
-    public static enum SpecialItemType
+    private final ArrayList<Face> faces = new ArrayList<Face>();
+    
+    public void addFace( Face face )
     {
-        SCENE_GROUP,
-        NESTED_TRANSFORM,
-        SHAPE,
-        NAMED_OBJECT,
-        MOUNT_TRANSFORM,
-        SPAWN_TRANSFORM,
-        ITEM,
-        SUB_MODEL,
-        LIGHT,
-        SKYBOX,
-        TEXTURE_ANIMATOR,
-        ANIMATION_CONTROLLERS,
-        ;
+        faces.add( face );
     }
     
-    public Object addSpecialItem( SpecialItemType type, String name, Object item );
+    public final ArrayList< Face > getFaces()
+    {
+        return( faces );
+    }
+    
+    public Surface()
+    {
+    }
 }
