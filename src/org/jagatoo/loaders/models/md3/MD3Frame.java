@@ -27,44 +27,38 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models._util;
+package org.jagatoo.loaders.models.md3;
 
-import org.jagatoo.datatypes.NamedObject;
-import org.openmali.vecmath2.AxisAngle3f;
-import org.openmali.vecmath2.Matrix3f;
-import org.openmali.vecmath2.Matrix4f;
-import org.openmali.vecmath2.Quaternion4f;
-import org.openmali.vecmath2.Tuple3f;
-import org.openmali.vecmath2.Vector3f;
+import java.io.IOException;
+
+import org.jagatoo.util.streams.LittleEndianDataInputStream;
+import org.jagatoo.util.streams.StreamUtils;
+import org.openmali.vecmath2.Point3f;
 
 /**
  * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface AnimationFactory
+public class MD3Frame
 {
-    public static enum AnimationType
+    public final Point3f minBounds = new Point3f();
+    public final Point3f maxBounds = new Point3f();
+    public final Point3f localOrigin = new Point3f();
+    public final float scale;
+    public final String name;
+    
+    private MD3Frame( LittleEndianDataInputStream in ) throws IOException
     {
-        MESH_DEFORMATION_KEY_FRAMES,
-        TRANSFORM_KEY_FRAMES,
-        SKELETAL,
-        WEIGHTED_SKELETAL,
+        StreamUtils.readTuple3f( in, minBounds );
+        StreamUtils.readTuple3f( in, maxBounds );
+        StreamUtils.readTuple3f( in, localOrigin );
+        scale = in.readFloat();
+        name = in.readCString( 16, true );
     }
     
-    public Object createMeshDeformationKeyFrame( float[] coords, float[] normals );
-    
-    public Object createTransformKeyFrame( float time, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
-    
-    public Object createTransformKeyFrame( float time, Vector3f translation, AxisAngle3f rotation, Tuple3f scale );
-    
-    public Object createTransformKeyFrame( float time, Vector3f translation, Matrix3f rotation, Tuple3f scale );
-    
-    public Object createTransformKeyFrame( float time, Matrix4f transform );
-    
-    public void transformTransformKeyFrame( Matrix4f transform, Object frame );
-    
-    public void transformTransformKeyFrames( Matrix4f transform, Object[] frames );
-    
-    public Object createAnimationController( AnimationType animType, Object[] keyFrames, NamedObject target );
+    public static MD3Frame readFrame( LittleEndianDataInputStream in ) throws IOException
+    {
+        return( new MD3Frame( in ) );
+    }
 }

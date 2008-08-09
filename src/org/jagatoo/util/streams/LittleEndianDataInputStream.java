@@ -70,13 +70,40 @@ import java.io.InputStream;
  */
 public class LittleEndianDataInputStream extends FilterInputStream implements DataInput
 {
-    private DataInputStream din;
+    private final DataInputStream din;
     
-    public LittleEndianDataInputStream( InputStream in )
+    private int pointer = 0;
+    
+    public final int getPointer()
     {
-        super( in );
+        return( pointer );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int read() throws IOException
+    {
+        int i = super.read();
         
-        this.din = new DataInputStream( in );
+        pointer++;
+        
+        return( i );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int read( byte[] b, int off, int len ) throws IOException
+    {
+        int result = super.read( b, off, len );
+        
+        if ( result > 0 )
+            pointer += result;
+        
+        return( result );
     }
     
     /**
@@ -85,6 +112,8 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
     public void readFully( byte[] b ) throws IOException
     {
         din.readFully( b );
+        
+        pointer += b.length;
     }
     
     /**
@@ -93,14 +122,35 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
     public void readFully( byte[] b, int off, int len ) throws IOException
     {
         din.readFully( b, off, len );
+        
+        pointer += len;
     }
     
     /**
      * {@inheritDoc}
      */
-    public int skipBytes(int n) throws IOException
+    @Override
+    public long skip( long n ) throws IOException
     {
-        return( din.skipBytes( n ) );
+        long result = super.skip( n );
+        
+        if ( result > 0L )
+            pointer += (int)result;
+        
+        return( result );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public int skipBytes( int n ) throws IOException
+    {
+        int result = din.skipBytes( n );
+        
+        if ( result > 0 )
+            pointer += n;
+        
+        return( result );
     }
     
     /**
@@ -108,7 +158,11 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
      */
     public boolean readBoolean() throws IOException
     {
-        return( din.readBoolean() );
+        boolean result = din.readBoolean();
+        
+        pointer++;;
+        
+        return( result );
     }
     
     /**
@@ -116,7 +170,11 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
      */
     public byte readByte() throws IOException
     {
-        return( din.readByte() );
+        byte result = din.readByte();
+        
+        pointer++;;
+        
+        return( result );
     }
     
     /**
@@ -124,7 +182,11 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
      */
     public int readUnsignedByte() throws IOException
     {
-        return( din.readUnsignedByte() );
+        int result = din.readUnsignedByte();
+        
+        pointer++;;
+        
+        return( result );
     }
     
     /**
@@ -135,7 +197,9 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         int low = din.read();
         int high = din.read();
         
-        return( (short)( ( high << 8 ) | ( low & 0xff ) ) );
+        pointer += 2;
+        
+        return( (short)( ( high << 8 ) | ( low & 0xFF ) ) );
     }
     
     /**
@@ -146,7 +210,9 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         int low = din.read();
         int high = din.read();
         
-        return( ( ( high & 0xff ) << 8 ) | ( low & 0xff ) );
+        pointer += 2;
+        
+        return( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
     }
     
     /**
@@ -154,7 +220,11 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
      */
     public char readChar() throws IOException
     {
-        return( din.readChar() );
+        char result = din.readChar();
+        
+        pointer += 2;
+        
+        return( result );
     }
     
     /**
@@ -162,14 +232,14 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
      */
     public int readInt() throws IOException
     {
-      int[] res = new int[ 4 ];
-      for ( int i = 3; i >= 0; i-- )
-          res[ i ] = din.read();
-      
-      return( ( (res[ 0 ] & 0xff ) << 24 ) |
-              ( (res[ 1 ] & 0xff ) << 16 ) |
-              ( (res[ 2 ] & 0xff ) << 8 ) |
-              ( res[ 3 ] & 0xff ) );
+        int i3 = din.read();
+        int i2 = din.read();
+        int i1 = din.read();
+        int i0 = din.read();
+        
+        pointer += 4;
+        
+        return( ( ( i0 & 0xFF ) << 24 ) | ( ( i1 & 0xFF ) << 16 ) | ( ( i2 & 0xFF ) << 8 ) | ( i3 & 0xFF ) );
     }
     
     /**
@@ -177,18 +247,26 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
      */
     public long readLong() throws IOException
     {
-        int[] res = new int[ 8 ];
-        for ( int i = 7; i >= 0; i-- )
-            res[ i ] = din.read();
+        int i7 = din.read();
+        int i6 = din.read();
+        int i5 = din.read();
+        int i4 = din.read();
+        int i3 = din.read();
+        int i2 = din.read();
+        int i1 = din.read();
+        int i0 = din.read();
         
-        return( ( (long)( res[ 0 ] & 0xff ) << 56 ) |
-                ( (long)( res[ 1 ] & 0xff ) << 48 ) |
-                ( (long)( res[ 2 ] & 0xff ) << 40 ) |
-                ( (long)( res[ 3 ] & 0xff ) << 32 ) |
-                ( (long)( res[ 4 ] & 0xff ) << 24 ) |
-                ( (long)( res[ 5 ] & 0xff ) << 16 ) |
-                ( (long)( res[ 6 ] & 0xff ) <<  8 ) |
-                ( (long)( res[ 7 ] & 0xff ) ) );
+        pointer += 8;
+        
+        return( ( (long)( i0 & 0xff ) << 56 ) |
+                ( (long)( i1 & 0xff ) << 48 ) |
+                ( (long)( i2 & 0xff ) << 40 ) |
+                ( (long)( i3 & 0xff ) << 32 ) |
+                ( (long)( i4 & 0xff ) << 24 ) |
+                ( (long)( i5 & 0xff ) << 16 ) |
+                ( (long)( i6 & 0xff ) <<  8 ) |
+                ( (long)( i7 & 0xff ) )
+              );
     }
     
     /**
@@ -210,10 +288,14 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
     /**
      * {@inheritDoc}
      */
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings( "deprecation" )
     public final String readLine() throws IOException
     {
-        return( din.readLine() );
+        String result = din.readLine();
+        
+        pointer += result.length() + 1;
+        
+        return( result );
     }
     
     /**
@@ -221,6 +303,41 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
      */
     public String readUTF() throws IOException
     {
+        // The pointer offset cannot be predicted!
+        
         return( din.readUTF() );
+    }
+    
+    /**
+     * Reads a String from the InputStream.
+     * The string is expected to be 0-terminated.
+     * 
+     * @param in
+     * @param maxLength
+     * @param alwaysReadMaxLength
+     * 
+     * @return the read String.
+     * 
+     * @throws IOException
+     */
+    public final String readCString( int maxLength, boolean alwaysReadMaxLength ) throws IOException
+    {
+        String result = StreamUtils.readCString( this, maxLength, alwaysReadMaxLength );
+        
+        /*
+        if ( alwaysReadMaxLength )
+            pointer += maxLength;
+        else
+            pointer += Math.min( result.length() + 1, maxLength );
+        */
+        
+        return( result );
+    }
+    
+    public LittleEndianDataInputStream( InputStream in )
+    {
+        super( in );
+        
+        this.din = new DataInputStream( in );
     }
 }

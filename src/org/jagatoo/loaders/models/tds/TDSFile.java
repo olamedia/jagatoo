@@ -42,7 +42,7 @@ import java.net.URL;
 
 import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.ParsingException;
 import org.openmali.vecmath2.Matrix3f;
 
 import org.jagatoo.loaders.models._util.AnimationFactory;
@@ -343,7 +343,7 @@ public class TDSFile
         }
     }
     
-    public static final TDSFile load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, boolean convertZup2Yup, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingErrorException
+    public static final TDSFile load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, boolean convertZup2Yup, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
     {
         TDSFile file = new TDSFile( in, baseURL, appFactory, geomFactory, nodeFactory, animFactory, siHandler, convertZup2Yup );
         

@@ -333,6 +333,40 @@ public final class ArrayUtils
      * @param start the index in the source array to start the search at
      * @param limit the index in the source array of the last element to be tested
      * @param element the element to search
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( byte[] array, int start, int limit, byte element )
+    {
+        for ( int i = start; i <= limit; i++ )
+        {
+            if ( array[ i ] == element )
+                return( i );
+        }
+        
+        return( -1 );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( byte[] array, byte element )
+    {
+        return( indexOf( array, 0, array.length - 1, element ) );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
      * @param strict if <code>true</code>, a == check is used to identify the element, otherwise, the equals method is used.
      * 
      * @return the element's index within the array or -1, if the array does not contain the specified element.

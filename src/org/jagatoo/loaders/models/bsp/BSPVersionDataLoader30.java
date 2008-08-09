@@ -34,7 +34,7 @@ import java.nio.ByteBuffer;
 
 import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.ParsingException;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.models._util.GeometryFactory;
 import org.jagatoo.loaders.models._util.GeometryFactory.GeometryType;
@@ -72,7 +72,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
     /**
      * {@inheritDoc}
      */
-    public BSPScenePrototype loadPrototypeData( BSPFile bspFile, BSPDirectory bspDir, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException
+    public BSPScenePrototype loadPrototypeData( BSPFile bspFile, BSPDirectory bspDir, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingException
     {
         BSPScenePrototype prototype = new BSPScenePrototype( bspFile.getVersion() );
         
@@ -103,7 +103,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
         }
         catch ( IOException e )
         {
-            throw new ParsingErrorException( e );
+            throw new ParsingException( e );
         }
         
         return( prototype );

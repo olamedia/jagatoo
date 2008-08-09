@@ -72,7 +72,7 @@ import java.util.ArrayList;
 
 import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.ParsingException;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.models._util.GeometryFactory;
 import org.jagatoo.loaders.models._util.GroupType;
@@ -1226,7 +1226,7 @@ public class BSPPrototypeLoader
     /**
      * Loads the BSP scene prototype.
      */
-    private static BSPScenePrototype load( BSPFile bspFile, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingErrorException
+    private static BSPScenePrototype load( BSPFile bspFile, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         final BSPDirectory bspDir;
         
@@ -1256,7 +1256,7 @@ public class BSPPrototypeLoader
     /**
      * Loads the BSP scene prototype.
      */
-    public static BSPScenePrototype load( InputStream in, String filename, URL baseURL, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingErrorException
+    public static BSPScenePrototype load( InputStream in, String filename, URL baseURL, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         if ( !( in instanceof BufferedInputStream ) )
             in = new BufferedInputStream( in );
@@ -1272,7 +1272,7 @@ public class BSPPrototypeLoader
     /**
      * Loads the BSP scene prototype.
      */
-    public static BSPScenePrototype load( URL url, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingErrorException
+    public static BSPScenePrototype load( URL url, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         return( load( url.openStream(), LoaderUtils.extractFilenameWithoutExt( url ), LoaderUtils.extractBaseURL( url ), geomFactory, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
     }

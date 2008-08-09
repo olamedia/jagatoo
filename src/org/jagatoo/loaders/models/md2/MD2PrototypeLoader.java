@@ -67,7 +67,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.ParsingException;
 import org.jagatoo.util.streams.StreamUtils;
 import org.openmali.vecmath2.Point3f;
 import org.openmali.vecmath2.TexCoord2f;
@@ -246,7 +246,7 @@ public class MD2PrototypeLoader
      * @param filter A list of <code>String</code> to filter the frames
      * @param bNormals Whether or not to load vertex-normal data
      */
-    public static final MD2ModelPrototype load( InputStream in, int loadFlags, String skin, List< String > filter, boolean bNormals ) throws IOException, ParsingErrorException
+    public static final MD2ModelPrototype load( InputStream in, int loadFlags, String skin, List< String > filter, boolean bNormals ) throws IOException, ParsingException
     {
         if ( !( in instanceof BufferedInputStream ) )
             in = new BufferedInputStream( in );
@@ -287,7 +287,7 @@ public class MD2PrototypeLoader
      * @param loadFlags the loading flags
      * @param skin The texture to apply (skin) as PCX
      */
-    public static final MD2ModelPrototype load( InputStream in, int loadFlags, String skin ) throws IOException, ParsingErrorException
+    public static final MD2ModelPrototype load( InputStream in, int loadFlags, String skin ) throws IOException, ParsingException
     {
         return( load( in, loadFlags, skin, null, true ) );
     }

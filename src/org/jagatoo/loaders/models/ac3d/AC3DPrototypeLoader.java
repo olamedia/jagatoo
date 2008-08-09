@@ -75,7 +75,7 @@ import java.util.TreeSet;
 
 import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.ParsingException;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.models._util.GeometryFactory;
 import org.jagatoo.loaders.models._util.NodeFactory;
@@ -422,7 +422,7 @@ public class AC3DPrototypeLoader
      * @throws IOException Thrown if there is an IO Error
      * @throws FileFormatException Thrown if the file does not match the AC3D specification
      */
-    private static void loadObject( BufferedReader reader, URL baseURL, ArrayList<NamedObject> materials, ArrayList<Float> translucencies, AppearanceFactory appFactory, AC3DAppearanceCache appCache, GeometryFactory geomFactory, NodeFactory nodeFactory, boolean keepNestedTransforms, Matrix4f parentTransform, NamedObject parentGroup, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingErrorException
+    private static void loadObject( BufferedReader reader, URL baseURL, ArrayList<NamedObject> materials, ArrayList<Float> translucencies, AppearanceFactory appFactory, AC3DAppearanceCache appCache, GeometryFactory geomFactory, NodeFactory nodeFactory, boolean keepNestedTransforms, Matrix4f parentTransform, NamedObject parentGroup, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         // The object name
         String name = null;
@@ -701,14 +701,14 @@ public class AC3DPrototypeLoader
         {
             // Something is wrong with the file, the file spec says the the
             // surfaces and kids are the last tags, we have found something else
-            throw new ParsingErrorException( "\"" + token.toString() + "\"" + " found where only a 'kids' should be" );
+            throw new ParsingException( "\"" + token.toString() + "\"" + " found where only a 'kids' should be" );
         }
     }
     
     /**
      * The real loading method (for objects)
      */
-    private static void loadObjects( BufferedReader reader, int numKids, URL baseURL, ArrayList<NamedObject> materials, ArrayList<Float> translucencies, AppearanceFactory appFactory, AC3DAppearanceCache appCache, GeometryFactory geomFactory, NodeFactory nodeFactory, boolean keepNestedTransforms, Matrix4f parentTransform, NamedObject parentGroup, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingErrorException
+    private static void loadObjects( BufferedReader reader, int numKids, URL baseURL, ArrayList<NamedObject> materials, ArrayList<Float> translucencies, AppearanceFactory appFactory, AC3DAppearanceCache appCache, GeometryFactory geomFactory, NodeFactory nodeFactory, boolean keepNestedTransforms, Matrix4f parentTransform, NamedObject parentGroup, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         for ( int i = 0; i < numKids; i++ )
         {
@@ -719,7 +719,7 @@ public class AC3DPrototypeLoader
     /**
      * The real loading method
      */
-    public static void load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, NodeFactory nodeFactory, boolean keepNestedTransforms, NamedObject rootGroup, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingErrorException
+    public static void load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, NodeFactory nodeFactory, boolean keepNestedTransforms, NamedObject rootGroup, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         BufferedReader reader = new BufferedReader( new InputStreamReader( in ) );
         
@@ -749,7 +749,7 @@ public class AC3DPrototypeLoader
                 StringTokenizer tokenizer = new StringTokenizer( line, " " );
                 token = tokenizer.nextToken();
                 if ( !token.equals( "kids" ) )
-                    throw new ParsingErrorException( "expected \"kids\" line, but found \"" + line + "\"." );
+                    throw new ParsingException( "expected \"kids\" line, but found \"" + line + "\"." );
                 
                 int numKids = Integer.parseInt( tokenizer.nextToken() );
                 loadObjects( reader, numKids, baseURL, materials, translucencies, appFactory, appCache, geomFactory, nodeFactory, keepNestedTransforms, rootTransform, rootGroup, siHandler );

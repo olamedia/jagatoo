@@ -27,44 +27,58 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models._util;
+package org.jagatoo.loaders.models.md3;
 
-import org.jagatoo.datatypes.NamedObject;
-import org.openmali.vecmath2.AxisAngle3f;
-import org.openmali.vecmath2.Matrix3f;
-import org.openmali.vecmath2.Matrix4f;
-import org.openmali.vecmath2.Quaternion4f;
-import org.openmali.vecmath2.Tuple3f;
-import org.openmali.vecmath2.Vector3f;
+import java.io.IOException;
+
+import org.jagatoo.loaders.IncorrectFormatException;
+import org.jagatoo.util.streams.LittleEndianDataInputStream;
 
 /**
  * Insert type comment here.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface AnimationFactory
+public class MD3Header
 {
-    public static enum AnimationType
+    public static final int MAGIC_NUMBER = 0x33504449;
+    
+    public final int version;
+    public final String name;
+    public final int flags;
+    public final int numFrames;
+    public final int numTags;
+    public final int numSurfaces;
+    public final int numSkins;
+    public final int frameOffset;
+    public final int tagOffset;
+    public final int surfaceOffset;
+    public final int fileOffset;
+    
+    private MD3Header( LittleEndianDataInputStream in ) throws IOException, IncorrectFormatException
     {
-        MESH_DEFORMATION_KEY_FRAMES,
-        TRANSFORM_KEY_FRAMES,
-        SKELETAL,
-        WEIGHTED_SKELETAL,
+        int ident = in.readInt();
+        if ( ident != MAGIC_NUMBER )
+            throw new IncorrectFormatException( "This is not an MD3 file!" );
+        
+        version = in.readInt();
+        if ( version != 15 )
+            throw new IncorrectFormatException( "Unsupported MD3 version " + version + ". Currently ony version 15 is supported." );
+        
+        name = in.readCString( 64, true );
+        flags = in.readInt();
+        numFrames = in.readInt();
+        numTags = in.readInt();
+        numSurfaces = in.readInt();
+        numSkins = in.readInt();
+        frameOffset = in.readInt();
+        tagOffset = in.readInt();
+        surfaceOffset = in.readInt();
+        fileOffset = in.readInt();
     }
     
-    public Object createMeshDeformationKeyFrame( float[] coords, float[] normals );
-    
-    public Object createTransformKeyFrame( float time, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
-    
-    public Object createTransformKeyFrame( float time, Vector3f translation, AxisAngle3f rotation, Tuple3f scale );
-    
-    public Object createTransformKeyFrame( float time, Vector3f translation, Matrix3f rotation, Tuple3f scale );
-    
-    public Object createTransformKeyFrame( float time, Matrix4f transform );
-    
-    public void transformTransformKeyFrame( Matrix4f transform, Object frame );
-    
-    public void transformTransformKeyFrames( Matrix4f transform, Object[] frames );
-    
-    public Object createAnimationController( AnimationType animType, Object[] keyFrames, NamedObject target );
+    public static final MD3Header readHeader( LittleEndianDataInputStream in ) throws IOException, IncorrectFormatException
+    {
+        return( new MD3Header( in ) );
+    }
 }

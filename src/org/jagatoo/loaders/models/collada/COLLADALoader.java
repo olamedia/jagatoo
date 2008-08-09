@@ -37,7 +37,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.ParsingException;
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.datastructs.ColladaProtoypeModel;
 import org.jagatoo.loaders.models.collada.stax.XMLCOLLADA;
@@ -72,7 +72,7 @@ public class COLLADALoader
     /**
      * Create a new COLLADA Loader.
      */
-    public COLLADALoader() throws ParsingErrorException
+    public COLLADALoader() throws ParsingException
     {
     }
     

@@ -37,7 +37,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.ParsingException;
 import org.jagatoo.logging.JAGTLog;
 import org.openmali.FastMath;
 import org.openmali.vecmath2.Matrix4f;
@@ -182,7 +182,7 @@ public class XMLNode {
                     if ( localName.equals( "asset" ) )
                     {
                         if ( asset != null )
-                            throw new ParsingErrorException( this.getClass().getSimpleName() + " Too MANY: " + parser.getLocalName() );
+                            throw new ParsingException( this.getClass().getSimpleName() + " Too MANY: " + parser.getLocalName() );
                         
                         asset = new XMLAsset();
                         asset.parse( parser );

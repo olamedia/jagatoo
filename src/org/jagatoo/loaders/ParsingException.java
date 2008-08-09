@@ -27,44 +27,31 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models._util;
-
-import org.jagatoo.datatypes.NamedObject;
-import org.openmali.vecmath2.AxisAngle3f;
-import org.openmali.vecmath2.Matrix3f;
-import org.openmali.vecmath2.Matrix4f;
-import org.openmali.vecmath2.Quaternion4f;
-import org.openmali.vecmath2.Tuple3f;
-import org.openmali.vecmath2.Vector3f;
+package org.jagatoo.loaders;
 
 /**
- * Insert type comment here.
+ * Exception used to indicate that the loader encountered
+ * a problem parsing the specified file.
  * 
- * @author Marvin Froehlich (aka Qudus)
+ * @author Amos Wenger (aka BlueSky)
+ * @author Marvin Froehlich (aka Qudus) [code cleaning]
  */
-public interface AnimationFactory
+public class ParsingException extends RuntimeException
 {
-    public static enum AnimationType
+    private static final long serialVersionUID = 8739835886126935739L;
+    
+    public ParsingException()
     {
-        MESH_DEFORMATION_KEY_FRAMES,
-        TRANSFORM_KEY_FRAMES,
-        SKELETAL,
-        WEIGHTED_SKELETAL,
+        super();
     }
     
-    public Object createMeshDeformationKeyFrame( float[] coords, float[] normals );
+    public ParsingException( String s )
+    {
+        super( s );
+    }
     
-    public Object createTransformKeyFrame( float time, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
-    
-    public Object createTransformKeyFrame( float time, Vector3f translation, AxisAngle3f rotation, Tuple3f scale );
-    
-    public Object createTransformKeyFrame( float time, Vector3f translation, Matrix3f rotation, Tuple3f scale );
-    
-    public Object createTransformKeyFrame( float time, Matrix4f transform );
-    
-    public void transformTransformKeyFrame( Matrix4f transform, Object frame );
-    
-    public void transformTransformKeyFrames( Matrix4f transform, Object[] frames );
-    
-    public Object createAnimationController( AnimationType animType, Object[] keyFrames, NamedObject target );
+    public ParsingException( Throwable cause )
+    {
+        super( cause );
+    }
 }

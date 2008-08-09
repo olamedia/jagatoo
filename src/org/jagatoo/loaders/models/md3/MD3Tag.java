@@ -27,31 +27,35 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders;
+package org.jagatoo.loaders.models.md3;
+
+import java.io.IOException;
+
+import org.jagatoo.util.streams.LittleEndianDataInputStream;
+import org.jagatoo.util.streams.StreamUtils;
+import org.openmali.vecmath2.Matrix3f;
+import org.openmali.vecmath2.Vector3f;
 
 /**
- * Exception used to indicate that the loader encountered
- * a problem parsing the specified file.
+ * Insert type comment here.
  * 
- * @author Amos Wenger (aka BlueSky)
- * @author Marvin Froehlich (aka Qudus) [code cleaning]
+ * @author Marvin Froehlich (aka Qudus)
  */
-public class ParsingErrorException extends RuntimeException
+public class MD3Tag
 {
-    private static final long serialVersionUID = 8739835886126935739L;
+    public final String name;
+    public final Vector3f translation = new Vector3f();
+    public final Matrix3f rotation = new Matrix3f();
     
-    public ParsingErrorException()
+    private MD3Tag( LittleEndianDataInputStream in ) throws IOException
     {
-        super();
+        this.name = in.readCString( 64, true );
+        StreamUtils.readTuple3f( in, translation );
+        StreamUtils.readMatrix3f( in, rotation );
     }
     
-    public ParsingErrorException( String s )
+    public static MD3Tag readTag( LittleEndianDataInputStream in ) throws IOException
     {
-        super( s );
-    }
-    
-    public ParsingErrorException( Throwable cause )
-    {
-        super( cause );
+        return( new MD3Tag( in ) );
     }
 }

@@ -45,7 +45,7 @@ import java.util.HashMap;
 import org.jagatoo.image.BufferedImageFactory;
 import org.jagatoo.image.SharedBufferedImage;
 import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.ParsingException;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity;
 import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity_worldspawn;
@@ -822,7 +822,7 @@ public class WADFile
         return( readTexture( resName, appFactory, baseURL, entities, false ) );
     }
     
-    private HashMap<String, WADDirectoryEntry> readWADDirectory( URL wadFile ) throws IOException, IncorrectFormatException, ParsingErrorException
+    private HashMap<String, WADDirectoryEntry> readWADDirectory( URL wadFile ) throws IOException, IncorrectFormatException, ParsingException
     {      
         try
         {
@@ -887,7 +887,7 @@ public class WADFile
         }
         catch ( Throwable t )
         {
-            throw new ParsingErrorException( t );
+            throw new ParsingException( t );
         }
     }
     
@@ -903,7 +903,7 @@ public class WADFile
             return( filePath.substring( lastSlashPos + 1 ) );
     }
     
-    public WADFile( URL wadResource ) throws IOException, IncorrectFormatException, ParsingErrorException
+    public WADFile( URL wadResource ) throws IOException, IncorrectFormatException, ParsingException
     {
         super();
         

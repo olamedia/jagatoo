@@ -32,7 +32,7 @@ package org.jagatoo.loaders.models.bsp;
 import java.io.IOException;
 
 import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingErrorException;
+import org.jagatoo.loaders.ParsingException;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.models._util.GeometryFactory;
 import org.jagatoo.loaders.models.bsp.lumps.BSPDirectory;
@@ -44,7 +44,7 @@ import org.jagatoo.loaders.models.bsp.lumps.BSPDirectory;
  */
 public interface BSPVersionDataLoader
 {
-    public BSPScenePrototype loadPrototypeData( BSPFile bspFile, BSPDirectory bspDir, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingErrorException;
+    public BSPScenePrototype loadPrototypeData( BSPFile bspFile, BSPDirectory bspDir, float worldScale, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingException;
     
     public void convertFacesToGeometries( BSPScenePrototype prototype, AppearanceFactory appFactory, GeometryFactory geomFactory, float worldScale );
 }
