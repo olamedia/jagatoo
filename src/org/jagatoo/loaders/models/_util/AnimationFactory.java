@@ -52,7 +52,7 @@ public interface AnimationFactory
         WEIGHTED_SKELETAL,
     }
     
-    public Object createMeshDeformationKeyFrame( float[] coords, float[] normals );
+    public Object createMeshDeformationKeyFrame( float[] coords, float[] normals, Matrix4f[] mountTransforms );
     
     public Object createTransformKeyFrame( float time, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
     

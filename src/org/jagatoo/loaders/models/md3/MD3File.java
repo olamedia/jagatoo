@@ -109,7 +109,7 @@ public class MD3File
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
     }
     
-    private void readTags( boolean convertZup2Yup, float scale, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
+    private void readTags( boolean convertZup2Yup, float scale, Matrix4f[][] tagFrames, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
         JAGTLog.debug( "Loading MD3 tags..." );
@@ -121,23 +121,13 @@ public class MD3File
         Matrix4f tmp = Matrix4f.fromPool();
         tmp.setIdentity();
         
-        String[] tagNames = new String[header.numTags];
-        Matrix4f[][] tagFrames = new Matrix4f[header.numTags][];
-        
-        for ( int t = 0; t < header.numTags; t++ )
-        {
-            tagFrames[t] = new Matrix4f[header.numFrames];
-        }
-        
         for ( int f = 0; f < header.numFrames; f++ )
         {
+            tagFrames[f] = new Matrix4f[ header.numTags ];
+            
             for ( int t = 0; t < header.numTags; t++ )
             {
                 String name = in.readCString( 64, true );
-                if ( f == 0 )
-                {
-                    tagNames[t] = name;
-                }
                 StreamUtils.readTuple3f( in, translation );
                 StreamUtils.readMatrix3f( in, rotation );
                 
@@ -170,18 +160,18 @@ public class MD3File
                 }
                 transform.mul( tmp, transform );
                 
-                tagFrames[t][f] = transform;
+                tagFrames[f][t] = transform;
+                
+                if ( f == 0 )
+                {
+                    siHandler.addSpecialItem( SpecialItemType.MOUNT_TRANSFORM, name, transform );
+                }
             }
         }
         
         Matrix4f.toPool( tmp );
         Vector3f.toPool( translation );
         Matrix3f.toPool( rotation );
-        
-        for ( int t = 0; t < header.numTags; t++ )
-        {
-            siHandler.addSpecialItem( SpecialItemType.MOUNT_TRANSFORM, tagNames[t], tagFrames[t] );
-        }
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
     }
@@ -344,7 +334,7 @@ public class MD3File
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
     }
     
-    private void readCoordinatesAndNormals( int numFrames, int coordNormalOffset, int numVertices, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NamedObject geometry, AnimationFactory animFactory, Object[] keyFrames ) throws IOException, IncorrectFormatException, ParsingException
+    private void readCoordinatesAndNormals( int numFrames, int coordNormalOffset, int numVertices, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NamedObject geometry, AnimationFactory animFactory, Object[] keyFrames, Matrix4f[][] frameTags ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
         JAGTLog.debug( "Loading MD3 vertex-coordinates and -normals (for all frames)..." );
@@ -425,7 +415,7 @@ public class MD3File
             
             if ( numFrames > 1 )
             {
-                keyFrames[f] = animFactory.createMeshDeformationKeyFrame( keyFrameCoords, keyFrameNormals );
+                keyFrames[f] = animFactory.createMeshDeformationKeyFrame( keyFrameCoords, keyFrameNormals, frameTags[f] );
             }
         }
         
@@ -435,7 +425,7 @@ public class MD3File
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
     }
     
-    private void readSurfaces( URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
+    private void readSurfaces( URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, Matrix4f[][] frameTags, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
         JAGTLog.debug( "Loading MD3 surfaces..." );
@@ -474,7 +464,7 @@ public class MD3File
             NamedObject[] shaders = readShaders( shadersOffset, numShaders, baseURL, appFactory, nodeFactory );
             readTriangles( trianglesOffset, numTriangles, geomFactory, geometry );
             readTextureCoordinates( textureCoordsOffset, numVertices, geomFactory, geometry );
-            readCoordinatesAndNormals( numFrames, coordNormalOffset, numVertices, geomFactory, convertZup2Yup, scale, geometry, animFactory, keyFrames );
+            readCoordinatesAndNormals( numFrames, coordNormalOffset, numVertices, geomFactory, convertZup2Yup, scale, geometry, animFactory, keyFrames, frameTags );
             
             NamedObject shape = nodeFactory.createShape( surfaceName, geometry, ( shaders.length > 0 ) ? shaders[0] : null, BoundsType.SPHERE );
             
@@ -482,10 +472,11 @@ public class MD3File
             siHandler.addSpecialItem( SpecialItemType.SHAPE, shape.getName(), shape );
             siHandler.addSpecialItem( SpecialItemType.NAMED_OBJECT, shape.getName(), shape );
             
+            //System.out.println( header.numFrames + ", " + numFrames + ", " + header.numSurfaces );
             if ( numFrames > 1 )
             {
                 Object animController = animFactory.createAnimationController( AnimationType.MESH_DEFORMATION_KEY_FRAMES, keyFrames, shape );
-                siHandler.addSpecialItem( SpecialItemType.ANIMATION_CONTROLLERS, null, new Object[] { new Object[] { animController }, keyFrames.length } );
+                siHandler.addSpecialItem( SpecialItemType.ANIMATION_CONTROLLERS, null, new Object[] { animController, keyFrames.length } );
             }
         }
         
@@ -502,8 +493,14 @@ public class MD3File
         this.header = MD3Header.readHeader( this.in );
         
         readFrames();
-        readTags( convertZup2Yup, scale, siHandler );
-        readSurfaces( baseURL, appFactory, geomFactory, convertZup2Yup, scale * COORDINATE_SCALE, nodeFactory, animFactory, siHandler, rootGroup );
+        Matrix4f[][] frameTags = null;
+        //System.out.println( header.numFrames );
+        if ( header.numTags > 0 )
+        {
+            frameTags = new Matrix4f[ header.numFrames ][];
+            readTags( convertZup2Yup, scale, frameTags, siHandler );
+        }
+        readSurfaces( baseURL, appFactory, geomFactory, convertZup2Yup, scale * COORDINATE_SCALE, nodeFactory, animFactory, frameTags, siHandler, rootGroup );
     }
     
     public static final void load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
