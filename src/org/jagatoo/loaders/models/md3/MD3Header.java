@@ -65,7 +65,7 @@ public class MD3Header
         if ( version != 15 )
             throw new IncorrectFormatException( "Unsupported MD3 version " + version + ". Currently ony version 15 is supported." );
         
-        name = in.readCString( 64, true );
+        name = MD3File.fixPath( in.readCString( 64, true ) );
         flags = in.readInt();
         numFrames = in.readInt();
         numTags = in.readInt();

@@ -133,7 +133,7 @@ public class MD3File
         {
             for ( int t = 0; t < header.numTags; t++ )
             {
-                String name = fixPath( in.readCString( 64, true ) );
+                String name = in.readCString( 64, true );
                 if ( f == 0 )
                 {
                     tagNames[t] = name;
@@ -447,7 +447,7 @@ public class MD3File
             if ( in.readInt() != MD3Header.MAGIC_NUMBER )
                 throw new IncorrectFormatException( "Invalid magic number found at MD3 surfaces block " + s + "." );
             
-            String surfaceName = fixPath( in.readCString( 64, true ) );
+            String surfaceName = in.readCString( 64, true );
             /*int flags = */in.readInt();
             int numFrames = in.readInt();
             int numShaders = in.readInt();
