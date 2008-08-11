@@ -54,7 +54,7 @@ public class MD3Frame
         StreamUtils.readTuple3f( in, maxBounds );
         StreamUtils.readTuple3f( in, localOrigin );
         scale = in.readFloat();
-        name = in.readCString( 16, true );
+        name = MD3File.fixPath( in.readCString( 16, true ) );
     }
     
     public static MD3Frame readFrame( LittleEndianDataInputStream in ) throws IOException

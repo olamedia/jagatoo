@@ -77,6 +77,21 @@ public class MD3File
     private static final GeometryFactory.GeometryType geomType = GeometryFactory.GeometryType.INDEXED_TRIANGLE_ARRAY;
     private static final float COORDINATE_SCALE = 1.0f / 64f;
     
+    static final String fixPath( String path )
+    {
+        if ( path.indexOf( '\\' ) >= 0 )
+        {
+            path = path.replace( '\\', '/' );
+        }
+        
+        if ( path.indexOf( ' ' ) >= 0 )
+        {
+            path = path.replace( " ", "%20" );
+        }
+        
+        return( path );
+    }
+    
     private void readFrames() throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
@@ -118,7 +133,7 @@ public class MD3File
         {
             for ( int t = 0; t < header.numTags; t++ )
             {
-                String name = in.readCString( 64, true );
+                String name = fixPath( in.readCString( 64, true ) );
                 if ( f == 0 )
                 {
                     tagNames[t] = name;
@@ -262,7 +277,7 @@ public class MD3File
         
         for ( int i = 0; i < numShaders; i++ )
         {
-            String shaderName = in.readCString( 64, true );
+            String shaderName = fixPath( in.readCString( 64, true ) );
             int shaderIndex = in.readInt();
             
             NamedObject shader = shaderCache.get( shaderName );
@@ -432,7 +447,7 @@ public class MD3File
             if ( in.readInt() != MD3Header.MAGIC_NUMBER )
                 throw new IncorrectFormatException( "Invalid magic number found at MD3 surfaces block " + s + "." );
             
-            String surfaceName = in.readCString( 64, true );
+            String surfaceName = fixPath( in.readCString( 64, true ) );
             /*int flags = */in.readInt();
             int numFrames = in.readInt();
             int numShaders = in.readInt();
