@@ -1248,7 +1248,7 @@ public class BSPPrototypeLoader
         
         loader.convertFacesToGeometries( prototype, appFactory, geomFactory, worldScale );
         
-        BSPConverter.convert( prototype, appFactory, nodeFactory, sceneGroup, mainGroupType, worldScale, siHandler );
+        BSPConverter.convert( prototype, appFactory, nodeFactory, sceneGroup, mainGroupType, worldScale, bspFile.getBaseURL(), siHandler );
         
         return( prototype );
     }

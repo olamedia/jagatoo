@@ -48,9 +48,12 @@ import org.jagatoo.loaders.models._util.SpecialItemsHandler.SpecialItemType;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.logging.JAGTLog;
 import org.jagatoo.util.streams.LittleEndianDataInputStream;
+import org.jagatoo.util.streams.StreamUtils;
 import org.openmali.FastMath;
 import org.openmali.spatial.bounds.BoundsType;
+import org.openmali.vecmath2.AxisAngle3f;
 import org.openmali.vecmath2.Matrix3f;
+import org.openmali.vecmath2.Matrix4f;
 import org.openmali.vecmath2.Point3f;
 import org.openmali.vecmath2.Vector3f;
 import org.openmali.vecmath2.Vertex3f;
@@ -68,7 +71,6 @@ public class MD3File
     private final MD3Header header;
     
     private MD3Frame[] frames;
-    private MD3Tag[] tags;
     
     private final HashMap<String, NamedObject> shaderCache = new HashMap<String, NamedObject>();
     
@@ -92,21 +94,161 @@ public class MD3File
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
     }
     
-    private void readTags() throws IOException, IncorrectFormatException, ParsingException
+    private void readTags( boolean convertZup2Yup, float scale, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
         JAGTLog.debug( "Loading MD3 tags..." );
         
         in.skipBytes( header.tagOffset - in.getPointer() );
         
-        tags = new MD3Tag[ header.numTags ];
+        Vector3f translation = Vector3f.fromPool();
+        Matrix3f rotation = Matrix3f.fromPool();
+        Matrix4f tmp = Matrix4f.fromPool();
+        tmp.setIdentity();
         
-        for ( int i = 0; i < header.numTags; i++ )
+        String[] tagNames = new String[header.numTags];
+        Matrix4f[][] tagFrames = new Matrix4f[header.numTags][];
+        
+        for ( int t = 0; t < header.numTags; t++ )
         {
-            tags[i] = MD3Tag.readTag( in );
+            tagFrames[t] = new Matrix4f[header.numFrames];
+        }
+        
+        for ( int f = 0; f < header.numFrames; f++ )
+        {
+            for ( int t = 0; t < header.numTags; t++ )
+            {
+                String name = in.readCString( 64, true );
+                if ( f == 0 )
+                {
+                    tagNames[t] = name;
+                }
+                StreamUtils.readTuple3f( in, translation );
+                StreamUtils.readMatrix3f( in, rotation );
+                
+                if ( convertZup2Yup )
+                {
+                    // TODO: How do I do this with a simple matrix multiplication? And is it really simpler?
+                    
+                    //rotation.mul( Matrix3f.Z_UP_TO_Y_UP, rotation );
+                    AxisAngle3f aa = AxisAngle3f.fromPool();
+                    aa.set( rotation );
+                    aa.set( aa.getX(), aa.getZ(), -aa.getY(), aa.getAngle() );
+                    rotation.set( aa );
+                    AxisAngle3f.toPool( aa );
+                }
+                
+                Matrix4f transform = new Matrix4f();
+                //transform.setIdentity();
+                transform.set( rotation );
+                if ( convertZup2Yup )
+                {
+                    tmp.m03( translation.getX() * scale );
+                    tmp.m13( translation.getZ() * scale );
+                    tmp.m23( -translation.getY() * scale );
+                }
+                else
+                {
+                    tmp.m03( translation.getX() * scale );
+                    tmp.m13( translation.getY() * scale );
+                    tmp.m23( translation.getZ() * scale );
+                }
+                transform.mul( tmp, transform );
+                
+                tagFrames[t][f] = transform;
+            }
+        }
+        
+        Matrix4f.toPool( tmp );
+        Vector3f.toPool( translation );
+        Matrix3f.toPool( rotation );
+        
+        for ( int t = 0; t < header.numTags; t++ )
+        {
+            siHandler.addSpecialItem( SpecialItemType.MOUNT_TRANSFORM, tagNames[t], tagFrames[t] );
         }
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
+    }
+    
+    private AbstractTexture loadTexture( String texName, URL baseURL, AppearanceFactory appFactory )
+    {
+        // First try to load the texture by the given name...
+        AbstractTexture texture = appFactory.loadOrGetTexture( texName, baseURL, true, true, true, true, true );
+        
+        if ( !appFactory.isFallbackTexture( texture ) )
+            return( texture );
+        
+        if ( texName.endsWith( ".tga" ) )
+        {
+            String texBaseName = texName.substring( 0, texName.length() - 4 );
+            
+            // Try without extension...
+            texture = appFactory.loadOrGetTexture( texBaseName, baseURL, true, true, true, true, true );
+            
+            if ( !appFactory.isFallbackTexture( texture ) )
+                return( texture );
+            
+            // Try as jpeg...
+            texture = appFactory.loadOrGetTexture( texBaseName + ".jpg", baseURL, true, true, true, true, true );
+            
+            if ( !appFactory.isFallbackTexture( texture ) )
+                return( texture );
+        }
+        else
+        {
+            // Try as jpeg...
+            texture = appFactory.loadOrGetTexture( texName + ".jpg", baseURL, true, true, true, true, true );
+            
+            if ( !appFactory.isFallbackTexture( texture ) )
+                return( texture );
+        }
+        
+        int lastSlashPos = texName.lastIndexOf( '/' );
+        if ( lastSlashPos >= 0 )
+        {
+            String texBaseName = texName.substring( lastSlashPos + 1 );
+            
+            // Try without path...
+            texture = appFactory.loadOrGetTexture( texBaseName, baseURL, true, true, true, true, true );
+            
+            if ( !appFactory.isFallbackTexture( texture ) )
+                return( texture );
+            
+            if ( texBaseName.endsWith( ".tga" ) )
+            {
+                texBaseName = texBaseName.substring( 0, texBaseName.length() - 4 );
+                
+                // Try without path and extension...
+                texture = appFactory.loadOrGetTexture( texBaseName, baseURL, true, true, true, true, true );
+                
+                if ( !appFactory.isFallbackTexture( texture ) )
+                    return( texture );
+                
+                // Try as jpeg...
+                texture = appFactory.loadOrGetTexture( texBaseName + ".jpg", baseURL, true, true, true, true, true );
+                
+                if ( !appFactory.isFallbackTexture( texture ) )
+                    return( texture );
+            }
+            else
+            {
+                // Try as jpeg...
+                texture = appFactory.loadOrGetTexture( texBaseName + ".jpg", baseURL, true, true, true, true, true );
+                
+                if ( !appFactory.isFallbackTexture( texture ) )
+                    return( texture );
+            }
+        }
+        
+        /*
+         * The texture wasn't found at all.
+         * Log the fail and return fallback-texture!
+         */
+        
+        JAGTLog.printlnEx( "Couldn't find texture resource \"", texName, "\"!" );
+        
+        return( texture );
     }
     
     private NamedObject[] readShaders( int shadersOffset, int numShaders, URL baseURL, AppearanceFactory appFactory, NodeFactory nodeFactory ) throws IOException, IncorrectFormatException, ParsingException
@@ -126,7 +268,11 @@ public class MD3File
             NamedObject shader = shaderCache.get( shaderName );
             if ( shader == null )
             {
-                AbstractTexture texture = appFactory.loadOrGetTexture( shaderName, baseURL, true, true, true, true, true );
+                AbstractTexture texture;
+                if ( ( shaderName == null ) || ( shaderName.length() == 0 ) )
+                    texture = appFactory.getFallbackTexture();
+                else
+                    texture = loadTexture( shaderName, baseURL, appFactory );
                 
                 shader = appFactory.createAppearance( shaderName, 0 );
                 appFactory.applyTexture( texture, 0, shader );
@@ -207,9 +353,9 @@ public class MD3File
             
             for ( int i = 0; i < numVertices; i++ )
             {
-                buffer[0] = (float)in.readShort() * COORDINATE_SCALE * scale;
-                buffer[1] = (float)in.readShort() * COORDINATE_SCALE * scale;
-                buffer[2] = (float)in.readShort() * COORDINATE_SCALE * scale;
+                buffer[0] = (float)in.readShort() * scale;
+                buffer[1] = (float)in.readShort() * scale;
+                buffer[2] = (float)in.readShort() * scale;
                 
                 if ( convertZup2Yup )
                 {
@@ -341,8 +487,8 @@ public class MD3File
         this.header = MD3Header.readHeader( this.in );
         
         readFrames();
-        readTags();
-        readSurfaces( baseURL, appFactory, geomFactory, convertZup2Yup, scale, nodeFactory, animFactory, siHandler, rootGroup );
+        readTags( convertZup2Yup, scale, siHandler );
+        readSurfaces( baseURL, appFactory, geomFactory, convertZup2Yup, scale * COORDINATE_SCALE, nodeFactory, animFactory, siHandler, rootGroup );
     }
     
     public static final void load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException

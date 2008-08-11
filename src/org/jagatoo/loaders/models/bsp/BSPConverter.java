@@ -29,6 +29,8 @@
  */
 package org.jagatoo.loaders.models.bsp;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.BitSet;
 import java.util.HashMap;
 
@@ -350,7 +352,7 @@ public class BSPConverter
         return( trans );
     }
     
-    private static void convertEntitiesLocations( BSPEntity[] entities, float worldScale, SpecialItemsHandler siHandler, NodeFactory nodeFactory, NamedObject sceneGroup )
+    private static void convertEntities( BSPEntity[] entities, float worldScale, URL baseURL, SpecialItemsHandler siHandler, NodeFactory nodeFactory, NamedObject sceneGroup )
     {
         if ( entities == null )
         {
@@ -382,9 +384,17 @@ public class BSPConverter
             {
                 BSPEntity_misc_model entLoc = (BSPEntity_misc_model)entity;
                 
-                Matrix4f modelTrans = getTransformFromEntity( entLoc, worldScale );
-                
-                siHandler.addSpecialItem( SpecialItemType.SUB_MODEL, entLoc.model, modelTrans );
+                try
+                {
+                    URL modelURL = new URL( baseURL, entLoc.model );
+                    Matrix4f modelTrans = getTransformFromEntity( entLoc, worldScale );
+                    
+                    siHandler.addSpecialItem( SpecialItemType.SUB_MODEL, modelURL.toExternalForm(), modelTrans );
+                }
+                catch ( MalformedURLException e )
+                {
+                    e.printStackTrace();
+                }
             }
             else if ( className2.startsWith( "light" ) )
             {
@@ -409,7 +419,7 @@ public class BSPConverter
      * 
      * @param prototype
      */
-    public static void convert( BSPScenePrototype prototype, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, float worldScale, SpecialItemsHandler siHandler )
+    public static void convert( BSPScenePrototype prototype, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, float worldScale, URL baseURL, SpecialItemsHandler siHandler )
     {
         Object[] result = convertFacesToShapes( prototype.sourceBSPVersion, prototype.models, prototype.faces, prototype.geometries, prototype.baseTextures, prototype.lightMaps, appFactory, nodeFactory, sceneGroup, mainGroupType, worldScale, siHandler );
         
@@ -423,6 +433,6 @@ public class BSPConverter
         
         //checkBrushes( prototype, scene );
         
-        convertEntitiesLocations( prototype.entities, worldScale, siHandler, nodeFactory, sceneGroup );
+        convertEntities( prototype.entities, worldScale, baseURL, siHandler, nodeFactory, sceneGroup );
     }
 }
