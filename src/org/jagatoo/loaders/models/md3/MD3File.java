@@ -501,6 +501,8 @@ public class MD3File
             readTags( convertZup2Yup, scale, frameTags, siHandler );
         }
         readSurfaces( baseURL, appFactory, geomFactory, convertZup2Yup, scale * COORDINATE_SCALE, nodeFactory, animFactory, frameTags, siHandler, rootGroup );
+        
+        in.close();
     }
     
     public static final void load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
