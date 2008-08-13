@@ -558,6 +558,26 @@ public class MD2File
             frames.add( new Object[] { fanFrame, stripFrame } );
         }
         
+        if ( (framesData.length > 1 ) && ( lastAnimName != null ) && ( frames.size() > 0 ) )
+        {
+            Object[] fanFrames = new Object[ frames.size() ];
+            Object[] stripFrames = new Object[ frames.size() ];
+            for ( int i = 0; i < frames.size(); i++ )
+            {
+                Object[] o = frames.get( i );
+                
+                fanFrames[i] = o[0];
+                stripFrames[i] = o[1];
+            }
+            
+            frames.clear();
+            
+            Object fanAnimController = animFactory.createAnimationController( AnimationType.MESH_DEFORMATION_KEY_FRAMES, fanFrames, fanShape );
+            Object stripAnimController = animFactory.createAnimationController( AnimationType.MESH_DEFORMATION_KEY_FRAMES, stripFrames, stripShape );
+            
+            siHandler.addSpecialItem( SpecialItemType.ANIMATION_CONTROLLERS, lastAnimName, new Object[] { fanAnimController, stripAnimController } );
+        }
+        
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
     }
     
