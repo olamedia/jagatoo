@@ -42,6 +42,7 @@ import org.jagatoo.loaders.models.bsp.lumps.BSPDirectory;
 import org.jagatoo.loaders.models.bsp.lumps.BSPFace;
 import org.jagatoo.loaders.models.bsp.lumps.BSPVertex;
 import org.jagatoo.loaders.models.bsp.util.PatchSurface;
+import org.openmali.vecmath2.Vector3f;
 import org.openmali.vecmath2.Vertex3f;
 
 /**
@@ -90,6 +91,14 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         return( prototype );
     }
     
+    private static final float[] getNormal( Vector3f normal, boolean convertZup2Yup )
+    {
+        if ( convertZup2Yup )
+            return( new float[] { normal.getX(), normal.getZ(), -normal.getY() } );
+        else
+            return( new float[] { normal.getX(), normal.getY(), normal.getZ() } );
+    }
+    
     /**
      * Creates the indexed geometry array for the BSP face.  The lightmap tex coords are stored in
      * unit 1, the regular tex coords are stored in unit 0
@@ -100,19 +109,24 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
      * @return 
      */
     @SuppressWarnings( "unused" )
-    private NamedObject convertFaceToIndexedStripGeom( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, float worldScale )
+    private NamedObject convertFaceToIndexedStripGeom( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale )
     {
         GeometryType geomType = GeometryType.INDEXED_TRIANGLE_STRIP_ARRAY;
         NamedObject ga = geomFactory.createInterleavedGeometry( "Geometry " + faceIndex,
                                                                 geomType, 3,
                                                                 face.numOfVerts, ( face.numMeshVerts / 3 ) + 2, new int[] { face.numMeshVerts },
-                                                                Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2, 2 }, null
+                                                                Vertex3f.COORDINATES | ( BSPPrototypeLoader.loadNormals ? Vertex3f.NORMALS : 0 ) | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2, 2 }, null
                                                               );
         
         for ( int i = 0; i < face.numOfVerts; i++ )
         {
             int j = face.vertexIndex + i;
-            geomFactory.setCoordinate( ga, geomType, i, new float[] { vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getZ() * worldScale, -vertices[ j ].position.getY() * worldScale }, 0, 1 );
+            if ( convertZup2Yup )
+                geomFactory.setCoordinate( ga, geomType, i, new float[] { vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getZ() * worldScale, -vertices[ j ].position.getY() * worldScale }, 0, 1 );
+            else
+                geomFactory.setCoordinate( ga, geomType, i, new float[] { vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getY() * worldScale, vertices[ j ].position.getZ() * worldScale }, 0, 1 );
+            if ( BSPPrototypeLoader.loadNormals )
+                geomFactory.setNormal( ga, geomType, i, getNormal( vertices[ j ].normal, convertZup2Yup ), 0, 1 );
             geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { vertices[ j ].texCoord.getS(), vertices[ j ].texCoord.getT() }, 0, 1 );
             geomFactory.setTexCoord( ga, geomType, 1, 2, i, new float[] { vertices[ j ].lightTexCoord.getS(), vertices[ j ].lightTexCoord.getT() }, 0, 1 );
             
@@ -144,7 +158,7 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         return( ga );
     }
     
-    private NamedObject convertFaceToSurfacePatch( int faceIndex, BSPFace face, BSPVertex[] vertices, GeometryFactory geomFactory, float worldScale )
+    private NamedObject convertFaceToSurfacePatch( int faceIndex, BSPFace face, BSPVertex[] vertices, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale )
     {
         BSPVertex[] control = new BSPVertex[ face.numOfVerts ];
         
@@ -165,12 +179,17 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         NamedObject ga = geomFactory.createInterleavedGeometry( "Geometry " + faceIndex,
                                                                 geomType, 3,
                                                                 ps.mPoints.length, ps.mIndices.length, null,
-                                                                Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2, 2 }, null
+                                                                Vertex3f.COORDINATES | ( BSPPrototypeLoader.loadNormals ? Vertex3f.NORMALS : 0 ) | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2, 2 }, null
                                                               );
         
         for ( int i = 0; i < ps.mPoints.length; i++ )
         {
-            geomFactory.setCoordinate( ga, geomType, i, new float[] { ps.mPoints[ i ].position.getX() * worldScale, ps.mPoints[ i ].position.getZ() * worldScale, -ps.mPoints[ i ].position.getY() * worldScale }, 0, 1 );
+            if ( convertZup2Yup )
+                geomFactory.setCoordinate( ga, geomType, i, new float[] { ps.mPoints[ i ].position.getX() * worldScale, ps.mPoints[ i ].position.getZ() * worldScale, -ps.mPoints[ i ].position.getY() * worldScale }, 0, 1 );
+            else
+                geomFactory.setCoordinate( ga, geomType, i, new float[] { ps.mPoints[ i ].position.getX() * worldScale, ps.mPoints[ i ].position.getY() * worldScale, ps.mPoints[ i ].position.getZ() * worldScale }, 0, 1 );
+            if ( BSPPrototypeLoader.loadNormals )
+                geomFactory.setNormal( ga, geomType, i, getNormal( ps.mPoints[ i ].normal, convertZup2Yup ), 0, 1 );
             geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { ps.mPoints[ i ].texCoord.getS(), ps.mPoints[ i ].texCoord.getT() }, 0, 1 );
             geomFactory.setTexCoord( ga, geomType, 1, 2, i, new float[] { ps.mPoints[ i ].lightTexCoord.getS(), ps.mPoints[ i ].lightTexCoord.getT() }, 0, 1 );
             //geomFactory.setColor( ga, geomType, ps.mPoints[ i ].color.hasAlpha() ? 4 : 3, i, new float[] { ps.mPoints[ i ].color.getRed(), ps.mPoints[ i ].color.getGreen(), ps.mPoints[ i ].color.getBlue(), ps.mPoints[ i ].color.getAlpha() }, 0, 1 );
@@ -190,19 +209,24 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
      * @param face 
      * @return 
      */
-    private NamedObject convertFaceToIndexedGeom( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, float worldScale )
+    private NamedObject convertFaceToIndexedGeom( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale )
     {
         GeometryType geomType = GeometryType.INDEXED_TRIANGLE_ARRAY;
         NamedObject ga = geomFactory.createInterleavedGeometry( "Geometry " + faceIndex,
                                                                 geomType, 3,
                                                                 face.numOfVerts, face.numMeshVerts, null,
-                                                                Vertex3f.COORDINATES | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2, 2 }, null
+                                                                Vertex3f.COORDINATES | ( BSPPrototypeLoader.loadNormals ? Vertex3f.NORMALS : 0 ) | Vertex3f.TEXTURE_COORDINATES, false, new int[] { 2, 2 }, null
                                                               );
         
         for ( int i = 0; i < face.numOfVerts; i++ )
         {
             int j = face.vertexIndex + i;
-            geomFactory.setCoordinate( ga, geomType, i, new float[] { vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getZ() * worldScale, -vertices[ j ].position.getY() * worldScale }, 0, 1 );
+            if ( convertZup2Yup )
+                geomFactory.setCoordinate( ga, geomType, i, new float[] { vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getZ() * worldScale, -vertices[ j ].position.getY() * worldScale }, 0, 1 );
+            else
+                geomFactory.setCoordinate( ga, geomType, i, new float[] { vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getY() * worldScale, vertices[ j ].position.getZ() * worldScale }, 0, 1 );
+            if ( BSPPrototypeLoader.loadNormals )
+                geomFactory.setNormal( ga, geomType, i, getNormal( vertices[ j ].normal, convertZup2Yup ), 0, 1 );
             geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { vertices[ j ].texCoord.getS(), vertices[ j ].texCoord.getT() }, 0, 1 );
             geomFactory.setTexCoord( ga, geomType, 1, 2, i, new float[] { vertices[ j ].lightTexCoord.getS(), vertices[ j ].lightTexCoord.getT() }, 0, 1 );
             
@@ -230,7 +254,7 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
      * @param face 
      * @return 
      */
-    private NamedObject convertFaceToBillboard( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, float worldScale )
+    private NamedObject convertFaceToBillboard( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale )
     {
         System.out.println( "TODO: Implement the abstract creation of Billboard geometry" );
         
@@ -240,21 +264,21 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
     /**
      * {@inheritDoc}
      */
-    public NamedObject convertFaceToGeometry( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, float worldScale )
+    public NamedObject convertFaceToGeometry( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale )
     {
         switch ( face.type )
         {
             case 1:
-                return( convertFaceToIndexedGeom( faceIndex, face, vertices, meshVertices, geomFactory, worldScale ) );
+                return( convertFaceToIndexedGeom( faceIndex, face, vertices, meshVertices, geomFactory, convertZup2Yup, worldScale ) );
             
             case 2:
-                return( convertFaceToSurfacePatch( faceIndex, face, vertices, geomFactory, worldScale ) );
+                return( convertFaceToSurfacePatch( faceIndex, face, vertices, geomFactory, convertZup2Yup, worldScale ) );
             
             case 3:
-                return( convertFaceToIndexedGeom( faceIndex, face, vertices, meshVertices, geomFactory, worldScale ) );
+                return( convertFaceToIndexedGeom( faceIndex, face, vertices, meshVertices, geomFactory, convertZup2Yup, worldScale ) );
                 
             case 4:
-                return( convertFaceToBillboard( faceIndex, face, vertices, meshVertices, geomFactory, worldScale ) );
+                return( convertFaceToBillboard( faceIndex, face, vertices, meshVertices, geomFactory, convertZup2Yup, worldScale ) );
         }
         
         throw new Error( "Unsupported face type " + face.type );
@@ -263,7 +287,7 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
     /**
      * {@inheritDoc}
      */
-    public void convertFacesToGeometries( BSPScenePrototype prototype, AppearanceFactory appFactory, GeometryFactory geomFactory, float worldScale )
+    public void convertFacesToGeometries( BSPScenePrototype prototype, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale )
     {
         int numModels = prototype.models.length;
         
@@ -280,7 +304,7 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
             {
                 BSPFace face = prototype.faces[ model.faceIndex + f ];
                 
-                geometries[ f ] = convertFaceToGeometry( f, face, prototype.vertices, prototype.meshVertices, geomFactory, worldScale );
+                geometries[ f ] = convertFaceToGeometry( f, face, prototype.vertices, prototype.meshVertices, geomFactory, convertZup2Yup, worldScale );
             }
             
             prototype.geometries[m] = geometries;

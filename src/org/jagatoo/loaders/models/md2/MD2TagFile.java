@@ -42,7 +42,7 @@ import org.openmali.vecmath2.Matrix4f;
 /**
  * Insert type comment here.
  * 
- * @author Piotr Maceluch (aka Mancer)
+ * @author Piotr Maceluch (aka kerno)
  * @author Marvin Froehlich (aka Qudus)
  */
 public class MD2TagFile

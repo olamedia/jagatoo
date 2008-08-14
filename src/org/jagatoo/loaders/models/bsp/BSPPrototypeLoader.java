@@ -99,6 +99,8 @@ import org.jagatoo.opengl.enums.TextureImageFormat;
  */
 public class BSPPrototypeLoader
 {
+    public static boolean loadNormals = true;
+    
     protected static final Boolean DEBUG = null;
     
     protected static BSPEntity[] readEntities( BSPFile file, BSPDirectory bspDir ) throws IOException
@@ -1226,7 +1228,7 @@ public class BSPPrototypeLoader
     /**
      * Loads the BSP scene prototype.
      */
-    private static BSPScenePrototype load( BSPFile bspFile, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
+    private static BSPScenePrototype load( BSPFile bspFile, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         final BSPDirectory bspDir;
         
@@ -1246,7 +1248,7 @@ public class BSPPrototypeLoader
         
         BSPScenePrototype prototype = loader.loadPrototypeData( bspFile, bspDir, worldScale, appFactory );
         
-        loader.convertFacesToGeometries( prototype, appFactory, geomFactory, worldScale );
+        loader.convertFacesToGeometries( prototype, appFactory, geomFactory, convertZup2Yup, worldScale );
         
         BSPConverter.convert( prototype, appFactory, nodeFactory, sceneGroup, mainGroupType, worldScale, bspFile.getBaseURL(), siHandler );
         
@@ -1256,7 +1258,7 @@ public class BSPPrototypeLoader
     /**
      * Loads the BSP scene prototype.
      */
-    public static BSPScenePrototype load( InputStream in, String filename, URL baseURL, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
+    public static BSPScenePrototype load( InputStream in, String filename, URL baseURL, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         if ( !( in instanceof BufferedInputStream ) )
             in = new BufferedInputStream( in );
@@ -1266,14 +1268,14 @@ public class BSPPrototypeLoader
         
         BSPFile bspFile = new BSPFile( in, filename, baseURL );
         
-        return( load( bspFile, geomFactory, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
+        return( load( bspFile, geomFactory, convertZup2Yup, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
     }
     
     /**
      * Loads the BSP scene prototype.
      */
-    public static BSPScenePrototype load( URL url, GeometryFactory geomFactory, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
+    public static BSPScenePrototype load( URL url, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
-        return( load( url.openStream(), LoaderUtils.extractFilenameWithoutExt( url ), LoaderUtils.extractBaseURL( url ), geomFactory, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
+        return( load( url.openStream(), LoaderUtils.extractFilenameWithoutExt( url ), LoaderUtils.extractBaseURL( url ), geomFactory, convertZup2Yup, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
     }
 }
