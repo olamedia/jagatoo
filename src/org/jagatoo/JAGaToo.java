@@ -48,7 +48,7 @@ public final class JAGaToo
         if (version != null)
             return( version );
         
-        version = new Version( 0, 3, 1, "", 135 );
+        version = new Version( 0, 4, 0, "dev", 322 );
         
         return( version );
     }

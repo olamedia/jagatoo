@@ -320,7 +320,7 @@ public class MD2File
         return( frameName.substring( 0, i + 1 ) );
     }
     
-    private void readGLCommands( int commandsOffset, int numGlCommandBytes, Object[][] framesData, GeometryFactory geomFactory, AnimationFactory animFactory, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject rootGroup, NamedObject[] skins, AbstractTexture skinTex, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
+    private void readGLCommands( int commandsOffset, int numGlCommandBytes, Object[][] framesData, GeometryFactory geomFactory, boolean convertZup2Yup, AnimationFactory animFactory, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject rootGroup, NamedObject[] skins, AbstractTexture skinTex, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
         JAGTLog.debug( "Loading MD2 GL-commands..." );
@@ -491,11 +491,19 @@ public class MD2File
                         {
                             //geomFactory.setCoordinate( fanArray, geomType, fanIndex, coords, vertexIndex * 3, 1 );
                             geomFactory.setTexCoord( fanArray, geomType, 0, 2, fanIndex, st, j * 2, 1 );
-                            //geomFactory.setNormal( fanArray, geomType, fanIndex, MD2Normals.data2, normalIndex * 3, 1 );
+                            /*
+                            if ( convertZup2Yup )
+                                geomFactory.setNormal( fanArray, geomType, fanIndex, MD2Normals.dataYup, normalIndex * 3, 1 );
+                            else
+                                geomFactory.setNormal( fanArray, geomType, fanIndex, MD2Normals.dataZup, normalIndex * 3, 1 );
+                            */
                         }
                         
                         System.arraycopy( coords, vertexIndex * 3, frameFanCoords, fanIndex * 3, 3 );
-                        System.arraycopy( MD2Normals.data, normalIndex * 3, frameFanNormals, fanIndex * 3, 3 );
+                        if ( convertZup2Yup )
+                            System.arraycopy( MD2Normals.dataYup, normalIndex * 3, frameFanNormals, fanIndex * 3, 3 );
+                        else
+                            System.arraycopy( MD2Normals.dataZup, normalIndex * 3, frameFanNormals, fanIndex * 3, 3 );
                         
                         fanIndex++;
                     }
@@ -511,11 +519,19 @@ public class MD2File
                         {
                             //geomFactory.setCoordinate( stripArray, geomType, stripIndex, coords, vertexIndex * 3, 1 );
                             geomFactory.setTexCoord( stripArray, geomType, 0, 2, stripIndex, st, j * 2, 1 );
-                            //geomFactory.setNormal( stripArray, geomType, stripIndex, MD2Normals.data2, normalIndex * 3, 1 );
+                            /*
+                            if ( convertZup2Yup )
+                                geomFactory.setNormal( stripArray, geomType, stripIndex, MD2Normals.dataYup, normalIndex * 3, 1 );
+                            else
+                                geomFactory.setNormal( stripArray, geomType, stripIndex, MD2Normals.dataZup, normalIndex * 3, 1 );
+                            */
                         }
                         
                         System.arraycopy( coords, vertexIndex * 3, frameStripCoords, stripIndex * 3, 3 );
-                        System.arraycopy( MD2Normals.data, normalIndex * 3, frameStripNormals, stripIndex * 3, 3 );
+                        if ( convertZup2Yup )
+                            System.arraycopy( MD2Normals.dataYup, normalIndex * 3, frameStripNormals, stripIndex * 3, 3 );
+                        else
+                            System.arraycopy( MD2Normals.dataZup, normalIndex * 3, frameStripNormals, stripIndex * 3, 3 );
                         
                         stripIndex++;
                     }
@@ -525,7 +541,9 @@ public class MD2File
             if ( f == 0 )
             {
                 geomFactory.setCoordinate( fanArray, GeometryFactory.GeometryType.TRIANGLE_FAN_ARRAY, 0, frameFanCoords, 0, fanIndex );
+                geomFactory.setNormal( fanArray, GeometryFactory.GeometryType.TRIANGLE_FAN_ARRAY, 0, frameFanNormals, 0, fanIndex );
                 geomFactory.setCoordinate( stripArray, GeometryFactory.GeometryType.TRIANGLE_STRIP_ARRAY, 0, frameStripCoords, 0, stripIndex );
+                geomFactory.setNormal( stripArray, GeometryFactory.GeometryType.TRIANGLE_STRIP_ARRAY, 0, frameStripNormals, 0, stripIndex );
                 
                 geomFactory.finalizeGeometry( fanArray, GeometryFactory.GeometryType.TRIANGLE_FAN_ARRAY, 0, fanVertexCount, 0, 0 );
                 geomFactory.finalizeGeometry( stripArray, GeometryFactory.GeometryType.TRIANGLE_STRIP_ARRAY, 0, stripVertexCount, 0, 0 );
@@ -594,7 +612,7 @@ public class MD2File
         /*float[] texCoords = */readTextureCoordinates( header.offsetTexCoords, header.numTexCoords, header.skinWidth, header.skinHeight );
         /*int[][] triangles = */readTriangles( header.offsetTriangles, header.numTriangles );
         Object[][] frames = readFrames( header.offsetFrames, header.numFrames, header.numVertices, convertZup2Yup, scale );
-        readGLCommands( header.offsetGlCommands, header.numGlCommandBytes, frames, geomFactory, animFactory, appFactory, nodeFactory, rootGroup, skins, skinTexture, siHandler );
+        readGLCommands( header.offsetGlCommands, header.numGlCommandBytes, frames, geomFactory, convertZup2Yup, animFactory, appFactory, nodeFactory, rootGroup, skins, skinTexture, siHandler );
     }
     
     public static final void load( InputStream in, URL baseURL, AppearanceFactory appFactory, AbstractTexture skinTexture, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
