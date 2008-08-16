@@ -50,9 +50,12 @@ public class XMLFloat {
         {
             switch ( event )
             {
-                case XMLStreamConstants.CHARACTERS:
+                case XMLStreamConstants.START_ELEMENT:
                 {
-                    _float = Float.parseFloat( parser.getText() );
+                    if ( parser.getLocalName().equals( "float" ) )
+                    {
+                        _float = Float.parseFloat( parser.getElementText() );
+                    }
                     break;
                 }
                 case XMLStreamConstants.END_ELEMENT:
