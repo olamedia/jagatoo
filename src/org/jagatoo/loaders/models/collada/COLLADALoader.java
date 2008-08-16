@@ -50,8 +50,6 @@ import org.jagatoo.loaders.models.collada.stax.XMLLibraryMaterials;
 import org.jagatoo.loaders.models.collada.stax.XMLLibraryVisualScenes;
 import org.jagatoo.logging.JAGTLog;
 
-import com.ctc.wstx.stax.WstxInputFactory;
-
 /**
  * This is a really simple COLLADA file loader. Its features are limited for now
  * but improving every minute :)
@@ -105,6 +103,12 @@ public class COLLADALoader
             }
             catch ( XMLStreamException e )
             {
+                System.out.println( reader.getLocation().toString() );
+                e.printStackTrace();
+            }
+            catch ( NumberFormatException e )
+            {
+                System.out.println( reader.getLocation().toString() );
                 e.printStackTrace();
             }
             finally

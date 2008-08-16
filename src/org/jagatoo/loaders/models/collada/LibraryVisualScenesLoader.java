@@ -37,8 +37,8 @@ import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.Controller;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalController;
-import org.jagatoo.loaders.models.collada.datastructs.visualscenes.ControllerInstanceNode;
-import org.jagatoo.loaders.models.collada.datastructs.visualscenes.GeometryInstanceNode;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.ControllerInstance;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.GeometryInstance;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.LibraryVisualScenes;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.MatrixTransform;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.Node;
@@ -85,81 +85,12 @@ public class LibraryVisualScenesLoader
             JAGTLog.increaseIndentation();
             for ( XMLNode node : visualScene.nodes.values() )
             {
-                JAGTLog.debug( "TT] Found node [", node.id, ":", node.name, "]" );
-                JAGTLog.increaseIndentation();
+                Node colNode = processNode( node, colLibVisualScenes, colladaFile, upVector );
                 
-                Node colNode = null;
-                
-                if ( node.type == XMLNode.Type.NODE )
-                {
-                    JAGTLog.debug( "TT] Alright, it's a basic node" );
-                    
-                    MatrixTransform transform = new MatrixTransform( node.matrix.matrix4f );
-                    
-                    if ( node.instanceGeometries != null && !node.instanceGeometries.isEmpty() )
-                    {
-                    	JAGTLog.debug( "TT] A geometry node!" );
-                    	
-                        for ( XMLInstanceGeometry instanceGeometry : node.instanceGeometries )
-                        {
-                            colNode = newCOLLADAGeometryInstanceNode( colladaFile, node, transform, instanceGeometry.url, instanceGeometry.bindMaterial );
-                        }
-                    }
-                    else if ( node.instanceControllers != null && !node.instanceControllers.isEmpty() )
-                    {
-                    	JAGTLog.debug( "TT] A controller node!" );
-                    	
-                        for ( XMLInstanceController instanceController : node.instanceControllers )
-                        {
-                            colNode = newCOLLADAControllerInstanceNode( colladaFile, node, transform, instanceController.url, instanceController.bindMaterial );
-                            Controller controller = colladaFile.getLibraryControllers().getControllers().get( instanceController.url );
-                            
-                            if ( controller instanceof SkeletalController )
-                            {
-                                final SkeletalController skelController = (SkeletalController)controller;
-                                
-                            	JAGTLog.debug( "Wow! It's a Skeletal Controller Node!" );
-                            	skelController.setSkeleton( colLibVisualScenes.getSkeletons().get( instanceController.skeleton ) );
-                            	skelController.setDestinationMesh( colladaFile.getLibraryGeometries().getGeometries().get( skelController.getSourceMeshId() ) );
-                            }
-                        }
-                    }
-                }
-                else if ( node.type == XMLNode.Type.JOINT )
-                {
-                    JAGTLog.debug( "TT] Alright, it's a skeleton node" );
-                    
-                    Skeleton skeleton = SkeletonLoader.loadSkeleton( node, upVector );
-                    colLibVisualScenes.getSkeletons().put( node.id, skeleton );
-                    Collection<Controller> controllers = colladaFile.getLibraryControllers().getControllers().values();
-                    for ( Controller controller : controllers )
-                    {
-                        if ( controller instanceof SkeletalController )
-                        {
-                            final SkeletalController skelController = (SkeletalController)controller;
-                            
-                            if ( node.id.equals( skelController.getController().skin.source ) )
-                            {
-                                skelController.setSkeleton( skeleton );
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    JAGTLog.debug( "TT] Node is of type : ", node.type, " we don't support specific nodes yet..." );
-                }
-                
-                JAGTLog.decreaseIndentation();
-                
-                if ( colNode != null )
+                if ( colNode != null && node.type != XMLNode.Type.JOINT )
                 {
                 	JAGTLog.debug( "TT] Successfully adding colNode ", colNode.getId() );
                     colScene.getNodes().put( colNode.getId(), colNode );
-                }
-                else if ( node.type != XMLNode.Type.JOINT )
-                {
-                    JAGTLog.debug( "TT] NULL node! Something went wrong..." );
                 }
             }
             
@@ -167,6 +98,81 @@ public class LibraryVisualScenesLoader
         }
         
         JAGTLog.decreaseIndentation();
+    }
+    
+    static Node processNode( XMLNode node, LibraryVisualScenes colLibVisualScenes, AssetFolder colladaFile, Vector3f upVector )
+    {
+        JAGTLog.debug( "TT] Found node [", node.id, ":", node.name, "]" );
+        JAGTLog.increaseIndentation();
+        
+        Node colNode = new Node( colladaFile, node.id, node.name, new MatrixTransform( node.matrix.matrix4f ) );
+        
+        if ( node.type == XMLNode.Type.NODE )
+        {
+            for ( XMLNode child: node.childrenList )
+            {
+                colNode.addChild( processNode( child, colLibVisualScenes, colladaFile, upVector ) );
+            }
+            
+            JAGTLog.debug( "TT] Alright, it's a basic node" );
+            
+            if ( node.instanceGeometries != null && !node.instanceGeometries.isEmpty() )
+            {
+                JAGTLog.debug( "TT] A geometry node!" );
+                
+                for ( XMLInstanceGeometry instanceGeometry: node.instanceGeometries )
+                {
+                    colNode.addGeometryInstance( newCOLLADAGeometryInstanceNode( colladaFile, node, instanceGeometry.url, instanceGeometry.bindMaterial ) );
+                }
+            }
+            else if ( node.instanceControllers != null && !node.instanceControllers.isEmpty() )
+            {
+                JAGTLog.debug( "TT] A controller node!" );
+                
+                for ( XMLInstanceController instanceController: node.instanceControllers )
+                {
+                    colNode.addControllerInstance( newCOLLADAControllerInstanceNode( colladaFile, node, instanceController.url, instanceController.bindMaterial ) );
+                    Controller controller = colladaFile.getLibraryControllers().getControllers().get( instanceController.url );
+                    
+                    if ( controller instanceof SkeletalController )
+                    {
+                        final SkeletalController skelController = (SkeletalController)controller;
+                        
+                        JAGTLog.debug( "Wow! It's a Skeletal Controller Node!" );
+                        skelController.setSkeleton( colLibVisualScenes.getSkeletons().get( instanceController.skeleton ) );
+                        skelController.setDestinationMesh( colladaFile.getLibraryGeometries().getGeometries().get( skelController.getSourceMeshId() ) );
+                    }
+                }
+            }
+        }
+        else if ( node.type == XMLNode.Type.JOINT )
+        {
+            JAGTLog.debug( "TT] Alright, it's a skeleton node" );
+            
+            Skeleton skeleton = SkeletonLoader.loadSkeleton( node, upVector );
+            colLibVisualScenes.getSkeletons().put( node.id, skeleton );
+            Collection< Controller > controllers = colladaFile.getLibraryControllers().getControllers().values();
+            for ( Controller controller: controllers )
+            {
+                if ( controller instanceof SkeletalController )
+                {
+                    final SkeletalController skelController = (SkeletalController)controller;
+                    
+                    if ( node.id.equals( skelController.getController().skin.source ) )
+                    {
+                        skelController.setSkeleton( skeleton );
+                    }
+                }
+            }
+        }
+        else
+        {
+            JAGTLog.debug( "TT] Node is of type : ", node.type, " we don't support specific nodes yet..." );
+        }
+        
+        JAGTLog.decreaseIndentation();
+        
+        return colNode;
     }
     
     /**
@@ -180,9 +186,9 @@ public class LibraryVisualScenesLoader
      * 
      * @return
      */
-    static GeometryInstanceNode newCOLLADAGeometryInstanceNode( AssetFolder colladaFile, XMLNode node, MatrixTransform transform, String geometryUrl, XMLBindMaterial bindMaterial )
+    static GeometryInstance newCOLLADAGeometryInstanceNode( AssetFolder colladaFile, XMLNode node, String geometryUrl, XMLBindMaterial bindMaterial )
     {
-        GeometryInstanceNode colNode;
+        GeometryInstance colNode;
         String materialUrl = null;
         XMLBindMaterial.TechniqueCommon techniqueCommon = bindMaterial.techniqueCommon;
         List<XMLInstanceMaterial> instanceMaterialList = techniqueCommon.instanceMaterials;
@@ -198,11 +204,10 @@ public class LibraryVisualScenesLoader
             }
         }
         
-        colNode = new GeometryInstanceNode(
+        colNode = new GeometryInstance(
                 colladaFile,
                 node.id,
                 node.name,
-                transform,
                 geometryUrl,
                 materialUrl
         );
@@ -221,9 +226,9 @@ public class LibraryVisualScenesLoader
      * 
      * @return
      */
-    static ControllerInstanceNode newCOLLADAControllerInstanceNode( AssetFolder colladaFile, XMLNode node, MatrixTransform transform, String controllerUrl, XMLBindMaterial bindMaterial )
+    static ControllerInstance newCOLLADAControllerInstanceNode( AssetFolder colladaFile, XMLNode node, String controllerUrl, XMLBindMaterial bindMaterial )
     {
-        ControllerInstanceNode colNode;
+        ControllerInstance colNode;
         String materialUrl = null;
         XMLBindMaterial.TechniqueCommon techniqueCommon = bindMaterial.techniqueCommon;
         List<XMLInstanceMaterial> instanceMaterialList = techniqueCommon.instanceMaterials;
@@ -239,11 +244,10 @@ public class LibraryVisualScenesLoader
             }
         }
         
-        colNode = new ControllerInstanceNode(
+        colNode = new ControllerInstance(
                 colladaFile,
                 node.id,
                 node.name,
-                transform,
                 controllerUrl,
                 materialUrl
         );

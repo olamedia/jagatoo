@@ -76,7 +76,7 @@ public class XMLColorOrTexture
                 case XMLStreamConstants.START_ELEMENT:
                 {
                     String localName = parser.getLocalName();
-                    if ( localName.equals( "color4" ) )
+                    if ( localName.equals( "color" ) )
                     {
                         checkVars( "color" );
                         color4 = new XMLColor4( StAXHelper.parseText( parser ) );
@@ -92,6 +92,7 @@ public class XMLColorOrTexture
                     {
                         JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Start tag: ", parser.getLocalName() );
                     }
+                    break;
                 }
                 case XMLStreamConstants.END_ELEMENT:
                 {

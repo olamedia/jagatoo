@@ -46,7 +46,7 @@ import org.jagatoo.logging.JAGTLog;
  */
 public class XMLMaterial
 {
-    
+    public String name = null;
     public String id = null;
     public XMLInstanceEffect instanceEffect = null;
     
@@ -67,6 +67,10 @@ public class XMLMaterial
             if ( attr.getLocalPart().equals( "id" ) )
             {
                 id = parser.getAttributeValue( i );
+            }
+            else if ( attr.getLocalPart().equals( "name" ) )
+            {
+                name = parser.getAttributeValue( i );
             }
             else
             {

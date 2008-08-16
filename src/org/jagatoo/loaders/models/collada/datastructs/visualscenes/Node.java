@@ -29,6 +29,8 @@
  */
 package org.jagatoo.loaders.models.collada.datastructs.visualscenes;
 
+import java.util.ArrayList;
+
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 
 /**
@@ -36,7 +38,7 @@ import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public abstract class Node
+public class Node
 {
     /** The COLLADA file this node belongs to */
     private final AssetFolder file;
@@ -49,6 +51,15 @@ public abstract class Node
     
     /** The transform of this node */
     private final COLLADATransform transform;
+    
+    /** Children nodes */
+    private final ArrayList< Node > children = new ArrayList< Node >();
+    
+    /** geometry instance nodes */
+    private final ArrayList< GeometryInstance > geometryInstances = new ArrayList< GeometryInstance >();
+    
+    /** controller instance nodes */
+    private final ArrayList< ControllerInstance > controllerInstances = new ArrayList< ControllerInstance >();
     
     /**
      * @return the file.
@@ -82,6 +93,36 @@ public abstract class Node
         return( transform );
     }
     
+    public void addGeometryInstance( GeometryInstance instance )
+    {
+        geometryInstances.add( instance );
+    }
+    
+    public void addControllerInstance( ControllerInstance instance )
+    {
+        controllerInstances.add( instance );
+    }
+    
+    public void addChild( Node child )
+    {
+        children.add( child );
+    }
+    
+    public ArrayList< Node > getChildren()
+    {
+        return children;
+    }
+    
+    public ArrayList< GeometryInstance > getGeometryInstances()
+    {
+        return geometryInstances;
+    }
+    
+    public ArrayList< ControllerInstance > getControllerInstances()
+    {
+        return controllerInstances;
+    }
+
     /**
      * Creates a new COLLADANode.
      * 

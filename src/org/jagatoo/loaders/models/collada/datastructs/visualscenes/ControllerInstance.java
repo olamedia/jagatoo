@@ -42,10 +42,9 @@ import org.jagatoo.loaders.models.collada.datastructs.materials.Material;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class ControllerInstanceNode extends Node
+public class ControllerInstance extends AbstractInstance
 {
     /** Our controller */
-    private final String controllerURL;
     private final String materialURL;
     
     /**
@@ -53,7 +52,7 @@ public class ControllerInstanceNode extends Node
      */
     public final Controller getController()
     {
-        return( getFile().getLibraryControllers().getControllers().get( controllerURL ) );
+        return( getFile().getLibraryControllers().getControllers().get( getUrl() ) );
     }
     
     /**
@@ -65,7 +64,7 @@ public class ControllerInstanceNode extends Node
     }
     
     /**
-     * Creates a new {@link ControllerInstanceNode}.
+     * Creates a new {@link ControllerInstance}.
      * 
      * @param file The COLLADA file this node belongs to
      * @param id The id of this node
@@ -74,11 +73,10 @@ public class ControllerInstanceNode extends Node
      * @param controllerURL The URL of the geometry this node is an instance of
      * @param materialURL The URL of the material bound to this node
      */
-    public ControllerInstanceNode( AssetFolder file, String id, String name, COLLADATransform transform, String controllerURL, String materialURL )
+    public ControllerInstance( AssetFolder file, String id, String name, String controllerURL, String materialURL )
     {
-        super( file, id, name, transform );
+        super( file, id, name, controllerURL );
         
-        this.controllerURL = controllerURL;
         this.materialURL = materialURL;
     }
 }

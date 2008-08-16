@@ -63,7 +63,7 @@ public class XMLNode {
         NODE,
         JOINT
     }
-    public Type type = null;
+    public Type type = Type.NODE;
     public String id = null;
     public String name = null;
     

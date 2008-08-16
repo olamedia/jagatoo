@@ -42,10 +42,9 @@ import org.jagatoo.loaders.models.collada.datastructs.materials.Material;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class GeometryInstanceNode extends Node
+public class GeometryInstance extends AbstractInstance
 {
     /** Our geometry */
-    private final String geometryID;
     private final String materialID;
     
     /**
@@ -53,7 +52,7 @@ public class GeometryInstanceNode extends Node
      */
     public final Geometry getGeometry()
     {
-        return( getFile().getLibraryGeometries().getGeometries().get( geometryID ) );
+        return( getFile().getLibraryGeometries().getGeometries().get( getUrl() ) );
     }
     
     /**
@@ -65,7 +64,7 @@ public class GeometryInstanceNode extends Node
     }
     
     /**
-     * Creates a new {@link GeometryInstanceNode}.
+     * Creates a new {@link GeometryInstance}.
      * 
      * @param file The COLLADA file this node belongs to
      * @param id The id of this node
@@ -74,11 +73,10 @@ public class GeometryInstanceNode extends Node
      * @param geometryUrl The URL of the geometry this node is an instance of
      * @param materialUrl The URL of the material bound to this node
      */
-    public GeometryInstanceNode( AssetFolder file, String id, String name, COLLADATransform transform, String geometryUrl, String materialUrl )
+    public GeometryInstance( AssetFolder file, String id, String name, String geometryUrl, String materialUrl )
     {
-        super( file, id, name, transform );
+        super( file, id, name, geometryUrl );
         
-        this.geometryID = geometryUrl;
         this.materialID = materialUrl;
     }
 }
