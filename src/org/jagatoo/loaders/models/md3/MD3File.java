@@ -43,7 +43,6 @@ import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.models._util.GeometryFactory;
 import org.jagatoo.loaders.models._util.NodeFactory;
 import org.jagatoo.loaders.models._util.SpecialItemsHandler;
-import org.jagatoo.loaders.models._util.AnimationFactory.AnimationType;
 import org.jagatoo.loaders.models._util.SpecialItemsHandler.SpecialItemType;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.logging.JAGTLog;
@@ -321,14 +320,12 @@ public class MD3File
         
         in.skipBytes( header.surfaceOffset + textureCoordsOffset - in.getPointer() );
         
-        float[] buffer = new float[ 2 ];
-        
         for ( int i = 0; i < numVertices; i++ )
         {
-            buffer[0] = in.readFloat();
-            buffer[1] = 1f - in.readFloat();
+            float s = in.readFloat();
+            float t = 1f - in.readFloat();
             
-            geomFactory.setTexCoord( geometry, geomType, 0, 2, i, buffer, 0, 1 );
+            geomFactory.setTexCoord( geometry, geomType, 0, i, s, t );
         }
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
@@ -343,7 +340,7 @@ public class MD3File
         
         Point3f coord = Point3f.fromPool();
         Vector3f normal = Vector3f.fromPool();
-        float[] buffer = new float[ 3 ];
+        float x, y, z;
         
         for ( int f = 0; f < numFrames; f++ )
         {
@@ -358,27 +355,29 @@ public class MD3File
             
             for ( int i = 0; i < numVertices; i++ )
             {
-                buffer[0] = (float)in.readShort() * scale;
-                buffer[1] = (float)in.readShort() * scale;
-                buffer[2] = (float)in.readShort() * scale;
+                x = (float)in.readShort() * scale;
+                y = (float)in.readShort() * scale;
+                z = (float)in.readShort() * scale;
                 
                 if ( convertZup2Yup )
                 {
-                    coord.set( buffer );
+                    coord.set( x, y, z );
                     
-                    buffer[0] = coord.getX();
-                    buffer[1] = coord.getZ();
-                    buffer[2] = -coord.getY();
+                    x = coord.getX();
+                    y = coord.getZ();
+                    z = -coord.getY();
                 }
                 
                 if ( f == 0 )
                 {
-                    geomFactory.setCoordinate( geometry, geomType, i, buffer, 0, 1 );
+                    geomFactory.setCoordinate( geometry, geomType, i, x, y, z );
                 }
                 
                 if ( numFrames > 1 )
                 {
-                    System.arraycopy( buffer, 0, keyFrameCoords, i * 3, 3 );
+                    keyFrameCoords[i * 3 + 0] = x;
+                    keyFrameCoords[i * 3 + 1] = y;
+                    keyFrameCoords[i * 3 + 2] = z;
                 }
                 
                 // normal
@@ -387,29 +386,33 @@ public class MD3File
                 float lat = ( zenith * FastMath.TWO_PI ) / 255f;
                 float lng = ( azimuth * FastMath.TWO_PI ) / 255f;
                 
-                buffer[0] = FastMath.cos( lat ) * FastMath.sin( lng );
-                buffer[1] = FastMath.sin( lat ) * FastMath.sin( lng );
-                buffer[2] = FastMath.cos( lng );
+                x = FastMath.cos( lat ) * FastMath.sin( lng );
+                y = FastMath.sin( lat ) * FastMath.sin( lng );
+                z = FastMath.cos( lng );
                 
                 if ( convertZup2Yup )
                 {
-                    normal.set( buffer );
+                    normal.set( x, y, z );
                     
                     normal.add( coord );
                     Matrix3f.Z_UP_TO_Y_UP.transform( normal );
                     normal.sub( coord.getX(), coord.getZ(), -coord.getY() );
                     
-                    normal.get( buffer );
+                    x = normal.getX();
+                    y = normal.getY();
+                    z = normal.getZ();
                 }
                 
                 if ( f == 0 )
                 {
-                    geomFactory.setNormal( geometry, geomType, i, buffer, 0, 1 );
+                    geomFactory.setNormal( geometry, geomType, i, x, y, z );
                 }
                 
                 if ( numFrames > 1 )
                 {
-                    System.arraycopy( buffer, 0, keyFrameNormals, i * 3, 3 );
+                    keyFrameNormals[i * 3 + 0] = x;
+                    keyFrameNormals[i * 3 + 1] = y;
+                    keyFrameNormals[i * 3 + 2] = z;
                 }
             }
             
@@ -475,8 +478,10 @@ public class MD3File
             //System.out.println( header.numFrames + ", " + numFrames + ", " + header.numSurfaces );
             if ( numFrames > 1 )
             {
-                Object animController = animFactory.createAnimationController( AnimationType.MESH_DEFORMATION_KEY_FRAMES, keyFrames, shape );
-                siHandler.addSpecialItem( SpecialItemType.ANIMATION_CONTROLLERS, null, new Object[] { animController, keyFrames.length } );
+                Object animController = animFactory.createMeshDeformationKeyFrameController( keyFrames, shape );
+                Object[] animControllers = animFactory.createMeshDeformationKeyFrameControllersArray( 1 );
+                animControllers[0] = animController;
+                siHandler.addAnimation( "default", keyFrames.length, 9f, animControllers );
             }
         }
         

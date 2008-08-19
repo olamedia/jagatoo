@@ -185,13 +185,13 @@ public class SmoothGroupProcessor extends ChunkProcessor
             }
             
             GeometryFactory.GeometryType geomType = GeometryFactory.GeometryType.INDEXED_TRIANGLE_ARRAY;
-            geomFactory.setCoordinate( context.geometry, geomType, 0, context.vertexCoords, 0, context.vertexCoords.length );
-            geomFactory.setNormal( context.geometry, geomType, 0, normals, 0, normals.length );
+            geomFactory.setCoordinates( context.geometry, geomType, 0, context.vertexCoords, 0, context.vertexCoords.length );
+            geomFactory.setNormals( context.geometry, geomType, 0, normals, 0, normals.length );
             geomFactory.setIndex( context.geometry, geomType, 0, indices, 0, indices.length );
             
             if ( context.textureCoords != null )
             {
-                geomFactory.setTexCoord( context.geometry, geomType, 0, 2, 0, context.textureCoords, 0, context.textureCoords.length );
+                geomFactory.setTexCoords( context.geometry, geomType, 0, 2, 0, context.textureCoords, 0, context.textureCoords.length );
             }
             //context.indexedGeometry.calculateFaceNormals();
             
@@ -243,12 +243,12 @@ public class SmoothGroupProcessor extends ChunkProcessor
             }
             
             GeometryFactory.GeometryType geomType = GeometryFactory.GeometryType.TRIANGLE_ARRAY;
-            geomFactory.setCoordinate( context.geometry, geomType, 0, coords, 0, coords.length );
-            geomFactory.setNormal( context.geometry, geomType, 0, normals, 0, normals.length );
+            geomFactory.setCoordinates( context.geometry, geomType, 0, coords, 0, coords.length );
+            geomFactory.setNormals( context.geometry, geomType, 0, normals, 0, normals.length );
             
             if ( context.textureCoords != null )
             {
-                geomFactory.setTexCoord( context.geometry, geomType, 0, 2, 0, texCoords, 0, texCoords.length );
+                geomFactory.setTexCoords( context.geometry, geomType, 0, 2, 0, texCoords, 0, texCoords.length );
             }
             
             geomFactory.finalizeGeometry( context.geometry, geomType, 0, context.vertexCoords.length, 0, 0 );

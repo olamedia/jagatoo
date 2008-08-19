@@ -664,10 +664,10 @@ public class AC3DPrototypeLoader
                 {
                     int vertexRef =  surface.getVertexReferences()[j];
                     
-                    geomFactory.setCoordinate( geom, geomType, vertexIndex, vertexCoords, vertexRef * 3, 1 );
+                    geomFactory.setCoordinate( geom, geomType, vertexIndex, vertexCoords[vertexRef * 3 + 0], vertexCoords[vertexRef * 3 + 1], vertexCoords[vertexRef * 3 + 2] );
                     if ( surface.hasTextureCoordinates() )
                     {
-                        geomFactory.setTexCoord( geom, geomType, 0, 2, vertexIndex, surface.getTextureCoordinates(), vertexRef * 2, 1 );
+                        geomFactory.setTexCoords( geom, geomType, 0, 2, vertexIndex, surface.getTextureCoordinates(), vertexRef * 2, 1 );
                     }
                     
                     vertexIndex++;

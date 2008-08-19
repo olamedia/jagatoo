@@ -34,25 +34,10 @@ package org.jagatoo.loaders.models._util;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface SpecialItemsHandler
+public enum AnimationType
 {
-    public static enum SpecialItemType
-    {
-        SCENE_GROUP,
-        NESTED_TRANSFORM,
-        SHAPE,
-        NAMED_OBJECT,
-        MOUNT_TRANSFORM,
-        SPAWN_TRANSFORM,
-        ITEM,
-        SUB_MODEL,
-        LIGHT,
-        SKYBOX,
-        TEXTURE_ANIMATOR,
-        ;
-    }
-    
-    public Object addSpecialItem( SpecialItemType type, String name, Object item );
-    
-    public void addAnimation( String name, int numFrames, float fps, Object[] controllers );
+    MESH_DEFORMATION_KEY_FRAMES,
+    SKELETAL,
+    TRANSFORM_KEY_FRAMES,
+    ;
 }

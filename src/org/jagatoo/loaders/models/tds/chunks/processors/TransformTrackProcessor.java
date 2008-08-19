@@ -38,7 +38,6 @@ import org.jagatoo.loaders.IncorrectFormatException;
 import org.jagatoo.loaders.models._util.AnimationFactory;
 import org.jagatoo.loaders.models._util.NodeFactory;
 import org.jagatoo.loaders.models._util.SpecialItemsHandler;
-import org.jagatoo.loaders.models._util.AnimationFactory.AnimationType;
 import org.jagatoo.loaders.models._util.SpecialItemsHandler.SpecialItemType;
 import org.jagatoo.loaders.models.tds.internal.KeyFrameFactory;
 import org.jagatoo.loaders.models.tds.internal.ModelContext;
@@ -96,7 +95,7 @@ public abstract class TransformTrackProcessor extends ChunkProcessor
         
         Matrix4f masterTransform = ( isRootNode && convertZup2Yup ) ? Matrix4f.Z_UP_TO_Y_UP : null;
         Object[] keyFrames = KeyFrameFactory.createKeyFrames( masterTransform, context.framesCount, context.translation, context.orientation, context.scale, animFactory );
-        Object animController = animFactory.createAnimationController( AnimationType.TRANSFORM_KEY_FRAMES, keyFrames, transformGroup );
+        Object animController = animFactory.createTransformKeyFrameController( keyFrames, transformGroup );
         
         if ( shape != null )
         {

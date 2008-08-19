@@ -67,10 +67,45 @@ public class LoaderUtils
         return( extractBaseURL( new File( filename ) ) );
     }
     
+    public static final String extractFilenameWithoutExt( URL url, String ext )
+    {
+        String filename = url.getFile();
+        
+        //return( filename.substring( filename.lastIndexOf( '/' ) + 1, filename.length() - ext.length() - 1 ) );
+        
+        int lastSlashPos = filename.lastIndexOf( '/' );
+        if ( lastSlashPos < 0 )
+        {
+            return( filename.substring( 0, filename.length() - ext.length() - 1 ) );
+        }
+        else
+        {
+            return( filename.substring( lastSlashPos + 1, filename.length() - ext.length() - 1 ) );
+        }
+    }
+    
     public static final String extractFilenameWithoutExt( URL url )
     {
-        String fileName = url.getFile();
+        String filename = url.getFile();
         
-        return( fileName.substring( fileName.lastIndexOf( "/" ) + 1, fileName.length() - 4 ) );
+        int lastSlashPos = filename.lastIndexOf( '/' );
+        if ( lastSlashPos < 0 )
+        {
+            int lastDotPos = filename.lastIndexOf( '.' );
+            
+            if ( lastDotPos < 0 )
+                return( filename );
+            else
+                return( filename.substring( 0, lastDotPos ) );
+        }
+        else
+        {
+            int lastDotPos = filename.lastIndexOf( '.' );
+            
+            if ( lastDotPos < 0 )
+                return( filename.substring( lastSlashPos + 1, filename.length() ) );
+            else
+                return( filename.substring( lastSlashPos + 1, lastDotPos ) );
+        }
     }
 }

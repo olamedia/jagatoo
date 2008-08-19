@@ -229,12 +229,12 @@ public class ModelContext
                 GeometryFactory.GeometryType geomType = FaceArrayProcessor.CREATE_INDEXED_GEOMETRY ? GeometryFactory.GeometryType.INDEXED_TRIANGLE_ARRAY : GeometryFactory.GeometryType.TRIANGLE_ARRAY;
                 for ( int i = 0; i < coords.length; i++ )
                 {
-                    geomFactory.setCoordinate( geometry, geomType, i, coords, i, 1 );
-                    geomFactory.setNormal( geometry, geomType, i, normals, i, 1 );
+                    geomFactory.setCoordinate( geometry, geomType, i, coords[i].getX(), coords[i].getY(), coords[i].getZ() );
+                    geomFactory.setNormal( geometry, geomType, i, normals[i].getX(), normals[i].getY(), normals[i].getZ() );
                     
                     if ( textureCoords != null )
                     {
-                        geomFactory.setTexCoord( geometry, geomType, 0, 2, i, texCoords, i, 1 );
+                        geomFactory.setTexCoord( geometry, geomType, 0, i, texCoords[i].getS(), texCoords[i].getT() );
                     }
                 }
             }

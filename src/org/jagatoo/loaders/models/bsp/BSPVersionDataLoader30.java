@@ -213,13 +213,13 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
             p.set( control[ i ].position );
             
             if ( convertZup2Yup )
-                geomFactory.setCoordinate( ga, geomType, i, new float[] { p.getX() * worldScale, p.getZ() * worldScale, -p.getY() * worldScale }, 0, 1 );
+                geomFactory.setCoordinate( ga, geomType, i, p.getX() * worldScale, p.getZ() * worldScale, -p.getY() * worldScale );
             else
-                geomFactory.setCoordinate( ga, geomType, i, new float[] { p.getX() * worldScale, p.getY() * worldScale, p.getZ() * worldScale }, 0, 1 );
+                geomFactory.setCoordinate( ga, geomType, i, p.getX() * worldScale, p.getY() * worldScale, p.getZ() * worldScale );
             
             if ( BSPPrototypeLoader.loadNormals )
             {
-                geomFactory.setNormal( ga, geomType, i, new float[] { control[ i ].normal.getX(), control[ i ].normal.getY(), control[ i ].normal.getZ() }, 0, 1 );
+                geomFactory.setNormal( ga, geomType, i, control[ i ].normal.getX(), control[ i ].normal.getY(), control[ i ].normal.getZ() );
             }
             
             float u = p.getX() * texInfo.s[0] + p.getY() * texInfo.s[1] + p.getZ() * texInfo.s[2] + texInfo.s[3];
@@ -243,7 +243,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
             if ( v > max_v )
                 max_v = v;
             
-            geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { u, v }, 0, 1 );
+            geomFactory.setTexCoord( ga, geomType, 0, i, u, v );
         }
         
         Point3f.toPool( p );
@@ -277,7 +277,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
                 u /= lightMapWidth;
                 v /= lightMapHeight;
                 
-                geomFactory.setTexCoord( ga, geomType, 1, 2, i, new float[] { u, v }, 0, 1 );
+                geomFactory.setTexCoord( ga, geomType, 1, i, u, v );
             }
         }
         

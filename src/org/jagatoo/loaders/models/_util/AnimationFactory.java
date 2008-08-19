@@ -44,15 +44,35 @@ import org.openmali.vecmath2.Vector3f;
  */
 public interface AnimationFactory
 {
-    public static enum AnimationType
-    {
-        MESH_DEFORMATION_KEY_FRAMES,
-        TRANSFORM_KEY_FRAMES,
-        SKELETAL,
-        WEIGHTED_SKELETAL,
-    }
+    public NamedObject[] createBonesArray( int length );
+    
+    public NamedObject createBone( String name, Vector3f translation, Quaternion4f rotation );
+    
+    public Object[] createBoneAnimationKeyFrameArray( int length );
+    
+    public Object createBoneAnimationKeyFrame( NamedObject[] bones, Matrix4f[] mountTransforms );
+    
+    public Object createBoneWeightsArray( int length, boolean twoDims );
+    
+    public Object createBoneWeight( int boneIndex, float weight, Vector3f offset );
+    
+    public Object[] createBoneAnimationKeyFrameControllerArray( int length );
+    
+    public Object createBoneAnimationKeyFrameController( Object[] keyFrames, NamedObject target, Object[][] boneWeights );
+    
+    
+    
+    public Object[] createMeshDeformationKeyFrameArray( int length );
     
     public Object createMeshDeformationKeyFrame( float[] coords, float[] normals, Matrix4f[] mountTransforms );
+    
+    public Object[] createMeshDeformationKeyFrameControllersArray( int length );
+    
+    public Object createMeshDeformationKeyFrameController( Object[] keyFrames, NamedObject target );
+    
+    
+    
+    public Object[] createTransformKeyFrameArray( int length );
     
     public Object createTransformKeyFrame( float time, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
     
@@ -66,5 +86,7 @@ public interface AnimationFactory
     
     public void transformTransformKeyFrames( Matrix4f transform, Object[] frames );
     
-    public Object createAnimationController( AnimationType animType, Object[] keyFrames, NamedObject target );
+    public Object[] createTransformKeyFrameControllersArray( int length );
+    
+    public Object createTransformKeyFrameController( Object[] keyFrames, NamedObject target );
 }

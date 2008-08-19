@@ -239,6 +239,10 @@ public interface AppearanceFactory
     
     public abstract NamedObject createAppearance( String name, int flags );
     
+    public abstract NamedObject createStandardAppearance( String name, AbstractTexture texture0, int flags );
+    
+    public abstract NamedObject createStandardAppearance( String name, String textureName0, URL baseURL, int flags );
+    
     public abstract void applyAppearance( NamedObject appearance, NamedObject geometry );
     
     

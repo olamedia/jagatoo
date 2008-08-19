@@ -77,6 +77,29 @@ public final class StringUtils
         return( str.equalsIgnoreCase( "true" ) || str.equalsIgnoreCase( "false" ) );
     }
     
+    public static final String unquoteString( String s )
+    {
+        if ( s.charAt( 0 ) == '\"' )
+        {
+            if ( s.charAt( s.length() - 1 ) == '\"' )
+            {
+                return( s.substring( 1, s.length() - 1 ) );
+            }
+            else
+            {
+                return( s.substring( 1, s.length() - 0 ) );
+            }
+        }
+        else if ( s.charAt( s.length() - 1 ) == '\"' )
+        {
+            return( s.substring( 1, s.length() - 1 ) );
+        }
+        else
+        {
+            return( s );
+        }
+    }
+    
     private StringUtils()
     {
     }

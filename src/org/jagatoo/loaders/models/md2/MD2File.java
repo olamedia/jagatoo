@@ -77,7 +77,6 @@ import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.models._util.GeometryFactory;
 import org.jagatoo.loaders.models._util.NodeFactory;
 import org.jagatoo.loaders.models._util.SpecialItemsHandler;
-import org.jagatoo.loaders.models._util.AnimationFactory.AnimationType;
 import org.jagatoo.loaders.models._util.SpecialItemsHandler.SpecialItemType;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.logging.JAGTLog;
@@ -456,10 +455,14 @@ public class MD2File
                 
                 frames.clear();
                 
-                Object fanAnimController = animFactory.createAnimationController( AnimationType.MESH_DEFORMATION_KEY_FRAMES, fanFrames, fanShape );
-                Object stripAnimController = animFactory.createAnimationController( AnimationType.MESH_DEFORMATION_KEY_FRAMES, stripFrames, stripShape );
+                Object fanAnimController = animFactory.createMeshDeformationKeyFrameController( fanFrames, fanShape );
+                Object stripAnimController = animFactory.createMeshDeformationKeyFrameController( stripFrames, stripShape );
                 
-                siHandler.addSpecialItem( SpecialItemType.ANIMATION_CONTROLLERS, lastAnimName, new Object[] { fanAnimController, stripAnimController } );
+                Object[] animControllers = animFactory.createMeshDeformationKeyFrameControllersArray( 2 );
+                animControllers[0] = fanAnimController;
+                animControllers[1] = stripAnimController;
+                
+                siHandler.addAnimation( lastAnimName, frames.size(), 9f, animControllers );
             }
             
             lastAnimName = animName;
@@ -489,13 +492,13 @@ public class MD2File
                         
                         if ( f == 0 )
                         {
-                            //geomFactory.setCoordinate( fanArray, geomType, fanIndex, coords, vertexIndex * 3, 1 );
-                            geomFactory.setTexCoord( fanArray, geomType, 0, 2, fanIndex, st, j * 2, 1 );
+                            //geomFactory.setCoordinates( fanArray, geomType, fanIndex, coords, vertexIndex * 3, 1 );
+                            geomFactory.setTexCoords( fanArray, geomType, 0, 2, fanIndex, st, j * 2, 1 );
                             /*
                             if ( convertZup2Yup )
-                                geomFactory.setNormal( fanArray, geomType, fanIndex, MD2Normals.dataYup, normalIndex * 3, 1 );
+                                geomFactory.setNormals( fanArray, geomType, fanIndex, MD2Normals.dataYup, normalIndex * 3, 1 );
                             else
-                                geomFactory.setNormal( fanArray, geomType, fanIndex, MD2Normals.dataZup, normalIndex * 3, 1 );
+                                geomFactory.setNormals( fanArray, geomType, fanIndex, MD2Normals.dataZup, normalIndex * 3, 1 );
                             */
                         }
                         
@@ -517,13 +520,13 @@ public class MD2File
                         
                         if ( f == 0 )
                         {
-                            //geomFactory.setCoordinate( stripArray, geomType, stripIndex, coords, vertexIndex * 3, 1 );
-                            geomFactory.setTexCoord( stripArray, geomType, 0, 2, stripIndex, st, j * 2, 1 );
+                            //geomFactory.setCoordinates( stripArray, geomType, stripIndex, coords, vertexIndex * 3, 1 );
+                            geomFactory.setTexCoords( stripArray, geomType, 0, 2, stripIndex, st, j * 2, 1 );
                             /*
                             if ( convertZup2Yup )
-                                geomFactory.setNormal( stripArray, geomType, stripIndex, MD2Normals.dataYup, normalIndex * 3, 1 );
+                                geomFactory.setNormals( stripArray, geomType, stripIndex, MD2Normals.dataYup, normalIndex * 3, 1 );
                             else
-                                geomFactory.setNormal( stripArray, geomType, stripIndex, MD2Normals.dataZup, normalIndex * 3, 1 );
+                                geomFactory.setNormals( stripArray, geomType, stripIndex, MD2Normals.dataZup, normalIndex * 3, 1 );
                             */
                         }
                         
@@ -540,10 +543,10 @@ public class MD2File
             
             if ( f == 0 )
             {
-                geomFactory.setCoordinate( fanArray, GeometryFactory.GeometryType.TRIANGLE_FAN_ARRAY, 0, frameFanCoords, 0, fanIndex );
-                geomFactory.setNormal( fanArray, GeometryFactory.GeometryType.TRIANGLE_FAN_ARRAY, 0, frameFanNormals, 0, fanIndex );
-                geomFactory.setCoordinate( stripArray, GeometryFactory.GeometryType.TRIANGLE_STRIP_ARRAY, 0, frameStripCoords, 0, stripIndex );
-                geomFactory.setNormal( stripArray, GeometryFactory.GeometryType.TRIANGLE_STRIP_ARRAY, 0, frameStripNormals, 0, stripIndex );
+                geomFactory.setCoordinates( fanArray, GeometryFactory.GeometryType.TRIANGLE_FAN_ARRAY, 0, frameFanCoords, 0, fanIndex );
+                geomFactory.setNormals( fanArray, GeometryFactory.GeometryType.TRIANGLE_FAN_ARRAY, 0, frameFanNormals, 0, fanIndex );
+                geomFactory.setCoordinates( stripArray, GeometryFactory.GeometryType.TRIANGLE_STRIP_ARRAY, 0, frameStripCoords, 0, stripIndex );
+                geomFactory.setNormals( stripArray, GeometryFactory.GeometryType.TRIANGLE_STRIP_ARRAY, 0, frameStripNormals, 0, stripIndex );
                 
                 geomFactory.finalizeGeometry( fanArray, GeometryFactory.GeometryType.TRIANGLE_FAN_ARRAY, 0, fanVertexCount, 0, 0 );
                 geomFactory.finalizeGeometry( stripArray, GeometryFactory.GeometryType.TRIANGLE_STRIP_ARRAY, 0, stripVertexCount, 0, 0 );
@@ -576,7 +579,7 @@ public class MD2File
             frames.add( new Object[] { fanFrame, stripFrame } );
         }
         
-        if ( (framesData.length > 1 ) && ( lastAnimName != null ) && ( frames.size() > 0 ) )
+        if ( ( framesData.length > 1 ) && ( lastAnimName != null ) && ( frames.size() > 0 ) )
         {
             Object[] fanFrames = new Object[ frames.size() ];
             Object[] stripFrames = new Object[ frames.size() ];
@@ -590,10 +593,14 @@ public class MD2File
             
             frames.clear();
             
-            Object fanAnimController = animFactory.createAnimationController( AnimationType.MESH_DEFORMATION_KEY_FRAMES, fanFrames, fanShape );
-            Object stripAnimController = animFactory.createAnimationController( AnimationType.MESH_DEFORMATION_KEY_FRAMES, stripFrames, stripShape );
+            Object fanAnimController = animFactory.createMeshDeformationKeyFrameController( fanFrames, fanShape );
+            Object stripAnimController = animFactory.createMeshDeformationKeyFrameController( stripFrames, stripShape );
             
-            siHandler.addSpecialItem( SpecialItemType.ANIMATION_CONTROLLERS, lastAnimName, new Object[] { fanAnimController, stripAnimController } );
+            Object[] animControllers = animFactory.createMeshDeformationKeyFrameControllersArray( 2 );
+            animControllers[0] = fanAnimController;
+            animControllers[1] = stripAnimController;
+            
+            siHandler.addAnimation( lastAnimName, frames.size(), 9f, animControllers );
         }
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );

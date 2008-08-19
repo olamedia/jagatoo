@@ -50,7 +50,6 @@ import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.models._util.GeometryFactory;
 import org.jagatoo.loaders.models._util.NodeFactory;
 import org.jagatoo.loaders.models._util.SpecialItemsHandler;
-import org.jagatoo.loaders.models._util.SpecialItemsHandler.SpecialItemType;
 import org.jagatoo.loaders.models.tds.chunks.TDSChunkType;
 import org.jagatoo.loaders.models.tds.chunks.processors.ChunkProcessor;
 import org.jagatoo.loaders.models.tds.internal.ModelContext;
@@ -338,8 +337,9 @@ public class TDSFile
         
         if ( context.animationFound )
         {
-            Object[] animControllers = context.animControllers.toArray();
-            siHandler.addSpecialItem( SpecialItemType.ANIMATION_CONTROLLERS, null, new Object[] { animControllers, context.framesCount } );
+            Object[] animControllers = animFactory.createTransformKeyFrameControllersArray( context.animControllers.size() );
+            context.animControllers.toArray( animControllers );
+            siHandler.addAnimation( "default", context.framesCount, 25f, animControllers );
         }
     }
     

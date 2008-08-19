@@ -122,13 +122,13 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         {
             int j = face.vertexIndex + i;
             if ( convertZup2Yup )
-                geomFactory.setCoordinate( ga, geomType, i, new float[] { vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getZ() * worldScale, -vertices[ j ].position.getY() * worldScale }, 0, 1 );
+                geomFactory.setCoordinate( ga, geomType, i, vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getZ() * worldScale, -vertices[ j ].position.getY() * worldScale );
             else
-                geomFactory.setCoordinate( ga, geomType, i, new float[] { vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getY() * worldScale, vertices[ j ].position.getZ() * worldScale }, 0, 1 );
+                geomFactory.setCoordinate( ga, geomType, i, vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getY() * worldScale, vertices[ j ].position.getZ() * worldScale );
             if ( BSPPrototypeLoader.loadNormals )
-                geomFactory.setNormal( ga, geomType, i, getNormal( vertices[ j ].normal, convertZup2Yup ), 0, 1 );
-            geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { vertices[ j ].texCoord.getS(), vertices[ j ].texCoord.getT() }, 0, 1 );
-            geomFactory.setTexCoord( ga, geomType, 1, 2, i, new float[] { vertices[ j ].lightTexCoord.getS(), vertices[ j ].lightTexCoord.getT() }, 0, 1 );
+                geomFactory.setNormals( ga, geomType, i, getNormal( vertices[ j ].normal, convertZup2Yup ), 0, 1 );
+            geomFactory.setTexCoord( ga, geomType, 0, i, vertices[ j ].texCoord.getS(), vertices[ j ].texCoord.getT() );
+            geomFactory.setTexCoord( ga, geomType, 1, i, vertices[ j ].lightTexCoord.getS(), vertices[ j ].lightTexCoord.getT() );
             
             /*
             if ( vertices[ j ].color.getRed() < 0f )
@@ -185,14 +185,14 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         for ( int i = 0; i < ps.mPoints.length; i++ )
         {
             if ( convertZup2Yup )
-                geomFactory.setCoordinate( ga, geomType, i, new float[] { ps.mPoints[ i ].position.getX() * worldScale, ps.mPoints[ i ].position.getZ() * worldScale, -ps.mPoints[ i ].position.getY() * worldScale }, 0, 1 );
+                geomFactory.setCoordinate( ga, geomType, i, ps.mPoints[ i ].position.getX() * worldScale, ps.mPoints[ i ].position.getZ() * worldScale, -ps.mPoints[ i ].position.getY() * worldScale );
             else
-                geomFactory.setCoordinate( ga, geomType, i, new float[] { ps.mPoints[ i ].position.getX() * worldScale, ps.mPoints[ i ].position.getY() * worldScale, ps.mPoints[ i ].position.getZ() * worldScale }, 0, 1 );
+                geomFactory.setCoordinate( ga, geomType, i, ps.mPoints[ i ].position.getX() * worldScale, ps.mPoints[ i ].position.getY() * worldScale, ps.mPoints[ i ].position.getZ() * worldScale );
             if ( BSPPrototypeLoader.loadNormals )
-                geomFactory.setNormal( ga, geomType, i, getNormal( ps.mPoints[ i ].normal, convertZup2Yup ), 0, 1 );
-            geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { ps.mPoints[ i ].texCoord.getS(), ps.mPoints[ i ].texCoord.getT() }, 0, 1 );
-            geomFactory.setTexCoord( ga, geomType, 1, 2, i, new float[] { ps.mPoints[ i ].lightTexCoord.getS(), ps.mPoints[ i ].lightTexCoord.getT() }, 0, 1 );
-            //geomFactory.setColor( ga, geomType, ps.mPoints[ i ].color.hasAlpha() ? 4 : 3, i, new float[] { ps.mPoints[ i ].color.getRed(), ps.mPoints[ i ].color.getGreen(), ps.mPoints[ i ].color.getBlue(), ps.mPoints[ i ].color.getAlpha() }, 0, 1 );
+                geomFactory.setNormals( ga, geomType, i, getNormal( ps.mPoints[ i ].normal, convertZup2Yup ), 0, 1 );
+            geomFactory.setTexCoord( ga, geomType, 0, i, ps.mPoints[ i ].texCoord.getS(), ps.mPoints[ i ].texCoord.getT() );
+            geomFactory.setTexCoord( ga, geomType, 1, i, ps.mPoints[ i ].lightTexCoord.getS(), ps.mPoints[ i ].lightTexCoord.getT() );
+            //geomFactory.setColors( ga, geomType, ps.mPoints[ i ].color.hasAlpha() ? 4 : 3, i, new float[] { ps.mPoints[ i ].color.getRed(), ps.mPoints[ i ].color.getGreen(), ps.mPoints[ i ].color.getBlue(), ps.mPoints[ i ].color.getAlpha() }, 0, 1 );
         }
         
         geomFactory.setIndex( ga, geomType, 0, ps.mIndices, 0, ps.mIndices.length );
@@ -222,13 +222,13 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         {
             int j = face.vertexIndex + i;
             if ( convertZup2Yup )
-                geomFactory.setCoordinate( ga, geomType, i, new float[] { vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getZ() * worldScale, -vertices[ j ].position.getY() * worldScale }, 0, 1 );
+                geomFactory.setCoordinate( ga, geomType, i, vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getZ() * worldScale, -vertices[ j ].position.getY() * worldScale );
             else
-                geomFactory.setCoordinate( ga, geomType, i, new float[] { vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getY() * worldScale, vertices[ j ].position.getZ() * worldScale }, 0, 1 );
+                geomFactory.setCoordinate( ga, geomType, i, vertices[ j ].position.getX() * worldScale, vertices[ j ].position.getY() * worldScale, vertices[ j ].position.getZ() * worldScale );
             if ( BSPPrototypeLoader.loadNormals )
-                geomFactory.setNormal( ga, geomType, i, getNormal( vertices[ j ].normal, convertZup2Yup ), 0, 1 );
-            geomFactory.setTexCoord( ga, geomType, 0, 2, i, new float[] { vertices[ j ].texCoord.getS(), vertices[ j ].texCoord.getT() }, 0, 1 );
-            geomFactory.setTexCoord( ga, geomType, 1, 2, i, new float[] { vertices[ j ].lightTexCoord.getS(), vertices[ j ].lightTexCoord.getT() }, 0, 1 );
+                geomFactory.setNormals( ga, geomType, i, getNormal( vertices[ j ].normal, convertZup2Yup ), 0, 1 );
+            geomFactory.setTexCoord( ga, geomType, 0, i, vertices[ j ].texCoord.getS(), vertices[ j ].texCoord.getT() );
+            geomFactory.setTexCoord( ga, geomType, 1, i, vertices[ j ].lightTexCoord.getS(), vertices[ j ].lightTexCoord.getT() );
             
             /*
             if ( vertices[ j ].color.getRed() < 0f )

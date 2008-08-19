@@ -57,23 +57,29 @@ public interface GeometryFactory
     
     public NamedObject createInterleavedGeometry( String name, GeometryType type, int coordSize, int numVertices, int numIndices, int[] numStrips, int features, boolean colorAlpha, int[] tuSizes, int[] vaSizes );
     
-    public void setCoordinate( NamedObject geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
+    public void setCoordinate( NamedObject geometry, GeometryType type, int vertexIndex, float x, float y, float z );
     
-    public void setCoordinate( NamedObject geometry, GeometryType type, int vertexIndex, Point3f[] data, int offset, int num );
+    public void setCoordinates( NamedObject geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
     
-    public void setNormal( NamedObject geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
+    public void setCoordinates( NamedObject geometry, GeometryType type, int vertexIndex, Point3f[] data, int offset, int num );
     
-    public void setNormal( NamedObject geometry, GeometryType type, int vertexIndex, Vector3f[] data, int offset, int num );
+    public void setNormal( NamedObject geometry, GeometryType type, int vertexIndex, float x, float y, float z );
     
-    public void setTexCoord( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, float[] data, int offset, int num );
+    public void setNormals( NamedObject geometry, GeometryType type, int vertexIndex, float[] data, int offset, int num );
     
-    public void setTexCoord( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, TexCoordf<?>[] data, int offset, int num );
+    public void setNormals( NamedObject geometry, GeometryType type, int vertexIndex, Vector3f[] data, int offset, int num );
     
-    public void setColor( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, float[] data, int offset, int num );
+    public void setTexCoord( NamedObject geometry, GeometryType type, int textureUnit, int vertexIndex, float s, float t );
     
-    public void setColor( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, Colorf[] data, int offset, int num );
+    public void setTexCoords( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, float[] data, int offset, int num );
     
-    public void setVertexAttrib( NamedObject geometry, GeometryType type, int attribIndex, int attribSize, int vertexIndex, float[] data, int offset, int num );
+    public void setTexCoords( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, TexCoordf<?>[] data, int offset, int num );
+    
+    public void setColors( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, float[] data, int offset, int num );
+    
+    public void setColors( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, Colorf[] data, int offset, int num );
+    
+    public void setVertexAttribs( NamedObject geometry, GeometryType type, int attribIndex, int attribSize, int vertexIndex, float[] data, int offset, int num );
     
     public void setIndex( NamedObject geometry, GeometryType type, int vertexIndex, int[] data, int offset, int num );
     
