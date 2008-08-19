@@ -154,6 +154,30 @@ public final class ArrayUtils
      * 
      * @param array the input array
      * @param minCapacity the desired (minimal) capacity
+     * 
+     * @return the array with the ensured length
+     */
+    public static final Integer[] ensureCapacity( Integer[] array, int minCapacity )
+    {
+        final int oldCapacity = array.length;
+        
+        if ( minCapacity > oldCapacity )
+        {
+            final Integer[] oldArray = array;
+            final int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            array = new Integer[ newCapacity ];
+            System.arraycopy( oldArray, 0, array, 0, oldCapacity );
+        }
+        
+        return( array );
+    }
+    
+    /**
+     * Ensures, the given int array has the desired length.<br>
+     * <b>The ensured array is returned!</b>
+     * 
+     * @param array the input array
+     * @param minCapacity the desired (minimal) capacity
      * @param paddValue the value to be written to appended elements
      * 
      * @return the array with the ensured length
