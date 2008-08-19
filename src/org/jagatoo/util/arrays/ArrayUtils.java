@@ -567,6 +567,35 @@ public final class ArrayUtils
      * Checks, if the specified array contains the specified element.
      * 
      * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
+     * @param strict if <code>true</code>, a == check is used to identify the element, otherwise, the equals method is used.
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( Object[] array, int start, int limit, Object element, boolean strict )
+    {
+        for ( int i = start; i <= limit; i++ )
+        {
+            if ( strict || ( array[ i ] == null ) )
+            {
+                if ( array[ i ] == element )
+                    return( true );
+            }
+            else if ( array[ i ].equals( element ) )
+            {
+                return( true );
+            }
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
      * @param element the element to search
      * @param strict if <code>true</code>, a == check is used to identify the element, otherwise, the equals method is used.
      * 
