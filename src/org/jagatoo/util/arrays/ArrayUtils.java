@@ -328,6 +328,120 @@ public final class ArrayUtils
      * 
      * @param array the array to check
      * @param element the element to search
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( byte[] array, byte element )
+    {
+        for ( int i = 0; i < array.length; i++ )
+        {
+            if ( array[ i ] == element )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( short[] array, short element )
+    {
+        for ( int i = 0; i < array.length; i++ )
+        {
+            if ( array[ i ] == element )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( int[] array, int element )
+    {
+        for ( int i = 0; i < array.length; i++ )
+        {
+            if ( array[ i ] == element )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( long[] array, long element )
+    {
+        for ( int i = 0; i < array.length; i++ )
+        {
+            if ( array[ i ] == element )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( float[] array, float element )
+    {
+        for ( int i = 0; i < array.length; i++ )
+        {
+            if ( array[ i ] == element )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( double[] array, double element )
+    {
+        for ( int i = 0; i < array.length; i++ )
+        {
+            if ( array[ i ] == element )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
+     * @param element the element to search
      * @param strict if <code>true</code>, a == check is used to identify the element, otherwise, the equals method is used.
      * 
      * @return <code>true</code>, if the array contains the specified element.
@@ -380,6 +494,176 @@ public final class ArrayUtils
      * @return the element's index within the array or -1, if the array does not contain the specified element.
      */
     public static final int indexOf( byte[] array, byte element )
+    {
+        return( indexOf( array, 0, array.length - 1, element ) );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( short[] array, int start, int limit, short element )
+    {
+        for ( int i = start; i <= limit; i++ )
+        {
+            if ( array[ i ] == element )
+                return( i );
+        }
+        
+        return( -1 );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( short[] array, short element )
+    {
+        return( indexOf( array, 0, array.length - 1, element ) );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( int[] array, int start, int limit, int element )
+    {
+        for ( int i = start; i <= limit; i++ )
+        {
+            if ( array[ i ] == element )
+                return( i );
+        }
+        
+        return( -1 );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( int[] array, int element )
+    {
+        return( indexOf( array, 0, array.length - 1, element ) );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( long[] array, int start, int limit, long element )
+    {
+        for ( int i = start; i <= limit; i++ )
+        {
+            if ( array[ i ] == element )
+                return( i );
+        }
+        
+        return( -1 );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( long[] array, long element )
+    {
+        return( indexOf( array, 0, array.length - 1, element ) );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( float[] array, int start, int limit, float element )
+    {
+        for ( int i = start; i <= limit; i++ )
+        {
+            if ( array[ i ] == element )
+                return( i );
+        }
+        
+        return( -1 );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( float[] array, float element )
+    {
+        return( indexOf( array, 0, array.length - 1, element ) );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( double[] array, int start, int limit, double element )
+    {
+        for ( int i = start; i <= limit; i++ )
+        {
+            if ( array[ i ] == element )
+                return( i );
+        }
+        
+        return( -1 );
+    }
+    
+    /**
+     * Searches the specified element inside the specified array.
+     * 
+     * @param array the array to check
+     * @param element the element to search
+     * 
+     * @return the element's index within the array or -1, if the array does not contain the specified element.
+     */
+    public static final int indexOf( double[] array, double element )
     {
         return( indexOf( array, 0, array.length - 1, element ) );
     }
