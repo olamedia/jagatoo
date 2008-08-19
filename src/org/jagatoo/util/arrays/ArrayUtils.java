@@ -327,6 +327,27 @@ public final class ArrayUtils
      * Checks, if the specified array contains the specified element.
      * 
      * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( byte[] array, int start, int limit, byte element )
+    {
+        for ( int i = start; i <= limit; i++ )
+        {
+            if ( array[ i ] == element )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
      * @param element the element to search
      * 
      * @return <code>true</code>, if the array contains the specified element.
@@ -334,6 +355,27 @@ public final class ArrayUtils
     public static final boolean contains( byte[] array, byte element )
     {
         for ( int i = 0; i < array.length; i++ )
+        {
+            if ( array[ i ] == element )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( short[] array, int start, int limit, short element )
+    {
+        for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
                 return( true );
@@ -365,6 +407,27 @@ public final class ArrayUtils
      * Checks, if the specified array contains the specified element.
      * 
      * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( int[] array, int start, int limit, int element )
+    {
+        for ( int i = start; i <= limit; i++ )
+        {
+            if ( array[ i ] == element )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
      * @param element the element to search
      * 
      * @return <code>true</code>, if the array contains the specified element.
@@ -372,6 +435,27 @@ public final class ArrayUtils
     public static final boolean contains( int[] array, int element )
     {
         for ( int i = 0; i < array.length; i++ )
+        {
+            if ( array[ i ] == element )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( long[] array, int start, int limit, long element )
+    {
+        for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
                 return( true );
@@ -403,6 +487,27 @@ public final class ArrayUtils
      * Checks, if the specified array contains the specified element.
      * 
      * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( float[] array, int start, int limit, float element )
+    {
+        for ( int i = start; i <= limit; i++ )
+        {
+            if ( array[ i ] == element )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
      * @param element the element to search
      * 
      * @return <code>true</code>, if the array contains the specified element.
@@ -410,6 +515,27 @@ public final class ArrayUtils
     public static final boolean contains( float[] array, float element )
     {
         for ( int i = 0; i < array.length; i++ )
+        {
+            if ( array[ i ] == element )
+                return( true );
+        }
+        
+        return( false );
+    }
+    
+    /**
+     * Checks, if the specified array contains the specified element.
+     * 
+     * @param array the array to check
+     * @param start the index in the source array to start the search at
+     * @param limit the index in the source array of the last element to be tested
+     * @param element the element to search
+     * 
+     * @return <code>true</code>, if the array contains the specified element.
+     */
+    public static final boolean contains( double[] array, int start, int limit, double element )
+    {
+        for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
                 return( true );
