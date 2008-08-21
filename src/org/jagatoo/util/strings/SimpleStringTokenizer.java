@@ -43,15 +43,18 @@ public class SimpleStringTokenizer
     
     private Boolean hasMore = null;
     
+    private String lastToken = null;
+    
     private final StringBuilder sb = new StringBuilder();
     
     public void reset()
     {
         this.pos = -1;
         this.hasMore = null;
+        this.lastToken = null;
     }
     
-    public void setString( String string )
+    public void setString( String string, int skipChars )
     {
         if ( string == null )
         {
@@ -60,6 +63,12 @@ public class SimpleStringTokenizer
         
         this.string = string;
         reset();
+        this.pos = skipChars - 1;
+    }
+    
+    public void setString( String string )
+    {
+        setString( string, 0 );
     }
     
     private static final boolean isWhitespace( char ch )
@@ -85,7 +94,7 @@ public class SimpleStringTokenizer
     
     public final boolean hasMoreTokens()
     {
-        if ( pos >= string.length() - 1 )
+        if ( pos >= string.length() )
             return( false );
         
         if ( hasMore == null )
@@ -139,7 +148,9 @@ public class SimpleStringTokenizer
     
     public final String nextToken()
     {
-        return( nextToken( false ) );
+        lastToken = nextToken( false );
+        
+        return( lastToken );
     }
     
     public final SimpleStringTokenizer skipToken()
@@ -147,6 +158,57 @@ public class SimpleStringTokenizer
         nextToken( true );
         
         return( this );
+    }
+    
+    public final String getLastToken()
+    {
+        return( lastToken );
+    }
+    
+    private final String getRest( boolean acceptQuotes )
+    {
+        sb.setLength( 0 );
+        
+        int numWhitespaces = 0;
+        for ( int i = pos; i < string.length(); i++ )
+        {
+            char ch = string.charAt( i );
+            boolean ws = isWhitespace( ch );
+            
+            if ( ws )
+            {
+                numWhitespaces++;
+            }
+            else
+            {
+                numWhitespaces = 0;
+            }
+            
+            if ( acceptQuotes || ( ch != '\"' ) )
+            {
+                if ( !ws || ( sb.length() > 0 ) )
+                {
+                    sb.append( ch );
+                }
+            }
+        }
+        
+        if ( numWhitespaces > 0 )
+        {
+            sb.delete( sb.length() - numWhitespaces, sb.length() - 1 );
+        }
+        
+        return( sb.toString() );
+    }
+    
+    public final String getRest()
+    {
+        return( getRest( true ) );
+    }
+    
+    public final String getUnquotedRest()
+    {
+        return( getRest( false ) );
     }
     
     public SimpleStringTokenizer( String string )

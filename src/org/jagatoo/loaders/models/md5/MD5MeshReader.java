@@ -135,11 +135,9 @@ public class MD5MeshReader
     private MD5Bone[] skeleton;
     private MD5Mesh[] meshes;
     
-    private MD5Bone parseBone( String source, boolean convertZup2Yup )
+    private MD5Bone parseBone( SimpleStringTokenizer st, boolean convertZup2Yup )
     {
-        SimpleStringTokenizer st = new SimpleStringTokenizer( source );
-        
-        String boneName = StringUtils.unquoteString( st.nextToken() );
+        String boneName = StringUtils.unquoteString( st.getLastToken() );
         st.skipToken(); // skip parent bone-index
         
         st.skipToken(); // skip "("
@@ -212,10 +210,7 @@ public class MD5MeshReader
         
         for ( int i = 0; i < weightDefs.size(); i++ )
         {
-            String weightDef = weightDefs.get( i );
-            
-            st.setString( weightDef );
-            st.skipToken();
+            st.setString( weightDefs.get( i ) );
             
             st.skipToken(); // skip index
             
@@ -243,10 +238,7 @@ public class MD5MeshReader
         
         for ( int i = 0; i < vertDefs.size(); i++ )
         {
-            String vertDef = vertDefs.get( i );
-            
-            st.setString( vertDef );
-            st.skipToken();
+            st.setString( vertDefs.get( i ) );
             
             st.skipToken(); // skip index
             
@@ -279,7 +271,6 @@ public class MD5MeshReader
         for ( int i = 0; i < triDefs.size(); i++ )
         {
             st.setString( triDefs.get( i ) );
-            st.skipToken();
             
             st.skipToken(); // skip index
             
@@ -306,56 +297,69 @@ public class MD5MeshReader
         BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
         String line;
         SimpleStringTokenizer st = new SimpleStringTokenizer( "" );
+        String token = null;
         while ( ( line = br.readLine() ) != null )
         {
-            line = line.trim();
+            st.setString( line );
+            token = st.nextToken();
             
-            if ( line.equals( "" ) )
+            if ( token == null )
             {
+                continue;
             }
-            else if ( line.startsWith( "MD5Version" ) )
+            
+            if ( token.equals( "MD5Version" ) )
             {
-                int version = Integer.parseInt( line.substring( 11 ), 10 );
+                int version = Integer.parseInt( st.nextToken() );
                 if ( version != 10 )
+                {
+                    br.close();
+                    
                     throw new IncorrectFormatException( "MD5 version " + version + " is not supported. Expected 10." );
+                }
             }
-            else if ( line.startsWith( "commandline" ) )
+            /*
+            else if ( token.equals( "commandline" ) )
             {
                 // ignored!
             }
-            else if ( line.startsWith( "numJoints" ) )
+            */
+            else if ( token.equals( "numJoints" ) )
             {
-                numJoints = Integer.parseInt( line.substring( 10 ), 10 );
+                numJoints = Integer.parseInt( st.nextToken() );
             }
-            else if ( line.startsWith( "numMeshes" ) )
+            else if ( token.equals( "numMeshes" ) )
             {
-                numMeshes = Integer.parseInt( line.substring( 10 ), 10 );
+                numMeshes = Integer.parseInt( st.nextToken() );
                 meshes = new ArrayList<MD5Mesh>( numMeshes );
             }
-            else if ( line.startsWith( "joints" ) )
+            else if ( token.equals( "joints" ) )
             {
                 ArrayList< MD5Bone > bones = new ArrayList< MD5Bone >( numJoints );
                 
                 while ( ( line = br.readLine() ) != null )
                 {
-                    line = line.trim();
+                    st.setString( line );
+                    token = st.nextToken();
                     
-                    if ( line.equals( "" ) )
+                    if ( token == null )
                     {
+                        continue;
                     }
-                    else if ( line.equals( "}" ) )
+                    
+                    if ( token.equals( "}" ) )
                     {
                         break;
                     }
                     else
                     {
-                        bones.add( parseBone( line, convertZup2Yup ) );
+                        bones.add( parseBone( st, convertZup2Yup ) );
                     }
                 }
                 
                 skeleton = bones.toArray( new MD5Bone[ bones.size() ] );
             }
-            else if ( line.startsWith( "mesh" ) )
+            else if ( token.equals( "mesh" ) )
             {
                 String meshName = "";
                 NamedObject shader = null;
@@ -369,8 +373,6 @@ public class MD5MeshReader
                 
                 // parse mesh-name
                 {
-                    st.setString( line );
-                    st.skipToken();
                     meshName = st.nextToken();
                     if ( meshName.equals( "{" ) )
                         meshName = "";
@@ -378,48 +380,51 @@ public class MD5MeshReader
                 
                 while ( ( line = br.readLine() ) != null )
                 {
-                    line = line.trim();
+                    st.setString( line );
+                    token = st.nextToken();
                     
-                    if ( line.equals( "" ) )
+                    if ( token == null )
                     {
+                        continue;
                     }
-                    else if ( line.startsWith( "shader" ) )
+                    
+                    if ( token.equals( "numverts" ) )
                     {
-                        String shaderName = StringUtils.unquoteString( line.substring( 7 ) );
+                        numVertices = Integer.parseInt( st.getRest() );
+                        vertDefs = new ArrayList< String >( numVertices );
+                    }
+                    else if ( token.equals( "vert" ) )
+                    {
+                        vertDefs.add( st.getRest() );
+                    }
+                    else if ( token.equals( "numtris" ) )
+                    {
+                        numTriangles = Integer.parseInt( st.getRest() );
+                        triDefs = new ArrayList< String >( numTriangles );
+                    }
+                    else if ( token.equals( "tri" ) )
+                    {
+                        triDefs.add( st.getRest() );
+                    }
+                    else if ( token.equals( "numweights" ) )
+                    {
+                        numWeights = Integer.parseInt( st.getRest() );
+                        weightDefs = new ArrayList< String >( numWeights );
+                    }
+                    else if ( token.equals( "weight" ) )
+                    {
+                        weightDefs.add( st.getRest() );
+                    }
+                    else if ( token.equals( "shader" ) )
+                    {
+                        String shaderName = st.getUnquotedRest();
                         
                         if ( skin == null )
                         {
                             shader = createShader( shaderName, appFactory, baseURL );
                         }
                     }
-                    else if ( line.startsWith( "numverts" ) )
-                    {
-                        numVertices = Integer.parseInt( line.substring( 9 ), 10 );
-                        vertDefs = new ArrayList< String >( numVertices );
-                    }
-                    else if ( line.startsWith( "vert" ) )
-                    {
-                        vertDefs.add( line );
-                    }
-                    else if ( line.startsWith( "numtris" ) )
-                    {
-                        numTriangles = Integer.parseInt( line.substring( 8 ), 10 );
-                        triDefs = new ArrayList< String >( numTriangles );
-                    }
-                    else if ( line.startsWith( "tri" ) )
-                    {
-                        triDefs.add( line );
-                    }
-                    else if ( line.startsWith( "numweights" ) )
-                    {
-                        numWeights = Integer.parseInt( line.substring( 11 ), 10 );
-                        weightDefs = new ArrayList< String >( numWeights );
-                    }
-                    else if ( line.startsWith( "weight" ) )
-                    {
-                        weightDefs.add( line );
-                    }
-                    else if ( line.equals( "}" ) )
+                    else if ( token.equals( "}" ) )
                     {
                         break;
                     }
@@ -488,10 +493,8 @@ public class MD5MeshReader
         }
     }
     
-    private static NamedObject computeTriMesh( MD5Mesh mesh, String name, MD5Bone[] bones, GeometryFactory geomFactory, boolean convertZup2Yup )
+    private static void computeTriMesh( MD5Mesh mesh, String name, MD5Bone[] bones, GeometryFactory geomFactory, boolean convertZup2Yup )
     {
-        NamedObject geom = mesh.geom;
-        
         float[] coords = new float[ mesh.numVertices * 3 ];
         Point3f tmp = new Point3f();
         
@@ -518,13 +521,11 @@ public class MD5MeshReader
             }
         }
         
-        geomFactory.setCoordinates( geom, GEOM_TYPE, 0, coords, 0, mesh.numVertices );
+        geomFactory.setCoordinates( mesh.geom, GEOM_TYPE, 0, coords, 0, mesh.numVertices );
         
-        computeNormals( mesh.numVertices, coords, mesh.triangles, geom, geomFactory );
+        computeNormals( mesh.numVertices, coords, mesh.triangles, mesh.geom, geomFactory );
         
-        geomFactory.finalizeGeometry( geom, GEOM_TYPE, 0, mesh.numVertices, 0, mesh.triangles.length );
-        
-        return( geom );
+        geomFactory.finalizeGeometry( mesh.geom, GEOM_TYPE, 0, mesh.numVertices, 0, mesh.triangles.length );
     }
     
     public static Object[][][] load( InputStream in, URL baseURL, AppearanceFactory appFactory, String skin, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
@@ -541,13 +542,13 @@ public class MD5MeshReader
             
             String meshName = ( ( mesh.name == null ) || mesh.name.equals( "" ) ) ? "MD5Mesh" + m : mesh.name;
             
-            NamedObject geom = computeTriMesh( mesh, meshName, reader.skeleton, geomFactory, convertZup2Yup );
+            computeTriMesh( mesh, meshName, reader.skeleton, geomFactory, convertZup2Yup );
             NamedObject shader = mesh.shader;
             if ( skin != null )
             {
                 shader = reader.createShader( skin, appFactory, baseURL );
             }
-            NamedObject shape = nodeFactory.createShape( geom.getName(), geom, shader, BoundsType.SPHERE );
+            NamedObject shape = nodeFactory.createShape( mesh.geom.getName(), mesh.geom, shader, BoundsType.SPHERE );
             
             siHandler.addSpecialItem( SpecialItemType.SHAPE, shape.getName(), shape );
             siHandler.addSpecialItem( SpecialItemType.NAMED_OBJECT, shape.getName(), shape );

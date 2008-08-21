@@ -207,7 +207,11 @@ public class MD5AnimationReader
             {
                 int version = Integer.parseInt( line.substring( 11 ), 10 );
                 if ( version != 10 )
+                {
+                    br.close();
+                    
                     throw new IncorrectFormatException( "MD5 version " + version + " is not supported. Expected 10." );
+                }
             }
             else if ( line.startsWith( "commandline" ) )
             {
