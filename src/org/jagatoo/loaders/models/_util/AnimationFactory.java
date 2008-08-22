@@ -48,7 +48,7 @@ public interface AnimationFactory
     
     public NamedObject createBone( String name, Vector3f translation, Quaternion4f rotation );
     
-    public Object[] createBoneAnimationKeyFrameArray( int length );
+    public Object[] createBoneAnimationKeyFramesArray( int length );
     
     public Object createBoneAnimationKeyFrame( NamedObject[] bones, Matrix4f[] mountTransforms );
     
@@ -56,13 +56,13 @@ public interface AnimationFactory
     
     public Object createBoneWeight( int boneIndex, float weight, Vector3f offset );
     
-    public Object[] createBoneAnimationKeyFrameControllerArray( int length );
+    public Object[] createBoneAnimationKeyFrameControllersArray( int length );
     
     public Object createBoneAnimationKeyFrameController( Object[] keyFrames, NamedObject target, Object[][] boneWeights );
     
     
     
-    public Object[] createMeshDeformationKeyFrameArray( int length );
+    public Object[] createMeshDeformationKeyFramesArray( int length );
     
     public Object createMeshDeformationKeyFrame( float[] coords, float[] normals, Matrix4f[] mountTransforms );
     
@@ -72,7 +72,7 @@ public interface AnimationFactory
     
     
     
-    public Object[] createTransformKeyFrameArray( int length );
+    public Object[] createTransformKeyFramesArray( int length );
     
     public Object createTransformKeyFrame( float time, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
     

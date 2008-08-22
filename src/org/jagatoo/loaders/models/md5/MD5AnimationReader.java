@@ -341,9 +341,9 @@ public class MD5AnimationReader
         
         
         
-        Object[] keyFrames = frames.toArray( animFactory.createBoneAnimationKeyFrameArray( frames.size() ) );
+        Object[] keyFrames = frames.toArray( animFactory.createBoneAnimationKeyFramesArray( frames.size() ) );
         
-        Object[] controllers = animFactory.createBoneAnimationKeyFrameControllerArray( shapes.length );
+        Object[] controllers = animFactory.createBoneAnimationKeyFrameControllersArray( shapes.length );
         for ( int i = 0; i < shapes.length; i++ )
         {
             NamedObject shape = shapes[i];

@@ -44,7 +44,7 @@ public class KeyFrameFactory
 {
     public static Object[] createKeyFrames( Matrix4f masterTransform, int framesCount, PosTransform posTransform, RotTransform rotTransform, ScaleTransform scaleTransform, AnimationFactory animFactory )
     {
-        Object[] frames = new Object[ framesCount + 1 ];
+        Object[] frames = animFactory.createTransformKeyFramesArray( framesCount + 1 );
         
         Vector3f translation = new Vector3f();
         Quaternion4f rotation = new Quaternion4f();

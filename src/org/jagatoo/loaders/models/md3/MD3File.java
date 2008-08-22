@@ -33,6 +33,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.jagatoo.datatypes.NamedObject;
@@ -73,7 +74,7 @@ public class MD3File
     
     private final HashMap<String, NamedObject> shaderCache = new HashMap<String, NamedObject>();
     
-    private static final GeometryFactory.GeometryType geomType = GeometryFactory.GeometryType.INDEXED_TRIANGLE_ARRAY;
+    private static final GeometryFactory.GeometryType GEOM_TYPE = GeometryFactory.GeometryType.INDEXED_TRIANGLE_ARRAY;
     private static final float COORDINATE_SCALE = 1.0f / 64f;
     
     static final String fixPath( String path )
@@ -108,12 +109,19 @@ public class MD3File
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
     }
     
-    private void readTags( boolean convertZup2Yup, float scale, Matrix4f[][] tagFrames, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
+    private Matrix4f[][] readTags( boolean convertZup2Yup, float scale, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
+        if ( header.numTags == 0 )
+        {
+            return( null );
+        }
+        
         long t0 = System.currentTimeMillis();
         JAGTLog.debug( "Loading MD3 tags..." );
         
         in.skipBytes( header.tagOffset - in.getPointer() );
+        
+        Matrix4f[][] tagFrames = new Matrix4f[ header.numFrames ][];
         
         Vector3f translation = Vector3f.fromPool();
         Matrix3f rotation = Matrix3f.fromPool();
@@ -173,6 +181,8 @@ public class MD3File
         Matrix3f.toPool( rotation );
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
+        
+        return( tagFrames );
     }
     
     private AbstractTexture loadTexture( String texName, URL baseURL, AppearanceFactory appFactory )
@@ -307,7 +317,7 @@ public class MD3File
             buffer[1] = in.readInt();
             buffer[2] = in.readInt();
             
-            geomFactory.setIndex( geometry, geomType, i * 3, buffer, 0, 3 );
+            geomFactory.setIndex( geometry, GEOM_TYPE, i * 3, buffer, 0, 3 );
         }
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
@@ -325,7 +335,7 @@ public class MD3File
             float s = in.readFloat();
             float t = 1f - in.readFloat();
             
-            geomFactory.setTexCoord( geometry, geomType, 0, i, s, t );
+            geomFactory.setTexCoord( geometry, GEOM_TYPE, 0, i, s, t );
         }
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
@@ -370,7 +380,7 @@ public class MD3File
                 
                 if ( f == 0 )
                 {
-                    geomFactory.setCoordinate( geometry, geomType, i, x, y, z );
+                    geomFactory.setCoordinate( geometry, GEOM_TYPE, i, x, y, z );
                 }
                 
                 if ( numFrames > 1 )
@@ -397,6 +407,7 @@ public class MD3File
                     normal.add( coord );
                     Matrix3f.Z_UP_TO_Y_UP.transform( normal );
                     normal.sub( coord.getX(), coord.getZ(), -coord.getY() );
+                    normal.normalize();
                     
                     x = normal.getX();
                     y = normal.getY();
@@ -405,7 +416,7 @@ public class MD3File
                 
                 if ( f == 0 )
                 {
-                    geomFactory.setNormal( geometry, geomType, i, x, y, z );
+                    geomFactory.setNormal( geometry, GEOM_TYPE, i, x, y, z );
                 }
                 
                 if ( numFrames > 1 )
@@ -418,7 +429,7 @@ public class MD3File
             
             if ( numFrames > 1 )
             {
-                keyFrames[f] = animFactory.createMeshDeformationKeyFrame( keyFrameCoords, keyFrameNormals, frameTags[f] );
+                keyFrames[f] = animFactory.createMeshDeformationKeyFrame( keyFrameCoords, keyFrameNormals, ( frameTags != null ) ? frameTags[f] : null );
             }
         }
         
@@ -434,6 +445,8 @@ public class MD3File
         JAGTLog.debug( "Loading MD3 surfaces..." );
         
         in.skipBytes( header.surfaceOffset - in.getPointer() );
+        
+        ArrayList<Object> controllersList = new ArrayList<Object>( header.numSurfaces );
         
         for ( int s = 0; s < header.numSurfaces; s++ )
         {
@@ -453,7 +466,7 @@ public class MD3File
             /*int surfaceEnd = */in.readInt();
             
             NamedObject geometry = geomFactory.createInterleavedGeometry( surfaceName,
-                                                                          geomType, 3, numVertices, numTriangles * 3, null,
+                                                                          GEOM_TYPE, 3, numVertices, numTriangles * 3, null,
                                                                           Vertex3f.COORDINATES | Vertex3f.NORMALS | Vertex3f.TEXTURE_COORDINATES,
                                                                           false, new int[] { 2 }, null
                                                                         );
@@ -461,7 +474,7 @@ public class MD3File
             Object[] keyFrames = null;
             if ( numFrames > 1 )
             {
-                keyFrames = new Object[ numFrames ];
+                keyFrames = animFactory.createMeshDeformationKeyFramesArray( numFrames );
             }
             
             NamedObject[] shaders = readShaders( shadersOffset, numShaders, baseURL, appFactory, nodeFactory );
@@ -478,11 +491,15 @@ public class MD3File
             //System.out.println( header.numFrames + ", " + numFrames + ", " + header.numSurfaces );
             if ( numFrames > 1 )
             {
-                Object animController = animFactory.createMeshDeformationKeyFrameController( keyFrames, shape );
-                Object[] animControllers = animFactory.createMeshDeformationKeyFrameControllersArray( 1 );
-                animControllers[0] = animController;
-                siHandler.addAnimation( "default", keyFrames.length, 9f, animControllers );
+                controllersList.add( animFactory.createMeshDeformationKeyFrameController( keyFrames, shape ) );
             }
+        }
+        
+        if ( controllersList.size() > 0 )
+        {
+            Object[] animControllers = animFactory.createMeshDeformationKeyFrameControllersArray( controllersList.size() );
+            animControllers = controllersList.toArray( animControllers );
+            siHandler.addAnimation( "default", header.numFrames, 9f, animControllers );
         }
         
         JAGTLog.debug( "done loading ", header.numSurfaces, " surfaces. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
@@ -495,19 +512,25 @@ public class MD3File
         
         this.in = new LittleEndianDataInputStream( in );
         
-        this.header = MD3Header.readHeader( this.in );
-        
-        readFrames();
-        Matrix4f[][] frameTags = null;
-        //System.out.println( header.numFrames );
-        if ( header.numTags > 0 )
+        try
         {
-            frameTags = new Matrix4f[ header.numFrames ][];
-            readTags( convertZup2Yup, scale, frameTags, siHandler );
+            this.header = MD3Header.readHeader( this.in );
+            
+            readFrames();
+            Matrix4f[][] frameTags = readTags( convertZup2Yup, scale, siHandler );;
+            readSurfaces( baseURL, appFactory, geomFactory, convertZup2Yup, scale * COORDINATE_SCALE, nodeFactory, animFactory, frameTags, siHandler, rootGroup );
         }
-        readSurfaces( baseURL, appFactory, geomFactory, convertZup2Yup, scale * COORDINATE_SCALE, nodeFactory, animFactory, frameTags, siHandler, rootGroup );
-        
-        in.close();
+        finally
+        {
+            try
+            {
+                in.close();
+            }
+            catch ( Throwable t )
+            {
+                t.printStackTrace();
+            }
+        }
     }
     
     public static final void load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException

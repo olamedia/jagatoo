@@ -443,8 +443,8 @@ public class MD2File
             
             if ( ( lastAnimName != null ) && !lastAnimName.equals( animName ) )
             {
-                Object[] fanFrames = new Object[ frames.size() ];
-                Object[] stripFrames = new Object[ frames.size() ];
+                Object[] fanFrames = animFactory.createMeshDeformationKeyFramesArray( frames.size() );
+                Object[] stripFrames = animFactory.createMeshDeformationKeyFramesArray( frames.size() );
                 for ( int i = 0; i < frames.size(); i++ )
                 {
                     Object[] o = frames.get( i );
@@ -452,8 +452,6 @@ public class MD2File
                     fanFrames[i] = o[0];
                     stripFrames[i] = o[1];
                 }
-                
-                frames.clear();
                 
                 Object fanAnimController = animFactory.createMeshDeformationKeyFrameController( fanFrames, fanShape );
                 Object stripAnimController = animFactory.createMeshDeformationKeyFrameController( stripFrames, stripShape );
@@ -463,6 +461,8 @@ public class MD2File
                 animControllers[1] = stripAnimController;
                 
                 siHandler.addAnimation( lastAnimName, frames.size(), 9f, animControllers );
+                
+                frames.clear();
             }
             
             lastAnimName = animName;
@@ -581,8 +581,8 @@ public class MD2File
         
         if ( ( framesData.length > 1 ) && ( lastAnimName != null ) && ( frames.size() > 0 ) )
         {
-            Object[] fanFrames = new Object[ frames.size() ];
-            Object[] stripFrames = new Object[ frames.size() ];
+            Object[] fanFrames = animFactory.createMeshDeformationKeyFramesArray( frames.size() );
+            Object[] stripFrames = animFactory.createMeshDeformationKeyFramesArray( frames.size() );
             for ( int i = 0; i < frames.size(); i++ )
             {
                 Object[] o = frames.get( i );
@@ -590,8 +590,6 @@ public class MD2File
                 fanFrames[i] = o[0];
                 stripFrames[i] = o[1];
             }
-            
-            frames.clear();
             
             Object fanAnimController = animFactory.createMeshDeformationKeyFrameController( fanFrames, fanShape );
             Object stripAnimController = animFactory.createMeshDeformationKeyFrameController( stripFrames, stripShape );
@@ -601,6 +599,8 @@ public class MD2File
             animControllers[1] = stripAnimController;
             
             siHandler.addAnimation( lastAnimName, frames.size(), 9f, animControllers );
+            
+            frames.clear();
         }
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
@@ -613,13 +613,27 @@ public class MD2File
         
         this.in = new LittleEndianDataInputStream( in );
         
-        this.header = MD2Header.readHeader( this.in );
-        
-        NamedObject[] skins = readSkins( header.offsetSkins, header.numSkins, baseURL, appFactory, nodeFactory );
-        /*float[] texCoords = */readTextureCoordinates( header.offsetTexCoords, header.numTexCoords, header.skinWidth, header.skinHeight );
-        /*int[][] triangles = */readTriangles( header.offsetTriangles, header.numTriangles );
-        Object[][] frames = readFrames( header.offsetFrames, header.numFrames, header.numVertices, convertZup2Yup, scale );
-        readGLCommands( header.offsetGlCommands, header.numGlCommandBytes, frames, geomFactory, convertZup2Yup, animFactory, appFactory, nodeFactory, rootGroup, skins, skinTexture, siHandler );
+        try
+        {
+            this.header = MD2Header.readHeader( this.in );
+            
+            NamedObject[] skins = readSkins( header.offsetSkins, header.numSkins, baseURL, appFactory, nodeFactory );
+            /*float[] texCoords = */readTextureCoordinates( header.offsetTexCoords, header.numTexCoords, header.skinWidth, header.skinHeight );
+            /*int[][] triangles = */readTriangles( header.offsetTriangles, header.numTriangles );
+            Object[][] frames = readFrames( header.offsetFrames, header.numFrames, header.numVertices, convertZup2Yup, scale );
+            readGLCommands( header.offsetGlCommands, header.numGlCommandBytes, frames, geomFactory, convertZup2Yup, animFactory, appFactory, nodeFactory, rootGroup, skins, skinTexture, siHandler );
+        }
+        finally
+        {
+            try
+            {
+                in.close();
+            }
+            catch ( Throwable t )
+            {
+                t.printStackTrace();
+            }
+        }
     }
     
     public static final void load( InputStream in, URL baseURL, AppearanceFactory appFactory, AbstractTexture skinTexture, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
