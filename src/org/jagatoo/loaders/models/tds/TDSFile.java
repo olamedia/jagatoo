@@ -337,7 +337,7 @@ public class TDSFile
         
         if ( context.animationFound )
         {
-            Object[] animControllers = animFactory.createTransformKeyFrameControllersArray( context.animControllers.size() );
+            Object[] animControllers = animFactory.createMeshTransformKeyFrameControllersArray( context.animControllers.size() );
             context.animControllers.toArray( animControllers );
             siHandler.addAnimation( "default", context.framesCount, 25f, animControllers );
         }

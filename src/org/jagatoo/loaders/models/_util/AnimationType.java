@@ -36,8 +36,9 @@ package org.jagatoo.loaders.models._util;
  */
 public enum AnimationType
 {
-    MESH_DEFORMATION_KEY_FRAMES,
+    MESH_DEFORMATION,
     SKELETAL,
-    TRANSFORM_KEY_FRAMES,
+    MESH_TRANSFORM,
+    PRECOMPUTED,
     ;
 }

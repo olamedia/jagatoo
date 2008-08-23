@@ -95,7 +95,7 @@ public abstract class TransformTrackProcessor extends ChunkProcessor
         
         Matrix4f masterTransform = ( isRootNode && convertZup2Yup ) ? Matrix4f.Z_UP_TO_Y_UP : null;
         Object[] keyFrames = KeyFrameFactory.createKeyFrames( masterTransform, context.framesCount, context.translation, context.orientation, context.scale, animFactory );
-        Object animController = animFactory.createTransformKeyFrameController( keyFrames, transformGroup );
+        Object animController = animFactory.createMeshTransformKeyFrameController( keyFrames, transformGroup );
         
         if ( shape != null )
         {

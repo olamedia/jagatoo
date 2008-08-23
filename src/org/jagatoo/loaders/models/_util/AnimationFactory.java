@@ -58,7 +58,7 @@ public interface AnimationFactory
     
     public Object[] createBoneAnimationKeyFrameControllersArray( int length );
     
-    public Object createBoneAnimationKeyFrameController( Object[] keyFrames, NamedObject target, Object[][] boneWeights );
+    public Object createBoneAnimationKeyFrameController( Object[] keyFrames, Object[][] boneWeights, NamedObject target );
     
     
     
@@ -72,21 +72,21 @@ public interface AnimationFactory
     
     
     
-    public Object[] createTransformKeyFramesArray( int length );
+    public Object[] createMeshTransformKeyFramesArray( int length );
     
-    public Object createTransformKeyFrame( float time, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
+    public Object createMeshTransformKeyFrame( float time, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
     
-    public Object createTransformKeyFrame( float time, Vector3f translation, AxisAngle3f rotation, Tuple3f scale );
+    public Object createMeshTransformKeyFrame( float time, Vector3f translation, AxisAngle3f rotation, Tuple3f scale );
     
-    public Object createTransformKeyFrame( float time, Vector3f translation, Matrix3f rotation, Tuple3f scale );
+    public Object createMeshTransformKeyFrame( float time, Vector3f translation, Matrix3f rotation, Tuple3f scale );
     
-    public Object createTransformKeyFrame( float time, Matrix4f transform );
+    public Object createMeshTransformKeyFrame( float time, Matrix4f transform );
     
-    public void transformTransformKeyFrame( Matrix4f transform, Object frame );
+    public void transformMeshTransformKeyFrame( Matrix4f transform, Object frame );
     
-    public void transformTransformKeyFrames( Matrix4f transform, Object[] frames );
+    public void transformMeshTransformKeyFrames( Matrix4f transform, Object[] frames );
     
-    public Object[] createTransformKeyFrameControllersArray( int length );
+    public Object[] createMeshTransformKeyFrameControllersArray( int length );
     
-    public Object createTransformKeyFrameController( Object[] keyFrames, NamedObject target );
+    public Object createMeshTransformKeyFrameController( Object[] keyFrames, NamedObject target );
 }

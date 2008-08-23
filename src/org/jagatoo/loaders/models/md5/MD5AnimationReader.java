@@ -348,7 +348,7 @@ public class MD5AnimationReader
         {
             NamedObject shape = shapes[i];
             
-            controllers[i] = animFactory.createBoneAnimationKeyFrameController( keyFrames, shape, boneWeights[i] );
+            controllers[i] = animFactory.createBoneAnimationKeyFrameController( keyFrames, boneWeights[i], shape );
         }
         
         siHandler.addAnimation( filename, keyFrames.length, frameRate, controllers );

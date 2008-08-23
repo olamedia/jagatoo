@@ -44,7 +44,7 @@ public class KeyFrameFactory
 {
     public static Object[] createKeyFrames( Matrix4f masterTransform, int framesCount, PosTransform posTransform, RotTransform rotTransform, ScaleTransform scaleTransform, AnimationFactory animFactory )
     {
-        Object[] frames = animFactory.createTransformKeyFramesArray( framesCount + 1 );
+        Object[] frames = animFactory.createMeshTransformKeyFramesArray( framesCount + 1 );
         
         Vector3f translation = new Vector3f();
         Quaternion4f rotation = new Quaternion4f();
@@ -67,11 +67,11 @@ public class KeyFrameFactory
             else
                 scale.set( 1f, 1f, 1f );
             
-            frames[i] = animFactory.createTransformKeyFrame( frameTime, translation, rotation, scale );
+            frames[i] = animFactory.createMeshTransformKeyFrame( frameTime, translation, rotation, scale );
             
             if ( masterTransform != null )
             {
-                animFactory.transformTransformKeyFrame( masterTransform, frames[i] );
+                animFactory.transformMeshTransformKeyFrame( masterTransform, frames[i] );
             }
         }
         
