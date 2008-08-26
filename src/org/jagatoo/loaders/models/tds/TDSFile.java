@@ -295,7 +295,7 @@ public class TDSFile
         din.close();
     }
     
-    private TDSFile( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, boolean convertZup2Yup ) throws IOException
+    private TDSFile( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler ) throws IOException
     {
         if ( !( in instanceof BufferedInputStream ) )
             in = new BufferedInputStream( in );
@@ -343,9 +343,9 @@ public class TDSFile
         }
     }
     
-    public static final TDSFile load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, boolean convertZup2Yup, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
+    public static final TDSFile load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
     {
-        TDSFile file = new TDSFile( in, baseURL, appFactory, geomFactory, nodeFactory, animFactory, siHandler, convertZup2Yup );
+        TDSFile file = new TDSFile( in, baseURL, appFactory, geomFactory, convertZup2Yup, nodeFactory, animFactory, siHandler );
         
         try
         {

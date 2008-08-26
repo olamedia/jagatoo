@@ -239,7 +239,7 @@ public class BSPConverter
                 throw new Error( "Unsupported main GroupType " + mainGroupType );
         }
         
-        siHandler.addSpecialItem( SpecialItemType.SCENE_GROUP, bspTreeGroup.getName(), bspTreeGroup );
+        siHandler.addSpecialItem( SpecialItemType.MAIN_GROUP, bspTreeGroup.getName(), bspTreeGroup );
         
         boolean skyboxPublished = false;
         
@@ -294,7 +294,7 @@ public class BSPConverter
                         NamedObject appearance = nodeFactory.getAppearanceFromShape( shape );
                         BSPTextureAnimator animator = new BSPTextureAnimator( baseTextures[ face.textureID ], appearance, 0, appFactory, 10f );
                         
-                        shape = (NamedObject)siHandler.addSpecialItem( SpecialItemType.TEXTURE_ANIMATOR, null, new Object[] { animator, shape } );
+                        shape = siHandler.createTextureAnimator( animator, shape );
                     }
                 }
                 

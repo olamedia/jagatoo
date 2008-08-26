@@ -486,7 +486,6 @@ public class MD3File
             
             nodeFactory.addNodeToGroup( shape, rootGroup );
             siHandler.addSpecialItem( SpecialItemType.SHAPE, shape.getName(), shape );
-            siHandler.addSpecialItem( SpecialItemType.NAMED_OBJECT, shape.getName(), shape );
             
             //System.out.println( header.numFrames + ", " + numFrames + ", " + header.numSurfaces );
             if ( numFrames > 1 )

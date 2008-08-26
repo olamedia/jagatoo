@@ -524,7 +524,6 @@ public class MD5MeshReader
             NamedObject shape = nodeFactory.createShape( mesh.geom.getName(), mesh.geom, shader, BoundsType.SPHERE );
             
             siHandler.addSpecialItem( SpecialItemType.SHAPE, shape.getName(), shape );
-            siHandler.addSpecialItem( SpecialItemType.NAMED_OBJECT, shape.getName(), shape );
             
             nodeFactory.addNodeToGroup( shape, rootGroup );
             

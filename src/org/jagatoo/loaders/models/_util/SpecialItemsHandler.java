@@ -29,6 +29,9 @@
  */
 package org.jagatoo.loaders.models._util;
 
+import org.jagatoo.datatypes.NamedObject;
+import org.jagatoo.loaders.models.bsp.BSPTextureAnimator;
+
 /**
  * Insert type comment here.
  * 
@@ -38,21 +41,24 @@ public interface SpecialItemsHandler
 {
     public static enum SpecialItemType
     {
-        SCENE_GROUP,
+        MAIN_GROUP,
         NESTED_TRANSFORM,
         SHAPE,
-        NAMED_OBJECT,
         MOUNT_TRANSFORM,
         SPAWN_TRANSFORM,
         ITEM,
         SUB_MODEL,
         LIGHT,
+        FOG,
+        SOUND,
         SKYBOX,
-        TEXTURE_ANIMATOR,
+        NAMED_OBJECT,
         ;
     }
     
-    public Object addSpecialItem( SpecialItemType type, String name, Object item );
+    public void addSpecialItem( SpecialItemType type, String name, Object item );
+    
+    public NamedObject createTextureAnimator( BSPTextureAnimator animator, NamedObject shape );
     
     public void addAnimation( String name, int numFrames, float fps, Object[] controllers );
 }

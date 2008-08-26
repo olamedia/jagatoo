@@ -64,8 +64,20 @@ package org.jagatoo.loaders.models.ase;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.net.URL;
+
+import org.jagatoo.datatypes.NamedObject;
+import org.jagatoo.loaders.IncorrectFormatException;
+import org.jagatoo.loaders.ParsingException;
+import org.jagatoo.loaders.models._util.AnimationFactory;
+import org.jagatoo.loaders.models._util.AppearanceFactory;
+import org.jagatoo.loaders.models._util.GeometryFactory;
+import org.jagatoo.loaders.models._util.NodeFactory;
+import org.jagatoo.loaders.models._util.SpecialItemsHandler;
 
 /**
  * Extends LineNumberReader to read and parse a single line into pieces for easy
@@ -227,5 +239,19 @@ public class AseReader //extends LineNumberReader
         {
             return( null );
         }
+    }
+    
+    public void close() throws IOException
+    {
+        lnReader.close();
+    }
+    
+    public static final void load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
+    {
+        AseReader aseReader = new AseReader( new BufferedReader( new InputStreamReader( in ) ) );
+        AseFile aseFile = new AseFile();
+        aseFile.parse( aseReader );
+        
+        AseConverter.getTransformGroupTree( aseFile, appFactory, baseURL, geomFactory, convertZup2Yup, scale, nodeFactory, siHandler, rootGroup );
     }
 }

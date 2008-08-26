@@ -308,6 +308,17 @@ public class AseFile extends AseNode
         {
             t.printStackTrace();
         }
+        finally
+        {
+            try
+            {
+                in.close();
+            }
+            catch ( Throwable t )
+            {
+                t.printStackTrace();
+            }
+        }
     }
     
     /**

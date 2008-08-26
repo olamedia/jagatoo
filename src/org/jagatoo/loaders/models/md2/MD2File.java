@@ -565,12 +565,10 @@ public class MD2File
                 fanShape = nodeFactory.createShape( "MD2-TriangleFanArray", fanArray, appearance, BoundsType.SPHERE );
                 nodeFactory.addNodeToGroup( fanShape, rootGroup );
                 siHandler.addSpecialItem( SpecialItemType.SHAPE, fanShape.getName(), fanShape );
-                siHandler.addSpecialItem( SpecialItemType.NAMED_OBJECT, fanShape.getName(), fanShape );
                 
                 stripShape = nodeFactory.createShape( "MD2-TriangleStripArray", stripArray, appearance, BoundsType.SPHERE );
                 nodeFactory.addNodeToGroup( stripShape, rootGroup );
                 siHandler.addSpecialItem( SpecialItemType.SHAPE, stripShape.getName(), stripShape );
-                siHandler.addSpecialItem( SpecialItemType.NAMED_OBJECT, stripShape.getName(), stripShape );
             }
             
             Object fanFrame = animFactory.createMeshDeformationKeyFrame( frameFanCoords, frameFanNormals, null );

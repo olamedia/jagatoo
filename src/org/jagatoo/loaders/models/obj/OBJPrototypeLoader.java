@@ -71,8 +71,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.StringTokenizer;
+
+import org.jagatoo.datatypes.NamedObject;
+import org.jagatoo.loaders.IncorrectFormatException;
+import org.jagatoo.loaders.ParsingException;
+import org.jagatoo.loaders.models._util.AppearanceFactory;
+import org.jagatoo.loaders.models._util.GeometryFactory;
+import org.jagatoo.loaders.models._util.NodeFactory;
+import org.jagatoo.loaders.models._util.SpecialItemsHandler;
 
 /**
  * A loader to create abstract java data from a Wavefront OBJ file.
@@ -252,7 +259,7 @@ public final class OBJPrototypeLoader
         
         BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
         
-        Map<String, OBJMaterial> matMap = new HashMap<String, OBJMaterial>();
+        HashMap<String, OBJMaterial> matMap = new HashMap<String, OBJMaterial>();
         
         List<float[]> verts = new ArrayList<float[]>();
         List<float[]> normals = new ArrayList<float[]>();
@@ -359,6 +366,13 @@ public final class OBJPrototypeLoader
     public static OBJModelPrototype load( InputStream in, URL baseURL ) throws IOException
     {
         return( load( in, baseURL, null ) );
+    }
+    
+    public static void load( InputStream in, URL baseURL, AppearanceFactory appFactory, String skin, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
+    {
+        OBJModelPrototype prototype = load( in, baseURL );
+        
+        OBJConverter.convert( prototype, baseURL, appFactory, skin, geomFactory, convertZup2Yup, scale, nodeFactory, siHandler, rootGroup );
     }
     
     private OBJPrototypeLoader()

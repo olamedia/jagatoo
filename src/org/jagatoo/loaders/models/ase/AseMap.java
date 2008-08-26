@@ -62,15 +62,6 @@
  */
 package org.jagatoo.loaders.models.ase;
 
-/*
- * example MAP_DIFFUSE { public static final Category LOG =
- * Category.getInstance(AseMap.class.getName()); MAP_NAME "Map #7" MAP_CLASS
- * "Bitmap" MAP_SUBNO 1 MAP_AMOUNT 1.0000 BITMAP "E:\3dsmax4\Maps\COSM 256
- * maps\cornervine2.png" MAP_TYPE Screen UVW_U_OFFSET 0.0000 UVW_V_OFFSET 0.0000
- * UVW_U_TILING 1.0000 UVW_V_TILING 1.0000 UVW_ANGLE 0.0000 UVW_BLUR 1.0000
- * UVW_BLUR_OFFSET 0.0000 UVW_NOUSE_AMT 1.0000 UVW_NOISE_SIZE 1.0000
- * UVW_NOISE_LEVEL 1 UVW_NOISE_PHASE 0.0000 BITMAP_FILTER Pyramidal }
- */
 /**
  * This is an ASE map node.
  * 

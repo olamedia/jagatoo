@@ -74,7 +74,6 @@ public class NamedObjectProcessor extends ChunkProcessor
         file.processChunk();
         
         siHandler.addSpecialItem( SpecialItemType.SHAPE, context.shape.getName(), context.shape );
-        siHandler.addSpecialItem( SpecialItemType.NAMED_OBJECT, context.shape.getName(), context.shape );
         context.objectTable.put( context.objectName, context.shape );
         
         /*

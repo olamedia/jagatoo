@@ -90,7 +90,6 @@ public abstract class TransformTrackProcessor extends ChunkProcessor
         boolean isRootNode = ( ( context.father == -1 ) || IGNORE_HIERARCHY );
         
         NamedObject transformGroup = nodeFactory.createTransformGroup( context.nodeName + "-TG", BoundsType.SPHERE );
-        siHandler.addSpecialItem( SpecialItemType.NAMED_OBJECT, transformGroup.getName(), transformGroup );
         siHandler.addSpecialItem( SpecialItemType.NESTED_TRANSFORM, transformGroup.getName(), transformGroup );
         
         Matrix4f masterTransform = ( isRootNode && convertZup2Yup ) ? Matrix4f.Z_UP_TO_Y_UP : null;

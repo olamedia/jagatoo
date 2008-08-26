@@ -33,7 +33,7 @@
  */
 package org.jagatoo.loaders.models.obj;
 
-import java.util.Map;
+import java.util.HashMap;
 
 /**
  * A prototype for OBJ model data.
@@ -42,11 +42,11 @@ import java.util.Map;
  */
 public class OBJModelPrototype
 {
-    private Map<String, OBJMaterial> matMap;
+    private HashMap<String, OBJMaterial> matMap;
     
     private OBJGroup topGroup;
     
-    public Map<String, OBJMaterial> getMaterialMap()
+    public HashMap<String, OBJMaterial> getMaterialMap()
     {
         return( matMap );
     }
@@ -56,7 +56,7 @@ public class OBJModelPrototype
         return( topGroup );
     }
     
-    public OBJModelPrototype( Map<String, OBJMaterial> matMap, OBJGroup topGroup )
+    public OBJModelPrototype( HashMap<String, OBJMaterial> matMap, OBJGroup topGroup )
     {
         this.matMap = matMap;
         this.topGroup = topGroup;

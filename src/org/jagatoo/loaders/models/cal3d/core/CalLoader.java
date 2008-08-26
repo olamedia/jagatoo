@@ -83,8 +83,6 @@ public class CalLoader {
     
     /** Flag for the loader to rotate X to Y axis. */
     public static final int LOADER_ROTATE_X_AXIS = 1;
-    /** Flag for the loader to invert the V texture coord. */
-    public static final int LOADER_INVERT_V_COORD = 2;
     
     /** Flags used by the loader - note this is static so all loads must be consistent.
      */
@@ -662,11 +660,7 @@ public class CalLoader {
                     
                     StringTokenizer token = new StringTokenizer(texCoord.getValue(), " "); 
                     texCoord2f.setX( toFloat(token.nextToken()) );
-                    texCoord2f.setY( toFloat(token.nextToken()) );
-                    
-                    if (loadingMode==LOADER_INVERT_V_COORD) {
-                        texCoord2f.setY( 1.0f - texCoord2f.getY() );
-                    }
+                    texCoord2f.setY( 1.0f - toFloat(token.nextToken()) );
 
                     // set texture coordinate in the core submesh instance
                     pCoreSubmesh.setTextureCoordinate(vertexId, texCoordId++, texCoord2f);
@@ -926,10 +920,7 @@ public class CalLoader {
                 // load data of the influence
                 textureCoordinate.setX( file.readFloat() );
                 
-                textureCoordinate.setY( file.readFloat() );
-                if(loadingMode==LOADER_INVERT_V_COORD){
-                    textureCoordinate.setY( 1f - textureCoordinate.getY() );
-                }
+                textureCoordinate.setY( 1.0f - file.readFloat() );
                 // set texture coordinate in the core submesh instance
                 coreSubmesh.setTextureCoordinate(vertexId, textureCoordinateId, textureCoordinate);
             }
