@@ -51,6 +51,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -207,7 +208,7 @@ public class MD5MeshReader
         result.firstWeights = new int[ vertDefs.size() ];
         result.weightCounts = new int[ vertDefs.size() ];
         
-        Object[][] boneWeights = (Object[][])animFactory.createBoneWeightsArray( result.numVertices, true );
+        Object[][] boneWeights = null;
         
         for ( int i = 0; i < vertDefs.size(); i++ )
         {
@@ -229,11 +230,29 @@ public class MD5MeshReader
             result.firstWeights[i] = firstWeight;
             result.weightCounts[i] = weightCount;
             
-            boneWeights[i] = (Object[])animFactory.createBoneWeightsArray( weightCount, false );
+            if ( boneWeights != null )
+            {
+                boneWeights[i] = null;
+            }
             
             for ( int w = 0; w < weightCount; w++ )
             {
-                boneWeights[i][w] = animFactory.createBoneWeight( result.boneWeightBones[firstWeight + w], result.boneWeightWeights[firstWeight + w], result.boneWeightOffsets[firstWeight + w] );
+                Object bw = animFactory.createBoneWeight( result.boneWeightBones[firstWeight + w], result.boneWeightWeights[firstWeight + w], result.boneWeightOffsets[firstWeight + w] );
+                
+                if ( boneWeights == null )
+                {
+                    Object[] bws = (Object[])Array.newInstance( bw.getClass(), weightCount );
+                    
+                    boneWeights = (Object[][])Array.newInstance( bws.getClass(), result.numVertices );
+                    
+                    boneWeights[i] = bws;
+                }
+                else if ( boneWeights[i] == null )
+                {
+                    boneWeights[i] = (Object[])Array.newInstance( bw.getClass(), weightCount );
+                }
+                
+                boneWeights[i][w] = bw;
             }
         }
         

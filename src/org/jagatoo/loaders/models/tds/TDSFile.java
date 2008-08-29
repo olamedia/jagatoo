@@ -38,6 +38,7 @@ import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.URL;
 
 import org.jagatoo.datatypes.NamedObject;
@@ -337,7 +338,7 @@ public class TDSFile
         
         if ( context.animationFound )
         {
-            Object[] animControllers = animFactory.createMeshTransformKeyFrameControllersArray( context.animControllers.size() );
+            Object[] animControllers = (Object[])Array.newInstance( context.animControllers.get( 0 ).getClass(), context.animControllers.size() );
             context.animControllers.toArray( animControllers );
             Object animation = animFactory.createAnimation( "default", context.framesCount, 25f, animControllers, null );
             siHandler.addAnimation( animation );

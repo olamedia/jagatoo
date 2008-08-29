@@ -47,6 +47,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -69,7 +70,7 @@ public class MD5AnimationReader
         Vector3f[] boneTrs = new Vector3f[ numBones ];
         Quaternion4f[] boneRots = new Quaternion4f[ numBones ];
         
-        NamedObject[] bones = animFactory.createBonesArray( numBones );
+        NamedObject[] bones = null;
         for ( int i = 0; i < numBones; i++ )
         {
             Vector3f translation = new Vector3f( baseFrame[i * 6 + 0],
@@ -151,7 +152,14 @@ public class MD5AnimationReader
                 rotation.normalize();
             }
             
-            bones[i] = animFactory.createBone( name, translation, rotation );
+            NamedObject bone = animFactory.createBone( name, translation, rotation );
+            
+            if ( bones == null )
+            {
+                bones = (NamedObject[])Array.newInstance( bone.getClass(), numBones );
+            }
+            
+            bones[i] = bone;
         }
         
         return( animFactory.createBoneAnimationKeyFrame( bones ) );
@@ -340,15 +348,22 @@ public class MD5AnimationReader
         br.close();
         
         
+        Object[] keyFrames = (Object[])Array.newInstance( frames.get( 0 ).getClass(), frames.size() );
+        keyFrames = frames.toArray( keyFrames );
         
-        Object[] keyFrames = frames.toArray( animFactory.createBoneAnimationKeyFramesArray( frames.size() ) );
-        
-        Object[] controllers = animFactory.createBoneAnimationKeyFrameControllersArray( shapes.length );
+        Object[] controllers = null;
         for ( int i = 0; i < shapes.length; i++ )
         {
             NamedObject shape = shapes[i];
             
-            controllers[i] = animFactory.createBoneAnimationKeyFrameController( keyFrames, boneWeights[i], shape );
+            Object controller = animFactory.createBoneAnimationKeyFrameController( keyFrames, boneWeights[i], shape );
+            
+            if ( controllers == null )
+            {
+                controllers = (Object[])Array.newInstance( controller.getClass(), shapes.length );
+            }
+            
+            controllers[i] = controller;
         }
         
         Object animation = animFactory.createAnimation( filename, keyFrames.length, frameRate, controllers, null );

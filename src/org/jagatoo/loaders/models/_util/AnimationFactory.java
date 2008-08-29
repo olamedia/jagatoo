@@ -44,35 +44,21 @@ import org.openmali.vecmath2.Vector3f;
  */
 public interface AnimationFactory
 {
-    public NamedObject[] createBonesArray( int length );
-    
     public NamedObject createBone( String name, Vector3f translation, Quaternion4f rotation );
-    
-    public Object[] createBoneAnimationKeyFramesArray( int length );
     
     public Object createBoneAnimationKeyFrame( NamedObject[] bones );
     
-    public Object createBoneWeightsArray( int length, boolean twoDims );
-    
     public Object createBoneWeight( int boneIndex, float weight, Vector3f offset );
-    
-    public Object[] createBoneAnimationKeyFrameControllersArray( int length );
     
     public Object createBoneAnimationKeyFrameController( Object[] keyFrames, Object[][] boneWeights, NamedObject target );
     
     
     
-    public Object[] createMeshDeformationKeyFramesArray( int length );
-    
     public Object createMeshDeformationKeyFrame( float[] coords, float[] normals );
-    
-    public Object[] createMeshDeformationKeyFrameControllersArray( int length );
     
     public Object createMeshDeformationKeyFrameController( Object[] keyFrames, NamedObject target );
     
     
-    
-    public Object[] createMeshTransformKeyFramesArray( int length );
     
     public Object createMeshTransformKeyFrame( float time, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
     
@@ -85,8 +71,6 @@ public interface AnimationFactory
     public void transformMeshTransformKeyFrame( Matrix4f transform, Object frame );
     
     public void transformMeshTransformKeyFrames( Matrix4f transform, Object[] frames );
-    
-    public Object[] createMeshTransformKeyFrameControllersArray( int length );
     
     public Object createMeshTransformKeyFrameController( Object[] keyFrames, NamedObject target );
     

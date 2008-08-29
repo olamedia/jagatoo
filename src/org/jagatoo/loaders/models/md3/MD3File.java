@@ -32,6 +32,7 @@ package org.jagatoo.loaders.models.md3;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -341,12 +342,14 @@ public class MD3File
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
     }
     
-    private void readCoordinatesAndNormals( int numFrames, int coordNormalOffset, int numVertices, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NamedObject geometry, AnimationFactory animFactory, Object[] keyFrames ) throws IOException, IncorrectFormatException, ParsingException
+    private Object[] readCoordinatesAndNormals( int numFrames, int coordNormalOffset, int numVertices, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NamedObject geometry, AnimationFactory animFactory ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
         JAGTLog.debug( "Loading MD3 vertex-coordinates and -normals (for all frames)..." );
         
         in.skipBytes( header.surfaceOffset + coordNormalOffset - in.getPointer() );
+        
+        Object[] keyFrames = null;
         
         Point3f coord = Point3f.fromPool();
         Vector3f normal = Vector3f.fromPool();
@@ -429,6 +432,13 @@ public class MD3File
             
             if ( numFrames > 1 )
             {
+                Object keyFrame = animFactory.createMeshDeformationKeyFrame( keyFrameCoords, keyFrameNormals );
+                
+                if ( keyFrames == null )
+                {
+                    keyFrames = (Object[])Array.newInstance( keyFrame.getClass(), numFrames );
+                }
+                
                 keyFrames[f] = animFactory.createMeshDeformationKeyFrame( keyFrameCoords, keyFrameNormals );
             }
         }
@@ -437,6 +447,8 @@ public class MD3File
         Point3f.toPool( coord );
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
+        
+        return( keyFrames );
     }
     
     private void readSurfaces( URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, Matrix4f[][] frameTags, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
@@ -471,16 +483,10 @@ public class MD3File
                                                                           false, new int[] { 2 }, null
                                                                         );
             
-            Object[] keyFrames = null;
-            if ( numFrames > 1 )
-            {
-                keyFrames = animFactory.createMeshDeformationKeyFramesArray( numFrames );
-            }
-            
             NamedObject[] shaders = readShaders( shadersOffset, numShaders, baseURL, appFactory, nodeFactory );
             readTriangles( trianglesOffset, numTriangles, geomFactory, geometry );
             readTextureCoordinates( textureCoordsOffset, numVertices, geomFactory, geometry );
-            readCoordinatesAndNormals( numFrames, coordNormalOffset, numVertices, geomFactory, convertZup2Yup, scale, geometry, animFactory, keyFrames );
+            Object[] keyFrames = readCoordinatesAndNormals( numFrames, coordNormalOffset, numVertices, geomFactory, convertZup2Yup, scale, geometry, animFactory );
             
             NamedObject shape = nodeFactory.createShape( surfaceName, geometry, ( shaders.length > 0 ) ? shaders[0] : null, BoundsType.SPHERE );
             
@@ -496,7 +502,7 @@ public class MD3File
         
         if ( controllersList.size() > 0 )
         {
-            Object[] animControllers = animFactory.createMeshDeformationKeyFrameControllersArray( controllersList.size() );
+            Object[] animControllers = (Object[])Array.newInstance( controllersList.get( 0 ).getClass(), controllersList.size() );
             animControllers = controllersList.toArray( animControllers );
             Object animation = animFactory.createAnimation( "default", header.numFrames, 9f, animControllers, frameTags );
             siHandler.addAnimation( animation );

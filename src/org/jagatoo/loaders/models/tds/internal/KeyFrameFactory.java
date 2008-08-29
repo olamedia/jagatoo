@@ -29,6 +29,8 @@
  */
 package org.jagatoo.loaders.models.tds.internal;
 
+import java.lang.reflect.Array;
+
 import org.jagatoo.loaders.models._util.AnimationFactory;
 import org.openmali.vecmath2.Matrix4f;
 import org.openmali.vecmath2.Quaternion4f;
@@ -44,7 +46,7 @@ public class KeyFrameFactory
 {
     public static Object[] createKeyFrames( Matrix4f masterTransform, int framesCount, PosTransform posTransform, RotTransform rotTransform, ScaleTransform scaleTransform, AnimationFactory animFactory )
     {
-        Object[] frames = animFactory.createMeshTransformKeyFramesArray( framesCount + 1 );
+        Object[] frames = null;
         
         Vector3f translation = new Vector3f();
         Quaternion4f rotation = new Quaternion4f();
@@ -67,11 +69,18 @@ public class KeyFrameFactory
             else
                 scale.set( 1f, 1f, 1f );
             
-            frames[i] = animFactory.createMeshTransformKeyFrame( frameTime, translation, rotation, scale );
+            Object frame = animFactory.createMeshTransformKeyFrame( frameTime, translation, rotation, scale );
+            
+            if ( frames == null )
+            {
+                frames = (Object[])Array.newInstance( frame.getClass(), framesCount + 1 );
+            }
+            
+            frames[i] = frame;
             
             if ( masterTransform != null )
             {
-                animFactory.transformMeshTransformKeyFrame( masterTransform, frames[i] );
+                animFactory.transformMeshTransformKeyFrame( masterTransform, frame );
             }
         }
         

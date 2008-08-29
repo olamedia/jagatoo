@@ -65,6 +65,7 @@ package org.jagatoo.loaders.models.md2;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -448,8 +449,8 @@ public class MD2File
             
             if ( ( lastAnimName != null ) && !lastAnimName.equals( animName ) )
             {
-                Object[] fanFrames = animFactory.createMeshDeformationKeyFramesArray( frames.size() );
-                Object[] stripFrames = animFactory.createMeshDeformationKeyFramesArray( frames.size() );
+                Object[] fanFrames = (Object[])Array.newInstance( frames.get( 0 )[0].getClass(), frames.size() );
+                Object[] stripFrames = (Object[])Array.newInstance( frames.get( 0 )[1].getClass(), frames.size() );
                 for ( int i = 0; i < frames.size(); i++ )
                 {
                     Object[] o = frames.get( i );
@@ -461,7 +462,7 @@ public class MD2File
                 Object fanAnimController = animFactory.createMeshDeformationKeyFrameController( fanFrames, fanShape );
                 Object stripAnimController = animFactory.createMeshDeformationKeyFrameController( stripFrames, stripShape );
                 
-                Object[] animControllers = animFactory.createMeshDeformationKeyFrameControllersArray( 2 );
+                Object[] animControllers = (Object[])Array.newInstance( fanAnimController.getClass(), 2 );
                 animControllers[0] = fanAnimController;
                 animControllers[1] = stripAnimController;
                 
@@ -584,8 +585,8 @@ public class MD2File
         
         if ( ( framesData.length > 1 ) && ( lastAnimName != null ) && ( frames.size() > 0 ) )
         {
-            Object[] fanFrames = animFactory.createMeshDeformationKeyFramesArray( frames.size() );
-            Object[] stripFrames = animFactory.createMeshDeformationKeyFramesArray( frames.size() );
+            Object[] fanFrames = (Object[])Array.newInstance( frames.get( 0 )[0].getClass(), frames.size() );
+            Object[] stripFrames = (Object[])Array.newInstance( frames.get( 0 )[1].getClass(), frames.size() );
             for ( int i = 0; i < frames.size(); i++ )
             {
                 Object[] o = frames.get( i );
@@ -597,7 +598,7 @@ public class MD2File
             Object fanAnimController = animFactory.createMeshDeformationKeyFrameController( fanFrames, fanShape );
             Object stripAnimController = animFactory.createMeshDeformationKeyFrameController( stripFrames, stripShape );
             
-            Object[] animControllers = animFactory.createMeshDeformationKeyFrameControllersArray( 2 );
+            Object[] animControllers = (Object[])Array.newInstance( fanAnimController.getClass(), 2 );
             animControllers[0] = fanAnimController;
             animControllers[1] = stripAnimController;
             
