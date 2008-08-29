@@ -145,6 +145,26 @@ public class MD2File
         return( texture );
     }
     
+    private NamedObject createSkin( String skinName, URL baseURL, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingException
+    {
+        NamedObject skin = skinsCache.get( skinName );
+        
+        if ( skin == null )
+        {
+            AbstractTexture texture;
+            if ( ( skinName == null ) || ( skinName.length() == 0 ) )
+                texture = appFactory.getFallbackTexture();
+            else
+                texture = loadTexture( skinName, baseURL, appFactory );
+            
+            skin = appFactory.createStandardAppearance( "", texture, 0 );
+            
+            skinsCache.put( skinName, skin );
+        }
+        
+        return( skin );
+    }
+    
     private NamedObject[] readSkins( int skinsOffset, int numSkins, URL baseURL, AppearanceFactory appFactory, NodeFactory nodeFactory ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
@@ -158,22 +178,7 @@ public class MD2File
         {
             String skinName = fixPath( in.readCString( 64, true ) );
             
-            NamedObject skin = skinsCache.get( skinName );
-            if ( skin == null )
-            {
-                AbstractTexture texture;
-                if ( ( skinName == null ) || ( skinName.length() == 0 ) )
-                    texture = appFactory.getFallbackTexture();
-                else
-                    texture = loadTexture( skinName, baseURL, appFactory );
-                
-                skin = appFactory.createAppearance( skinName, 0 );
-                appFactory.applyTexture( texture, 0, skin );
-                
-                skinsCache.put( skinName, skin );
-            }
-            
-            skins[ i ] = skin;
+            skins[ i ] = createSkin( skinName, baseURL, appFactory );
         }
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
@@ -319,7 +324,7 @@ public class MD2File
         return( frameName.substring( 0, i + 1 ) );
     }
     
-    private void readGLCommands( int commandsOffset, int numGlCommandBytes, Object[][] framesData, GeometryFactory geomFactory, boolean convertZup2Yup, AnimationFactory animFactory, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject rootGroup, NamedObject[] skins, AbstractTexture skinTex, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
+    private void readGLCommands( int commandsOffset, int numGlCommandBytes, Object[][] framesData, GeometryFactory geomFactory, boolean convertZup2Yup, AnimationFactory animFactory, AppearanceFactory appFactory, URL baseURL, NodeFactory nodeFactory, NamedObject rootGroup, NamedObject[] skins, String skin, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
         JAGTLog.debug( "Loading MD2 GL-commands..." );
@@ -553,10 +558,9 @@ public class MD2File
                 geomFactory.finalizeGeometry( stripArray, GeometryFactory.GeometryType.TRIANGLE_STRIP_ARRAY, 0, stripVertexCount, 0, 0 );
                 
                 NamedObject appearance;
-                if ( ( skinTex != null ) || ( skins == null ) || ( skins.length == 0 ) )
+                if ( ( skin != null ) || ( skins == null ) || ( skins.length == 0 ) )
                 {
-                    appearance = appFactory.createAppearance( "", 0 );
-                    appFactory.applyTexture( skinTex, 0, appearance );
+                    appearance = createSkin( skin, baseURL, appFactory );
                 }
                 else
                 {
@@ -606,7 +610,7 @@ public class MD2File
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
     }
     
-    private MD2File( InputStream in, URL baseURL, AppearanceFactory appFactory, AbstractTexture skinTexture, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
+    private MD2File( InputStream in, URL baseURL, AppearanceFactory appFactory, String skin, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
     {
         if ( !( in instanceof BufferedInputStream ) )
             in = new BufferedInputStream( in );
@@ -621,7 +625,7 @@ public class MD2File
             /*float[] texCoords = */readTextureCoordinates( header.offsetTexCoords, header.numTexCoords, header.skinWidth, header.skinHeight );
             /*int[][] triangles = */readTriangles( header.offsetTriangles, header.numTriangles );
             Object[][] frames = readFrames( header.offsetFrames, header.numFrames, header.numVertices, convertZup2Yup, scale );
-            readGLCommands( header.offsetGlCommands, header.numGlCommandBytes, frames, geomFactory, convertZup2Yup, animFactory, appFactory, nodeFactory, rootGroup, skins, skinTexture, siHandler );
+            readGLCommands( header.offsetGlCommands, header.numGlCommandBytes, frames, geomFactory, convertZup2Yup, animFactory, appFactory, baseURL, nodeFactory, rootGroup, skins, skin, siHandler );
         }
         finally
         {
@@ -636,8 +640,8 @@ public class MD2File
         }
     }
     
-    public static final void load( InputStream in, URL baseURL, AppearanceFactory appFactory, AbstractTexture skinTexture, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
+    public static final void load( InputStream in, URL baseURL, AppearanceFactory appFactory, String skin, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
     {
-        new MD2File( in, baseURL, appFactory, skinTexture, geomFactory, convertZup2Yup, scale, nodeFactory, animFactory, siHandler, rootGroup );
+        new MD2File( in, baseURL, appFactory, skin, geomFactory, convertZup2Yup, scale, nodeFactory, animFactory, siHandler, rootGroup );
     }
 }
