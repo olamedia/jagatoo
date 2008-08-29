@@ -341,7 +341,7 @@ public class MD3File
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
     }
     
-    private void readCoordinatesAndNormals( int numFrames, int coordNormalOffset, int numVertices, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NamedObject geometry, AnimationFactory animFactory, Object[] keyFrames, Matrix4f[][] frameTags ) throws IOException, IncorrectFormatException, ParsingException
+    private void readCoordinatesAndNormals( int numFrames, int coordNormalOffset, int numVertices, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NamedObject geometry, AnimationFactory animFactory, Object[] keyFrames ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
         JAGTLog.debug( "Loading MD3 vertex-coordinates and -normals (for all frames)..." );
@@ -429,7 +429,7 @@ public class MD3File
             
             if ( numFrames > 1 )
             {
-                keyFrames[f] = animFactory.createMeshDeformationKeyFrame( keyFrameCoords, keyFrameNormals, ( frameTags != null ) ? frameTags[f] : null );
+                keyFrames[f] = animFactory.createMeshDeformationKeyFrame( keyFrameCoords, keyFrameNormals );
             }
         }
         
@@ -480,7 +480,7 @@ public class MD3File
             NamedObject[] shaders = readShaders( shadersOffset, numShaders, baseURL, appFactory, nodeFactory );
             readTriangles( trianglesOffset, numTriangles, geomFactory, geometry );
             readTextureCoordinates( textureCoordsOffset, numVertices, geomFactory, geometry );
-            readCoordinatesAndNormals( numFrames, coordNormalOffset, numVertices, geomFactory, convertZup2Yup, scale, geometry, animFactory, keyFrames, frameTags );
+            readCoordinatesAndNormals( numFrames, coordNormalOffset, numVertices, geomFactory, convertZup2Yup, scale, geometry, animFactory, keyFrames );
             
             NamedObject shape = nodeFactory.createShape( surfaceName, geometry, ( shaders.length > 0 ) ? shaders[0] : null, BoundsType.SPHERE );
             
@@ -498,7 +498,8 @@ public class MD3File
         {
             Object[] animControllers = animFactory.createMeshDeformationKeyFrameControllersArray( controllersList.size() );
             animControllers = controllersList.toArray( animControllers );
-            siHandler.addAnimation( "default", header.numFrames, 9f, animControllers );
+            Object animation = animFactory.createAnimation( "default", header.numFrames, 9f, animControllers, frameTags );
+            siHandler.addAnimation( animation );
         }
         
         JAGTLog.debug( "done loading ", header.numSurfaces, " surfaces. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );

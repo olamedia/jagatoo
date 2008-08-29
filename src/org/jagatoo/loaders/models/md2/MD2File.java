@@ -460,7 +460,8 @@ public class MD2File
                 animControllers[0] = fanAnimController;
                 animControllers[1] = stripAnimController;
                 
-                siHandler.addAnimation( lastAnimName, frames.size(), 9f, animControllers );
+                Object animation = animFactory.createAnimation( lastAnimName, frames.size(), 9f, animControllers, null );
+                siHandler.addAnimation( animation );
                 
                 frames.clear();
             }
@@ -571,8 +572,8 @@ public class MD2File
                 siHandler.addSpecialItem( SpecialItemType.SHAPE, stripShape.getName(), stripShape );
             }
             
-            Object fanFrame = animFactory.createMeshDeformationKeyFrame( frameFanCoords, frameFanNormals, null );
-            Object stripFrame = animFactory.createMeshDeformationKeyFrame( frameStripCoords, frameStripNormals, null );
+            Object fanFrame = animFactory.createMeshDeformationKeyFrame( frameFanCoords, frameFanNormals );
+            Object stripFrame = animFactory.createMeshDeformationKeyFrame( frameStripCoords, frameStripNormals );
             
             frames.add( new Object[] { fanFrame, stripFrame } );
         }
@@ -596,7 +597,8 @@ public class MD2File
             animControllers[0] = fanAnimController;
             animControllers[1] = stripAnimController;
             
-            siHandler.addAnimation( lastAnimName, frames.size(), 9f, animControllers );
+            Object animation = animFactory.createAnimation( lastAnimName, frames.size(), 9f, animControllers, null );
+            siHandler.addAnimation( animation );
             
             frames.clear();
         }

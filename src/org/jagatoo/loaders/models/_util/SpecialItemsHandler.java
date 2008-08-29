@@ -60,5 +60,5 @@ public interface SpecialItemsHandler
     
     public NamedObject createTextureAnimator( BSPTextureAnimator animator, NamedObject shape );
     
-    public void addAnimation( String name, int numFrames, float fps, Object[] controllers );
+    public void addAnimation( Object animation );
 }

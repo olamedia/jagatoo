@@ -154,7 +154,7 @@ public class MD5AnimationReader
             bones[i] = animFactory.createBone( name, translation, rotation );
         }
         
-        return( animFactory.createBoneAnimationKeyFrame( bones, null ) );
+        return( animFactory.createBoneAnimationKeyFrame( bones ) );
     }
     
     public static void load( InputStream in, String filename, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, NamedObject[] shapes, Object[][][] boneWeights, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
@@ -351,6 +351,7 @@ public class MD5AnimationReader
             controllers[i] = animFactory.createBoneAnimationKeyFrameController( keyFrames, boneWeights[i], shape );
         }
         
-        siHandler.addAnimation( filename, keyFrames.length, frameRate, controllers );
+        Object animation = animFactory.createAnimation( filename, keyFrames.length, frameRate, controllers, null );
+        siHandler.addAnimation( animation );
     }
 }
