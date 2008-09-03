@@ -173,9 +173,16 @@ public abstract class InputDevice implements Enableable
             return;
         }
         
+        int n = stateListeners.size();
         for ( int i = 0; i < stateListeners.size(); i++ )
         {
             stateListeners.get( i ).onInputStateChanged( e, e.getComponent(), delta, state );
+            
+            if ( n > stateListeners.size() )
+            {
+                n = stateListeners.size();
+                i--;
+            }
         }
         
         if ( e.getComponent() != null )

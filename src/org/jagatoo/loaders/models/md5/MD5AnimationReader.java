@@ -132,6 +132,8 @@ public class MD5AnimationReader
             boneTrs[i] = translation;
             boneRots[i] = rotation;
             
+            NamedObject parentBone = null;
+            
             if ( parent == -1 )
             {
                 if ( convertZup2Yup )
@@ -141,6 +143,13 @@ public class MD5AnimationReader
             }
             else
             {
+                if ( bones == null )
+                {
+                    throw new ParsingException( "Can't find the parent bone by id " + parent );
+                }
+                
+                parentBone = bones[parent];
+                
                 Point3f rpos = boneRots[parent].transform( translation, new Point3f() );
                 translation.set( rpos.getX() + boneTrs[parent].getX(),
                                  rpos.getY() + boneTrs[parent].getY(),
@@ -152,7 +161,7 @@ public class MD5AnimationReader
                 rotation.normalize();
             }
             
-            NamedObject bone = animFactory.createBone( name, translation, rotation );
+            NamedObject bone = animFactory.createBone( parentBone, name, translation, rotation, null );
             
             if ( bones == null )
             {

@@ -44,7 +44,9 @@ import org.openmali.vecmath2.Vector3f;
  */
 public interface AnimationFactory
 {
-    public NamedObject createBone( String name, Vector3f translation, Quaternion4f rotation );
+    public NamedObject createBone( NamedObject parentBone, String name, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
+    
+    public NamedObject createBone( NamedObject parentBone, String name, Matrix4f transformation );
     
     public Object createBoneAnimationKeyFrame( NamedObject[] bones );
     
