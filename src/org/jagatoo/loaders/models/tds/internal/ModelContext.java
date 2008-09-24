@@ -156,6 +156,7 @@ public class ModelContext
         geometry = null;
         numberOfVerts = 0;
         vertexCoords = null;
+        textureCoords = null;
         sharedFaces = null;
         numberOfFaces = 0;
         faces = null;

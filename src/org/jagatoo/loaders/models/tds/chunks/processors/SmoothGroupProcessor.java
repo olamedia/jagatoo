@@ -191,6 +191,7 @@ public class SmoothGroupProcessor extends ChunkProcessor
             
             if ( context.textureCoords != null )
             {
+                System.out.println( context.vertexCoords.length + ", " + normals.length + ", " + context.textureCoords.length );
                 geomFactory.setTexCoords( context.geometry, geomType, 0, 2, 0, context.textureCoords, 0, context.textureCoords.length );
             }
             //context.indexedGeometry.calculateFaceNormals();
