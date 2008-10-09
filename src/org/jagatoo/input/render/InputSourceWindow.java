@@ -31,6 +31,7 @@ package org.jagatoo.input.render;
 
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.devices.InputDeviceFactory;
+import org.jagatoo.input.devices.Mouse;
 
 /**
  * This is an abstraction of the link between the input system
@@ -80,8 +81,10 @@ public interface InputSourceWindow
     
     /**
      * Refreshes the Cursor on this window.
+     * 
+     * @param mouse the mouse, that triggers this method.
      */
-    public void refreshCursor();
+    public void refreshCursor( Mouse mouse );
     
     /**
      * @return the currently used Cursor.

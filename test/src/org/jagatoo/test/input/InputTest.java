@@ -506,7 +506,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             this.cursor = cursor;
         }
         
-        public void refreshCursor()
+        public void refreshCursor( org.jagatoo.input.devices.Mouse mouse )
         {
         }
         
@@ -559,7 +559,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             this.cursor = cursor;
         }
         
-        public void refreshCursor()
+        public void refreshCursor( org.jagatoo.input.devices.Mouse mouse )
         {
         }
         

@@ -462,8 +462,10 @@ public class MD3File
         
         for ( int s = 0; s < header.numSurfaces; s++ )
         {
-            if ( in.readInt() != MD3Header.MAGIC_NUMBER )
-                throw new IncorrectFormatException( "Invalid magic number found at MD3 surfaces block " + s + "." );
+            int magic = in.readInt();
+            
+            if ( magic != MD3Header.MAGIC_NUMBER )
+                throw new IncorrectFormatException( "Invalid magic number found at MD3 surfaces block " + s + ". (" + magic + " != " + MD3Header.MAGIC_NUMBER + ")" );
             
             String surfaceName = in.readCString( 64, true );
             /*int flags = */in.readInt();

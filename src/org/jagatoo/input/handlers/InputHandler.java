@@ -38,6 +38,7 @@ import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.actions.InputAction;
 import org.jagatoo.input.managers.InputBindingsManager;
 import org.jagatoo.input.managers.InputStatesManager;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * This is the abstract base class for all InputHandlers.<br>
@@ -58,8 +59,9 @@ public abstract class InputHandler< A extends InputAction >
     public static final int MOUSE_WHEEL_SUSPENDED = 4;
     public static final int KEYBOARD_SUSPENDED = 8;
     
-    protected int suspendMask = 0;
     private InputSystem inputSystem = null;
+    protected int suspendMask = 0;
+    private InputSourceWindow attachedISW = null;
     
     private boolean mouseSmoothingEnabled = false;
     
@@ -182,6 +184,32 @@ public abstract class InputHandler< A extends InputAction >
     }
     
     /**
+     * Attaches this {@link InputHandler} to a certain {@link InputSourceWindow}.
+     * If this is not null, then the {@link InputHandler} will only receive input
+     * events, if the given {@link InputSourceWindow}'s {@link InputSourceWindow#receivesInputEvents()}
+     * method returns <code>true</code>.
+     * 
+     * @param inputSourceWindow
+     */
+    public void attachToSourceWindow( InputSourceWindow inputSourceWindow )
+    {
+        this.attachedISW = inputSourceWindow;
+    }
+    
+    /**
+     * @return the attached {@link InputSourceWindow}.
+     * If this is not null, then the {@link InputHandler} will only receive input
+     * events, if the given {@link InputSourceWindow}'s {@link InputSourceWindow#receivesInputEvents()}
+     * method returns <code>true</code>.
+     * 
+     * @param inputSourceWindow
+     */
+    public final InputSourceWindow getAttachedSourceWindow()
+    {
+        return( attachedISW );
+    }
+    
+    /**
      * Suspends or resumes this {@link InputHandler}.<br>
      * <br>
      * If an {@link InputHandler} is suspended, it will ignore any input.
@@ -211,6 +239,9 @@ public abstract class InputHandler< A extends InputAction >
      */
     protected void updateInputStates( long nanoTime )
     {
+        if ( ( getAttachedSourceWindow() != null ) && !getAttachedSourceWindow().receivesInputEvents() )
+            return;
+        
         if ( statesManager != null )
         {
             statesManager.update( nanoTime );
@@ -240,13 +271,16 @@ public abstract class InputHandler< A extends InputAction >
      */
     public final void update( long nanoTime ) throws InputSystemException
     {
-        updateInputStates( nanoTime );
-        
         if ( oldNanoTime == -1L )
             oldNanoTime = nanoTime;
         
         final long nanoFrame = ( nanoTime - oldNanoTime );
         oldNanoTime = nanoTime;
+        
+        if ( ( getAttachedSourceWindow() != null ) && !getAttachedSourceWindow().receivesInputEvents() )
+            return;
+        
+        updateInputStates( nanoTime );
         
         update( nanoTime, (float)nanoTime / 1000000000f, nanoFrame, (float)nanoFrame / 1000000000f );
     }

@@ -757,13 +757,13 @@ public abstract class Mouse extends InputDevice
         {
             this.isAbsolute = absolute;
             setAbsoluteImpl( absolute );
-            getSourceWindow().refreshCursor();
+            getSourceWindow().refreshCursor( this );
         }
         else if ( this.isAbsolute && !absolute )
         {
             this.isAbsolute = absolute;
             setAbsoluteImpl( absolute );
-            getSourceWindow().refreshCursor();
+            getSourceWindow().refreshCursor( this );
         }
     }
     
