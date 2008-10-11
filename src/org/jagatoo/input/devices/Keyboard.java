@@ -32,6 +32,8 @@ package org.jagatoo.input.devices;
 import java.util.ArrayList;
 
 import org.jagatoo.input.InputSystemException;
+import org.jagatoo.input.InputSystemRuntimeException;
+import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.devices.components.InputState;
 import org.jagatoo.input.devices.components.Key;
 import org.jagatoo.input.devices.components.Keys;
@@ -389,6 +391,22 @@ public abstract class Keyboard extends InputDevice
             return( InputState.POSITIVE );
         else
             return( InputState.NEGATIVE );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getState( DeviceComponent component ) throws InputSystemRuntimeException
+    {
+        if ( !( component instanceof Key ) )
+        {
+            throw new InputSystemRuntimeException( "The Keyboard only supports Key instances for this method." );
+        }
+        
+        boolean state = isKeyPressed( (Key)component );
+        
+        return( state ? 1 : 0 );
     }
     
     /**

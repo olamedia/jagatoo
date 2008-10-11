@@ -32,7 +32,9 @@ package org.jagatoo.input.devices;
 import java.util.ArrayList;
 
 import org.jagatoo.input.InputSystemException;
+import org.jagatoo.input.InputSystemRuntimeException;
 import org.jagatoo.input.devices.components.ControllerButton;
+import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.devices.components.InputState;
 import org.jagatoo.input.devices.components.MouseAxis;
 import org.jagatoo.input.devices.components.MouseButton;
@@ -163,7 +165,7 @@ public abstract class Mouse extends InputDevice
      * @param x
      * @param y
      */
-    public void setPosition( int x, int y ) throws InputSystemException
+    protected void setPosition( int x, int y ) throws InputSystemException
     {
         this.xAxis.setValue( x );
         this.yAxis.setValue( y );
@@ -307,6 +309,41 @@ public abstract class Mouse extends InputDevice
             return( InputState.POSITIVE );
         else
             return( InputState.NEGATIVE );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getState( DeviceComponent component ) throws InputSystemRuntimeException
+    {
+        if ( component instanceof MouseButton )
+        {
+            boolean state = isButtonPressed( (MouseButton)component );
+            
+            return( state ? 1 : 0 );
+        }
+        
+        if ( component instanceof MouseWheel )
+        {
+            if ( ( component != MouseWheel.GLOBAL_WHEEL ) && ( component != getWheel() ) )
+                throw new InputSystemRuntimeException( "The given MouseWheel is not part of this Mouse." );
+            
+            return( getWheel().getIntValue() );
+        }
+        
+        if ( component instanceof MouseAxis )
+        {
+            if ( component == getXAxis() )
+                return( getCurrentX() );
+            
+            if ( component == getYAxis() )
+                return( getCurrentY() );
+            
+            throw new InputSystemRuntimeException( "The given MouseAxis is not part of this Mouse." );
+        }
+        
+        throw new InputSystemRuntimeException( "The Mouse only supports MouseButton, MouseAxis and MouseWheel instances for this method." );
     }
     
     /**

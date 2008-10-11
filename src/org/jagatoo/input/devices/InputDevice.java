@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import org.jagatoo.datatypes.Enableable;
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
+import org.jagatoo.input.InputSystemRuntimeException;
+import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.events.EventQueue;
 import org.jagatoo.input.events.InputEvent;
 import org.jagatoo.input.listeners.InputStateListener;
@@ -101,6 +103,18 @@ public abstract class InputDevice implements Enableable
     public void onDeviceUnregistered( InputSystem inputSystem ) throws InputSystemException
     {
     }
+    
+    /**
+     * This method returns an abstract input-state for the given DeviceComponent.
+     * Note, that only supported components are accepted.
+     * 
+     * @param component
+     * 
+     * @return the current state of the given component on this device.
+     * 
+     * @throws InputSystemRuntimeException
+     */
+    public abstract int getState( DeviceComponent component ) throws InputSystemRuntimeException;
     
     /**
      * {@inheritDoc}

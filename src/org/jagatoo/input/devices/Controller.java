@@ -32,8 +32,10 @@ package org.jagatoo.input.devices;
 import java.util.ArrayList;
 
 import org.jagatoo.input.InputSystemException;
+import org.jagatoo.input.InputSystemRuntimeException;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
+import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.events.ControllerAxisChangedEvent;
 import org.jagatoo.input.events.ControllerButtonPressedEvent;
 import org.jagatoo.input.events.ControllerButtonReleasedEvent;
@@ -107,6 +109,37 @@ public abstract class Controller extends InputDevice
     public final ControllerButton getButton( int index )
     {
         return( buttons[ index ] );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int getState( DeviceComponent component ) throws InputSystemRuntimeException
+    {
+        if ( component instanceof ControllerButton )
+        {
+            ControllerButton button = (ControllerButton)component;
+            
+            if ( button.getController() != this )
+                throw new InputSystemRuntimeException( "The given ControllerButton is not part of this Controller." );
+            
+            boolean state = isButtonPressed( (ControllerButton)component );
+            
+            return( state ? 1 : 0 );
+        }
+        
+        if ( component instanceof ControllerAxis )
+        {
+            ControllerAxis axis = (ControllerAxis)component;
+            
+            if ( axis.getController() != this )
+                throw new InputSystemRuntimeException( "The given ControllerAxis is not part of this Controller." );
+            
+            return( axis.getIntValue() );
+        }
+        
+        throw new InputSystemRuntimeException( "The Controller only supports ControllerButton and ControllerAxis instances for this method." );
     }
     
     /**
