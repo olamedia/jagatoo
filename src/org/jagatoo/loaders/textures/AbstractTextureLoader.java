@@ -54,6 +54,7 @@ import org.jagatoo.loaders.textures.locators.TextureStreamLocatorFile;
 import org.jagatoo.loaders.textures.locators.TextureStreamLocatorURL;
 import org.jagatoo.logging.JAGTLog;
 import org.jagatoo.logging.ProfileTimer;
+import org.jagatoo.opengl.enums.TextureImageFormat;
 
 /**
  * Loads Textures from various image resources.<br>
@@ -307,7 +308,7 @@ public abstract class AbstractTextureLoader
         
         tex.setImage( 0, ti );
         
-        if ( loadMipmaps )
+        if ( loadMipmaps && ( ti.getFormat() != TextureImageFormat.DEPTH ) && ( ti.getFormat().getPixelSize() > 1 ) )
         {
             MipmapGenerator.createMipMaps( ti, tex, texFactory );
         }

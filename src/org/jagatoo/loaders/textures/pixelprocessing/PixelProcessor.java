@@ -147,6 +147,7 @@ public abstract class PixelProcessor
     {
         switch ( tiFormat )
         {
+            //case DEPTH:
             case INTENSITY:
             case LUMINANCE:
             case ALPHA:
