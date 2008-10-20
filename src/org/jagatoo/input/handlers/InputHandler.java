@@ -58,6 +58,7 @@ public abstract class InputHandler< A extends InputAction >
     public static final int MOUSE_BUTTONS_SUSPENDED = 2;
     public static final int MOUSE_WHEEL_SUSPENDED = 4;
     public static final int KEYBOARD_SUSPENDED = 8;
+    public static final int FIRST_USER_SUSPEND_FLAG = 16;
     
     private InputSystem inputSystem = null;
     protected int suspendMask = 0;
@@ -219,7 +220,7 @@ public abstract class InputHandler< A extends InputAction >
     public void setSuspended( boolean suspended )
     {
         if ( suspended )
-            setSuspendMask( MOUSE_MOVEMENT_SUSPENDED | MOUSE_BUTTONS_SUSPENDED | MOUSE_WHEEL_SUSPENDED | KEYBOARD_SUSPENDED );
+            setSuspendMask( ~0 );
         else
             setSuspendMask( 0 );
     }
