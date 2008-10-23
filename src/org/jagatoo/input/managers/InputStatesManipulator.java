@@ -39,27 +39,27 @@ import org.jagatoo.input.actions.InputAction;
  */
 public class InputStatesManipulator
 {
-    private final Boolean[] states;
+    private final Short[] states;
     
     /**
-     * Sets the key-state for the given command.
+     * Sets the key-state for the given action.
      * 
-     * @param command
+     * @param action
      * @param state the state. Use null to not override the real key-state.
      */
-    public void setKeyState( InputAction command, Boolean state )
+    public final void setKeyState( InputAction action, Short state )
     {
-        states[ command.ordinal() ] = state;
+        states[ action.ordinal() ] = state;
     }
     
     /**
-     * @param command
+     * @param action
      * 
-     * @return the current state for the given command.
+     * @return the current state for the given action.
      */
-    public Boolean getKeyState( InputAction command )
+    public final Short getKeyState( InputAction action )
     {
-        return( states[ command.ordinal() ] );
+        return( states[ action.ordinal() ] );
     }
     
     /**
@@ -71,15 +71,14 @@ public class InputStatesManipulator
         {
             if ( this.states[ i ] != null )
             {
-                // TODO: implement correctly!!!
-                //currStates[ i ] = this.states[ i ].booleanValue();
+                currStates[ i ] = this.states[ i ].shortValue();
             }
         }
     }
     
     protected InputStatesManipulator( InputStatesManager keyStatesManager )
     {
-        this.states = new Boolean[ keyStatesManager.getNumStates() ];
+        this.states = new Short[ keyStatesManager.getNumStates() ];
         for ( int i = 0; i < states.length; i++ )
         {
             states[ i ] = null;
