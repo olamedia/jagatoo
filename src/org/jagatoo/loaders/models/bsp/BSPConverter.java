@@ -287,14 +287,21 @@ public class BSPConverter
                 {
                     shape = convertFaceToShape( sourceBSPVersion, f, face, geometries[ m ][ f ], baseTextures, lightMaps, nodeFactory, nodeBoundsType, appFactory, appCache );
                     
-                    siHandler.addSpecialItem( SpecialItemType.SHAPE, shape.getName(), shape );
-                    
-                    if ( baseTexName.startsWith( "+" ) )
+                    if ( shape == null )
                     {
-                        NamedObject appearance = nodeFactory.getAppearanceFromShape( shape );
-                        BSPTextureAnimator animator = new BSPTextureAnimator( baseTextures[ face.textureID ], appearance, 0, appFactory, 10f );
+                        shape = nodeFactory.createDummyNode();
+                    }
+                    else
+                    {
+                        siHandler.addSpecialItem( SpecialItemType.SHAPE, shape.getName(), shape );
                         
-                        shape = siHandler.createTextureAnimator( animator, shape );
+                        if ( baseTexName.startsWith( "+" ) )
+                        {
+                            NamedObject appearance = nodeFactory.getAppearanceFromShape( shape );
+                            BSPTextureAnimator animator = new BSPTextureAnimator( baseTextures[ face.textureID ], appearance, 0, appFactory, 10f );
+                            
+                            shape = siHandler.createTextureAnimator( animator, shape );
+                        }
                     }
                 }
                 
