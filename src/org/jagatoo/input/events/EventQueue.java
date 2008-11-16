@@ -71,11 +71,11 @@ public class EventQueue
     
     public final void dequeueAndFire( InputSystem inputSystem, InputEvent.Type filteredType )
     {
-        if ( numEvents == 0 )
-            return;
-        
         synchronized ( LOCK )
         {
+            if ( numEvents == 0 )
+                return;
+        
             for ( int i = 0; i < numEvents; i++ )
             {
                 final InputEvent event = events[ i ];
@@ -126,11 +126,11 @@ public class EventQueue
     
     private final void strip()
     {
-        if ( !hasNullEvents || ( numEvents == 0 ) )
-            return;
-        
         synchronized ( LOCK )
         {
+            if ( !hasNullEvents || ( numEvents == 0 ) )
+                return;
+        
             int j = 0;
             for ( int i = 0; i < numEvents; i++ )
             {
