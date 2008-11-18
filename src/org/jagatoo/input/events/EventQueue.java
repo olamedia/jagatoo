@@ -75,7 +75,7 @@ public class EventQueue
         {
             if ( numEvents == 0 )
                 return;
-        
+            
             for ( int i = 0; i < numEvents; i++ )
             {
                 final InputEvent event = events[ i ];
@@ -130,7 +130,7 @@ public class EventQueue
         {
             if ( !hasNullEvents || ( numEvents == 0 ) )
                 return;
-        
+            
             int j = 0;
             for ( int i = 0; i < numEvents; i++ )
             {

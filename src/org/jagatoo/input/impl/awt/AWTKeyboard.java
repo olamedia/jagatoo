@@ -234,7 +234,7 @@ public class AWTKeyboard extends Keyboard
             synchronized ( changedKeyStates )
             {
                 assert ( firstUnusedEntry > 0 );
-
+                
                 // process all events in the queue
                 for ( int i = 0; i < firstUnusedEntry; i++ )
                 {
@@ -249,28 +249,28 @@ public class AWTKeyboard extends Keyboard
                             dumpKeyConversionFailed( keyEvent );
                             continue;
                         }
-
+                        
                         pressedKeys.set( key.getKeyCode() - 1, keyEvent.getID() == KeyEvent.KEY_PRESSED );
                     }
                     else
                     {
                         final int modifierMask = getModifierMask();
-
+                        
                         char keyChar = keyEvent.getKeyChar();
                         if ( keyEvent.getKeyChar() == 65452 )
                         {
                             keyChar = KeyboardLocalizer.getMapping().getModifiedChar( Keys.NUMPAD_DECIMAL, '\0', 0 );
                         }
-
+                        
                         KeyTypedEvent e = prepareKeyTypedEvent( keyChar, modifierMask, lastUpdateTime, 0L );
-
+                        
                         if ( e != null )
                         {
                             getEventQueue().enqueue( e );
                         }
                     }
                 }
-
+                
                 // first check for newly pressed keys and adjust the changed bitset
                 for ( int keyIndex = pressedKeys.nextSetBit( 0 ); keyIndex >= 0; keyIndex = pressedKeys.nextSetBit( keyIndex + 1 ) )
                 {
@@ -280,7 +280,7 @@ public class AWTKeyboard extends Keyboard
                         lastPressedKeys.set( keyIndex );
                     }
                 }
-
+                
                 // then check, if there where keys released recently and again adjust the changed bitset
                 for ( int keyIndex = lastPressedKeys.nextSetBit( 0 ); keyIndex >= 0; keyIndex = lastPressedKeys.nextSetBit( keyIndex + 1 ) )
                 {
@@ -295,15 +295,13 @@ public class AWTKeyboard extends Keyboard
             }
         }
     };
-
+    
     /**
      * {@inheritDoc}
      */
     @Override
     protected boolean hasKeyStateChanged( Key key, boolean keyState )
     {
-
-
         /*
         final int keyIndex = key.getKeyCode() - 1;
         return( keyState != tmpKeyStates[ keyIndex ] );
@@ -331,11 +329,11 @@ public class AWTKeyboard extends Keyboard
     /*
     private final void notifyStatesManagersFromQueue( InputSystem is, EventQueue eventQueue, long nanoTime )
     {
-        if ( eventQueue.getNumEvents() == 0 )
-            return;
-        
         synchronized ( EventQueue.LOCK )
         {
+            if ( eventQueue.getNumEvents() == 0 )
+                return;
+            
             for ( int i = 0; i < eventQueue.getNumEvents(); i++ )
             {
                 final InputEvent event = eventQueue.getEvent( i );
@@ -376,20 +374,19 @@ public class AWTKeyboard extends Keyboard
             
             synchronized ( changedKeyStates )
             {
-
                 final int n = changedKeyStates.length();
                 for ( int i = changedKeyStates.nextSetBit( 0 ); i >= 0 && i < n; i = changedKeyStates.nextSetBit( i + 1 ) )
                 {
                     final Key key = KeyID.values()[ i ].getKey();
                     
-                    if ( pressedKeys.get(i) )
+                    if ( pressedKeys.get( i ) )
                     {
                         final int modifierMask = applyModifier( key, true );
-
+                        
                         KeyPressedEvent e = prepareKeyPressedEvent( key, modifierMask, nanoTime, 0L );
-
+                        
                         is.notifyInputStatesManagers( this, key, 1, +1, nanoTime );
-
+                        
                         if ( e != null )
                         {
                             fireOnKeyPressed( e, true );
@@ -398,17 +395,17 @@ public class AWTKeyboard extends Keyboard
                     else
                     {
                         final int modifierMask = applyModifier( key, false );
-
+                        
                         KeyReleasedEvent e = prepareKeyReleasedEvent( key, modifierMask, nanoTime, 0L );
-
+                        
                         is.notifyInputStatesManagers( this, key, 0, -1, nanoTime );
-
+                        
                         if ( e != null )
                         {
                             fireOnKeyReleased( e, true );
                         }
                     }
-
+                    
                     changedKeyStates.clear( i );
                 }
             }
@@ -429,7 +426,7 @@ public class AWTKeyboard extends Keyboard
         
         lastUpdateTime = nanoTime;
     }
-
+    
     private static final void dumpKeyConversionFailed( java.awt.event.KeyEvent e )
     {
         String message = "Key-conversion failed for AWT key " + e.getKeyCode() + ". Please check localization (" + KeyboardLocalizer.getCurrentMappingName() + ")";
@@ -445,9 +442,9 @@ public class AWTKeyboard extends Keyboard
         
         if ( firstUnusedEntry < eventQueue.length - 1 )
             eventQueue[firstUnusedEntry++] = keyEvent;
-
-        // defere the event processing to a later point in time (the end of the AWT Evene-Queue), so events with the same timestamp
-        // are processed in a block to skip KEY_RELEASED events which are caused by the key auto-repeat in linux
+        
+        // defer the event processing to a later point in time (the end of the AWT Evene-Queue), so events with the same timestamp
+        // are processed in a block to skip KEY_RELEASED events which are caused by the key auto-repeat in linux.
         if ( deferredEventsProcessed )
         {
             deferredEventsProcessed = false;
@@ -477,24 +474,26 @@ public class AWTKeyboard extends Keyboard
         
         try
         {
-//            final java.awt.Component component = (java.awt.Component)sourceWindow.getDrawable();
-//            component.addKeyListener( new java.awt.event.KeyListener()
-//            {
-//                public void keyPressed( java.awt.event.KeyEvent e )
-//                {
-//                    processKeyEvent( e );
-//                }
-//
-//                public void keyReleased( java.awt.event.KeyEvent e )
-//                {
-//                    processKeyEvent( e );
-//                }
-//
-//                public void keyTyped( java.awt.event.KeyEvent e )
-//                {
-//                    processKeyEvent( e );
-//                }
-//            } );
+            /*
+            final java.awt.Component component = (java.awt.Component)sourceWindow.getDrawable();
+            component.addKeyListener( new java.awt.event.KeyListener()
+            {
+                public void keyPressed( java.awt.event.KeyEvent e )
+                {
+                    processKeyEvent( e );
+                }
+                
+                public void keyReleased( java.awt.event.KeyEvent e )
+                {
+                    processKeyEvent( e );
+                }
+                
+                public void keyTyped( java.awt.event.KeyEvent e )
+                {
+                    processKeyEvent( e );
+                }
+            } );
+            */
             
             Toolkit.getDefaultToolkit().addAWTEventListener( new AWTEventListener()
             {
@@ -503,7 +502,6 @@ public class AWTKeyboard extends Keyboard
                     if ( event instanceof KeyEvent ) processKeyEvent( (KeyEvent) event);
                 }
             }, AWTEvent.KEY_EVENT_MASK );
-            
         }
         catch ( Throwable e )
         {
