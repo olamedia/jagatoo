@@ -139,8 +139,10 @@ public final class ArrayUtils
         
         if ( minCapacity > oldCapacity )
         {
-            final int[] oldArray = array;
-            final int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            int[] oldArray = array;
+            int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            if ( newCapacity < minCapacity )
+                newCapacity = ( minCapacity * 3 ) / 2 + 1;
             array = new int[ newCapacity ];
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
         }
@@ -163,8 +165,10 @@ public final class ArrayUtils
         
         if ( minCapacity > oldCapacity )
         {
-            final Integer[] oldArray = array;
-            final int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            Integer[] oldArray = array;
+            int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            if ( newCapacity < minCapacity )
+                newCapacity = ( minCapacity * 3 ) / 2 + 1;
             array = new Integer[ newCapacity ];
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
         }
@@ -188,8 +192,10 @@ public final class ArrayUtils
         
         if ( minCapacity > oldCapacity )
         {
-            final int[] oldArray = array;
-            final int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            int[] oldArray = array;
+            int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            if ( newCapacity < minCapacity )
+                newCapacity = ( minCapacity * 3 ) / 2 + 1;
             array = new int[ newCapacity ];
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
             Arrays.fill( array, oldCapacity, newCapacity - 1, paddValue );
@@ -213,8 +219,10 @@ public final class ArrayUtils
         
         if ( minCapacity > oldCapacity )
         {
-            final long[] oldArray = array;
-            final int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            long[] oldArray = array;
+            int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            if ( newCapacity < minCapacity )
+                newCapacity = ( minCapacity * 3 ) / 2 + 1;
             array = new long[ newCapacity ];
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
         }
@@ -238,8 +246,10 @@ public final class ArrayUtils
         
         if ( minCapacity > oldCapacity )
         {
-            final long[] oldArray = array;
-            final int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            long[] oldArray = array;
+            int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            if ( newCapacity < minCapacity )
+                newCapacity = ( minCapacity * 3 ) / 2 + 1;
             array = new long[ newCapacity ];
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
             Arrays.fill( array, oldCapacity, newCapacity - 1, paddValue );
@@ -263,8 +273,10 @@ public final class ArrayUtils
         
         if ( minCapacity > oldCapacity )
         {
-            final float[] oldArray = array;
-            final int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            float[] oldArray = array;
+            int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            if ( newCapacity < minCapacity )
+                newCapacity = ( minCapacity * 3 ) / 2 + 1;
             array = new float[ newCapacity ];
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
         }
@@ -288,8 +300,10 @@ public final class ArrayUtils
         
         if ( minCapacity > oldCapacity )
         {
-            final float[] oldArray = array;
-            final int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            float[] oldArray = array;
+            int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            if ( newCapacity < minCapacity )
+                newCapacity = ( minCapacity * 3 ) / 2 + 1;
             array = new float[ newCapacity ];
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
             Arrays.fill( array, oldCapacity, newCapacity - 1, paddValue );
@@ -314,8 +328,10 @@ public final class ArrayUtils
         
         if ( minCapacity > oldCapacity )
         {
-            final E[] oldArray = array;
-            final int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            E[] oldArray = array;
+            int newCapacity = ( oldCapacity * 3 ) / 2 + 1;
+            if ( newCapacity < minCapacity )
+                newCapacity = ( minCapacity * 3 ) / 2 + 1;
             array = (E[])Array.newInstance( elementType, newCapacity );
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
         }
