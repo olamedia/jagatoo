@@ -474,33 +474,43 @@ public class StreamUtils
      */
     public static final byte[] buildByteArray( InputStream in, int initialSize ) throws IOException
     {
-        byte[] buffer = new byte[ initialSize ];
+        int a = in.available();
         
-        int i = 0;
-        int b;
-        while ( ( b = in.read() ) != -1 )
+        byte[] buffer = new byte[ Math.min( a, initialSize ) ];
+        
+        int offset = 0;
+        int n;
+        
+        while ( ( n = in.read( buffer, offset, a ) ) > 0 )
         {
-            if ( i >= buffer.length )
+            if ( n <= 0 )
+                break;
+            
+            offset += n;
+            
+            a = in.available();
+            
+            if ( offset + a > buffer.length )
             {
-                byte[] newBuffer = new byte[ (buffer.length * 3) / 2 + 1 ];
-                System.arraycopy( buffer, 0, newBuffer, 0, i );
+                //byte[] newBuffer = new byte[ (buffer.length * 3) / 2 + 1 ];
+                byte[] newBuffer = new byte[ Math.max( buffer.length << 1, offset + a ) ];
+                System.arraycopy( buffer, 0, newBuffer, 0, offset );
                 buffer = newBuffer;
             }
-            
-            buffer[ i ] = (byte)b;
-            
-            i++;
         }
         
-        final byte[] copy = new byte[ i ];
-        System.arraycopy( buffer, 0, copy, 0, Math.min( buffer.length, i ) );
+        if ( buffer.length == offset )
+            return ( buffer );
         
-        return( copy );
+        byte[] copy = new byte[ offset ];
+        System.arraycopy( buffer, 0, copy, 0, offset );
+        
+        return ( copy );
     }
     
     /**
      * This calls {@link #buildByteArray(InputStream, int)} with an initialSize
-     * of 1024.
+     * of in.available().
      * 
      * @param in the InputStream to get data from
      * @return the filled and correctly sized byte-array
@@ -509,7 +519,7 @@ public class StreamUtils
      */
     public static final byte[] buildByteArray( InputStream in ) throws IOException
     {
-        return( buildByteArray( in, 1024 ) );
+        return( buildByteArray( in, in.available() ) );
     }
     
     /**
