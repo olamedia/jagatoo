@@ -346,7 +346,7 @@ public class BSPConverter
     private static final Matrix4f getTransformFromEntity( BSPEntity_Location entLoc, float worldScale )
     {
         float angleX = FastMath.toRad( entLoc.angles.getX() );
-        float angleY = FastMath.toRad( entLoc.angles.getY() );
+        float angleY = FastMath.toRad( entLoc.angles.getY() - 90f );
         float angleZ = FastMath.toRad( entLoc.angles.getZ() );
         
         Matrix4f trans = new Matrix4f();

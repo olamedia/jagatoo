@@ -289,7 +289,7 @@ public class BSPEntitiesParser
                 // Q3
                 
                 // The x-angle is the one, that will rotate around the up-vector.
-                this.angles.set( Float.parseFloat( parseLineValue( line ) ), 0f, 0f );
+                this.angles.set( 0f, Float.parseFloat( parseLineValue( line ) ), 0f );
             }
         }
         
