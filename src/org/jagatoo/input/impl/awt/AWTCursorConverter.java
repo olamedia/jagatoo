@@ -46,7 +46,7 @@ import org.jagatoo.input.render.Cursor;
  */
 public class AWTCursorConverter
 {
-    private static final BufferedImage EMPTY_CURSOR_IMAGE = new BufferedImage( 1, 1, BufferedImage.TYPE_4BYTE_ABGR );
+    private static final BufferedImage EMPTY_CURSOR_IMAGE = new BufferedImage( 16, 16, BufferedImage.TYPE_4BYTE_ABGR );
     public static final java.awt.Cursor HIDDEN_CURSOR = Toolkit.getDefaultToolkit().createCustomCursor( EMPTY_CURSOR_IMAGE, new Point( 0, 0 ), "HIDDEN_CURSOR" );
     
     public static void convertCursor( Cursor cursor )
