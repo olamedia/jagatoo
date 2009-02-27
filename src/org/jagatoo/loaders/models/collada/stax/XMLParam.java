@@ -74,12 +74,16 @@ public class XMLParam
         X,
         /** Y coordinate */
         Y,
-        /** T coordinate */
+        /** Z coordinate */
         Z,
-        /** U coordinate for texture mapping */
+        /** first component for texture coordinates for texture mapping */
         S,
-        /** V coordinate for texture mapping */
+        /** second component for texture coordinates for texture mapping */
         T,
+        /** third component for texture coordinates for texture mapping */
+        P,
+        /** fourth component for texture coordinates for texture mapping */
+        Q,
         /** Red component for color */
         R,
         /** Green component for color */
