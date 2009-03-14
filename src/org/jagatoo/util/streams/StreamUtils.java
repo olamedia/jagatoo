@@ -30,13 +30,10 @@
 package org.jagatoo.util.streams;
 
 import java.io.BufferedInputStream;
-import java.io.DataInput;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.jagatoo.util.arrays.ArrayUtils;
-import org.openmali.vecmath2.Matrix3f;
-import org.openmali.vecmath2.Tuple3f;
 
 /**
  * Contains static utility methods for Stream.
@@ -520,59 +517,5 @@ public class StreamUtils
     public static final byte[] buildByteArray( InputStream in ) throws IOException
     {
         return( buildByteArray( in, in.available() ) );
-    }
-    
-    /**
-     * Reads a Tuple3f from the InputStream.
-     * 
-     * @param <T>
-     * 
-     * @param in
-     * @param t
-     * 
-     * @return the tuple t back again
-     * 
-     * @throws IOException
-     */
-    public static final <T extends Tuple3f> T readTuple3f( DataInput in, T t ) throws IOException
-    {
-        t.set( in.readFloat(),
-               in.readFloat(),
-               in.readFloat()
-             );
-        
-        return( t );
-    }
-    
-    /**
-     * Reads a Tuple3f from the InputStream.
-     * 
-     * @param <T>
-     * 
-     * @param in
-     * @param t
-     * 
-     * @return the tuple t back again
-     * 
-     * @throws IOException
-     */
-    public static final <M extends Matrix3f> M readMatrix3f( DataInput in, M m ) throws IOException
-    {
-        float m00 = in.readFloat();
-        float m10 = in.readFloat();
-        float m20 = in.readFloat();
-        float m01 = in.readFloat();
-        float m11 = in.readFloat();
-        float m21 = in.readFloat();
-        float m02 = in.readFloat();
-        float m12 = in.readFloat();
-        float m22 = in.readFloat();
-        
-        m.set( m00, m01, m02,
-               m10, m11, m12,
-               m20, m21, m22
-             );
-        
-        return( m );
     }
 }

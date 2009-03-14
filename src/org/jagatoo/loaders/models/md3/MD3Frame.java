@@ -32,8 +32,8 @@ package org.jagatoo.loaders.models.md3;
 import java.io.IOException;
 
 import org.jagatoo.util.streams.LittleEndianDataInputStream;
-import org.jagatoo.util.streams.StreamUtils;
 import org.openmali.vecmath2.Point3f;
+import org.openmali.vecmath2.util.VecMathUtils;
 
 /**
  * Insert type comment here.
@@ -50,9 +50,9 @@ public class MD3Frame
     
     private MD3Frame( LittleEndianDataInputStream in ) throws IOException
     {
-        StreamUtils.readTuple3f( in, minBounds );
-        StreamUtils.readTuple3f( in, maxBounds );
-        StreamUtils.readTuple3f( in, localOrigin );
+        VecMathUtils.readTuple3f( in, minBounds );
+        VecMathUtils.readTuple3f( in, maxBounds );
+        VecMathUtils.readTuple3f( in, localOrigin );
         scale = in.readFloat();
         name = in.readCString( 16, true );
     }

@@ -49,7 +49,6 @@ import org.jagatoo.loaders.models._util.SpecialItemsHandler.SpecialItemType;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.logging.JAGTLog;
 import org.jagatoo.util.streams.LittleEndianDataInputStream;
-import org.jagatoo.util.streams.StreamUtils;
 import org.openmali.FastMath;
 import org.openmali.spatial.bounds.BoundsType;
 import org.openmali.vecmath2.AxisAngle3f;
@@ -58,6 +57,7 @@ import org.openmali.vecmath2.Matrix4f;
 import org.openmali.vecmath2.Point3f;
 import org.openmali.vecmath2.Vector3f;
 import org.openmali.vecmath2.Vertex3f;
+import org.openmali.vecmath2.util.VecMathUtils;
 
 /**
  * Reads MD3 model files and pushes them through interfaces to
@@ -136,8 +136,8 @@ public class MD3File
             for ( int t = 0; t < header.numTags; t++ )
             {
                 String name = in.readCString( 64, true );
-                StreamUtils.readTuple3f( in, translation );
-                StreamUtils.readMatrix3f( in, rotation );
+                VecMathUtils.readTuple3f( in, translation );
+                VecMathUtils.readMatrix3f( in, rotation );
                 
                 if ( convertZup2Yup )
                 {

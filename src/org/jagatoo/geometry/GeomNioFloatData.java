@@ -33,9 +33,8 @@ import java.nio.FloatBuffer;
 
 import org.jagatoo.util.nio.BufferUtils;
 import org.openmali.vecmath2.Colorf;
-import org.openmali.vecmath2.Tuple2f;
-import org.openmali.vecmath2.Tuple3f;
-import org.openmali.vecmath2.Vector4f;
+import org.openmali.vecmath2.TexCoordf;
+import org.openmali.vecmath2.TupleNf;
 
 /**
  * GeomDataInterface implementation for NIO buffers
@@ -45,7 +44,7 @@ import org.openmali.vecmath2.Vector4f;
  */
 public class GeomNioFloatData extends GeomNioData
 {
-    private FloatBuffer buffer;
+    protected FloatBuffer buffer;
     
     private final int floatStride;
     
@@ -67,7 +66,7 @@ public class GeomNioFloatData extends GeomNioData
         return( buffer );
     }
     
-    private final int getElemStride()
+    public final int getElemStride()
     {
         if ( floatStride == 0 )
             return( getElemSize() );
@@ -155,37 +154,6 @@ public class GeomNioFloatData extends GeomNioData
         setDirty( true );
     }
     
-    public final void set( Tuple3f tuple )
-    {
-        buffer.put( tuple.getX() );
-        buffer.put( tuple.getY() );
-        buffer.put( tuple.getZ() );
-        
-        setDirty( true );
-    }
-    
-    public final void set( Vector4f tuple )
-    {
-        buffer.put( tuple.getX() );
-        buffer.put( tuple.getY() );
-        buffer.put( tuple.getZ() );
-        buffer.put( tuple.getW() );
-        
-        setDirty( true );
-    }
-    
-    public final void set( boolean alpha, Colorf color )
-    {
-        buffer.put( color.getRed() );
-        buffer.put( color.getGreen() );
-        buffer.put( color.getBlue() );
-        
-        if ( alpha )
-            buffer.put( color.getAlpha() );
-        
-        setDirty( true );
-    }
-    
     public final void set( float x )
     {
         buffer.put( x );
@@ -238,45 +206,6 @@ public class GeomNioFloatData extends GeomNioData
     public final void set( int index, int elemSize, long elemOffset, float[] a )
     {
         set( index, elemSize, elemOffset, a, 0, a.length );
-    }
-    
-    public final void set( int index, long elemOffset, Tuple3f tuple )
-    {
-        buffer.position( index * getElemStride() + (int)elemOffset );
-        
-        buffer.put( tuple.getX() );
-        buffer.put( tuple.getY() );
-        buffer.put( tuple.getZ() );
-        
-        setDirty( true );
-    }
-    
-    public final void set( int index, long elemOffset, Vector4f tuple )
-    {
-        buffer.position( index * getElemStride() + (int)elemOffset );
-        
-        buffer.put( tuple.getX() );
-        buffer.put( tuple.getY() );
-        buffer.put( tuple.getZ() );
-        buffer.put( tuple.getW() );
-        
-        setDirty( true );
-    }
-    
-    public final void set( int index, int elemSize, long elemOffset, Colorf color )
-    {
-        final int stride =  ( floatStride == 0 ) ? elemSize : floatStride;
-        
-        buffer.position( index * stride + (int)elemOffset );
-        
-        buffer.put( color.getRed() );
-        buffer.put( color.getGreen() );
-        buffer.put( color.getBlue() );
-        
-        if ( elemSize == 4 )
-            buffer.put( color.getAlpha() );
-        
-        setDirty( true );
     }
     
     public final void set( int index, long elemOffset, float x )
@@ -344,38 +273,74 @@ public class GeomNioFloatData extends GeomNioData
         return( buffer.get() );
     }
     
-    public final void get( int index, long elemOffset, Tuple2f values )
+    public final void set( TupleNf<?> tuple )
     {
-        buffer.position( index * getElemStride() + (int)elemOffset );
+        tuple.writeToBuffer( buffer, false, false );
         
-        values.setX( buffer.get() );
-        values.setY( buffer.get() );
+        setDirty( true );
     }
     
-    public final void get( int index, long elemOffset, Tuple3f values )
+    public final void set( boolean alpha, Colorf color )
     {
-        buffer.position( index * getElemStride() + (int)elemOffset );
+        buffer.put( color.getRed() );
+        buffer.put( color.getGreen() );
+        buffer.put( color.getBlue() );
         
-        values.setX( buffer.get() );
-        values.setY( buffer.get() );
-        values.setZ( buffer.get() );
+        if ( alpha )
+            buffer.put( color.getAlpha() );
+        
+        setDirty( true );
     }
     
-    public final void get( int index, long elemOffset, Vector4f values )
+    public final void set( TexCoordf<?> texCoord )
+    {
+        texCoord.writeToBuffer( buffer, false, false );
+        
+        setDirty( true );
+    }
+    
+    public final void set( int index, long elemOffset, TupleNf<?> tuple )
     {
         buffer.position( index * getElemStride() + (int)elemOffset );
         
-        values.setX( buffer.get() );
-        values.setY( buffer.get() );
-        values.setZ( buffer.get() );
-        values.setZ( buffer.get() );
+        tuple.writeToBuffer( buffer, false, false );
+        
+        setDirty( true );
+    }
+    
+    public final void set( int index, int elemSize, long elemOffset, Colorf color )
+    {
+        buffer.position( index * getElemStride() + (int)elemOffset );
+        
+        buffer.put( color.getRed() );
+        buffer.put( color.getGreen() );
+        buffer.put( color.getBlue() );
+        
+        if ( elemSize == 4 )
+            buffer.put( color.getAlpha() );
+        
+        setDirty( true );
+    }
+    
+    public final void set( int index, long elemOffset, TexCoordf<?> texCoord )
+    {
+        buffer.position( index * getElemStride() + (int)elemOffset );
+        
+        texCoord.writeToBuffer( buffer, false, false );
+        
+        setDirty( true );
+    }
+    
+    public final void get( int index, long elemOffset, TupleNf<?> values )
+    {
+        buffer.position( index * getElemStride() + (int)elemOffset );
+        
+        values.readFromBuffer( buffer );
     }
     
     public final void get( int index, int elemSize, long elemOffset, Colorf color )
     {
-        final int stride =  ( floatStride == 0 ) ? elemSize : floatStride;
-        
-        buffer.position( index * stride + (int)elemOffset );
+        buffer.position( index * getElemStride() + (int)elemOffset );
         
         color.setRed( buffer.get() );
         color.setGreen( buffer.get() );
@@ -383,6 +348,13 @@ public class GeomNioFloatData extends GeomNioData
         
         if ( elemSize == 4 )
             color.setAlpha( buffer.get() );
+    }
+    
+    public final void get( int index, long elemOffset, TexCoordf<?> texCoord )
+    {
+        buffer.position( index * getElemStride() + (int)elemOffset );
+        
+        texCoord.readFromBuffer( buffer );
     }
     
     

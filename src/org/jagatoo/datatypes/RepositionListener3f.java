@@ -27,7 +27,7 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.datatypes.impl;
+package org.jagatoo.datatypes;
 
 /**
  * Insert type comment here.

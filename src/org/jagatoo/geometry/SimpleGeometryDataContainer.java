@@ -47,12 +47,12 @@ import org.openmali.vecmath2.Vertex3f;
  */
 public class SimpleGeometryDataContainer implements VertexContainer
 {
-    public static final int COORDINATES = Vertex3f.COORDINATES;
+    public static final int COORDINATES            = 1;  // equals OpenMaLi's Vertex3f.COORDINATES
     public static final int BY_REFERENCE = 512;
     public static final int INTERLEAVED = 1024;
     
     protected GeomNioFloatData coords = null;
-    private GeomNioIntData indexData = null;
+    protected GeomNioIntData indexData = null;
     
     protected GeomNioFloatData interleavedData = null;
     
@@ -100,19 +100,9 @@ public class SimpleGeometryDataContainer implements VertexContainer
     /**
      * {@inheritDoc}
      */
-    public int getVertexCount()
+    public final int getVertexCount()
     {
         return ( maxVertices );
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean getVertex( int i, Tuple3f pos )
-    {
-        getCoordinate( i, pos );
-        
-        return ( true );
     }
     
     /**
@@ -251,7 +241,7 @@ public class SimpleGeometryDataContainer implements VertexContainer
         this.coords = newNioFloatData( maxVertices, coordsSize, 0, reversed );
     }
     
-    private final void checkCoordsExistence( int coordsSize )
+    protected final void checkCoordsExistence( int coordsSize )
     {
         if ( coordsSize != this.coordsSize )
             throw( new IllegalArgumentException( "given coordinate has wrong size. Found " + coordsSize + ", expected " + this.coordsSize + "." ) );
@@ -276,6 +266,19 @@ public class SimpleGeometryDataContainer implements VertexContainer
     }
     
     /**
+     * Sets the coordinates of the vertex at the given index
+     * 
+     * @param vertexIndex The index of the vertex to modify
+     * @param point3f The new coordinates
+     */
+    public void setCoordinate( int vertexIndex, Tuple3f point3f )
+    {
+        checkCoordsExistence( 3 );
+        
+        coords.set( vertexIndex, coordsOffset / 4L, point3f );
+    }
+    
+    /**
      * Sets the coordinates of the vertices starting at the specified index.
      * 
      * @param vertexIndex The index of the first vertex to be modified.
@@ -291,6 +294,22 @@ public class SimpleGeometryDataContainer implements VertexContainer
         
         //assert ( floatArray.length % 3 == 0 );
         coords.set( vertexIndex, coordsSize, coordsOffset / 4L, floatArray, startIndex * coordsSize, length * coordsSize );
+    }
+    
+    /**
+     * Sets the coordinates of the vertices starting at the specified index
+     * 
+     * @param vertexIndex The index of the first vertex to be modified.
+     * @param point3fArray The new coordinates
+     * @param startIndex The index of the first coordinate in the given array
+     * @param length The number of coordinates to copy
+     */
+    public void setCoordinates( int vertexIndex, Tuple3f[] point3fArray, int startIndex, int length )
+    {
+        checkCoordsExistence( 3 );
+        
+        for ( int i = startIndex; i < startIndex + length; i++ )
+            coords.set( vertexIndex++, coordsOffset / 4L, point3fArray[ i ] );
     }
     
     /**
@@ -312,16 +331,25 @@ public class SimpleGeometryDataContainer implements VertexContainer
     }
     
     /**
-     * Sets the coordinates of the vertex at the given index
+     * Sets the coordinates of the vertices starting at the specified index.
      * 
-     * @param vertexIndex The index of the vertex to modify
-     * @param point3f The new coordinates
+     * @param vertexIndex The index of the first vertex to modify
+     * @param point3fArray The new coordinates.
      */
-    public void setCoordinate( int vertexIndex, Tuple3f point3f )
+    public void setCoordinates( int vertexIndex, Tuple3f[] point3fArray )
     {
         checkCoordsExistence( 3 );
         
-        coords.set( vertexIndex, coordsOffset / 4L, point3f );
+        for ( int i = 0; i < point3fArray.length; i++ )
+            coords.set( vertexIndex + i, coordsOffset / 4L, point3fArray[ i ] );
+    }
+    
+    public void setCoordinates( int vertexIndex, List<Tuple3f> point3fList )
+    {
+        checkCoordsExistence( 3 );
+        
+        for ( int i = 0; i < point3fList.size(); i++ )
+            coords.set( vertexIndex + i, coordsOffset / 4L, point3fList.get( i ) );
     }
     
     /**
@@ -339,45 +367,11 @@ public class SimpleGeometryDataContainer implements VertexContainer
         coords.set( vertexIndex, coordsOffset / 4L, x, y, z );
     }
     
-    /**
-     * Sets the coordinates of the vertices starting at the specified index.
-     * 
-     * @param vertexIndex The index of the first vertex to modify
-     * @param point3fArray The new coordinates.
-     */
-    public void setCoordinates( int vertexIndex, Tuple3f[] point3fArray )
+    public void getCoordinate( int vertexIndex, float[] floatArray )
     {
-        checkCoordsExistence( 3 );
+        checkCoordsExistence( coordsSize );
         
-        for ( int i = 0; i < point3fArray.length; i++ )
-            coords.set( vertexIndex + i, coordsOffset / 4L, point3fArray[ i ] );
-    }
-    
-    /**
-     * Sets the coordinates of the vertices starting at the specified index
-     * 
-     * @param vertexIndex The index of the first vertex to be modified.
-     * @param point3fArray The new coordinates
-     * @param startIndex The index of the first coordinate in the given array
-     * @param length The number of coordinates to copy
-     */
-    public void setCoordinates( int vertexIndex, Tuple3f[] point3fArray, int startIndex, int length )
-    {
-        checkCoordsExistence( 3 );
-        
-        for ( int i = startIndex; i < startIndex + length; i++ )
-        {
-            coords.set( vertexIndex, coordsOffset / 4L, point3fArray[ i ] );
-            vertexIndex++;
-        }
-    }
-    
-    public void setCoordinates( int vertexIndex, List<Tuple3f> point3fList )
-    {
-        checkCoordsExistence( 3 );
-        
-        for ( int i = 0; i < point3fList.size(); i++ )
-            coords.set( vertexIndex + i, coordsOffset / 4L, point3fList.get( i ) );
+        coords.get( vertexIndex, coordsSize, coordsOffset / 4L, floatArray, 0, coordsSize );
     }
     
     public <T extends Tuple3f> T getCoordinate( int index, T point )
@@ -389,19 +383,17 @@ public class SimpleGeometryDataContainer implements VertexContainer
         return ( point );
     }
     
-    public void getCoordinate( int vertexIndex, float[] floatArray )
+    /**
+     * {@inheritDoc}
+     */
+    public boolean getVertex( int i, Tuple3f pos )
     {
-        checkCoordsExistence( coordsSize );
+        if ( i >= getVertexCount() )
+            return ( false );
         
-        coords.get( vertexIndex, coordsSize, coordsOffset / 4L, floatArray, 0, coordsSize );
-    }
-    
-    public void getCoordinates( int vertexIndex, Tuple3f[] point3fArray )
-    {
-        checkCoordsExistence( 3 );
+        getCoordinate( i, pos );
         
-        for ( int i = point3fArray.length - 1; i > -1; i-- )
-            getCoordinate( ( i - vertexIndex ), point3fArray[ i ] );
+        return ( true );
     }
     
     public void getCoordinates( int vertexIndex, float[] floatArray )
@@ -413,6 +405,77 @@ public class SimpleGeometryDataContainer implements VertexContainer
         {
             coords.get( vertexIndex + i, coordsSize, coordsOffset / 4L, floatArray, i * coordsSize, coordsSize );
         }
+    }
+    
+    public void getCoordinates( int vertexIndex, Tuple3f[] point3fArray )
+    {
+        checkCoordsExistence( 3 );
+        
+        for ( int i = point3fArray.length - 1; i > -1; i-- )
+            coords.get( ( i - vertexIndex ), coordsOffset / 4L, point3fArray[ i ] );
+    }
+    
+    /**
+     * Applies the the n-th Triangle to the GeometryArray.
+     * This method must be overridden by concrete classes to fix the vertex-index (e.g. for an IndexedTriangleArray)
+     * 
+     * @param i0 the first triangle's vertex-index
+     * @param i1 the second triangle's vertex-index
+     * @param i2 the third triangle's vertex-index
+     * @param triangle
+     * 
+     * @return true, if the triangle could be applied
+     */
+    public boolean setTriangle( int i0, int i1, int i2, Triangle triangle )
+    {
+        if ( triangle.hasFeature( Vertex3f.COORDINATES ) )
+        {
+            // write triangle data
+            setCoordinate( i0, triangle.getVertexCoordA() );
+            setCoordinate( i1, triangle.getVertexCoordB() );
+            setCoordinate( i2, triangle.getVertexCoordC() );
+        }
+        
+        return ( true );
+    }
+    
+    /**
+     * Applies the the n-th Triangle to the GeometryArray.
+     * This method must be overridden by concrete classes to fix the vertex-index (e.g. for an IndexedTriangleArray)
+     * 
+     * @param triangle
+     * 
+     * @return true, if the triangle could be applied
+     */
+    public final boolean setTriangle( Triangle triangle )
+    {
+        return ( setTriangle( triangle.getVertexIndexA(), triangle.getVertexIndexB(), triangle.getVertexIndexC(), triangle ) );
+    }
+    
+    /**
+     * Retrieves the the n-th Triangle from the GeometryArray.
+     * This method must be overridden by concrete classes to fix the vertex-index (e.g. for an IndexedTriangleArray)
+     * 
+     * @param i0 the first triangle's vertex-index
+     * @param i1 the second triangle's vertex-index
+     * @param i2 the third triangle's vertex-index
+     * @param triangle
+     * 
+     * @return true, if the triangle could be retrieved
+     */
+    public boolean getTriangle( int i0, int i1, int i2, Triangle triangle )
+    {
+        //if ( this.hasFeature( SimpleGeometryDataContainer.COORDINATES ) && triangle.hasFeature( Vertex3f.COORDINATES ) )
+        {
+            // read triangle data
+            getVertex( i0, triangle.getVertexCoordA() );
+            getVertex( i1, triangle.getVertexCoordB() );
+            getVertex( i2, triangle.getVertexCoordC() );
+        }
+        
+        triangle.setVertexIndices( i0, i1, i2 );
+        
+        return ( true );
     }
     
     /**
@@ -502,69 +565,6 @@ public class SimpleGeometryDataContainer implements VertexContainer
     public void getStripCounts( int[] sCounts )
     {
         System.arraycopy( stripCounts, 0, sCounts, 0, stripCounts.length );
-    }
-    
-    /**
-     * Applies the the n-th Triangle to the GeometryArray.
-     * This method must be overridden by concrete classes to fix the vertex-index (e.g. for an IndexedTriangleArray)
-     * 
-     * @param i0 the first triangle's vertex-index
-     * @param i1 the second triangle's vertex-index
-     * @param i2 the third triangle's vertex-index
-     * @param triangle
-     * 
-     * @return true, if the triangle could be applied
-     */
-    public boolean setTriangle( int i0, int i1, int i2, Triangle triangle )
-    {
-        if ( triangle.hasFeature( Vertex3f.COORDINATES ) )
-        {
-            // write triangle data
-            setCoordinate( i0, triangle.getVertexCoordA() );
-            setCoordinate( i1, triangle.getVertexCoordB() );
-            setCoordinate( i2, triangle.getVertexCoordC() );
-        }
-        
-        return ( true );
-    }
-    
-    /**
-     * Applies the the n-th Triangle to the GeometryArray.
-     * This method must be overridden by concrete classes to fix the vertex-index (e.g. for an IndexedTriangleArray)
-     * 
-     * @param triangle
-     * 
-     * @return true, if the triangle could be applied
-     */
-    public final boolean setTriangle( Triangle triangle )
-    {
-        return ( setTriangle( triangle.getVertexIndexA(), triangle.getVertexIndexB(), triangle.getVertexIndexC(), triangle ) );
-    }
-    
-    /**
-     * Retrieves the the n-th Triangle from the GeometryArray.
-     * This method must be overridden by concrete classes to fix the vertex-index (e.g. for an IndexedTriangleArray)
-     * 
-     * @param i0 the first triangle's vertex-index
-     * @param i1 the second triangle's vertex-index
-     * @param i2 the third triangle's vertex-index
-     * @param triangle
-     * 
-     * @return true, if the triangle could be retrieved
-     */
-    public boolean getTriangle( int i0, int i1, int i2, Triangle triangle )
-    {
-        //if ( this.hasFeature( SimpleGeometryDataContainer.COORDINATES ) && triangle.hasFeature( Vertex3f.COORDINATES ) )
-        {
-            // read triangle data
-            getVertex( i0, triangle.getVertexCoordA() );
-            getVertex( i1, triangle.getVertexCoordB() );
-            getVertex( i2, triangle.getVertexCoordC() );
-        }
-        
-        triangle.setVertexIndices( i0, i1, i2 );
-        
-        return ( true );
     }
     
     public float[] getCoordRefFloat()
