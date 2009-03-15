@@ -71,7 +71,4 @@
     nbproject/build-impl.xml file. 
 
     -->
-    <target name="-post-jar" if="build.jagatoo.copytoxith">
-        <copy file="${dist.jar}" toDir="../xith3d/third-party"/>
-    </target>
 </project>
