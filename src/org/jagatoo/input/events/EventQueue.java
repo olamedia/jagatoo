@@ -30,6 +30,7 @@
 package org.jagatoo.input.events;
 
 import org.jagatoo.input.InputSystem;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * This is a simple synchronized event queue for JAGaTOO input events.
@@ -131,22 +132,65 @@ public class EventQueue
             if ( !hasNullEvents || ( numEvents == 0 ) )
                 return;
             
-            int j = 0;
+            int offset = 0;
             for ( int i = 0; i < numEvents; i++ )
             {
-                if ( ( events[ i ] != null ) && ( i != j ) )
-                {
-                    events[ j++ ] = events[ i ];
-                }
+                if ( events[ i ] == null )
+                    offset++;
+                else if ( offset != 0 )
+                    events[ i - offset ] = events[ i ];
             }
             
-            for ( int i = j; i < numEvents; i++ )
+            for ( int i = numEvents - offset; i < numEvents; i++ )
             {
                 events[ i ] = null;
             }
             
-            numEvents = j;
+            numEvents = numEvents - offset;
             hasNullEvents = false;
+        }
+    }
+    
+    public void cleanup( InputSourceWindow sourceWindow )
+    {
+        synchronized ( LOCK )
+        {
+            if ( sourceWindow == null )
+            {
+                 for ( int i = 0; i < events.length; i++ )
+                 {
+                     events[ i ] = null;
+                     numEvents = 0;
+                 }
+            }
+            else
+            {
+                for ( int i = 0; i < events.length; i++ )
+                {
+                    if ( events[ i ] != null )
+                    {
+                        switch ( events[ i ].getType() )
+                        {
+                            case KEYBOARD_EVENT:
+                                if ( ( (KeyboardEvent)events[ i ] ).getKeyboard().getSourceWindow() == sourceWindow )
+                                    events[ i ] = null;
+                                break;
+                                
+                            case MOUSE_EVENT:
+                                if ( ( (MouseEvent)events[ i ] ).getMouse().getSourceWindow() == sourceWindow )
+                                    events[ i ] = null;
+                                break;
+                                
+                            case CONTROLLER_EVENT:
+                                if ( ( (ControllerEvent)events[ i ] ).getController().getSourceWindow() == sourceWindow )
+                                    events[ i ] = null;
+                                break;
+                        }
+                    }
+                }
+                
+                strip();
+            }
         }
     }
 }

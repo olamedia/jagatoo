@@ -92,7 +92,7 @@ public class LWJGLJInputInputDeviceFactory extends InputDeviceFactory
      * {@inheritDoc}
      */
     @Override
-    public void destroy( InputSystem inputSystem ) throws InputSystemException
+    protected void destroyImpl( InputSystem inputSystem ) throws InputSystemException
     {
         lwjglFactory.destroy( inputSystem );
         jInputFactory.destroy( inputSystem );

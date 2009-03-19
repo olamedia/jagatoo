@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseWheel;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * A pool for MouseEvent instances.
@@ -52,15 +53,15 @@ public final class MouseEventPool
     private static int n_pressed = 0;
     private static int n_released = 0;
     private static int n_clicked = 0;
-    private static int n_stopped = 0;
     private static int n_wheel = 0;
+    private static int n_stopped = 0;
     
     private static final Object LOCK_moved = new Object();
     private static final Object LOCK_pressed = new Object();
     private static final Object LOCK_released = new Object();
     private static final Object LOCK_clicked = new Object();
-    private static final Object LOCK_stopped = new Object();
     private static final Object LOCK_wheel = new Object();
+    private static final Object LOCK_stopped = new Object();
     
     public static MouseMovedEvent allocMoved()
     {
@@ -287,6 +288,122 @@ public final class MouseEventPool
         {
             instances_stopped.add( e );
             n_stopped++;
+        }
+    }
+    
+    public static void cleanup( InputSourceWindow sourceWindow )
+    {
+        if ( sourceWindow == null )
+        {
+            synchronized ( LOCK_moved )
+            {
+                instances_moved.clear();
+                n_moved = 0;
+            }
+            
+            synchronized ( LOCK_pressed )
+            {
+                instances_pressed.clear();
+                n_pressed = 0;
+            }
+            
+            synchronized ( LOCK_released )
+            {
+                instances_released.clear();
+                n_released = 0;
+            }
+            
+            synchronized ( LOCK_clicked )
+            {
+                instances_clicked.clear();
+                n_clicked = 0;
+            }
+            
+            synchronized ( LOCK_wheel )
+            {
+                instances_wheel.clear();
+                n_wheel = 0;
+            }
+            
+            synchronized ( LOCK_stopped )
+            {
+                instances_stopped.clear();
+                n_stopped = 0;
+            }
+        }
+        else
+        {
+            synchronized ( LOCK_moved )
+            {
+                for ( int i = instances_moved.size() - 1; i >= 0; i-- )
+                {
+                    if ( instances_moved.get( i ).getMouse().getSourceWindow() == sourceWindow )
+                    {
+                        instances_moved.remove( i );
+                        n_moved--;
+                    }
+                }
+            }
+            
+            synchronized ( LOCK_pressed )
+            {
+                for ( int i = instances_pressed.size() - 1; i >= 0; i-- )
+                {
+                    if ( instances_pressed.get( i ).getMouse().getSourceWindow() == sourceWindow )
+                    {
+                        instances_pressed.remove( i );
+                        n_pressed--;
+                    }
+                }
+            }
+            
+            synchronized ( LOCK_released )
+            {
+                for ( int i = instances_released.size() - 1; i >= 0; i-- )
+                {
+                    if ( instances_released.get( i ).getMouse().getSourceWindow() == sourceWindow )
+                    {
+                        instances_released.remove( i );
+                        n_released--;
+                    }
+                }
+            }
+            
+            synchronized ( LOCK_clicked )
+            {
+                for ( int i = instances_clicked.size() - 1; i >= 0; i-- )
+                {
+                    if ( instances_clicked.get( i ).getMouse().getSourceWindow() == sourceWindow )
+                    {
+                        instances_clicked.remove( i );
+                        n_clicked--;
+                    }
+                }
+            }
+            
+            synchronized ( LOCK_wheel )
+            {
+                for ( int i = instances_wheel.size() - 1; i >= 0; i-- )
+                {
+                    if ( instances_wheel.get( i ).getMouse().getSourceWindow() == sourceWindow )
+                    {
+                        instances_wheel.remove( i );
+                        n_wheel--;
+                    }
+                }
+            }
+            
+            synchronized ( LOCK_stopped )
+            {
+                for ( int i = instances_stopped.size() - 1; i >= 0; i-- )
+                {
+                    if ( instances_stopped.get( i ).getMouse().getSourceWindow() == sourceWindow )
+                    {
+                        instances_stopped.remove( i );
+                        n_stopped--;
+                    }
+                }
+            }
         }
     }
     

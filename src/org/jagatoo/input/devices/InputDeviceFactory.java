@@ -34,7 +34,10 @@ import java.util.Comparator;
 
 import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
+import org.jagatoo.input.events.ControllerEventPool;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.events.KeyboardEventPool;
+import org.jagatoo.input.events.MouseEventPool;
 import org.jagatoo.input.render.InputSourceWindow;
 
 /**
@@ -338,6 +341,8 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
         return( getControllers( false ) );
     }
     
+    protected abstract void destroyImpl( InputSystem inputSystem ) throws InputSystemException;
+    
     /**
      * This method is called by the InputSystem when it gets destroyed.
      * 
@@ -345,7 +350,16 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      * 
      * @throws InputSystemException
      */
-    public abstract void destroy( InputSystem inputSystem ) throws InputSystemException;
+    public final void destroy( InputSystem inputSystem ) throws InputSystemException
+    {
+        destroyImpl( inputSystem );
+        
+        KeyboardEventPool.cleanup( sourceWindow );
+        MouseEventPool.cleanup( sourceWindow );
+        ControllerEventPool.cleanup( sourceWindow );
+        
+        eventQueue.cleanup( sourceWindow );
+    }
     
     public InputDeviceFactory( InputDeviceFactory masterFactory, boolean useStaticArrays, InputSourceWindow sourceWindow, EventQueue eventQueue )
     {

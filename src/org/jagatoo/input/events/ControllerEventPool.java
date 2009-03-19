@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.components.ControllerAxis;
 import org.jagatoo.input.devices.components.ControllerButton;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * A pool for ControllerEvent instances.
@@ -164,6 +165,68 @@ public final class ControllerEventPool
         {
             instances_released.add( e );
             n_released++;
+        }
+    }
+    
+    public static void cleanup( InputSourceWindow sourceWindow )
+    {
+        if ( sourceWindow == null )
+        {
+            synchronized ( LOCK_axis )
+            {
+                instances_axis.clear();
+                n_axis = 0;
+            }
+            
+            synchronized ( LOCK_pressed )
+            {
+                instances_pressed.clear();
+                n_pressed = 0;
+            }
+            
+            synchronized ( LOCK_released )
+            {
+                instances_released.clear();
+                n_released = 0;
+            }
+        }
+        else
+        {
+            synchronized ( LOCK_axis )
+            {
+                for ( int i = instances_axis.size() - 1; i >= 0; i-- )
+                {
+                    if ( instances_axis.get( i ).getController().getSourceWindow() == sourceWindow )
+                    {
+                        instances_axis.remove( i );
+                        n_axis--;
+                    }
+                }
+            }
+            
+            synchronized ( LOCK_pressed )
+            {
+                for ( int i = instances_pressed.size() - 1; i >= 0; i-- )
+                {
+                    if ( instances_pressed.get( i ).getController().getSourceWindow() == sourceWindow )
+                    {
+                        instances_pressed.remove( i );
+                        n_pressed--;
+                    }
+                }
+            }
+            
+            synchronized ( LOCK_released )
+            {
+                for ( int i = instances_released.size() - 1; i >= 0; i-- )
+                {
+                    if ( instances_released.get( i ).getController().getSourceWindow() == sourceWindow )
+                    {
+                        instances_released.remove( i );
+                        n_released--;
+                    }
+                }
+            }
         }
     }
     

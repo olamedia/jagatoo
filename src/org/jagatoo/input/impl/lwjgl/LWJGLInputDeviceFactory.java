@@ -180,7 +180,7 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
      * {@inheritDoc}
      */
     @Override
-    public void destroy( InputSystem inputSystem ) throws InputSystemException
+    protected void destroyImpl( InputSystem inputSystem ) throws InputSystemException
     {
         try
         {

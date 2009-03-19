@@ -33,6 +33,7 @@ import java.util.ArrayList;
 
 import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.components.Key;
+import org.jagatoo.input.render.InputSourceWindow;
 
 /**
  * A pool for KeyboardEvent instances.
@@ -163,6 +164,68 @@ public final class KeyboardEventPool
         {
             instances_typed.add( e );
             n_typed++;
+        }
+    }
+    
+    public static void cleanup( InputSourceWindow sourceWindow )
+    {
+        if ( sourceWindow == null )
+        {
+            synchronized ( LOCK_pressed )
+            {
+                instances_pressed.clear();
+                n_pressed = 0;
+            }
+            
+            synchronized ( LOCK_released )
+            {
+                instances_released.clear();
+                n_released = 0;
+            }
+            
+            synchronized ( LOCK_typed )
+            {
+                instances_typed.clear();
+                n_typed = 0;
+            }
+        }
+        else
+        {
+            synchronized ( LOCK_pressed )
+            {
+                for ( int i = instances_pressed.size() - 1; i >= 0; i-- )
+                {
+                    if ( instances_pressed.get( i ).getKeyboard().getSourceWindow() == sourceWindow )
+                    {
+                        instances_pressed.remove( i );
+                        n_pressed--;
+                    }
+                }
+            }
+            
+            synchronized ( LOCK_released )
+            {
+                for ( int i = instances_released.size() - 1; i >= 0; i-- )
+                {
+                    if ( instances_released.get( i ).getKeyboard().getSourceWindow() == sourceWindow )
+                    {
+                        instances_released.remove( i );
+                        n_released--;
+                    }
+                }
+            }
+            
+            synchronized ( LOCK_typed )
+            {
+                for ( int i = instances_typed.size() - 1; i >= 0; i-- )
+                {
+                    if ( instances_typed.get( i ).getKeyboard().getSourceWindow() == sourceWindow )
+                    {
+                        instances_typed.remove( i );
+                        n_typed--;
+                    }
+                }
+            }
         }
     }
     

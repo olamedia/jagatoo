@@ -41,7 +41,10 @@ import org.jagatoo.input.devices.KeyboardFactory;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.devices.MouseFactory;
 import org.jagatoo.input.devices.components.DeviceComponent;
+import org.jagatoo.input.events.ControllerEventPool;
 import org.jagatoo.input.events.EventQueue;
+import org.jagatoo.input.events.KeyboardEventPool;
+import org.jagatoo.input.events.MouseEventPool;
 import org.jagatoo.input.handlers.InputHandler;
 import org.jagatoo.input.listeners.InputListener;
 import org.jagatoo.input.listeners.InputStateListener;
@@ -504,6 +507,9 @@ public class InputSystem
         
         this.keyboards = keyboards2;
         
+        KeyboardEventPool.cleanup( keyboard.getSourceWindow() );
+        eventQueue.cleanup( keyboard.getSourceWindow() );
+        
         keyboard.onDeviceUnregistered( this );
     }
     
@@ -732,6 +738,9 @@ public class InputSystem
         mouse.destroy();
         
         this.mouses = mouses2;
+        
+        MouseEventPool.cleanup( mouse.getSourceWindow() );
+        eventQueue.cleanup( mouse.getSourceWindow() );
         
         mouse.onDeviceUnregistered( this );
     }
@@ -967,6 +976,9 @@ public class InputSystem
         controller.destroy();
         
         this.controllers = controllers2;
+        
+        ControllerEventPool.cleanup( controller.getSourceWindow() );
+        eventQueue.cleanup( controller.getSourceWindow() );
         
         controller.onDeviceUnregistered( this );
     }
@@ -1222,13 +1234,24 @@ public class InputSystem
      */
     public void destroy( KeyboardFactory deviceFactory ) throws InputSystemException
     {
+        InputSourceWindow sourceWindow = null;
+        
         for ( int i = keyboards.length - 1; i >= 0; i-- )
         {
             if ( keyboards[ i ].getSourceFactory() == deviceFactory )
+            {
+                sourceWindow = keyboards[ i ].getSourceWindow();
                 deregisterKeyboard( keyboards[ i ] );
+            }
         }
         
         deviceFactory.destroy( this );
+        
+        if ( sourceWindow != null )
+        {
+            KeyboardEventPool.cleanup( sourceWindow );
+            eventQueue.cleanup( sourceWindow );
+        }
     }
     
     /**
@@ -1240,13 +1263,24 @@ public class InputSystem
      */
     public void destroy( MouseFactory deviceFactory ) throws InputSystemException
     {
+        InputSourceWindow sourceWindow = null;
+        
         for ( int i = mouses.length - 1; i >= 0; i-- )
         {
             if ( mouses[ i ].getSourceFactory() == deviceFactory )
+            {
+                sourceWindow = mouses[ i ].getSourceWindow();
                 deregisterMouse( mouses[ i ] );
+            }
         }
         
         deviceFactory.destroy( this );
+        
+        if ( sourceWindow != null )
+        {
+            MouseEventPool.cleanup( sourceWindow );
+            eventQueue.cleanup( sourceWindow );
+        }
     }
     
     /**
@@ -1258,13 +1292,24 @@ public class InputSystem
      */
     public void destroy( ControllerFactory deviceFactory ) throws InputSystemException
     {
+        InputSourceWindow sourceWindow = null;
+        
         for ( int i = controllers.length - 1; i >= 0; i-- )
         {
             if ( controllers[ i ].getSourceFactory() == deviceFactory )
+            {
+                sourceWindow = controllers[ i ].getSourceWindow();
                 deregisterController( controllers[ i ] );
+            }
         }
         
         deviceFactory.destroy( this );
+        
+        if ( sourceWindow != null )
+        {
+            MouseEventPool.cleanup( sourceWindow );
+            eventQueue.cleanup( sourceWindow );
+        }
     }
     
     /**
@@ -1289,7 +1334,7 @@ public class InputSystem
      * 
      * @throws InputSystemException
      */
-    public void destroy( InputSourceWindow sourceWindow ) throws InputSystemException
+    public final void destroy( InputSourceWindow sourceWindow ) throws InputSystemException
     {
         destroy( sourceWindow.getInputDeviceFactory( this ) );
     }
