@@ -246,6 +246,9 @@ public class TextureImageFormatLoaderImageIOImageInputStream implements TextureI
     {
         SharedBufferedImage img = loadFromStream( in, acceptAlpha );
         
+        if ( img == null )
+            return ( null );
+        
         AbstractTextureImage ti = createTextureImage( img, acceptAlpha, flipVertically, allowStreching, texFactory );
         
         return( ti );
