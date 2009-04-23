@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -61,9 +61,9 @@ public class JInputMouse extends Mouse
         DeviceComponent comp = compMap.get( jinputButton );
         
         if ( ( comp == null ) || ( !( comp instanceof MouseButton ) ) )
-            return( null );
+            return ( null );
         
-        return( (MouseButton)comp );
+        return ( (MouseButton)comp );
     }
     
     private final net.java.games.input.Mouse mouse;
@@ -90,15 +90,15 @@ public class JInputMouse extends Mouse
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t;
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t;
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t;
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -117,7 +117,7 @@ public class JInputMouse extends Mouse
         }
         catch ( Throwable t )
         {
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
         
         setPosition( centerX, centerY );
@@ -241,15 +241,15 @@ public class JInputMouse extends Mouse
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t;
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t;
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t;
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -269,7 +269,7 @@ public class JInputMouse extends Mouse
     public void collectEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
         if ( eventQueue == null )
-            throw( new InputSystemException( "EventQueue must not be null here!" ) );
+            throw new InputSystemException( "EventQueue must not be null here!" );
         
         final boolean acceptEvents = ( isEnabled() && getSourceWindow().receivesInputEvents() );
         
@@ -309,15 +309,15 @@ public class JInputMouse extends Mouse
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t;
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t;
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t;
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -346,7 +346,7 @@ public class JInputMouse extends Mouse
         }
         catch ( Throwable t )
         {
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t ) );
         }
         */
     }
@@ -374,7 +374,7 @@ public class JInputMouse extends Mouse
             }
         }
         
-        return( compMap.size() - oldCount );
+        return ( compMap.size() - oldCount );
     }
     
     private static boolean init_hasWheel( net.java.games.input.Mouse mouse ) throws InputSystemException
@@ -392,7 +392,7 @@ public class JInputMouse extends Mouse
             }
         }
         
-        return( hasWheel );
+        return ( hasWheel );
     }
     
     protected JInputMouse( MouseFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue, net.java.games.input.Mouse mouse ) throws InputSystemException

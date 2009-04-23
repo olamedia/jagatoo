@@ -108,12 +108,12 @@ public abstract class ChunkProcessor
     
     public static final ChunkProcessor getChunkProcessor( int id )
     {
-        return( chunkProcessors.get( id ) );
+        return ( chunkProcessors.get( id ) );
     }
     
     public static final ChunkProcessor getChunkProcessor( TDSChunkType chunkType )
     {
-        return( chunkProcessors.get( chunkType.getID() ) );
+        return ( chunkProcessors.get( chunkType.getID() ) );
     }
     
     public abstract void process( TDSFile file, AppearanceFactory appFactory, GeometryFactory geomFactory, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, ModelContext context, int length ) throws IOException;

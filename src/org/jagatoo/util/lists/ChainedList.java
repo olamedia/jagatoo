@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -76,7 +76,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      */
     public int size()
     {
-        return( size );
+        return ( size );
     }
     
     /**
@@ -84,7 +84,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      */
     public boolean isEmpty()
     {
-        return( size == 0 );
+        return ( size == 0 );
     }
     
     /**
@@ -104,7 +104,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      */
     public E getTail()
     {
-        return( tail );
+        return ( tail );
     }
     
     /**
@@ -115,7 +115,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      */
     public E removeHead()
     {
-        return( remove( 0 ) );
+        return ( remove( 0 ) );
     }
     
     /**
@@ -131,7 +131,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         if ( tail != null )
             remove( tail );
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -176,7 +176,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     {
         append( o );
         
-        return( true );
+        return ( true );
     }
     
     /**
@@ -203,7 +203,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
             append( it.next() );
         }
         
-        return( !c.isEmpty() );
+        return ( !c.isEmpty() );
     }
     
     /**
@@ -213,12 +213,12 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     {
         if ( c.isEmpty() )
         {
-            return( false );
+            return ( false );
         }
         
         if ( index >= size )
         {
-            return( addAll( c ) );
+            return ( addAll( c ) );
         }
         
         final E elem = get( index );
@@ -237,7 +237,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         elem.setPrevious( lastAdded );
         tail = oldTail;
         
-        return( true );
+        return ( true );
     }
     
     /**
@@ -276,7 +276,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         
         size--;
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -293,14 +293,14 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
             {
                 remove( elem );
                 
-                return( elem );
+                return ( elem );
             }
             
             elem = elem.getNext();
             i++;
         }
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -322,7 +322,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
             result = remove( items[ i ] ) || result;
         }
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -352,7 +352,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
             }
         }
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -382,10 +382,10 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
             if ( tail == old )
                 tail = element;
             
-            return( old );
+            return ( old );
         }
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -399,13 +399,13 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         while ( elem != null )
         {
             if ( i == index )
-                return( elem );
+                return ( elem );
             
             elem = elem.getNext();
             i++;
         }
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -419,13 +419,13 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         while ( elem != null )
         {
             if ( elem.equals( o ) )
-                return( i );
+                return ( i );
             
             elem = elem.getNext();
             i++;
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     /**
@@ -439,13 +439,13 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         while ( elem != null )
         {
             if ( elem.equals( o ) )
-                return( i );
+                return ( i );
             
             elem = elem.getPrevious();
             i--;
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     /**
@@ -468,12 +468,12 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         while ( elem != null )
         {
             if ( elem.equals( o ) )
-                return( true );
+                return ( true );
             
             elem = elem.getNext();
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -489,13 +489,13 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
             while ( elem != null )
             {
                 if ( elem.equals( o ) )
-                    return( true );
+                    return ( true );
                 
                 elem = elem.getNext();
             }
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -503,7 +503,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      */
     public List< E > subList( int fromIndex, int toIndex )
     {
-        throw( new UnsupportedOperationException( "subList() is not yet implemented" ) );
+        throw new UnsupportedOperationException( "subList() is not yet implemented" );
     }
     
     /**
@@ -512,9 +512,9 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     public E peek()
     {
         if ( size == 0 )
-            return( null );
+            return ( null );
         
-        return( getHead() );
+        return ( getHead() );
     }
     
     /**
@@ -522,7 +522,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      */
     public E element()
     {
-        return( getHead() );
+        return ( getHead() );
     }
     
     /**
@@ -531,9 +531,9 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     public E poll()
     {
         if ( size == 0 )
-            return( null );
+            return ( null );
         
-        return( removeHead() );
+        return ( removeHead() );
     }
     
     /**
@@ -541,7 +541,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      */
     public E remove()
     {
-        return( removeHead() );
+        return ( removeHead() );
     }
     
     /**
@@ -549,7 +549,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      */
     public boolean offer( E o )
     {
-        return( add( o ) );
+        return ( add( o ) );
     }
     
     private class ListItr implements ListIterator< E >
@@ -561,7 +561,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         ListItr( int index )
         {
             if ( ( index < 0 ) || ( index > size ) )
-                throw( new IndexOutOfBoundsException( "Index: " + index + ", Size: " + size ) );
+                throw new IndexOutOfBoundsException( "Index: " + index + ", Size: " + size );
             
             if ( index < ( size >> 1 ) )
             {
@@ -579,45 +579,45 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         
         public boolean hasNext()
         {
-            return( nextIndex != size );
+            return ( nextIndex != size );
         }
         
         public E next()
         {
             //checkForComodification();
             if ( nextIndex == size )
-                throw( new NoSuchElementException() );
+                throw new NoSuchElementException();
             
             lastReturned = next;
             next = next.getNext();
             nextIndex++;
-            return( lastReturned );
+            return ( lastReturned );
         }
         
         public boolean hasPrevious()
         {
-            return( nextIndex != 0 );
+            return ( nextIndex != 0 );
         }
         
         public E previous()
         {
             if ( nextIndex == 0 )
-                throw( new NoSuchElementException() );
+                throw new NoSuchElementException();
             
             lastReturned = next = next.getPrevious();
             nextIndex--;
             //checkForComodification();
-            return( lastReturned );
+            return ( lastReturned );
         }
         
         public int nextIndex()
         {
-            return( nextIndex );
+            return ( nextIndex );
         }
         
         public int previousIndex()
         {
-            return( nextIndex - 1 );
+            return ( nextIndex - 1 );
         }
         
         public void remove()
@@ -630,7 +630,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
             }
             catch ( NoSuchElementException e )
             {
-                throw( new IllegalStateException() );
+                throw new IllegalStateException();
             }
             if ( next == lastReturned )
                 next = lastNext;
@@ -643,7 +643,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         public void set( E o )
         {
             if ( lastReturned == head )
-                throw( new IllegalStateException() );
+                throw new IllegalStateException();
             //checkForComodification();
             lastReturned = o;
         }
@@ -661,7 +661,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         final void checkForComodification()
         {
             if ( modCount != expectedModCount )
-                throw( new ConcurrentModificationException() );
+                throw new ConcurrentModificationException() );
         }
         */
     }
@@ -671,7 +671,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      */
     public ListIterator< E > listIterator( int index )
     {
-        return( new ListItr( index ) );
+        return ( new ListItr( index ) );
     }
     
     /**
@@ -679,7 +679,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      */
     public ListIterator< E > listIterator()
     {
-        return( listIterator( 0 ) );
+        return ( listIterator( 0 ) );
     }
     
     /**
@@ -687,7 +687,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      */
     public Iterator< E > iterator()
     {
-        return( listIterator() );
+        return ( listIterator() );
     }
     
     private void addBefore( E o, E e )
@@ -720,14 +720,14 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         }
         catch ( CloneNotSupportedException e )
         {
-            throw( new InternalError() );
+            throw new InternalError();
         }
         
         clone.head = this.head;
         clone.tail = this.tail;
         clone.size = this.size;
         
-        return( clone );
+        return ( clone );
     }
     
     /**
@@ -752,7 +752,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
             i++;
         }
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -798,6 +798,6 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         if ( a.length > size )
             a[ size ] = null;
         
-        return( a );
+        return ( a );
     }
 }

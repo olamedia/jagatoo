@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -56,7 +56,7 @@ public class BufferedImageFactory
         WritableRaster newRaster = Raster.createInterleavedRaster( DataBuffer.TYPE_BYTE, width, height, width * 3, 3, bandOffset, null );
         BufferedImage newImage = new BufferedImage( cm, newRaster, false, null );
         
-        return( newImage );
+        return ( newImage );
     }
     
     public static BufferedImage createCustomRGBA( int width, int height )
@@ -69,16 +69,16 @@ public class BufferedImageFactory
         WritableRaster newRaster = Raster.createInterleavedRaster( DataBuffer.TYPE_BYTE, width, height, width * 4, 4, bandOffset, null );
         BufferedImage newImage = new BufferedImage( cm, newRaster, false, null );
         
-        return( newImage );
+        return ( newImage );
     }
     
     public static SharedBufferedImage createSharedBufferedImage( int width, int height, int pixelSize, boolean hasAlpha, int[] pixelOffsets, byte[] data )
     {
-        return( SharedBufferedImage.create( width, height, pixelSize, hasAlpha, pixelOffsets, data ) );
+        return ( SharedBufferedImage.create( width, height, pixelSize, hasAlpha, pixelOffsets, data ) );
     }
     
     public static final SharedBufferedImage createSharedBufferedImage( int width, int height, int pixelSize, int[] pixelOffsets, byte[] data )
     {
-        return( SharedBufferedImage.create( width, height, pixelSize, pixelOffsets, data ) );
+        return ( SharedBufferedImage.create( width, height, pixelSize, pixelOffsets, data ) );
     }
 }

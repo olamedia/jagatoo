@@ -279,7 +279,7 @@ public class TextureImageFormatLoaderSGI implements TextureImageFormatLoader
         bb.position( 0 );
         bb.limit( byteOffset0 + width * height * dstBytesPerPixel );
         
-        return( image );
+        return ( image );
     }
     
     public TextureImageFormatLoaderSGI()

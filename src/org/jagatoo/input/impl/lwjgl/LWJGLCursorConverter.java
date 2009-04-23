@@ -93,7 +93,7 @@ public class LWJGLCursorConverter
         }
         catch ( LWJGLException e )
         {
-            throw( new Error( e ) );
+            throw new Error( e );
         }
     }
 }

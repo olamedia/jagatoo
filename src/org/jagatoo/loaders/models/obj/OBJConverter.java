@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -170,7 +170,7 @@ public class OBJConverter
         
         NamedObject shape = nodeFactory.createShape( name, geom, app, BoundsType.SPHERE );
         
-        return( shape );
+        return ( shape );
     }
     
     private static void build( HashMap<String, NamedObject> appMap, OBJGroup objGroup, NamedObject parentGroup, GeometryFactory geomFactory, NodeFactory nodeFactory, SpecialItemsHandler siHandler )
@@ -213,6 +213,19 @@ public class OBJConverter
         }
     }
     
+    /**
+     * 
+     * @param prototype
+     * @param baseURL
+     * @param appFactory
+     * @param skin
+     * @param geomFactory
+     * @param convertZup2Yup
+     * @param scale
+     * @param nodeFactory
+     * @param siHandler
+     * @param rootGroup
+     */
     public static void convert( OBJModelPrototype prototype, URL baseURL, AppearanceFactory appFactory, String skin, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, SpecialItemsHandler siHandler, NamedObject rootGroup )
     {
         HashMap<String, NamedObject> appMap = new HashMap<String, NamedObject>();

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,7 +43,7 @@ public final class JavaTimer implements TimerInterface
      */
     public final long getResolution()
     {
-        return( 1000000000L );
+        return ( 1000000000L );
     }
     
     /**
@@ -51,7 +51,7 @@ public final class JavaTimer implements TimerInterface
      */
     public final long getTime()
     {
-        return( System.nanoTime() );
+        return ( System.nanoTime() );
     }
     
     /**
@@ -59,7 +59,7 @@ public final class JavaTimer implements TimerInterface
      */
     public final long getMilliseconds()
     {
-        return( getTime() / (getResolution() / 1000L) );
+        return ( getTime() / (getResolution() / 1000L) );
     }
     
     /**
@@ -67,7 +67,7 @@ public final class JavaTimer implements TimerInterface
      */
     public final long getMicroseconds()
     {
-        return( getTime() / 1000L );
+        return ( getTime() / 1000L );
     }
     
     /**
@@ -75,6 +75,6 @@ public final class JavaTimer implements TimerInterface
      */
     public final long getNanoseconds()
     {
-        return( getTime() );
+        return ( getTime() );
     }
 }

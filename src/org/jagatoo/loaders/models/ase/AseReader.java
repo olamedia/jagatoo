@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -120,7 +120,7 @@ public class AseReader //extends LineNumberReader
     
     public int getLastLineNumber()
     {
-        return( lineNo );
+        return ( lineNo );
     }
     
     /**
@@ -148,19 +148,17 @@ public class AseReader //extends LineNumberReader
                 }
                 else if ( wordBuff.length() > 0 )
                 {
-                    return( wordBuff.toString() );
+                    return ( wordBuff.toString() );
                 }
             }
             else if ( c == '"' )
             {
                 if ( ( wordBuff.length() > 0 ) || ( inString ) )
                 {
-                    return( wordBuff.toString() );
+                    return ( wordBuff.toString() );
                 }
-                else
-                {
-                    inString = true;
-                }
+                
+                inString = true;
             }
             else
             {
@@ -169,13 +167,9 @@ public class AseReader //extends LineNumberReader
         }
         
         if ( wordBuff.length() == 0 )
-        {
-            return( null );
-        }
-        else
-        {
-            return( wordBuff.toString() );
-        }
+            return ( null );
+        
+        return ( wordBuff.toString() );
     }
     
     /**
@@ -206,7 +200,7 @@ public class AseReader //extends LineNumberReader
             blockEnd = ( word.indexOf( "}" ) >= 0 );
         }
         
-        return( afLine );
+        return ( afLine );
     }
     
     /**
@@ -226,18 +220,18 @@ public class AseReader //extends LineNumberReader
                 
                 if ( line == null )
                 {
-                    return( null );
+                    return ( null );
                 }
                 
                 if ( line.length() > 0 )
                     break;
             }
             
-            return( parseLine( line ) );
+            return ( parseLine( line ) );
         }
         catch ( IOException e )
         {
-            return( null );
+            return ( null );
         }
     }
     
@@ -246,6 +240,22 @@ public class AseReader //extends LineNumberReader
         lnReader.close();
     }
     
+    /**
+     * 
+     * @param in
+     * @param baseURL
+     * @param appFactory
+     * @param geomFactory
+     * @param convertZup2Yup
+     * @param scale
+     * @param nodeFactory
+     * @param animFactory
+     * @param siHandler
+     * @param rootGroup
+     * @throws IOException
+     * @throws IncorrectFormatException
+     * @throws ParsingException
+     */
     public static final void load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
     {
         AseReader aseReader = new AseReader( new BufferedReader( new InputStreamReader( in ) ) );

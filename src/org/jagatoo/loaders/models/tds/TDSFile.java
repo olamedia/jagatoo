@@ -78,53 +78,53 @@ public class TDSFile
     
     public final URL getBaseURL()
     {
-        return( baseURL );
+        return ( baseURL );
     }
     
     public final boolean convertZup2Yup()
     {
-        return( convertZup2Yup );
+        return ( convertZup2Yup );
     }
     
     public final ModelContext getContext()
     {
-        return( context );
+        return ( context );
     }
     
     public final byte readByte() throws IOException
     {
-        return( din.readByte() );
+        return ( din.readByte() );
     }
     
     public final short readUnsignedByte() throws IOException
     {
-        return( (short)din.readUnsignedByte() );
+        return ( (short)din.readUnsignedByte() );
     }
     
     public final int readUnsignedShort() throws IOException
     {
         int num = din.readUnsignedShort();
         
-        return( ( ( num << 8 ) & 0xFF00 ) | ( ( num >> 8 ) & 0x00FF ) );
+        return ( ( ( num << 8 ) & 0xFF00 ) | ( ( num >> 8 ) & 0x00FF ) );
     }
     
     public final int readInt() throws IOException
     {
         int num = din.readInt();
         
-        return( ( ( num << 24 ) & 0xFF000000 ) | ( ( num << 8 ) & 0x00FF0000 ) | ( ( num >> 8 ) & 0x0000FF00 ) | ( ( num >> 24 ) & 0x000000FF ) );
+        return ( ( ( num << 24 ) & 0xFF000000 ) | ( ( num << 8 ) & 0x00FF0000 ) | ( ( num >> 8 ) & 0x0000FF00 ) | ( ( num >> 24 ) & 0x000000FF ) );
     }
     
     public final int readUnsignedInt() throws IOException
     {
         long uint = readInt() & 0xFFFFFFFF;
         
-        return( (int)uint );
+        return ( (int)uint );
     }
     
     public final float readFloat() throws IOException
     {
-        return( Float.intBitsToFloat( readInt() ) );
+        return ( Float.intBitsToFloat( readInt() ) );
     }
     
     public final void skipBytes( int bytesToSkip ) throws IOException
@@ -142,7 +142,7 @@ public class TDSFile
     
     public final boolean hiddenObject( String name )
     {
-        return( name.charAt( 0 ) == '$' );
+        return ( name.charAt( 0 ) == '$' );
     }
     
     public final float readPercentage( boolean readChunkID, int[] chunkID ) throws IOException
@@ -157,13 +157,13 @@ public class TDSFile
         {
             readInt();
             
-            return( (float)readUnsignedShort() / 100f );
+            return ( (float)readUnsignedShort() / 100f );
         }
         else if ( tag == TDSChunkType.FLOAT_PERCENTAGE.getID() )
         {
             readInt();
             
-            return( readFloat() );
+            return ( readFloat() );
         }
         else
         {
@@ -173,7 +173,7 @@ public class TDSFile
             //throw ex;
             System.err.println( message );
             
-            return( -Float.MAX_VALUE );
+            return ( -Float.MAX_VALUE );
         }
     }
     
@@ -195,7 +195,7 @@ public class TDSFile
             chars[length++] = c;
         }
         
-        return( new String( chars, 0, length ) );
+        return ( new String( chars, 0, length ) );
     }
     
     public final String readMatName( boolean readChunkID ) throws IOException
@@ -204,7 +204,7 @@ public class TDSFile
             readUnsignedShort();
         readInt();
         
-        return( readName() );
+        return ( readName() );
     }
     
     public final float[] readColor( boolean readChunkID, int[] chunkID ) throws IOException
@@ -219,13 +219,13 @@ public class TDSFile
         {
             readInt();
             
-            return( new float[] { readFloat(), readFloat(), readFloat() } );
+            return ( new float[] { readFloat(), readFloat(), readFloat() } );
         }
         else if ( tag == TDSChunkType.COLOR_24.getID() )
         {
             readInt();
             
-            return( new float[] { (float)din.readUnsignedByte() / 255f, (float)din.readUnsignedByte() / 255f, (float)din.readUnsignedByte() / 255f } );
+            return ( new float[] { (float)din.readUnsignedByte() / 255f, (float)din.readUnsignedByte() / 255f, (float)din.readUnsignedByte() / 255f } );
         }
         else
         {
@@ -235,7 +235,7 @@ public class TDSFile
             //throw ex;
             System.err.println( message );
             
-            return( null );
+            return ( null );
         }
     }
     
@@ -244,7 +244,7 @@ public class TDSFile
         String hex = Integer.toHexString( chunkID ).toUpperCase();
         
         if ( hex.length() >= 4 )
-            return( "0x" + hex );
+            return ( "0x" + hex );
         
         char[] chars = new char[ 6 ];
         chars[0] = '0';
@@ -261,7 +261,7 @@ public class TDSFile
             chars[2 + n + i] = hex.charAt( i );
         }
         
-        return( new String( chars ) );
+        return ( new String( chars ) );
     }
     
     public TDSChunkType processChunk() throws IOException
@@ -288,7 +288,7 @@ public class TDSFile
         }
         //System.out.println( System.currentTimeMillis() - t0 );
         
-        return( chunkType );
+        return ( chunkType );
     }
     
     public void close() throws IOException
@@ -374,6 +374,6 @@ public class TDSFile
         
         file.finalizeModel( convertZup2Yup, rootGroup, nodeFactory, siHandler );
         
-        return( file );
+        return ( file );
     }
 }

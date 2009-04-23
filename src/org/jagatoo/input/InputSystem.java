@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -102,7 +102,7 @@ public class InputSystem
      */
     public static final boolean hasInstance()
     {
-        return( instance != null );
+        return ( instance != null );
     }
     
     /**
@@ -116,12 +116,12 @@ public class InputSystem
             instance = new InputSystem();
         }
         
-        return( instance );
+        return ( instance );
     }
     
     public final EventQueue getEventQueue()
     {
-        return( eventQueue );
+        return ( eventQueue );
     }
     
     /**
@@ -132,7 +132,7 @@ public class InputSystem
     public void registerInputStatesManager( InputStatesManager mgr )
     {
         if ( mgr == null )
-            throw( new NullPointerException( "mgr must not be null." ) );
+            throw new NullPointerException( "mgr must not be null." );
         
         if ( ( statesManagers == null ) || ( statesManagers.length == 0 ) )
         {
@@ -155,23 +155,21 @@ public class InputSystem
     public void deregisterInputStatesManager( InputStatesManager mgr )
     {
         if ( mgr == null )
-            throw( new NullPointerException( "mgr must not be null." ) );
+            throw new NullPointerException( "mgr must not be null." );
         
         if ( ( statesManagers == null ) || ( statesManagers.length == 0 ) )
         {
             return;
         }
-        else
+        
+        final int index = ArrayUtils.indexOf( statesManagers, mgr, true );
+        
+        if ( index >= 0 )
         {
-            final int index = ArrayUtils.indexOf( statesManagers, mgr, true );
-            
-            if ( index >= 0 )
-            {
-                InputStatesManager[] newArray = new InputStatesManager[ statesManagers.length - 1 ];
-                System.arraycopy( statesManagers, 0, newArray, 0, index );
-                System.arraycopy( statesManagers, index + 1, newArray, index, statesManagers.length - index - 1 );
-                statesManagers = newArray;
-            }
+            InputStatesManager[] newArray = new InputStatesManager[ statesManagers.length - 1 ];
+            System.arraycopy( statesManagers, 0, newArray, 0, index );
+            System.arraycopy( statesManagers, index + 1, newArray, index, statesManagers.length - index - 1 );
+            statesManagers = newArray;
         }
     }
     
@@ -208,7 +206,7 @@ public class InputSystem
     public void addInputHandler( InputHandler< ? > inputHandler )
     {
         if ( inputHandler == null )
-            throw( new NullPointerException( "inputHandler must not be null." ) );
+            throw new NullPointerException( "inputHandler must not be null." );
         
         if ( !inputHandlers.contains( inputHandler ) )
         {
@@ -228,7 +226,7 @@ public class InputSystem
     public void removeInputHandler( InputHandler< ? > inputHandler )
     {
         if ( inputHandler == null )
-            throw( new NullPointerException( "inputHandler must not be null." ) );
+            throw new NullPointerException( "inputHandler must not be null." );
         
         if ( inputHandlers.remove( inputHandler ) )
         {
@@ -381,13 +379,13 @@ public class InputSystem
     {
         /*
         if ( !keyboard.getClass().isAssignableFrom( keyboard.getFactory().getExpectedKeyboardClass() ) )
-            throw( new InputSystemException( "This Keyboard is not an instance of " + getDeviceFactory().getExpectedKeyboardClass() + "." ) );
+            throw new InputSystemException( "This Keyboard is not an instance of " + getDeviceFactory().getExpectedKeyboardClass() + "." ) );
         */
         
         for ( int i = 0; i < keyboards.length; i++ )
         {
             if ( keyboards[ i ] == keyboard )
-                throw( new InputSystemException( "This Keyboard is already registered at this InputSystem." ) );
+                throw new InputSystemException( "This Keyboard is already registered at this InputSystem." );
         }
         
         Keyboard[] keyboards2 = new Keyboard[ keyboards.length + 1 ];
@@ -444,12 +442,12 @@ public class InputSystem
         
         if ( numNewKeyboards == 0 )
         {
-            throw( new InputSystemException( "There's no available Keyboard to register." ) );
+            throw new InputSystemException( "There's no available Keyboard to register." );
         }
         
         registerKeyboard( newKeyboards[ 0 ] );
         
-        return( newKeyboards[ 0 ] );
+        return ( newKeyboards[ 0 ] );
     }
     
     /**
@@ -463,7 +461,7 @@ public class InputSystem
      */
     public final Keyboard registerNewKeyboard( InputSourceWindow sourceWindow ) throws InputSystemException
     {
-        return( registerNewKeyboard( sourceWindow.getInputDeviceFactory( this ) ) );
+        return ( registerNewKeyboard( sourceWindow.getInputDeviceFactory( this ) ) );
     }
     
     /**
@@ -477,7 +475,7 @@ public class InputSystem
     public void deregisterKeyboard( Keyboard keyboard ) throws InputSystemException
     {
         if ( keyboards.length == 0 )
-            throw( new InputSystemException( "This Keyboard is not registered at this InputSystem." ) );
+            throw new InputSystemException( "This Keyboard is not registered at this InputSystem." );
         
         boolean found = false;
         Keyboard[] keyboards2 = new Keyboard[ keyboards.length - 1 ];
@@ -491,7 +489,7 @@ public class InputSystem
         }
         
         if ( !found )
-            throw( new InputSystemException( "This Keyboard is not registered at this InputSystem." ) );
+            throw new InputSystemException( "This Keyboard is not registered at this InputSystem." );
         
         for ( int i = 0; i < inputListeners.size(); i++ )
         {
@@ -518,7 +516,7 @@ public class InputSystem
      */
     public final boolean hasKeyboard()
     {
-        return( keyboards.length > 0 );
+        return ( keyboards.length > 0 );
     }
     
     /**
@@ -526,7 +524,7 @@ public class InputSystem
      */
     public final int getKeyboardsCount()
     {
-        return( keyboards.length );
+        return ( keyboards.length );
     }
     
     /**
@@ -535,9 +533,9 @@ public class InputSystem
     public final Keyboard getKeyboard()
     {
         if ( keyboards.length >= 1 )
-            return( keyboards[ 0 ] );
+            return ( keyboards[ 0 ] );
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -547,7 +545,7 @@ public class InputSystem
      */
     public final Keyboard getKeyboard( int index )
     {
-        return( keyboards[ index ] );
+        return ( keyboards[ index ] );
     }
     
     /**
@@ -561,7 +559,7 @@ public class InputSystem
             System.arraycopy( keyboards, 0, keyboards_out, 0, keyboards.length );
         }
         
-        return( keyboards_out );
+        return ( keyboards_out );
     }
     
     /**
@@ -576,10 +574,10 @@ public class InputSystem
         for ( int i = 0; i < keyboards.length; i++ )
         {
             if ( keyboards[ i ] == keyboard )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     
@@ -599,7 +597,7 @@ public class InputSystem
      */
     public final long getMouseButtonClickThreshold()
     {
-        return( clickThreshold );
+        return ( clickThreshold );
     }
     
     
@@ -614,13 +612,13 @@ public class InputSystem
     {
         /*
         if ( !mouse.getClass().isAssignableFrom( mouse.getFactory().getExpectedMouseClass() ) )
-            throw( new InputSystemException( "This mouse is not an instance of " + getDeviceFactory().getExpectedMouseClass() + "." ) );
+            throw new InputSystemException( "This mouse is not an instance of " + getDeviceFactory().getExpectedMouseClass() + "." ) );
         */
         
         for ( int i = 0; i < mouses.length; i++ )
         {
             if ( mouses[ i ] == mouse )
-                throw( new InputSystemException( "This Mouse is already registered at this InputSystem." ) );
+                throw new InputSystemException( "This Mouse is already registered at this InputSystem." );
         }
         
         Mouse[] mouses2 = new Mouse[ mouses.length + 1 ];
@@ -677,12 +675,12 @@ public class InputSystem
         
         if ( numNewMouses == 0 )
         {
-            throw( new InputSystemException( "There's no available Mouse to register." ) );
+            throw new InputSystemException( "There's no available Mouse to register." );
         }
         
         registerMouse( newMouses[ 0 ] );
         
-        return( newMouses[ 0 ] );
+        return ( newMouses[ 0 ] );
     }
     
     /**
@@ -696,7 +694,7 @@ public class InputSystem
      */
     public final Mouse registerNewMouse( InputSourceWindow sourceWindow ) throws InputSystemException
     {
-        return( registerNewMouse( sourceWindow.getInputDeviceFactory( this ) ) );
+        return ( registerNewMouse( sourceWindow.getInputDeviceFactory( this ) ) );
     }
     
     /**
@@ -709,7 +707,7 @@ public class InputSystem
     public void deregisterMouse( Mouse mouse ) throws InputSystemException
     {
         if ( mouses.length == 0 )
-            throw( new InputSystemException( "This Mouse is not registered at this InputSystem." ) );
+            throw new InputSystemException( "This Mouse is not registered at this InputSystem." );
         
         boolean found = false;
         Mouse[] mouses2 = new Mouse[ mouses.length - 1 ];
@@ -723,7 +721,7 @@ public class InputSystem
         }
         
         if ( !found )
-            throw( new InputSystemException( "This Mouse is not registered at this InputSystem." ) );
+            throw new InputSystemException( "This Mouse is not registered at this InputSystem." );
         
         for ( int i = 0; i < inputListeners.size(); i++ )
         {
@@ -750,7 +748,7 @@ public class InputSystem
      */
     public final boolean hasMouse()
     {
-        return( mouses.length > 0 );
+        return ( mouses.length > 0 );
     }
     
     /**
@@ -758,7 +756,7 @@ public class InputSystem
      */
     public final int getMousesCount()
     {
-        return( mouses.length );
+        return ( mouses.length );
     }
     
     /**
@@ -767,9 +765,9 @@ public class InputSystem
     public final Mouse getMouse()
     {
         if ( mouses.length >= 1 )
-            return( mouses[ 0 ] );
+            return ( mouses[ 0 ] );
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -779,7 +777,7 @@ public class InputSystem
      */
     public final Mouse getMouse( int index )
     {
-        return( mouses[ index ] );
+        return ( mouses[ index ] );
     }
     
     /**
@@ -793,7 +791,7 @@ public class InputSystem
             System.arraycopy( mouses, 0, mouses_out, 0, mouses.length );
         }
         
-        return( mouses_out );
+        return ( mouses_out );
     }
     
     /**
@@ -808,10 +806,10 @@ public class InputSystem
         for ( int i = 0; i < mouses.length; i++ )
         {
             if ( mouses[ i ] == mouse )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     
@@ -852,13 +850,13 @@ public class InputSystem
     {
         /*
         if ( !controller.getClass().isAssignableFrom( controller.getFactory().getExpectedControllerClass() ) )
-            throw( new InputSystemException( "This controller is not an instance of " + getDeviceFactory().getExpectedControllerClass() + "." ) );
+            throw new InputSystemException( "This controller is not an instance of " + getDeviceFactory().getExpectedControllerClass() + "." ) );
         */
         
         for ( int i = 0; i < controllers.length; i++ )
         {
             if ( controllers[ i ] == controller )
-                throw( new InputSystemException( "This Controller is already registered at this InputSystem." ) );
+                throw new InputSystemException( "This Controller is already registered at this InputSystem." );
         }
         
         Controller[] controllers2 = new Controller[ controllers.length + 1 ];
@@ -915,12 +913,12 @@ public class InputSystem
         
         if ( numNewControllers == 0 )
         {
-            throw( new InputSystemException( "There's no available Controller to register." ) );
+            throw new InputSystemException( "There's no available Controller to register." );
         }
         
         registerController( newControllers[ 0 ] );
         
-        return( newControllers[ 0 ] );
+        return ( newControllers[ 0 ] );
     }
     
     /**
@@ -934,7 +932,7 @@ public class InputSystem
      */
     public final Controller registerNewController( InputSourceWindow sourceWindow ) throws InputSystemException
     {
-        return( registerNewController( sourceWindow.getInputDeviceFactory( this ) ) );
+        return ( registerNewController( sourceWindow.getInputDeviceFactory( this ) ) );
     }
     
     /**
@@ -947,7 +945,7 @@ public class InputSystem
     public void deregisterController( Controller controller ) throws InputSystemException
     {
         if ( controllers.length == 0 )
-            throw( new InputSystemException( "This Controller is not registered at this InputSystem." ) );
+            throw new InputSystemException( "This Controller is not registered at this InputSystem." );
         
         boolean found = false;
         Controller[] controllers2 = new Controller[ controllers.length - 1 ];
@@ -961,7 +959,7 @@ public class InputSystem
         }
         
         if ( !found )
-            throw( new InputSystemException( "This Controller is not registered at this InputSystem." ) );
+            throw new InputSystemException( "This Controller is not registered at this InputSystem." );
         
         for ( int i = 0; i < inputListeners.size(); i++ )
         {
@@ -988,7 +986,7 @@ public class InputSystem
      */
     public final boolean hasController()
     {
-        return( controllers.length > 0 );
+        return ( controllers.length > 0 );
     }
     
     /**
@@ -996,7 +994,7 @@ public class InputSystem
      */
     public final int getControllersCount()
     {
-        return( controllers.length );
+        return ( controllers.length );
     }
     
     /**
@@ -1005,9 +1003,9 @@ public class InputSystem
     public final Controller getController()
     {
         if ( controllers.length >= 1 )
-            return( controllers[ 0 ] );
+            return ( controllers[ 0 ] );
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -1017,7 +1015,7 @@ public class InputSystem
      */
     public final Controller getController( int index )
     {
-        return( controllers[ index ] );
+        return ( controllers[ index ] );
     }
     
     /**
@@ -1031,7 +1029,7 @@ public class InputSystem
             System.arraycopy( controllers, 0, controllers_out, 0, controllers.length );
         }
         
-        return( controllers_out );
+        return ( controllers_out );
     }
     
     /**
@@ -1046,10 +1044,10 @@ public class InputSystem
         for ( int i = 0; i < controllers.length; i++ )
         {
             if ( controllers[ i ] == controller )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     

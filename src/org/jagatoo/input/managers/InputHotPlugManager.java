@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -102,7 +102,7 @@ public class InputHotPlugManager implements Runnable
         }
         else if ( ArrayUtils.contains( keyboardFactories, factory, true ) )
         {
-            throw( new InputSystemException( "This factory is already registered." ) );
+            throw new InputSystemException( "This factory is already registered." );
         }
         else
         {
@@ -126,7 +126,7 @@ public class InputHotPlugManager implements Runnable
     {
         if ( ( keyboardFactories == null ) || !ArrayUtils.contains( keyboardFactories, factory, true ) )
         {
-            throw( new InputSystemException( "This factory is not registered." ) );
+            throw new InputSystemException( "This factory is not registered." );
         }
         
         final int index = ArrayUtils.indexOf( keyboardFactories, factory, true );
@@ -152,7 +152,7 @@ public class InputHotPlugManager implements Runnable
         }
         else if ( ArrayUtils.contains( mouseFactories, factory, true ) )
         {
-            throw( new InputSystemException( "This factory is already registered." ) );
+            throw new InputSystemException( "This factory is already registered." );
         }
         else
         {
@@ -176,7 +176,7 @@ public class InputHotPlugManager implements Runnable
     {
         if ( ( mouseFactories == null ) || !ArrayUtils.contains( mouseFactories, factory, true ) )
         {
-            throw( new InputSystemException( "This factory is not registered." ) );
+            throw new InputSystemException( "This factory is not registered." );
         }
         
         final int index = ArrayUtils.indexOf( mouseFactories, factory, true );
@@ -202,7 +202,7 @@ public class InputHotPlugManager implements Runnable
         }
         else if ( ArrayUtils.contains( controllerFactories, factory, true ) )
         {
-            throw( new InputSystemException( "This factory is already registered." ) );
+            throw new InputSystemException( "This factory is already registered." );
         }
         else
         {
@@ -226,7 +226,7 @@ public class InputHotPlugManager implements Runnable
     {
         if ( ( controllerFactories == null ) || !ArrayUtils.contains( controllerFactories, factory, true ) )
         {
-            throw( new InputSystemException( "This factory is not registered." ) );
+            throw new InputSystemException( "This factory is not registered." );
         }
         
         final int index = ArrayUtils.indexOf( controllerFactories, factory, true );
@@ -420,7 +420,7 @@ public class InputHotPlugManager implements Runnable
     
     public final boolean isRunning()
     {
-        return( ( thread != null ) || running );
+        return ( ( thread != null ) || running );
     }
     
     /**

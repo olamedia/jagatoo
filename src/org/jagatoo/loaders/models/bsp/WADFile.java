@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -83,7 +83,7 @@ public class WADFile
         @Override
         public String toString()
         {
-            return( this.getClass().getSimpleName() + " { " +
+            return ( this.getClass().getSimpleName() + " { " +
                     "name: \"" + fileName + "\"" +
                     "\t | offset: " + offset +
                     "\t | compFileSize: " + compFileSize +
@@ -105,17 +105,17 @@ public class WADFile
     
     public final String getWADFilename()
     {
-        return( wadFilename );
+        return ( wadFilename );
     }
     
     public final String getWadType()
     {
-        return( wadType );
+        return ( wadType );
     }
     
     public final int getLumpCount()
     {
-        return( wadDir.size() );
+        return ( wadDir.size() );
     }
     
     public final String[] getWADResources()
@@ -130,12 +130,12 @@ public class WADFile
         
         java.util.Arrays.sort( result );
         
-        return( result );
+        return ( result );
     }
     
     public final boolean containsResource( String resName )
     {
-        return( wadDir.containsKey( resName.toLowerCase() ) );
+        return ( wadDir.containsKey( resName.toLowerCase() ) );
     }
     
     public final BufferedInputStream getResourceAsStream( String resName ) throws IOException
@@ -144,7 +144,7 @@ public class WADFile
         
         if ( entry == null )
         {
-            return( null );
+            return ( null );
         }
         
         InputStream in = wadResource.openStream();
@@ -155,7 +155,7 @@ public class WADFile
         
         in.skip( entry.offset );
         
-        return( (BufferedInputStream)in );
+        return ( (BufferedInputStream)in );
     }
     
     public final void exportResource( String resName, String filename ) throws IOException
@@ -419,7 +419,7 @@ public class WADFile
         bb.limit( limit0 );
     }
     
-    private AbstractTexture[] readSkyTextures( BSPEntity[] entities, DataInputStream din, byte[][] palette, AbstractTexture sampleTexture, AppearanceFactory appFactory, URL baseURL ) throws IOException
+    private AbstractTexture[] readSkyTextures( BSPEntity[] entities, AbstractTexture sampleTexture, AppearanceFactory appFactory, URL baseURL ) throws IOException
     {
         BSPEntity_worldspawn entity_worlspawn = null;
         for ( int i = 0; i < entities.length; i++ )
@@ -504,19 +504,17 @@ public class WADFile
                 }
             }
             
-            return( textures );
+            return ( textures );
         }
-        else
+        
+        AbstractTexture[] textures = new AbstractTexture[ 6 ];
+        
+        for ( int sky_index = 0; sky_index < 6; sky_index++ )
         {
-            AbstractTexture[] textures = new AbstractTexture[ 6 ];
-            
-            for ( int sky_index = 0; sky_index < 6; sky_index++ )
-            {
-                textures[sky_index] = sampleTexture;
-            }
-            
-            return( textures );
+            textures[sky_index] = sampleTexture;
         }
+        
+        return ( textures );
     }
     
     private void readSpecialTexture( DataInputStream din, byte[][] palette, int orgWidth, int orgHeight, int width, int height, ByteBuffer bb, byte[] pixelData ) throws IOException
@@ -637,7 +635,7 @@ public class WADFile
             //t.printStackTrace();
         }
         
-        return( texture );
+        return ( texture );
     }
     
     private final AbstractTexture[] readTexture( String resName, AppearanceFactory appFactory, URL baseURL, BSPEntity[] entities, boolean ignoreAnimations ) throws IOException
@@ -797,29 +795,29 @@ public class WADFile
                 
                 //System.out.println( resName + ": " + result.length );
                 
-                return( result );
+                return ( result );
             }
             else if ( isSkyTexture )
             {
-                AbstractTexture[] skyTextures = readSkyTextures( entities, din, palette, texture, appFactory, baseURL );
+                AbstractTexture[] skyTextures = readSkyTextures( entities, texture, appFactory, baseURL );
                 
-                return( new AbstractTexture[] { texture, skyTextures[0], skyTextures[1], skyTextures[2], skyTextures[3], skyTextures[4], skyTextures[5] } );
+                return ( new AbstractTexture[] { texture, skyTextures[0], skyTextures[1], skyTextures[2], skyTextures[3], skyTextures[4], skyTextures[5] } );
             }
             
-            return( new AbstractTexture[] { texture } );
+            return ( new AbstractTexture[] { texture } );
         }
         
-        return( null );
+        return ( null );
     }
     
     public final AbstractTexture[] readTexture( String resName, AppearanceFactory appFactory ) throws IOException
     {
-        return( readTexture( resName, appFactory, null, null, false ) );
+        return ( readTexture( resName, appFactory, null, null, false ) );
     }
     
     public final AbstractTexture[] readSkyTextures( String resName, AppearanceFactory appFactory, URL baseURL, BSPEntity[] entities ) throws IOException
     {
-        return( readTexture( resName, appFactory, baseURL, entities, false ) );
+        return ( readTexture( resName, appFactory, baseURL, entities, false ) );
     }
     
     private HashMap<String, WADDirectoryEntry> readWADDirectory( URL wadFile ) throws IOException, IncorrectFormatException, ParsingException
@@ -879,7 +877,7 @@ public class WADFile
             
             in.close();
             
-            return( wadDir );
+            return ( wadDir );
         }
         catch ( IOException ioe )
         {
@@ -898,9 +896,9 @@ public class WADFile
         int lastSlashPos = filePath.lastIndexOf( '/' );
         
         if ( lastSlashPos == -1 )
-            return( filePath );
-        else
-            return( filePath.substring( lastSlashPos + 1 ) );
+            return ( filePath );
+        
+        return ( filePath.substring( lastSlashPos + 1 ) );
     }
     
     public WADFile( URL wadResource ) throws IOException, IncorrectFormatException, ParsingException

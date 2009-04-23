@@ -168,12 +168,12 @@ public enum TDSChunkType
     
     public final int getID()
     {
-        return( id );
+        return ( id );
     }
     
     public static final TDSChunkType valueOf( int id )
     {
-        return( StaticMembersWrapper.reverseMap.get( id ) );
+        return ( StaticMembersWrapper.reverseMap.get( id ) );
     }
     
     private TDSChunkType( int id )

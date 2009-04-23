@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -136,7 +136,7 @@ public class MD5MeshReader
             //rotation.mul( Quaternion4f.Z_UP_TO_Y_UP, rotation );
         }
         
-        return( new MD5Bone( boneName, translation, rotation ) );
+        return ( new MD5Bone( boneName, translation, rotation ) );
     }
     
     private NamedObject createShader( String shaderName, AppearanceFactory appFactory, URL baseURL )
@@ -154,14 +154,14 @@ public class MD5MeshReader
         
         if ( shader != null )
         {
-            return( shader );
+            return ( shader );
         }
         
         shader = appFactory.createStandardAppearance( shaderName, shaderName, baseURL, 0 );
         
         shaderCache.put( shaderName, shader );
         
-        return( shader );
+        return ( shader );
     }
     
     private MD5Mesh compileMesh( String meshName, NamedObject shader, ArrayList< String > vertDefs, ArrayList< String > triDefs, ArrayList< String > weightDefs, GeometryFactory geomFactory, float scale, AnimationFactory animFactory )
@@ -275,7 +275,7 @@ public class MD5MeshReader
         
         geomFactory.setIndex( result.geom, GEOM_TYPE, 0, triangles, 0, triangles.length );
         
-        return( result );
+        return ( result );
     }
     
     private void readMeshFile( InputStream in, URL baseURL, String skin, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, AnimationFactory animFactory ) throws IOException
@@ -343,10 +343,8 @@ public class MD5MeshReader
                     {
                         break;
                     }
-                    else
-                    {
-                        bones.add( parseBone( st, convertZup2Yup ) );
-                    }
+                    
+                    bones.add( parseBone( st, convertZup2Yup ) );
                 }
                 
                 skeleton = bones.toArray( new MD5Bone[ bones.size() ] );
@@ -432,7 +430,7 @@ public class MD5MeshReader
         this.meshes = meshes.toArray( new MD5Mesh[ meshes.size() ] );
     }
     
-    private static void computeNormals( int numVertices, float[] coords, int[] triangles, NamedObject geom, GeometryFactory geomFactory )
+    private static void computeNormals( float[] coords, int[] triangles, NamedObject geom, GeometryFactory geomFactory )
     {
         int i3;
         float coordAx;
@@ -485,7 +483,7 @@ public class MD5MeshReader
         }
     }
     
-    private static void computeTriMesh( MD5Mesh mesh, String name, MD5Bone[] bones, GeometryFactory geomFactory, boolean convertZup2Yup )
+    private static void computeTriMesh( MD5Mesh mesh, MD5Bone[] bones, GeometryFactory geomFactory )
     {
         float[] coords = new float[ mesh.numVertices * 3 ];
         Point3f tmp = new Point3f();
@@ -515,7 +513,7 @@ public class MD5MeshReader
         
         geomFactory.setCoordinates( mesh.geom, GEOM_TYPE, 0, coords, 0, mesh.numVertices );
         
-        computeNormals( mesh.numVertices, coords, mesh.triangles, mesh.geom, geomFactory );
+        computeNormals( coords, mesh.triangles, mesh.geom, geomFactory );
         
         geomFactory.finalizeGeometry( mesh.geom, GEOM_TYPE, 0, mesh.numVertices, 0, mesh.triangles.length );
     }
@@ -532,9 +530,10 @@ public class MD5MeshReader
         {
             MD5Mesh mesh = reader.meshes[m];
             
-            String meshName = ( ( mesh.name == null ) || mesh.name.equals( "" ) ) ? "MD5Mesh" + m : mesh.name;
+            //String meshName = ( ( mesh.name == null ) || mesh.name.equals( "" ) ) ? "MD5Mesh" + m : mesh.name;
+            // TODO: The name should be set to the geometry or shape
             
-            computeTriMesh( mesh, meshName, reader.skeleton, geomFactory, convertZup2Yup );
+            computeTriMesh( mesh, reader.skeleton, geomFactory );
             NamedObject shader = mesh.shader;
             if ( skin != null )
             {
@@ -549,6 +548,6 @@ public class MD5MeshReader
             weights[m] = mesh.boneWeights;
         }
         
-        return( weights );
+        return ( weights );
     }
 }

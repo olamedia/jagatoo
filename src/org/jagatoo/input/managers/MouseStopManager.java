@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -142,7 +142,7 @@ public class MouseStopManager implements Runnable
     
     public final boolean isSearching()
     {
-        return( isSearching );
+        return ( isSearching );
     }
     
     /**
@@ -157,13 +157,13 @@ public class MouseStopManager implements Runnable
     public final MouseStoppedEvent prepareMouseStoppedEvent( long when )
     {
         if ( !mouse.isEnabled() || ( numListeners == 0 ) )
-            return( null );
+            return ( null );
         
         MouseStoppedEvent e = MouseEventPool.allocStopped( mouse, mouse.getCurrentX(), mouse.getCurrentY(), when, lastWhen_stopped );
         
         lastWhen_stopped = when;
         
-        return( e );
+        return ( e );
     }
     
     /**
@@ -256,7 +256,7 @@ public class MouseStopManager implements Runnable
     public void start() throws InputSystemException
     {
         if ( isThreadRunning )
-            throw( new InputSystemException( "The MouseStopManager is already running!" ) );
+            throw new InputSystemException( "The MouseStopManager is already running!" );
         
         for ( int i = 0; i < numListeners; i++ )
         {
@@ -269,7 +269,7 @@ public class MouseStopManager implements Runnable
     public void stopMe() throws InputSystemException
     {
         if ( !isThreadRunning )
-            throw( new InputSystemException( "The MouseStopManager is not running!" ) );
+            throw new InputSystemException( "The MouseStopManager is not running!" );
         
         this.isSearching = false;
     }

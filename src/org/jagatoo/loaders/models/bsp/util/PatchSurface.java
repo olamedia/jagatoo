@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -94,7 +94,7 @@ public class PatchSurface
     
     private int getLevelWidth(int lvl)
     {
-        return( (1 << (lvl + 1)) + 1 );
+        return ( (1 << (lvl + 1)) + 1 );
     }
     
     private boolean findSize(int controlx, int controly, BSPVertex cp[])
@@ -177,14 +177,14 @@ public class PatchSurface
             //if (Xith3DDefaults.getLocalDebug(BSPLoader.DEBUG))
               //  System.out.println("Bad mesh control points\n");
             
-            return( false );
+            return ( false );
         }
         
         /* Find subdivision level in u */
         int levely = findLevel(cp[ai].position, cp[ai + 1].position, cp[bi].position);
         sizey = (getLevelWidth(levely) - 1) * ((controly - 1) / 2) + 1;
         
-        return( true );
+        return ( true );
     }
     
     private int findLevel(Point3f cv0, Point3f cv1, Point3f cv2)
@@ -221,7 +221,7 @@ public class PatchSurface
             v1.set(a);
         }
         
-        return( level );
+        return ( level );
     }
     
     private void fillPatch(int controlx, int controly, BSPVertex p[])
@@ -268,7 +268,7 @@ public class PatchSurface
         }
     }
     
-    public PatchSurface(BSPVertex cp[], int npoints, int controlx, int controly)
+    public PatchSurface(BSPVertex cp[], int controlx, int controly)
     {
         findSize(controlx, controly, cp);
         

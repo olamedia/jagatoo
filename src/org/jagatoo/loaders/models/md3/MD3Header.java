@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -79,6 +79,6 @@ public class MD3Header
     
     public static final MD3Header readHeader( LittleEndianDataInputStream in ) throws IOException, IncorrectFormatException
     {
-        return( new MD3Header( in ) );
+        return ( new MD3Header( in ) );
     }
 }

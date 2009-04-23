@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -74,12 +74,10 @@ public class ImageUtility
         
         if ( ( list == null ) || ( list.size() == 0 ) )
         {
-            return( new int[ size ] );
+            return ( new int[ size ] );
         }
-        else
-        {
-            return( list.remove( 0 ) );
-        }
+        
+        return ( list.remove( 0 ) );
     }
     
     private static synchronized void putArray( int[] a )
@@ -147,7 +145,7 @@ public class ImageUtility
         putArray( dpix );
         putArray( spix );
         
-        return( dest );
+        return ( dest );
     }
     
     public static BufferedImage downSampleRGBA( BufferedImage source )
@@ -197,7 +195,7 @@ public class ImageUtility
         putArray( dpix );
         putArray( spix );
         
-        return( dest );
+        return ( dest );
     }
     
     /**
@@ -276,7 +274,7 @@ public class ImageUtility
         JAGTLog.debug( "Image alpha bounds : ", lx, ",", ly, " -> ", ux, ",", uy );
         r.setBounds( lx, ly, ux - lx + 1, uy - ly + 1 );
         
-        return( r );
+        return ( r );
     }
     
     private static int getIndex( int x, int y, int maxX, int maxY )
@@ -301,7 +299,7 @@ public class ImageUtility
             y = maxY - 1;
         }
         
-        return( ( y * maxX ) + x );
+        return ( ( y * maxX ) + x );
     }
     
     /**
@@ -345,7 +343,7 @@ public class ImageUtility
         g.setRenderingHint( RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC );
         g.drawImage( image, lx, ly, ( lx + w ) - 1, ( ly + h ) - 1, (int)r.getMinX(), (int)r.getMinY(), (int)r.getMaxX(), (int)r.getMaxY(), null );
         
-        return( bi );
+        return ( bi );
     }
     
     public static void writeImage( BufferedImage image, String filename )
@@ -401,7 +399,7 @@ public class ImageUtility
     {
         File f = new File( filename );
         
-        return( ImageIO.read( f ) );
+        return ( ImageIO.read( f ) );
     }
     
     public static BufferedImage readImage( String name, Object c ) throws IOException
@@ -410,7 +408,7 @@ public class ImageUtility
         
         if ( image != null )
         {
-            return( image );
+            return ( image );
         }
         
         ClassLoader classloader = c.getClass().getClassLoader();
@@ -418,13 +416,13 @@ public class ImageUtility
         
         if ( url == null )
         {
-            throw( new IOException( "Cannot find file " + name + " on classpath" ) );
+            throw new IOException( "Cannot find file " + name + " on classpath" );
         }
         
         BufferedImage i = ImageIO.read( url );
         images.put( name, i );
         
-        return( i );
+        return ( i );
     }
     
     /**
@@ -447,7 +445,7 @@ public class ImageUtility
         
         op.filter( bi, bi2 );
         
-        return( bi2 );
+        return ( bi2 );
     }
     
     /**
@@ -460,7 +458,7 @@ public class ImageUtility
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write( img, "pnm", baos );
         
-        return( baos.toByteArray() );
+        return ( baos.toByteArray() );
     }
     
     /**
@@ -476,7 +474,7 @@ public class ImageUtility
         bb.put( baos.toByteArray() );
         bb.rewind();
         
-        return( new ByteBuffer[] { bb } );
+        return ( new ByteBuffer[] { bb } );
     }
     
     /**
@@ -504,7 +502,7 @@ public class ImageUtility
             g2.dispose();
         }
         
-        return( trgImage );
+        return ( trgImage );
     }
     
     /**
@@ -521,7 +519,7 @@ public class ImageUtility
     {
         SharedBufferedImage newImg = SharedBufferedImage.create( width, height, ( alpha ? 4 : 3 ), alpha, null, null );
         
-        return( scaleImage( image, newImg ) );
+        return ( scaleImage( image, newImg ) );
     }
     
     /**
@@ -533,11 +531,11 @@ public class ImageUtility
         switch ( Integer.bitCount( v ) )
         {
             case 0:
-                return( 1 );
+                return ( 1 );
             case 1:
-                return( v );
+                return ( v );
             default:
-                return( Integer.highestOneBit( v ) << 1 );
+                return ( Integer.highestOneBit( v ) << 1 );
         }
     }
     

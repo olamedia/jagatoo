@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -208,229 +208,229 @@ public enum KeyID
         switch ( this )
         {
             case ESCAPE:
-                return( Keys.ESCAPE );
+                return ( Keys.ESCAPE );
             
             case F1:
-                return( Keys.F1 );
+                return ( Keys.F1 );
             case F2:
-                return( Keys.F2 );
+                return ( Keys.F2 );
             case F3:
-                return( Keys.F3 );
+                return ( Keys.F3 );
             case F4:
-                return( Keys.F4 );
+                return ( Keys.F4 );
             case F5:
-                return( Keys.F5 );
+                return ( Keys.F5 );
             case F6:
-                return( Keys.F6 );
+                return ( Keys.F6 );
             case F7:
-                return( Keys.F7 );
+                return ( Keys.F7 );
             case F8:
-                return( Keys.F8 );
+                return ( Keys.F8 );
             case F9:
-                return( Keys.F9 );
+                return ( Keys.F9 );
             case F10:
-                return( Keys.F10 );
+                return ( Keys.F10 );
             case F11:
-                return( Keys.F11 );
+                return ( Keys.F11 );
             case F12:
-                return( Keys.F12 );
+                return ( Keys.F12 );
             
             case PRINTSCREEN:
-                return( Keys.PRINTSCREEN );
+                return ( Keys.PRINTSCREEN );
             case PAUSE:
-                return( Keys.PAUSE );
+                return ( Keys.PAUSE );
             case SCROLL_LOCK:
-                return( Keys.SCROLL_LOCK );
+                return ( Keys.SCROLL_LOCK );
             
             case CIRCUMFLEX:
-                return( Keys.CIRCUMFLEX );
+                return ( Keys.CIRCUMFLEX );
             
             case _0:
-                return( Keys._0 );
+                return ( Keys._0 );
             case _1:
-                return( Keys._1 );
+                return ( Keys._1 );
             case _2:
-                return( Keys._2 );
+                return ( Keys._2 );
             case _3:
-                return( Keys._3 );
+                return ( Keys._3 );
             case _4:
-                return( Keys._4 );
+                return ( Keys._4 );
             case _5:
-                return( Keys._5 );
+                return ( Keys._5 );
             case _6:
-                return( Keys._6 );
+                return ( Keys._6 );
             case _7:
-                return( Keys._7 );
+                return ( Keys._7 );
             case _8:
-                return( Keys._8 );
+                return ( Keys._8 );
             case _9:
-                return( Keys._9 );
+                return ( Keys._9 );
             
             case A:
-                return( Keys.A );
+                return ( Keys.A );
             case B:
-                return( Keys.B );
+                return ( Keys.B );
             case C:
-                return( Keys.C );
+                return ( Keys.C );
             case D:
-                return( Keys.D );
+                return ( Keys.D );
             case E:
-                return( Keys.E );
+                return ( Keys.E );
             case F:
-                return( Keys.F );
+                return ( Keys.F );
             case G:
-                return( Keys.G );
+                return ( Keys.G );
             case H:
-                return( Keys.H );
+                return ( Keys.H );
             case I:
-                return( Keys.I );
+                return ( Keys.I );
             case J:
-                return( Keys.J );
+                return ( Keys.J );
             case K:
-                return( Keys.K );
+                return ( Keys.K );
             case L:
-                return( Keys.L );
+                return ( Keys.L );
             case M:
-                return( Keys.M );
+                return ( Keys.M );
             case N:
-                return( Keys.N );
+                return ( Keys.N );
             case O:
-                return( Keys.O );
+                return ( Keys.O );
             case P:
-                return( Keys.P );
+                return ( Keys.P );
             case Q:
-                return( Keys.Q );
+                return ( Keys.Q );
             case R:
-                return( Keys.R );
+                return ( Keys.R );
             case S:
-                return( Keys.S );
+                return ( Keys.S );
             case T:
-                return( Keys.T );
+                return ( Keys.T );
             case U:
-                return( Keys.U );
+                return ( Keys.U );
             case V:
-                return( Keys.V );
+                return ( Keys.V );
             case W:
-                return( Keys.W );
+                return ( Keys.W );
             case X:
-                return( Keys.X );
+                return ( Keys.X );
             case Y:
-                return( Keys.Y );
+                return ( Keys.Y );
             case Z:
-                return( Keys.Z );
+                return ( Keys.Z );
             
             case TAB:
-                return( Keys.TAB );
+                return ( Keys.TAB );
             case SPACE:
-                return( Keys.SPACE );
+                return ( Keys.SPACE );
             case BACK_SPACE:
-                return( Keys.BACK_SPACE );
+                return ( Keys.BACK_SPACE );
             case ENTER:
-                return( Keys.ENTER );
+                return ( Keys.ENTER );
             
             case LEFT_SHIFT:
-                return( Keys.LEFT_SHIFT );
+                return ( Keys.LEFT_SHIFT );
             case RIGHT_SHIFT:
-                return( Keys.RIGHT_SHIFT );
+                return ( Keys.RIGHT_SHIFT );
             case LEFT_CONTROL:
-                return( Keys.LEFT_CONTROL );
+                return ( Keys.LEFT_CONTROL );
             case RIGHT_CONTROL:
-                return( Keys.RIGHT_CONTROL );
+                return ( Keys.RIGHT_CONTROL );
             case ALT:
-                return( Keys.ALT );
+                return ( Keys.ALT );
             case ALT_GRAPH:
-                return( Keys.ALT_GRAPH );
+                return ( Keys.ALT_GRAPH );
             case LEFT_META:
-                return( Keys.LEFT_META );
+                return ( Keys.LEFT_META );
             case RIGHT_META:
-                return( Keys.RIGHT_META );
+                return ( Keys.RIGHT_META );
             case CAPS_LOCK:
-                return( Keys.CAPS_LOCK );
+                return ( Keys.CAPS_LOCK );
             
             case DELETE:
-                return( Keys.DELETE );
+                return ( Keys.DELETE );
             case INSERT:
-                return( Keys.INSERT );
+                return ( Keys.INSERT );
             case END:
-                return( Keys.END );
+                return ( Keys.END );
             case HOME:
-                return( Keys.HOME );
+                return ( Keys.HOME );
             case PAGE_UP:
-                return( Keys.PAGE_UP );
+                return ( Keys.PAGE_UP );
             case PAGE_DOWN:
-                return( Keys.PAGE_DOWN );
+                return ( Keys.PAGE_DOWN );
             
             case RIGHT:
-                return( Keys.RIGHT );
+                return ( Keys.RIGHT );
             case LEFT:
-                return( Keys.LEFT );
+                return ( Keys.LEFT );
             case UP:
-                return( Keys.UP );
+                return ( Keys.UP );
             case DOWN:
-                return( Keys.DOWN );
+                return ( Keys.DOWN );
             
             case NUM_LOCK:
-                return( Keys.NUM_LOCK );
+                return ( Keys.NUM_LOCK );
             
             case NUMPAD_DIVIDE:
-                return( Keys.NUMPAD_DIVIDE );
+                return ( Keys.NUMPAD_DIVIDE );
             case NUMPAD_MULTIPLY:
-                return( Keys.NUMPAD_MULTIPLY );
+                return ( Keys.NUMPAD_MULTIPLY );
             case NUMPAD_SUBTRACT:
-                return( Keys.NUMPAD_SUBTRACT );
+                return ( Keys.NUMPAD_SUBTRACT );
             case NUMPAD_ADD:
-                return( Keys.NUMPAD_ADD );
+                return ( Keys.NUMPAD_ADD );
             case NUMPAD_ENTER:
-                return( Keys.NUMPAD_ENTER );
+                return ( Keys.NUMPAD_ENTER );
             case NUMPAD_DECIMAL:
-                return( Keys.NUMPAD_DECIMAL );
+                return ( Keys.NUMPAD_DECIMAL );
             
             case NUMPAD0:
-                return( Keys.NUMPAD0 );
+                return ( Keys.NUMPAD0 );
             case NUMPAD1:
-                return( Keys.NUMPAD1 );
+                return ( Keys.NUMPAD1 );
             case NUMPAD2:
-                return( Keys.NUMPAD2 );
+                return ( Keys.NUMPAD2 );
             case NUMPAD3:
-                return( Keys.NUMPAD3 );
+                return ( Keys.NUMPAD3 );
             case NUMPAD4:
-                return( Keys.NUMPAD4 );
+                return ( Keys.NUMPAD4 );
             case NUMPAD5:
-                return( Keys.NUMPAD5 );
+                return ( Keys.NUMPAD5 );
             case NUMPAD6:
-                return( Keys.NUMPAD6 );
+                return ( Keys.NUMPAD6 );
             case NUMPAD7:
-                return( Keys.NUMPAD7 );
+                return ( Keys.NUMPAD7 );
             case NUMPAD8:
-                return( Keys.NUMPAD8 );
+                return ( Keys.NUMPAD8 );
             case NUMPAD9:
-                return( Keys.NUMPAD9 );
+                return ( Keys.NUMPAD9 );
             
             case LOCAL_KEY1:
-                return( Keys.LOCAL_KEY1 );
+                return ( Keys.LOCAL_KEY1 );
             case LOCAL_KEY2:
-                return( Keys.LOCAL_KEY2 );
+                return ( Keys.LOCAL_KEY2 );
             case LOCAL_KEY3:
-                return( Keys.LOCAL_KEY3 );
+                return ( Keys.LOCAL_KEY3 );
             case LOCAL_KEY4:
-                return( Keys.LOCAL_KEY4 );
+                return ( Keys.LOCAL_KEY4 );
             case LOCAL_KEY5:
-                return( Keys.LOCAL_KEY5 );
+                return ( Keys.LOCAL_KEY5 );
             case LOCAL_KEY6:
-                return( Keys.LOCAL_KEY6 );
+                return ( Keys.LOCAL_KEY6 );
             case LOCAL_KEY7:
-                return( Keys.LOCAL_KEY7 );
+                return ( Keys.LOCAL_KEY7 );
             case LOCAL_KEY8:
-                return( Keys.LOCAL_KEY8 );
+                return ( Keys.LOCAL_KEY8 );
             case LOCAL_KEY9:
-                return( Keys.LOCAL_KEY9 );
+                return ( Keys.LOCAL_KEY9 );
             case LOCAL_KEY10:
-                return( Keys.LOCAL_KEY10 );
+                return ( Keys.LOCAL_KEY10 );
             case LOCAL_KEY11:
-                return( Keys.LOCAL_KEY11 );
+                return ( Keys.LOCAL_KEY11 );
         }
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -443,26 +443,26 @@ public enum KeyID
         final String keyName = key.getName();
         
         if ( keyName.equals( "0" ) )
-            return( KeyID._0 );
+            return ( KeyID._0 );
         if ( keyName.equals( "1" ) )
-            return( KeyID._1 );
+            return ( KeyID._1 );
         if ( keyName.equals( "2" ) )
-            return( KeyID._2 );
+            return ( KeyID._2 );
         if ( keyName.equals( "3" ) )
-            return( KeyID._3 );
+            return ( KeyID._3 );
         if ( keyName.equals( "4" ) )
-            return( KeyID._4 );
+            return ( KeyID._4 );
         if ( keyName.equals( "5" ) )
-            return( KeyID._5 );
+            return ( KeyID._5 );
         if ( keyName.equals( "6" ) )
-            return( KeyID._6 );
+            return ( KeyID._6 );
         if ( keyName.equals( "7" ) )
-            return( KeyID._7 );
+            return ( KeyID._7 );
         if ( keyName.equals( "8" ) )
-            return( KeyID._8 );
+            return ( KeyID._8 );
         if ( keyName.equals( "9" ) )
-            return( KeyID._9 );
+            return ( KeyID._9 );
         
-        return( KeyID.valueOf( keyName ) );
+        return ( KeyID.valueOf( keyName ) );
     }
 }

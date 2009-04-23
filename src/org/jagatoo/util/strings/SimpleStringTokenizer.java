@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,7 +45,19 @@ public class SimpleStringTokenizer
     
     private String lastToken = null;
     
+    private boolean useQuotes = false;
+    
     private final StringBuilder sb = new StringBuilder();
+    
+    public void useQuotes( boolean keep )
+    {
+        this.useQuotes = keep;
+    }
+    
+    public final boolean useQuotes()
+    {
+        return ( useQuotes );
+    }
     
     public void reset()
     {
@@ -58,7 +70,7 @@ public class SimpleStringTokenizer
     {
         if ( string == null )
         {
-            throw new IllegalArgumentException( "string must nut be null" );
+            throw new IllegalArgumentException( "string must not be null" );
         }
         
         this.string = string;
@@ -71,10 +83,10 @@ public class SimpleStringTokenizer
         setString( string, 0 );
     }
     
-    private static final boolean isWhitespace( char ch )
+    public static final boolean isWhitespace( char ch )
     {
-        //return( Character.isWhitespace( ch ) );
-        return( ( ch == ' ' ) || ( ch == '\n' ) || ( ch == '\t' ) || ( ch == '\f' ) );
+        //return ( Character.isWhitespace( ch ) );
+        return ( ( ch == ' ' ) || ( ch == '\n' ) || ( ch == (char)13 ) || ( ch == '\t' ) || ( ch == '\f' ) );
     }
     
     private final boolean searchForNextToken()
@@ -85,84 +97,95 @@ public class SimpleStringTokenizer
             
             if ( !isWhitespace( ch ) )
             {
-                return( true );
+                return ( true );
             }
         }
         
-        return( false );
+        return ( false );
     }
     
     public final boolean hasMoreTokens()
     {
         if ( pos >= string.length() )
-            return( false );
+            return ( false );
         
         if ( hasMore == null )
         {
             hasMore = Boolean.valueOf( searchForNextToken() );
         }
         
-        return( hasMore.booleanValue() );
+        return ( hasMore.booleanValue() );
     }
     
     public final String nextToken( boolean discard )
     {
         if ( !hasMoreTokens() )
         {
-            return( null );
+            return ( null );
         }
+        
+        boolean quoteBegan = false;
         
         if ( !discard )
         {
             sb.setLength( 0 );
-            sb.append( string.charAt( pos ) );
+            char ch = string.charAt( pos );
+            if ( ( ch != '\"' ) || !useQuotes )
+                sb.append( ch );
+            else
+                quoteBegan = true;
         }
         
         while ( ++pos < string.length() )
         {
             char ch = string.charAt( pos );
             
-            if ( isWhitespace( ch ) )
+            if ( ( ch == '\"' ) && useQuotes )
+            {
+                quoteBegan = !quoteBegan;
+                
+                continue;
+            }
+            
+            if ( isWhitespace( ch ) && !quoteBegan )
             {
                 hasMore = null;
                 
                 if ( discard )
-                    return( null );
-                else
-                    return( sb.toString() );
+                    return ( null );
+                
+                return ( sb.toString() );
             }
-            else
-            {
-                if ( !discard )
-                    sb.append( ch );
-            }
+            
+            if ( !discard )
+                sb.append( ch );
         }
         
         hasMore = null;
         
         if ( discard || ( sb.length() == 0 ) )
-            return( null );
-        else
-            return( sb.toString() );
+            return ( null );
+        
+        return ( sb.toString() );
     }
     
     public final String nextToken()
     {
         lastToken = nextToken( false );
         
-        return( lastToken );
+        return ( lastToken );
     }
     
     public final SimpleStringTokenizer skipToken()
     {
         nextToken( true );
         
-        return( this );
+        return ( this );
     }
     
     public final String getLastToken()
     {
-        return( lastToken );
+        return ( lastToken );
     }
     
     private final String getRest( boolean acceptQuotes )
@@ -198,17 +221,17 @@ public class SimpleStringTokenizer
             sb.delete( sb.length() - numWhitespaces, sb.length() - 1 );
         }
         
-        return( sb.toString() );
+        return ( sb.toString() );
     }
     
     public final String getRest()
     {
-        return( getRest( true ) );
+        return ( getRest( true ) );
     }
     
     public final String getUnquotedRest()
     {
-        return( getRest( false ) );
+        return ( getRest( false ) );
     }
     
     public SimpleStringTokenizer( String string )

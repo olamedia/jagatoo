@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -62,12 +62,10 @@ public final class ControllerEventPool
             {
                 ControllerAxisChangedEvent e = instances_axis.remove( --n_axis );
                 
-                return( e );
+                return ( e );
             }
-            else
-            {
-                return( new ControllerAxisChangedEvent() );
-            }
+            
+            return ( new ControllerAxisChangedEvent() );
         }
     }
     
@@ -77,7 +75,7 @@ public final class ControllerEventPool
         
         e.set( controller, axis, axisDelta, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     public static void freeAxis( ControllerAxisChangedEvent e )
@@ -100,12 +98,10 @@ public final class ControllerEventPool
             {
                 ControllerButtonPressedEvent e = instances_pressed.remove( --n_pressed );
                 
-                return( e );
+                return ( e );
             }
-            else
-            {
-                return( new ControllerButtonPressedEvent() );
-            }
+            
+            return ( new ControllerButtonPressedEvent() );
         }
     }
     
@@ -115,7 +111,7 @@ public final class ControllerEventPool
         
         e.set( controller, button, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     public static void freePressed( ControllerButtonPressedEvent e )
@@ -138,12 +134,10 @@ public final class ControllerEventPool
             {
                 ControllerButtonReleasedEvent e = instances_released.remove( --n_released );
                 
-                return( e );
+                return ( e );
             }
-            else
-            {
-                return( new ControllerButtonReleasedEvent() );
-            }
+            
+            return ( new ControllerButtonReleasedEvent() );
         }
     }
     
@@ -153,7 +147,7 @@ public final class ControllerEventPool
         
         e.set( controller, button, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     public static void freeReleased( ControllerButtonReleasedEvent e )

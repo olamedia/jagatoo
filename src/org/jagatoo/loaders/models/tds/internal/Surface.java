@@ -51,7 +51,7 @@ public class Surface
     
     public final ArrayList< Face > getFaces()
     {
-        return( faces );
+        return ( faces );
     }
     
     public Surface()

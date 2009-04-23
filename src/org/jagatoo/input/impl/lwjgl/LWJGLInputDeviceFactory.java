@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -58,11 +58,11 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
         {
             if ( ( currentMouses[ 0 ] instanceof LWJGLMouse) && ( currentMouses[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
             {
-                return( new LWJGLMouse[] { (LWJGLMouse)currentMouses[ 0 ] } );
+                return ( new LWJGLMouse[] { (LWJGLMouse)currentMouses[ 0 ] } );
             }
         }
         
-        return( new LWJGLMouse[] { new LWJGLMouse( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
+        return ( new LWJGLMouse[] { new LWJGLMouse( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -77,11 +77,11 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
         {
             if ( ( currentKeyboards[ 0 ] instanceof LWJGLKeyboard ) && ( currentKeyboards[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
             {
-                return( new LWJGLKeyboard[] { (LWJGLKeyboard)currentKeyboards[ 0 ] } );
+                return ( new LWJGLKeyboard[] { (LWJGLKeyboard)currentKeyboards[ 0 ] } );
             }
         }
         
-        return( new LWJGLKeyboard[] { new LWJGLKeyboard( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
+        return ( new LWJGLKeyboard[] { new LWJGLKeyboard( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -130,7 +130,7 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
                     {
                         if ( ise.getInfo() != InputSystemException.Info.ILLEGAL_CONTROLLER_CONFIGURATION )
                         {
-                            throw( ise );
+                            throw ise;
                         }
                     }
                 }
@@ -141,10 +141,10 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
                 LWJGLController[] controllers2 = new LWJGLController[ k ];
                 System.arraycopy( controllers, 0, controllers2, 0, k );
                 
-                return( controllers2 );
+                return ( controllers2 );
             }
             
-            return( controllers );
+            return ( controllers );
         }
         catch ( org.lwjgl.LWJGLException lwjglEx )
         {
@@ -156,23 +156,23 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
                 
                 Log.error( InputSystem.LOG_CHANNEL, message );
                 
-                throw( new InputSystemException( message, ncdfe ) );
+                throw new InputSystemException( message, ncdfe );
             }
             
-            throw( new InputSystemException( lwjglEx ) );
+            throw new InputSystemException( lwjglEx );
         }
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t;
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t;
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t;
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -189,7 +189,7 @@ public class LWJGLInputDeviceFactory extends InputDeviceFactory
         }
         catch ( Throwable t )
         {
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -55,12 +55,12 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
     
     private static final short getUnsignedByte( byte[] bytes, int byteIndex )
     {
-        return( (short)( bytes[byteIndex] & 0xFF ) );
+        return ( (short)( bytes[byteIndex] & 0xFF ) );
     }
     
     private static final int getUnsignedShort( byte[] bytes, int byteIndex )
     {
-        return( ( getUnsignedByte( bytes, byteIndex + 1 ) << 8 ) + getUnsignedByte( bytes, byteIndex + 0 ) );
+        return ( ( getUnsignedByte( bytes, byteIndex + 1 ) << 8 ) + getUnsignedByte( bytes, byteIndex + 0 ) );
     }
     
     private static void readBuffer( BufferedInputStream in, byte[] buffer ) throws IOException
@@ -95,7 +95,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
          * 1 = has palette
          */
         if ( ( header[1] != (byte)0 ) && ( header[1] != (byte)1 ) )
-            return( HEADER_INVALID );
+            return ( HEADER_INVALID );
         
         /*
          * 2: image type
@@ -118,7 +118,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
                 hasPalette = true;
                 result = HEADER_UNCOMPRESSED;
                 System.err.println( "Indexed TGA is not yet supported!" );
-                return( HEADER_INVALID );
+                return ( HEADER_INVALID );
             case 2:
                 result = HEADER_UNCOMPRESSED;
                 break;
@@ -129,7 +129,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
                 hasPalette = true;
                 result = HEADER_COMPRESSED;
                 System.err.println( "Indexed TGA is not yet supported!" );
-                return( HEADER_INVALID );
+                return ( HEADER_INVALID );
             case 10:
                 result = HEADER_COMPRESSED;
                 break;
@@ -137,7 +137,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
                 result = HEADER_COMPRESSED;
                 break;
             default:
-                return( HEADER_INVALID );
+                return ( HEADER_INVALID );
         }
         
         /*
@@ -148,7 +148,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
             if ( getUnsignedShort( header, 3 ) != 0 )
             {
                 // No palette data, but palette offset specified!
-                return( HEADER_INVALID );
+                return ( HEADER_INVALID );
             }
         }
         
@@ -160,7 +160,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
             if ( getUnsignedShort( header, 5 ) != 0 )
             {
                 // No palette data, but palette size specified!
-                return( HEADER_INVALID );
+                return ( HEADER_INVALID );
             }
         }
         
@@ -176,13 +176,13 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         {
             if ( paletteEntrySize != 0 )
                 // No palette, but non-zero palette-entry-size!
-                return( HEADER_INVALID );
+                return ( HEADER_INVALID );
         }
         else
         {
             if ( ( paletteEntrySize != 15 ) && ( paletteEntrySize != 16 ) && ( paletteEntrySize != 24 ) && ( paletteEntrySize != 32 ) )
                 // Invalid palette-entry-size!
-                return( HEADER_INVALID );
+                return ( HEADER_INVALID );
         }
         
         /*
@@ -192,7 +192,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
          */
         if ( getUnsignedShort( header, 8 ) != 0 )
         {
-            return( HEADER_INVALID );
+            return ( HEADER_INVALID );
         }
         
         /*
@@ -202,7 +202,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
          */
         if ( getUnsignedShort( header, 10 ) != 0 )
         {
-            return( HEADER_INVALID );
+            return ( HEADER_INVALID );
         }
         
         /*
@@ -223,12 +223,12 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
             case 15:
             case 16:
                 System.err.println( "TGAs with non RGB or RGBA pixels are not yet supported." );
-                return( HEADER_INVALID );
+                return ( HEADER_INVALID );
             case 24:
             case 32:
                 break;
             default:
-                return( HEADER_INVALID );
+                return ( HEADER_INVALID );
         }
         
         /*
@@ -244,7 +244,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
             StreamUtils.skipBytes( in, imgIDSize );
         }
         
-        return( result );
+        return ( result );
     }
     
     private static void readBuffer( BufferedInputStream in, int width, int height, int srcBytesPerPixel, boolean acceptAlpha, boolean flipVertically, byte[] bb ) throws IOException
@@ -374,7 +374,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         // Make sure all information is valid
         if ( ( orgWidth <= 0 ) || ( orgHeight <= 0 ) || ( ( bpp != 24 ) && ( bpp != 32 ) ) )
         {
-            throw( new IOException( "Invalid texture information" ) );
+            throw new IOException( "Invalid texture information" );
         }
         
         // Compute the number of BYTES per pixel
@@ -407,7 +407,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         bb.position( 0 );
         bb.limit( width * height * image.getFormat().getPixelSize() );
         
-        return( image );
+        return ( image );
     }
     
     /**
@@ -445,7 +445,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         // Make sure all information is valid
         if ( ( orgWidth <= 0 ) || ( orgHeight <= 0 ) || ( ( bpp != 24 ) && ( bpp != 32 ) ) )
         {
-            throw( new IOException( "Invalid texture information" ) );
+            throw new IOException( "Invalid texture information" );
         }
         
         // Compute the number of BYTES per pixel
@@ -492,7 +492,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
             }
             catch ( IOException e )
             {
-                throw( new IOException( "Could not read RLE header" ) );
+                throw new IOException( "Could not read RLE header" );
             }
             
             boolean repeatColor;
@@ -560,7 +560,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
                 if ( currentPixel > pixelCount )
                 {
                     // if there is too many... Display an error!
-                    throw( new IOException( "Too many pixels read" ) );
+                    throw new IOException( "Too many pixels read" );
                 }
             }
         }
@@ -574,7 +574,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         bb.position( 0 );
         bb.limit( byteOffset0 + ( width * height * dstBytesPerPixel ) );
         
-        return( image );
+        return ( image );
     }
     
     /**
@@ -584,7 +584,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
     {
         if ( in.available() < HEADER_SIZE )
         {
-            return( null );
+            return ( null );
         }
         
         byte[] header = new byte[ HEADER_SIZE ];
@@ -592,7 +592,7 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         final int headerType = compareFormatHeader( in, header );
         
         if ( headerType == HEADER_INVALID )
-            return( null );
+            return ( null );
         
         AbstractTextureImage image = null;
         
@@ -609,11 +609,11 @@ public class TextureImageFormatLoaderTGA implements TextureImageFormatLoader
         // If header matches neither type
         else
         {
-            // throw( new IOException("TGA file be type 2 or type 10 ") );
-            return( null );
+            // throw new IOException("TGA file be type 2 or type 10 ") );
+            return ( null );
         }
         
-        return( image );
+        return ( image );
     }
     
     public TextureImageFormatLoaderTGA()

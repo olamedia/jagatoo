@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -90,13 +90,13 @@ public final class ResourceCache< K, T >
     public ResourceCache( int initialCapacity, float loadFactor )
     {
         if ( initialCapacity <= 0 )
-            throw( new IllegalArgumentException( "Illegal initial capacity: " + initialCapacity ) );
+            throw new IllegalArgumentException( "Illegal initial capacity: " + initialCapacity );
         
         if ( initialCapacity > MAXIMUM_CAPACITY )
             initialCapacity = MAXIMUM_CAPACITY;
         
         if ( loadFactor <= 0 || Float.isNaN( loadFactor ) )
-            throw( new IllegalArgumentException( "Illegal load factor: " + loadFactor ) );
+            throw new IllegalArgumentException( "Illegal load factor: " + loadFactor );
         
         // Find a power of 2 >= initialCapacity
         int capacity = 1;
@@ -148,7 +148,7 @@ public final class ResourceCache< K, T >
         h += ( h << 4 );
         h ^= ( h >>> 10 );
         
-        return( h );
+        return ( h );
     }
     
     /**
@@ -168,13 +168,13 @@ public final class ResourceCache< K, T >
             if ( e.hash == hash && ( key == e.key || key.equals( e.key ) ) )
             {
                 ++hits;
-                return( e.get() );
+                return ( e.get() );
             }
         }
         
         ++misses;
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -192,9 +192,9 @@ public final class ResourceCache< K, T >
         checkQueue();
         
         if ( key == null )
-            throw( new IllegalArgumentException( "Cache doesn't support null keys" ) );
+            throw new IllegalArgumentException( "Cache doesn't support null keys" );
         if ( value == null )
-            throw( new IllegalArgumentException( "Cache doesn't support null values" ) );
+            throw new IllegalArgumentException( "Cache doesn't support null values" );
         
         int hash = hash( key );
         int idx = hash & ( table.length - 1 );
@@ -209,7 +209,7 @@ public final class ResourceCache< K, T >
                     table[ idx ] = e;
                 else
                     prev.next = e;
-                return( value );
+                return ( value );
             }
             prev = e;
         }
@@ -219,7 +219,7 @@ public final class ResourceCache< K, T >
         if ( size++ >= threshold )
             resize( 2 * table.length );
         
-        return( value );
+        return ( value );
     }
     
     public void removeByKey( K key )
@@ -313,7 +313,7 @@ public final class ResourceCache< K, T >
      */
     public int getCacheHits()
     {
-        return( hits );
+        return ( hits );
     }
     
     /**
@@ -324,7 +324,7 @@ public final class ResourceCache< K, T >
      */
     public int getCacheMisses()
     {
-        return( misses );
+        return ( misses );
     }
     
     /**
@@ -332,7 +332,7 @@ public final class ResourceCache< K, T >
      */
     public int getCacheEntries()
     {
-        return( size );
+        return ( size );
     }
     
     /**
@@ -352,6 +352,6 @@ public final class ResourceCache< K, T >
     @Override
     public String toString()
     {
-        return( getClass().getName() + "[size=" + size + ",hits=" + hits + ",misses=" + misses + "]" );
+        return ( getClass().getName() + "[size=" + size + ",hits=" + hits + ",misses=" + misses + "]" );
     }
 }

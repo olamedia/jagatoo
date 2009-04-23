@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -59,15 +59,15 @@ public class JInputKeyboard extends Keyboard
     private final char getKeyChar( Key key, char char0, char charShift, int modifierMask )
     {
         if ( modifierMask == 0 )
-            return( char0 );
+            return ( char0 );
         
         if ( modifierMask == Keys.MODIFIER_SHIFT )
         {
             if ( charShift != '\0' )
-                return( charShift );
+                return ( charShift );
         }
         
-        return( KeyboardLocalizer.getMapping().getModifiedChar( key, char0, modifierMask ) );
+        return ( KeyboardLocalizer.getMapping().getModifiedChar( key, char0, modifierMask ) );
     }
     
     private final char getKeyChar( Key key, int modifierMask )
@@ -75,122 +75,122 @@ public class JInputKeyboard extends Keyboard
         switch ( key.getKeyID() )
         {
             case _0:
-                return( getKeyChar( key, '0', '\0', modifierMask ) );
+                return ( getKeyChar( key, '0', '\0', modifierMask ) );
             case _1:
-                return( getKeyChar( key, '1', '\0', modifierMask ) );
+                return ( getKeyChar( key, '1', '\0', modifierMask ) );
             case _2:
-                return( getKeyChar( key, '2', '\0', modifierMask ) );
+                return ( getKeyChar( key, '2', '\0', modifierMask ) );
             case _3:
-                return( getKeyChar( key, '3', '\0', modifierMask ) );
+                return ( getKeyChar( key, '3', '\0', modifierMask ) );
             case _4:
-                return( getKeyChar( key, '4', '\0', modifierMask ) );
+                return ( getKeyChar( key, '4', '\0', modifierMask ) );
             case _5:
-                return( getKeyChar( key, '5', '\0', modifierMask ) );
+                return ( getKeyChar( key, '5', '\0', modifierMask ) );
             case _6:
-                return( getKeyChar( key, '6', '\0', modifierMask ) );
+                return ( getKeyChar( key, '6', '\0', modifierMask ) );
             case _7:
-                return( getKeyChar( key, '7', '\0', modifierMask ) );
+                return ( getKeyChar( key, '7', '\0', modifierMask ) );
             case _8:
-                return( getKeyChar( key, '8', '\0', modifierMask ) );
+                return ( getKeyChar( key, '8', '\0', modifierMask ) );
             case _9:
-                return( getKeyChar( key, '9', '\0', modifierMask ) );
+                return ( getKeyChar( key, '9', '\0', modifierMask ) );
             
             case A:
-                return( getKeyChar( key, 'a', 'A', modifierMask ) );
+                return ( getKeyChar( key, 'a', 'A', modifierMask ) );
             case B:
-                return( getKeyChar( key, 'b', 'B', modifierMask ) );
+                return ( getKeyChar( key, 'b', 'B', modifierMask ) );
             case C:
-                return( getKeyChar( key, 'c', 'C', modifierMask ) );
+                return ( getKeyChar( key, 'c', 'C', modifierMask ) );
             case D:
-                return( getKeyChar( key, 'd', 'D', modifierMask ) );
+                return ( getKeyChar( key, 'd', 'D', modifierMask ) );
             case E:
-                return( getKeyChar( key, 'e', 'E', modifierMask ) );
+                return ( getKeyChar( key, 'e', 'E', modifierMask ) );
             case F:
-                return( getKeyChar( key, 'f', 'F', modifierMask ) );
+                return ( getKeyChar( key, 'f', 'F', modifierMask ) );
             case G:
-                return( getKeyChar( key, 'g', 'G', modifierMask ) );
+                return ( getKeyChar( key, 'g', 'G', modifierMask ) );
             case H:
-                return( getKeyChar( key, 'h', 'H', modifierMask ) );
+                return ( getKeyChar( key, 'h', 'H', modifierMask ) );
             case I:
-                return( getKeyChar( key, 'i', 'I', modifierMask ) );
+                return ( getKeyChar( key, 'i', 'I', modifierMask ) );
             case J:
-                return( getKeyChar( key, 'j', 'J', modifierMask ) );
+                return ( getKeyChar( key, 'j', 'J', modifierMask ) );
             case K:
-                return( getKeyChar( key, 'k', 'K', modifierMask ) );
+                return ( getKeyChar( key, 'k', 'K', modifierMask ) );
             case L:
-                return( getKeyChar( key, 'l', 'L', modifierMask ) );
+                return ( getKeyChar( key, 'l', 'L', modifierMask ) );
             case M:
-                return( getKeyChar( key, 'm', 'M', modifierMask ) );
+                return ( getKeyChar( key, 'm', 'M', modifierMask ) );
             case N:
-                return( getKeyChar( key, 'n', 'N', modifierMask ) );
+                return ( getKeyChar( key, 'n', 'N', modifierMask ) );
             case O:
-                return( getKeyChar( key, 'o', 'O', modifierMask ) );
+                return ( getKeyChar( key, 'o', 'O', modifierMask ) );
             case P:
-                return( getKeyChar( key, 'p', 'P', modifierMask ) );
+                return ( getKeyChar( key, 'p', 'P', modifierMask ) );
             case Q:
-                return( getKeyChar( key, 'q', 'Q', modifierMask ) );
+                return ( getKeyChar( key, 'q', 'Q', modifierMask ) );
             case R:
-                return( getKeyChar( key, 'r', 'R', modifierMask ) );
+                return ( getKeyChar( key, 'r', 'R', modifierMask ) );
             case S:
-                return( getKeyChar( key, 's', 'S', modifierMask ) );
+                return ( getKeyChar( key, 's', 'S', modifierMask ) );
             case T:
-                return( getKeyChar( key, 't', 'T', modifierMask ) );
+                return ( getKeyChar( key, 't', 'T', modifierMask ) );
             case U:
-                return( getKeyChar( key, 'u', 'U', modifierMask ) );
+                return ( getKeyChar( key, 'u', 'U', modifierMask ) );
             case V:
-                return( getKeyChar( key, 'v', 'V', modifierMask ) );
+                return ( getKeyChar( key, 'v', 'V', modifierMask ) );
             case W:
-                return( getKeyChar( key, 'w', 'W', modifierMask ) );
+                return ( getKeyChar( key, 'w', 'W', modifierMask ) );
             case X:
-                return( getKeyChar( key, 'x', 'X', modifierMask ) );
+                return ( getKeyChar( key, 'x', 'X', modifierMask ) );
             case Y:
-                return( getKeyChar( key, 'y', 'Y', modifierMask ) );
+                return ( getKeyChar( key, 'y', 'Y', modifierMask ) );
             case Z:
-                return( getKeyChar( key, 'z', 'Z', modifierMask ) );
+                return ( getKeyChar( key, 'z', 'Z', modifierMask ) );
             
             case TAB:
-                return( '\t' );
+                return ( '\t' );
             case SPACE:
-                return( ' ' );
+                return ( ' ' );
             case BACK_SPACE:
-                return( '\b' );
+                return ( '\b' );
             case ENTER:
-                return( '\r' );
+                return ( '\r' );
             
             case DELETE:
-                return( (char)127 );
+                return ( (char)127 );
             
             case NUMPAD_DIVIDE:
-                return( '/' );
+                return ( '/' );
             case NUMPAD_MULTIPLY:
-                return( '*' );
+                return ( '*' );
             case NUMPAD_SUBTRACT:
-                return( '-' );
+                return ( '-' );
             case NUMPAD_ADD:
-                return( '+' );
+                return ( '+' );
             case NUMPAD_ENTER:
-                return( '\r' );
+                return ( '\r' );
             
             case NUMPAD0:
-                return( '0' );
+                return ( '0' );
             case NUMPAD1:
-                return( '1' );
+                return ( '1' );
             case NUMPAD2:
-                return( '2' );
+                return ( '2' );
             case NUMPAD3:
-                return( '3' );
+                return ( '3' );
             case NUMPAD4:
-                return( '4' );
+                return ( '4' );
             case NUMPAD5:
-                return( '5' );
+                return ( '5' );
             case NUMPAD6:
-                return( '6' );
+                return ( '6' );
             case NUMPAD7:
-                return( '7' );
+                return ( '7' );
             case NUMPAD8:
-                return( '8' );
+                return ( '8' );
             case NUMPAD9:
-                return( '9' );
+                return ( '9' );
             
             case CIRCUMFLEX:
             case NUMPAD_DECIMAL:
@@ -205,10 +205,10 @@ public class JInputKeyboard extends Keyboard
             case LOCAL_KEY9:
             case LOCAL_KEY10:
             case LOCAL_KEY11:
-                return( KeyboardLocalizer.getMapping().getModifiedChar( key, '\0', modifierMask ) );
+                return ( KeyboardLocalizer.getMapping().getModifiedChar( key, '\0', modifierMask ) );
         }
         
-        return( '\0' );
+        return ( '\0' );
     }
     
     /**
@@ -217,7 +217,7 @@ public class JInputKeyboard extends Keyboard
     @Override
     protected boolean hasKeyStateChanged( Key key, boolean keyState )
     {
-        return( true );
+        return ( true );
     }
     
     private final net.java.games.input.Event event = new net.java.games.input.Event();
@@ -302,15 +302,15 @@ public class JInputKeyboard extends Keyboard
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t;
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t;
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t;
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -330,7 +330,7 @@ public class JInputKeyboard extends Keyboard
     public void collectEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
         if ( eventQueue == null )
-            throw( new InputSystemException( "EventQueue must not be null here!" ) );
+            throw new InputSystemException( "EventQueue must not be null here!" );
         
         final boolean acceptEvents = ( isEnabled() && getSourceWindow().receivesInputEvents() );
         
@@ -373,7 +373,7 @@ public class JInputKeyboard extends Keyboard
         }
         catch ( Throwable t )
         {
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t ) );
         }
         */
     }

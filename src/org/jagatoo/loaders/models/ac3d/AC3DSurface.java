@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -103,7 +103,7 @@ public class AC3DSurface
      */
     public int getType()
     {
-        return( type );
+        return ( type );
     }
     
     /**
@@ -114,7 +114,7 @@ public class AC3DSurface
      */
     public int getVertexReferenceCount()
     {
-        return( surfVerts.length );
+        return ( surfVerts.length );
     }
     
     /**
@@ -124,12 +124,12 @@ public class AC3DSurface
      */
     public int[] getVertexReferences()
     {
-        return( surfVerts );
+        return ( surfVerts );
     }
     
     public boolean hasTextureCoordinates()
     {
-        return( textCoords != null );
+        return ( textCoords != null );
     }
     
     /**
@@ -137,7 +137,7 @@ public class AC3DSurface
      */
     public float[] getTextureCoordinates()
     {
-        return( textCoords );
+        return ( textCoords );
     }
     
     /**
@@ -147,14 +147,10 @@ public class AC3DSurface
      */
     public boolean isLine()
     {
-        if ( type != POLYGON )
-        {
-            return( true );
-        }
-        else
-        {
-            return( false );
-        }
+        if ( type == POLYGON )
+            return ( false );
+        
+        return ( true );
     }
     
     /**
@@ -164,7 +160,7 @@ public class AC3DSurface
      */
     public boolean isTwoSided()
     {
-        return( twoSided );
+        return ( twoSided );
     }
     
     /**
@@ -172,7 +168,7 @@ public class AC3DSurface
      */
     public boolean isShaded()
     {
-        return( shaded );
+        return ( shaded );
     }
     
     /**
@@ -182,12 +178,12 @@ public class AC3DSurface
      */
     public int getMaterialIndex()
     {
-        return( material );
+        return ( material );
     }
     
     public Object getUserObject()
     {
-        return( userObject );
+        return ( userObject );
     }
     
     /**

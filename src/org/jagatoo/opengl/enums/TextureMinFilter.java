@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -129,14 +129,14 @@ public enum TextureMinFilter
     public final int getOpenGLBaseFilter( boolean mipmapping )
     {
         if ( mipmapping )
-            return( glValue_mipmapping );
-        else
-            return( glValue_no_mipmapping );
+            return ( glValue_mipmapping );
+        
+        return ( glValue_no_mipmapping );
     }
     
     public final int getAnisotropicLevel()
     {
-        return( anisotropicLevel );
+        return ( anisotropicLevel );
     }
     
     private TextureMinFilter( int glValue_no_mipmapping, int glValue_mipmapping, int anisotropicLevel )

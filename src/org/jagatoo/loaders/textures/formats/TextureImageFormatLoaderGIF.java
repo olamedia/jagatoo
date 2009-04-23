@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,16 +70,16 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
         int result = HEADER_FORMAT_INVALID;
         
         if ( (byte)in.read() != (byte)71 )
-            return( HEADER_FORMAT_INVALID );
+            return ( HEADER_FORMAT_INVALID );
         
         if ( (byte)in.read() != (byte)73 )
-            return( HEADER_FORMAT_INVALID );
+            return ( HEADER_FORMAT_INVALID );
         
         if ( (byte)in.read() != (byte)70 )
-            return( HEADER_FORMAT_INVALID );
+            return ( HEADER_FORMAT_INVALID );
         
         if ( (byte)in.read() != (byte)56 )
-            return( HEADER_FORMAT_INVALID );
+            return ( HEADER_FORMAT_INVALID );
         
         switch ( (byte)in.read() )
         {
@@ -90,13 +90,13 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
                 result = HEADER_FORMAT_GIF89a;
                 break;
             default:
-                return( HEADER_FORMAT_INVALID );
+                return ( HEADER_FORMAT_INVALID );
         }
         
         if ( (byte)in.read() != (byte)97 )
-            return( HEADER_FORMAT_INVALID );
+            return ( HEADER_FORMAT_INVALID );
         
-        return( result );
+        return ( result );
     }
     
     private static final byte parseGlobalFlags( BufferedInputStream in ) throws IOException
@@ -111,7 +111,7 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
         //byte bgcolor = globalHeader[5];
         //byte aspectRatio = globalHeader[6];
         
-        return( flags );
+        return ( flags );
     }
     
     private static byte[][] readColorPalette( BufferedInputStream in, int numColors ) throws IOException
@@ -128,7 +128,7 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
             };
         }
         
-        return( colorPalette );
+        return ( colorPalette );
     }
     
     private static final int parseTransparentColorIndex( BufferedInputStream in ) throws IOException
@@ -177,7 +177,7 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
         }
         while ( imageSeparator != 0x2c );
         
-        return( transparentColorIndex );
+        return ( transparentColorIndex );
     }
     
     private int readLZWCode( BufferedInputStream in, GIFWorkData workData, int codeLen, int codeEndOfImage, byte[] bytesBuff ) throws IOException
@@ -197,7 +197,7 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
                 }
                 else if ( workData.bytesAvailable == 0 )
                 {
-                    return( codeEndOfImage );
+                    return ( codeEndOfImage );
                 }
                 else
                 {
@@ -205,7 +205,7 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
                     
                     throw new Error( "Bad image format" );
                     
-                    //return( endOfImage );
+                    //return ( endOfImage );
                 }
             }
             
@@ -483,7 +483,7 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
         
         if ( headerFormat == HEADER_FORMAT_INVALID )
         {
-            return( null );
+            return ( null );
         }
         
         final int flags = parseGlobalFlags( in );
@@ -584,6 +584,6 @@ public class TextureImageFormatLoaderGIF implements TextureImageFormatLoader
         bb.position( 0 );
         bb.limit( byteOffset0 + width * height * dstBytesPerPixel );
         
-        return( image );
+        return ( image );
     }
 }

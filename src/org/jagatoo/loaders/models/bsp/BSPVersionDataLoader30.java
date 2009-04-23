@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -67,7 +67,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
         //Arrays.fill( decompressed, (byte)0xFF );
         byte[] decompressed = null;
         
-        return( decompressed );
+        return ( decompressed );
     }
     
     /**
@@ -80,7 +80,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
         try
         {
             prototype.entities = BSPPrototypeLoader.readEntities( bspFile, bspDir );
-            prototype.wadFiles = BSPPrototypeLoader.readWADFiles( bspFile, bspDir, prototype.entities );
+            prototype.wadFiles = BSPPrototypeLoader.readWADFiles( bspFile, prototype.entities );
             prototype.planes = BSPPrototypeLoader.readPlanes( bspFile, bspDir, worldScale );
             prototype.baseTextures = BSPPrototypeLoader.readTextures( bspFile, bspDir, prototype.wadFiles, prototype.entities, appFactory );
             prototype.vertices = BSPPrototypeLoader.readVertices( bspFile, bspDir );
@@ -107,7 +107,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
             throw new ParsingException( e );
         }
         
-        return( prototype );
+        return ( prototype );
     }
     
     
@@ -283,7 +283,7 @@ public class BSPVersionDataLoader30 implements BSPVersionDataLoader
         
         geomFactory.finalizeGeometry( ga, geomType, 0, numVertices, 0, 0 );
         
-        return( ga );
+        return ( ga );
     }
     
     /**

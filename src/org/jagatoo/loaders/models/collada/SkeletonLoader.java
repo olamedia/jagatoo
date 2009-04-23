@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -201,6 +201,6 @@ public class SkeletonLoader
         
         loadJoint( localToWorld, rootNode, upVector, Point3f.ZERO, Point3f.ZERO, rootBone, boneList );
         
-        return( new Skeleton( rootBone, skeletonPos, boneList ) );
+        return ( new Skeleton( rootBone, skeletonPos, boneList ) );
     }
 }

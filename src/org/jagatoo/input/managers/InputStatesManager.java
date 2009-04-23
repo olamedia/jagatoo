@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -74,7 +74,7 @@ public class InputStatesManager
             manipulator = new InputStatesManipulator( this );
         }
         
-        return( manipulator );
+        return ( manipulator );
     }
     
     /**
@@ -82,7 +82,7 @@ public class InputStatesManager
      */
     public final int getNumStates()
     {
-        return( numStates );
+        return ( numStates );
     }
     
     /**
@@ -97,24 +97,23 @@ public class InputStatesManager
         if ( states1[ ordinal ] == states2[ ordinal ] )
         {
             if ( states1[ ordinal ] > 0 )
-                return( InputState.POSITIVE );
-            else
-                return( InputState.NEGATIVE );
+                return ( InputState.POSITIVE );
+            
+            return ( InputState.NEGATIVE );
         }
-        else if ( swapper )
+        
+        if ( swapper )
         {
             if ( states1[ ordinal ] > states2[ ordinal ] )
-                return( InputState.MADE_POSITIVE );
-            else
-                return( InputState.MADE_NEGATIVE );
+                return ( InputState.MADE_POSITIVE );
+            
+            return ( InputState.MADE_NEGATIVE );
         }
-        else
-        {
-            if ( states2[ ordinal ] > states1[ ordinal ] )
-                return( InputState.MADE_POSITIVE );
-            else
-                return( InputState.MADE_NEGATIVE );
-        }
+        
+        if ( states2[ ordinal ] > states1[ ordinal ] )
+            return ( InputState.MADE_POSITIVE );
+        
+        return ( InputState.MADE_NEGATIVE );
     }
     
     /**
@@ -124,7 +123,7 @@ public class InputStatesManager
      */
     public final int getSimpleInputState( InputAction action )
     {
-        return( currStates[ action.ordinal() ] );
+        return ( currStates[ action.ordinal() ] );
     }
     
     /**
@@ -134,7 +133,7 @@ public class InputStatesManager
      */
     public final boolean hasInputStateChanged( InputAction action )
     {
-        return( states1[ action.ordinal() ] != states2[ action.ordinal() ] );
+        return ( states1[ action.ordinal() ] != states2[ action.ordinal() ] );
     }
     
     private final void invokeAction( final InputDevice device, final DeviceComponent comp, final int ordinal, final InputAction action, long nanoTime )
@@ -160,7 +159,7 @@ public class InputStatesManager
         final InputAction action = bindingsManager.getBoundAction( comp );
         
         if ( action == null )
-            return( -1 );
+            return ( -1 );
         
         final int ordinal = action.ordinal();
         
@@ -171,7 +170,7 @@ public class InputStatesManager
             invokeAction( device, comp, ordinal, action, nanoTime );
         }
         
-        return( ordinal );
+        return ( ordinal );
     }
     
     private final void updateWheelStates( final Mouse mouse, final MouseWheel wheel, final int state, final int delta, long nanoTime )
@@ -296,7 +295,7 @@ public class InputStatesManager
             }
         }
         
-        return( i );
+        return ( i );
     }
     
     /**
@@ -331,10 +330,10 @@ public class InputStatesManager
             InputAction[] actions2 = new InputAction[ i ];
             System.arraycopy( actions, 0, actions2, 0, i );
             
-            return( actions2 );
+            return ( actions2 );
         }
         
-        return( actions );
+        return ( actions );
     }
     
     /**

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,12 +47,12 @@ public class EventQueue
     
     public final int getNumEvents()
     {
-        return( numEvents );
+        return ( numEvents );
     }
     
     public final InputEvent getEvent( int index )
     {
-        return( events[ index ] );
+        return ( events[ index ] );
     }
     
     public final void enqueue( InputEvent event )
@@ -70,6 +70,11 @@ public class EventQueue
         }
     }
     
+    /**
+     * 
+     * @param inputSystem
+     * @param filteredType
+     */
     public final void dequeueAndFire( InputSystem inputSystem, InputEvent.Type filteredType )
     {
         synchronized ( LOCK )

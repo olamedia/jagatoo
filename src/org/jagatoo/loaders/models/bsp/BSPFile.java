@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -93,17 +93,17 @@ class BSPFile
     
     public final String getName()
     {
-        return( filename );
+        return ( filename );
     }
     
     public final URL getBaseURL()
     {
-        return( baseURL );
+        return ( baseURL );
     }
     
     public final BufferedInputStream getInputStrema()
     {
-        return( in );
+        return ( in );
     }
     
     public final void resetPointer() throws IOException
@@ -127,32 +127,32 @@ class BSPFile
     
     public final byte readByte() throws IOException
     {
-        return( (byte)in.read() );
+        return ( (byte)in.read() );
     }
     
     public final char readChar() throws IOException
     {
-        return( (char)readByte() );
+        return ( (char)readByte() );
     }
     
     public final int readInt() throws IOException
     {
-        return( StreamUtils.readSwappedInt( in ) );
+        return ( StreamUtils.readSwappedInt( in ) );
     }
     
     public final short readShort() throws IOException
     {
-        return( StreamUtils.readSwappedShort( in ) );
+        return ( StreamUtils.readSwappedShort( in ) );
     }
     
     public final int readUnsignedShort() throws IOException
     {
-        return( StreamUtils.readSwappedUnsignedShort( in ) );
+        return ( StreamUtils.readSwappedUnsignedShort( in ) );
     }
     
     public final float readFloat() throws IOException
     {
-        return( Float.intBitsToFloat( StreamUtils.readSwappedInt( in ) ) );
+        return ( Float.intBitsToFloat( StreamUtils.readSwappedInt( in ) ) );
     }
     
     public final void readFully( byte[] data ) throws IOException
@@ -171,7 +171,7 @@ class BSPFile
         
         in.read( data );
         
-        return( data );
+        return ( data );
     }
     
     public final void readFully( char[] data, int count ) throws IOException
@@ -215,19 +215,19 @@ class BSPFile
     
     public final char[] getID()
     {
-        return( ID );
+        return ( ID );
     }
     
     public final int getVersion()
     {
-        return( version );
+        return ( version );
     }
     
     private void checkVersion( int version ) throws IncorrectFormatException
     {
         /*
         if ( version != 0x2e )
-            throw( new IncorrectFormatException( "Invalid Quake 3 BSP file" ) );
+            throw new IncorrectFormatException( "Invalid Quake 3 BSP file" ) );
         */
         
         if ( ( version != 46 ) && ( version != 30 ) )

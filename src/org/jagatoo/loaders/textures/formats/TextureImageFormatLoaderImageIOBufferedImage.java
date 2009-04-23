@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -55,7 +55,7 @@ public class TextureImageFormatLoaderImageIOBufferedImage implements TextureImag
     {
         BufferedImage result = ImageIO.read( in );
         
-        return( result );
+        return ( result );
     }
     
     private static AbstractTextureImage createTextureImage( BufferedImage img, boolean acceptAlpha, boolean flipVertically, boolean allowStreching, TextureFactory texFactory ) throws IOException
@@ -96,7 +96,7 @@ public class TextureImageFormatLoaderImageIOBufferedImage implements TextureImag
         
         pp.readImageData( img, 0, 0, width, height, bb, bb.position(), flipVertically );
         
-        return( ti );
+        return ( ti );
     }
     
     /**
@@ -108,7 +108,7 @@ public class TextureImageFormatLoaderImageIOBufferedImage implements TextureImag
         
         AbstractTextureImage ti = createTextureImage( img, acceptAlpha, flipVertically, allowStreching, texFactory );
         
-        return( ti );
+        return ( ti );
     }
     
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -53,7 +53,7 @@ public class MouseStoppedEvent extends MouseEvent
      */
     public final int getX()
     {
-        return( x );
+        return ( x );
     }
     
     /**
@@ -61,7 +61,7 @@ public class MouseStoppedEvent extends MouseEvent
      */
     public final int getY()
     {
-        return( y );
+        return ( y );
     }
     
     
@@ -71,7 +71,7 @@ public class MouseStoppedEvent extends MouseEvent
     @Override
     public String toString()
     {
-        return( "MouseStoppedEvent( pos = (" + getX() + ", " + getY() + "), " +
+        return ( "MouseStoppedEvent( pos = (" + getX() + ", " + getY() + "), " +
                 "when = " + getWhen() +
                 " )"
               );

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -130,7 +130,7 @@ public class AseMesh extends AseNode
         
         if ( ( n / 3 ) != numVertices )
         {
-            throw( new Error( "Vertex list does not match declared amount : " + in.getLastLineNumber() ) );
+            throw new Error( "Vertex list does not match declared amount : " + in.getLastLineNumber() );
         }
         
         in.blockEnd = false;
@@ -158,7 +158,7 @@ public class AseMesh extends AseNode
             
             if ( line.getType() != AseFileLine.Type.MESH_FACE )
             {
-                throw( new Error( "Expecting *MESH_FACE at line " + line.getNumber() ) );
+                throw new Error( "Expecting *MESH_FACE at line " + line.getNumber() );
             }
             
             faces[ n++ ] = Integer.parseInt( line.getParameter( 2 ) );
@@ -182,7 +182,7 @@ public class AseMesh extends AseNode
             
             if ( matID >= MAX_MATERIALS )
             {
-                throw( new Error( "Invalid MatID " + matID + " on line " + line.getNumber() ) );
+                throw new Error( "Invalid MatID " + matID + " on line " + line.getNumber() );
             }
             
             totals[ matID ]++;
@@ -190,7 +190,7 @@ public class AseMesh extends AseNode
         
         if ( ( n / 3 ) != numFaces )
         {
-            throw( new Error( "Face list does not match declared amount : " + in.getLastLineNumber() ) );
+            throw new Error( "Face list does not match declared amount : " + in.getLastLineNumber() );
         }
         
         in.blockEnd = false;
@@ -224,7 +224,7 @@ public class AseMesh extends AseNode
             
             if ( line.getType() != AseFileLine.Type.MESH_TEX_VERT )
             {
-                throw( new Error( "Expecting *MESH_FACE at line " + line.getNumber() ) );
+                throw new Error( "Expecting *MESH_FACE at line " + line.getNumber() );
             }
             
             texVertices[ n++ ] = Float.parseFloat( line.getParameter( 1 ) );
@@ -233,7 +233,7 @@ public class AseMesh extends AseNode
         
         if ( ( n / 2 ) != numTexVertices )
         {
-            throw( new Error( "Texture vertex list does not match declared amount : " + in.getLastLineNumber() ) );
+            throw new Error( "Texture vertex list does not match declared amount : " + in.getLastLineNumber() );
         }
         
         in.blockEnd = false;
@@ -247,7 +247,7 @@ public class AseMesh extends AseNode
     {
         if ( numTexFaces != numFaces )
         {
-            throw( new Error( "Number of tex faces does not equal number of faces " + in.getLastLineNumber() ) );
+            throw new Error( "Number of tex faces does not equal number of faces " + in.getLastLineNumber() );
         }
         
         texFaces = new int[ numTexFaces * 3 ];
@@ -274,7 +274,7 @@ public class AseMesh extends AseNode
         
         if ( ( n / 3 ) != numTexFaces )
         {
-            throw( new Error( "tex face list does not match declared amount : " + in.getLastLineNumber() ) );
+            throw new Error( "tex face list does not match declared amount : " + in.getLastLineNumber() );
         }
         
         in.blockEnd = false;
@@ -290,7 +290,7 @@ public class AseMesh extends AseNode
         
         if ( line.getType() != AseFileLine.Type.MESH_VERTEXNORMAL )
         {
-            throw( new Error( "Expecting *MESH_VERTEXNORMAL at line " + line.getNumber() ) );
+            throw new Error( "Expecting *MESH_VERTEXNORMAL at line " + line.getNumber() );
         }
         
         normalsIndices[ n / 3 ] = Integer.parseInt( line.getParameter( 0 ) );
@@ -325,7 +325,7 @@ public class AseMesh extends AseNode
             
             if ( line.getType() != AseFileLine.Type.MESH_FACENORMAL )
             {
-                throw( new Error( "Expecting *MESH_FACENORMAL at line " + line.getNumber() ) );
+                throw new Error( "Expecting *MESH_FACENORMAL at line " + line.getNumber() );
             }
             
             faceNormalsIndices[ n / 9 ] = Integer.parseInt( line.getParameter( 0 ) );
@@ -343,7 +343,7 @@ public class AseMesh extends AseNode
         
         if ( ( n / 9 ) != numFaces )
         {
-            throw( new Error( "normal list does not match declared amount : " + in.getLastLineNumber() ) );
+            throw new Error( "normal list does not match declared amount : " + in.getLastLineNumber() );
         }
         
         in.blockEnd = false;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,7 +54,7 @@ public class MappingFrance implements Mapping
      */
     public final Key getUpperYZKey()
     {
-        return( Keys.Z );
+        return ( Keys.Z );
     }
     
     /**
@@ -62,7 +62,7 @@ public class MappingFrance implements Mapping
      */
     public final Key getLowerYZKey()
     {
-        return( Keys.Y );
+        return ( Keys.Y );
     }
     
     /**
@@ -74,151 +74,151 @@ public class MappingFrance implements Mapping
         {
             case _0:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '0' );
+                    return ( '0' );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '@' );
+                    return ( '@' );
                 break;
             case _1:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '&' );
+                    return ( '&' );
                 break;
             case _2:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( (char)233 );
+                    return ( (char)233 );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '~' );
+                    return ( '~' );
                 break;
             case _3:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '"' );
+                    return ( '"' );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '#' );
+                    return ( '#' );
                 break;
             case _4:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( (char)39 );
+                    return ( (char)39 );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '{' );
+                    return ( '{' );
                 break;
             case _5:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '(' );
+                    return ( '(' );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '[' );
+                    return ( '[' );
                 break;
             case _6:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '-' );
+                    return ( '-' );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '|' );
+                    return ( '|' );
                 break;
             case _7:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( (char)232 );
+                    return ( (char)232 );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '`' );
+                    return ( '`' );
                 break;
             case _8:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '_' );
+                    return ( '_' );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '\\' );
+                    return ( '\\' );
                 break;
             case _9:
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( (char)231 );
+                    return ( (char)231 );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '^' );
+                    return ( '^' );
                 break;
             
             case E:
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( (char)8364 );
+                    return ( (char)8364 );
                 break;
             
             case CIRCUMFLEX:
                 if ( modifierMask == 0 )
-                    return( '^' );
+                    return ( '^' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( (char)168 );
+                    return ( (char)168 );
                 break;
             
             case NUMPAD_DECIMAL:
-                return( '.' );
+                return ( '.' );
                 
             case LOCAL_KEY1:
                 if ( modifierMask == 0 )
-                    return( (char)178 );
+                    return ( (char)178 );
                 break;
             case LOCAL_KEY2:
                 if ( modifierMask == 0 )
-                    return( ')' );
+                    return ( ')' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return((char)176 );
+                    return ((char)176 );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( ']' );
+                    return ( ']' );
                 break;
             case LOCAL_KEY3:
                 if ( modifierMask == 0 )
-                    return( '$' );
+                    return ( '$' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( (char)163 );
+                    return ( (char)163 );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( (char)164 );
+                    return ( (char)164 );
                 break;
             case LOCAL_KEY4:
                 if ( modifierMask == 0 )
-                    return( (char)249 );
+                    return ( (char)249 );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '%' );
+                    return ( '%' );
                 break;
             case LOCAL_KEY5:
                 if ( modifierMask == 0 )
-                    return( '*' );
+                    return ( '*' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( (char)181 );
+                    return ( (char)181 );
                 break;
             case LOCAL_KEY6:
                 if ( modifierMask == 0 )
-                    return( ',' );
+                    return ( ',' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '?' );
+                    return ( '?' );
                 break;
             case LOCAL_KEY7:
                 if ( modifierMask == 0 )
-                    return( ';' );
+                    return ( ';' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '.' );
+                    return ( '.' );
                 break;
             case LOCAL_KEY8:
                 if ( modifierMask == 0 )
-                    return( ':' );
+                    return ( ':' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '/' );
+                    return ( '/' );
                 break;
             case LOCAL_KEY9:
                 if ( modifierMask == 0 )
-                    return( '!' );
+                    return ( '!' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( (char)167 );
+                    return ( (char)167 );
                 break;
             case LOCAL_KEY10:
                 if ( modifierMask == 0 )
-                    return( '^' );
+                    return ( '^' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( (char)168 );
+                    return ( (char)168 );
                 break;
             case LOCAL_KEY11:
                 if ( modifierMask == 0 )
-                    return( '=' );
+                    return ( '=' );
                 if ( modifierMask == Keys.MODIFIER_SHIFT )
-                    return( '+' );
+                    return ( '+' );
                 if ( modifierMask == Keys.MODIFIER_ALT_GRAPH )
-                    return( '}' );
+                    return ( '}' );
                 break;
         }
         
-        return( '\0' );
+        return ( '\0' );
     }
     
     public Key getLocalizedKey( char keyChar )
@@ -266,7 +266,7 @@ public class MappingFrance implements Mapping
                 
         }
         
-        return( null );
+        return ( null );
     }
     
     public String getLocalizedKeyName( DeviceComponent key )
@@ -298,9 +298,9 @@ public class MappingFrance implements Mapping
         String locName = localizedKeyNamesMap.get( key.getName() );
         
         if ( locName == null )
-            return( key.getName() );
+            return ( key.getName() );
         
-        return( locName );
+        return ( locName );
     }
     
     public MappingFrance()

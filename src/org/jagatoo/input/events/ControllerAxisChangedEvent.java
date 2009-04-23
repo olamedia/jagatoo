@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,12 +48,12 @@ public class ControllerAxisChangedEvent extends ControllerEvent
     
     public final ControllerAxis getAxis()
     {
-        return( axis );
+        return ( axis );
     }
     
     public final float getAxisValue()
     {
-        return( getAxis().getFloatValue() );
+        return ( getAxis().getFloatValue() );
     }
     
     /**
@@ -61,7 +61,7 @@ public class ControllerAxisChangedEvent extends ControllerEvent
      */
     public final float getAxisDelta()
     {
-        return( axisDelta );
+        return ( axisDelta );
     }
     
     
@@ -71,7 +71,7 @@ public class ControllerAxisChangedEvent extends ControllerEvent
     @Override
     public String toString()
     {
-        return( "ControllerAxisChangedEvent { value = " + getAxisValue() + ", " +
+        return ( "ControllerAxisChangedEvent { value = " + getAxisValue() + ", " +
                 "delta = " + getAxisDelta() + ", " +
                 "when = " + getWhen() + ", " +
                 "lastWhen = " + getLastWhen() +

@@ -73,11 +73,11 @@ public class RotTransform
         {
             if ( frames.get( i ).frameIndex == frameNumber )
             {
-                return( i );
+                return ( i );
             }
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     public void getRotationAtTime( float time, Quaternion4f rotation )
@@ -152,7 +152,7 @@ public class RotTransform
         
         s += " )";
         
-        return( s );
+        return ( s );
     }
     
     public RotTransform()

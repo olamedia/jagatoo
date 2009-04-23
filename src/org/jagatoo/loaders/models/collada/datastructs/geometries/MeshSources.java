@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,7 +57,7 @@ public class MeshSources
     
     public final float[] getVertices()
     {
-        return( vertices );
+        return ( vertices );
     }
     
     public void setNormals( float[] normals )
@@ -67,7 +67,7 @@ public class MeshSources
     
     public final float[] getNormals()
     {
-        return( normals );
+        return ( normals );
     }
     
     public void setColors( float[] colors )
@@ -77,7 +77,7 @@ public class MeshSources
     
     public final float[] getColors()
     {
-        return( colors );
+        return ( colors );
     }
     
     public void setUVs( float[][] uvs )
@@ -102,7 +102,7 @@ public class MeshSources
     
     public final float[][] getUVs()
     {
-        return( uvs );
+        return ( uvs );
     }
     
     /**
@@ -142,7 +142,7 @@ public class MeshSources
             System.arraycopy( this.uvs, 0, newMS.uvs, 0, this.uvs.length );
         }
         
-        return( newMS );
+        return ( newMS );
     }
     
     /**

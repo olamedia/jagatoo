@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,7 +43,7 @@ public class JInputControllerAxis extends ControllerAxis
     
     protected final net.java.games.input.Component getAxis()
     {
-        return( axis );
+        return ( axis );
     }
     
     @Override
@@ -51,7 +51,8 @@ public class JInputControllerAxis extends ControllerAxis
     {
     }
     
-    public JInputControllerAxis( JInputController controller, net.java.games.input.Controller implController, net.java.games.input.Component axis, int index )
+    //public JInputControllerAxis( JInputController controller, net.java.games.input.Controller implController, net.java.games.input.Component axis, int index )
+    public JInputControllerAxis( JInputController controller, net.java.games.input.Component axis, int index )
     {
         //super( index, axis.getName(), axis.getDeadZone(), axis.getPovX(), controller.getPovY() );
         super( controller, index, axis.getName(), axis.getDeadZone(), 0f, 0f );

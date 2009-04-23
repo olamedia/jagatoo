@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -114,7 +114,7 @@ class AseFileLine
      */
     public int getNumber()
     {
-        return( number );
+        return ( number );
     }
     
     /**
@@ -176,7 +176,7 @@ class AseFileLine
      */
     public String getKey()
     {
-        return( key );
+        return ( key );
     }
     
     /**
@@ -184,7 +184,7 @@ class AseFileLine
      */
     public Type getType()
     {
-        return( type );
+        return ( type );
     }
     
     /**
@@ -204,7 +204,7 @@ class AseFileLine
      */
     public int getParametersCount()
     {
-        return( numParams );
+        return ( numParams );
     }
     
     /**
@@ -215,9 +215,9 @@ class AseFileLine
     public String getParameter( int index )
     {
         if ( index >= numParams )
-            throw( new IllegalArgumentException( "A parameter with this index (" + index + ") does not exist." ) );
+            throw new IllegalArgumentException( "A parameter with this index (" + index + ") does not exist." );
         
-        return( params[index] );
+        return ( params[index] );
     }
     
     /**

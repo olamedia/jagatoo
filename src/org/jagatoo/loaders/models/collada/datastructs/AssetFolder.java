@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -89,7 +89,7 @@ public class AssetFolder
      */
     public final LibraryControllers getLibraryControllers()
     {
-        return( libraryControllers );
+        return ( libraryControllers );
     }
     
     /**
@@ -97,7 +97,7 @@ public class AssetFolder
      */
     public final LibraryEffects getLibraryEffects()
     {
-        return( libraryEffects );
+        return ( libraryEffects );
     }
     
     /**
@@ -105,7 +105,7 @@ public class AssetFolder
      */
     public final LibraryImages getLibraryImages()
     {
-        return( libraryImages );
+        return ( libraryImages );
     }
     
     /**
@@ -113,7 +113,7 @@ public class AssetFolder
      */
     public final LibraryMaterials getLibraryMaterials()
     {
-        return( libraryMaterials );
+        return ( libraryMaterials );
     }
     
     /**
@@ -121,7 +121,7 @@ public class AssetFolder
      */
     public final LibraryGeometries getLibraryGeometries()
     {
-        return( libraryGeometries );
+        return ( libraryGeometries );
     }
     
     /**
@@ -129,7 +129,7 @@ public class AssetFolder
      */
     public final LibraryVisualScenes getLibraryVisualsScenes()
     {
-        return( libraryVisualsScenes );
+        return ( libraryVisualsScenes );
     }
     
     /**
@@ -137,7 +137,7 @@ public class AssetFolder
      */
     public final LibraryAnimations getLibraryAnimations()
     {
-        return( libraryAnimations );
+        return ( libraryAnimations );
     }
     
     /**
@@ -145,7 +145,7 @@ public class AssetFolder
      */
     public final URL getBasePath()
     {
-        return( basePath );
+        return ( basePath );
     }
     
     public void setModel( ColladaProtoypeModel model )
@@ -155,7 +155,7 @@ public class AssetFolder
     
 	public final ColladaProtoypeModel getModel()
 	{
-		return( protoModel );
+		return ( protoModel );
 	}
     
     /**

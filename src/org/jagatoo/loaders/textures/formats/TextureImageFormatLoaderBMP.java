@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -62,7 +62,7 @@ public class TextureImageFormatLoaderBMP implements TextureImageFormatLoader
         int s1 = ( in.read() & 0xFF );
         int s2 = ( in.read() & 0xFF ) << 8;
         
-        return( (short)( s1 | s2 ) );
+        return ( (short)( s1 | s2 ) );
     }
     
     private static final int readInt( BufferedInputStream in ) throws IOException
@@ -72,7 +72,7 @@ public class TextureImageFormatLoaderBMP implements TextureImageFormatLoader
         int i3 = ( in.read() & 0xFF ) << 16;
         int i4 = ( in.read() & 0xFF ) << 24;
         
-        return( i1 | i2 | i3 | i4 );
+        return ( i1 | i2 | i3 | i4 );
     }
     
     private static final void readPixel( BufferedInputStream in, byte[] pixel, boolean readAlpha ) throws IOException
@@ -174,7 +174,7 @@ public class TextureImageFormatLoaderBMP implements TextureImageFormatLoader
             }
         }
         
-        return( palette );
+        return ( palette );
     }
     
     /**
@@ -230,7 +230,7 @@ public class TextureImageFormatLoaderBMP implements TextureImageFormatLoader
                 case 16:
                     palettized = false;
                     // Not currently supported!
-                    return( null );
+                    return ( null );
                 case 24:
                     palettized = false;
                     break;
@@ -254,7 +254,7 @@ public class TextureImageFormatLoaderBMP implements TextureImageFormatLoader
                     bytesPerPixel = 3;
                 
                 // Not currently supported!
-                //return( null );
+                //return ( null );
             }
             else
             {
@@ -267,13 +267,13 @@ public class TextureImageFormatLoaderBMP implements TextureImageFormatLoader
                     break;
                 case 1: // BI_RLE8
                     // Not currently supported!
-                    return( null );
+                    return ( null );
                 case 2: // BI_RLE4
                     // Not currently supported!
-                    return( null );
+                    return ( null );
                 case 3: // BI_BITFIELDS
                     // Not currently supported!
-                    return( null );
+                    return ( null );
             }
             
             int width = ImageUtility.roundUpPower2( orgWidth );

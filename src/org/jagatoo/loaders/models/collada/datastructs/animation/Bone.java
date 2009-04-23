@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -123,7 +123,7 @@ public class Bone
     
     public final String getSourceId()
     {
-        return( sid );
+        return ( sid );
     }
     
     /**
@@ -131,7 +131,7 @@ public class Bone
      */
     public final String getName() 
     {
-        return( name );
+        return ( name );
     }
     
     /**
@@ -152,7 +152,7 @@ public class Bone
      */
     public final float getLength()
     {
-        return( length );
+        return ( length );
     }
     
     /**
@@ -171,7 +171,7 @@ public class Bone
      */
     public final Quaternion4f getBindRotation()
     {
-        return( bindRotation );
+        return ( bindRotation );
     }
     
     /**
@@ -182,7 +182,7 @@ public class Bone
      */
     public final Vector3f getAbsoluteTranslation()
     {
-        return( absoluteTranslation );
+        return ( absoluteTranslation );
     }
     
     /**
@@ -193,17 +193,17 @@ public class Bone
      */
     public final Quaternion4f getAbsoluteRotation()
     {
-        return( absoluteRotation );
+        return ( absoluteRotation );
     }
     
     public final Tuple3f getAbsoluteScaling()
     {
-        return( absoluteScaling );
+        return ( absoluteScaling );
     }
     
     public final Matrix4f getAbsoluteTransformation()
     {
-        return( absoluteTransformation );
+        return ( absoluteTransformation );
     }
     
     /**
@@ -219,7 +219,7 @@ public class Bone
     	if ( scaleKeyFrames != null )
             total += scaleKeyFrames.size();
     	
-        return( total > 0 );
+        return ( total > 0 );
     }
     
     /**
@@ -240,7 +240,7 @@ public class Bone
      */
     public int selectCurrentRotFrame( long currentTime )
     {
-        return( KeyFrame.searchNextFrame( rotKeyFrames, currentTime ) );
+        return ( KeyFrame.searchNextFrame( rotKeyFrames, currentTime ) );
     }
     
     /**
@@ -252,7 +252,7 @@ public class Bone
      */
     public int selectCurrentScaleFrame( long currentTime )
     {
-        return( KeyFrame.searchNextFrame( scaleKeyFrames, currentTime ) );
+        return ( KeyFrame.searchNextFrame( scaleKeyFrames, currentTime ) );
     }
     
     /**
@@ -288,7 +288,7 @@ public class Bone
      */
     public final int numChildren()
     {
-        return( ( children == null ) ? 0 : children.size() );
+        return ( ( children == null ) ? 0 : children.size() );
     }
     
     /**
@@ -300,13 +300,13 @@ public class Bone
      */
     public final Bone getChild( int i )
     {
-        return( ( children == null ) ? null : children.get( i ) );
+        return ( ( children == null ) ? null : children.get( i ) );
     }
     
     @Override
     public String toString()
     {
-        return( name + "] Bind rotation : " + bindRotation + ", length : " + length );
+        return ( name + "] Bind rotation : " + bindRotation + ", length : " + length );
     }
     
     /**

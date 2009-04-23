@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -64,12 +64,12 @@ public abstract class InputDevice implements Enableable
      */
     public final InputSourceWindow getSourceWindow()
     {
-        return( sourceWindow );
+        return ( sourceWindow );
     }
     
     protected final EventQueue getEventQueue()
     {
-        return( eventQueue );
+        return ( eventQueue );
     }
     
     /**
@@ -77,7 +77,7 @@ public abstract class InputDevice implements Enableable
      */
     public final String getName()
     {
-        return( name );
+        return ( name );
     }
     
     /**
@@ -123,14 +123,14 @@ public abstract class InputDevice implements Enableable
     public boolean equals( Object o )
     {
         if ( o == this )
-            return( true );
+            return ( true );
         
         if ( ( o.getClass() != this.getClass() ) || ( !((InputDevice)o).getName().equals( this.getName() ) ) )
-            return( false );
+            return ( false );
         
         final InputDevice idO = (InputDevice)o;
         
-        return( idO.getSourceWindow() == this.getSourceWindow() );
+        return ( idO.getSourceWindow() == this.getSourceWindow() );
     }
     
     /**
@@ -146,7 +146,7 @@ public abstract class InputDevice implements Enableable
      */
     public final boolean isEnabled()
     {
-        return( enabled );
+        return ( enabled );
     }
     
     /**
@@ -154,7 +154,7 @@ public abstract class InputDevice implements Enableable
      */
     public final boolean hasInputStateListener()
     {
-        return( stateListeners.size() > 0 );
+        return ( stateListeners.size() > 0 );
     }
     
     /**
@@ -258,13 +258,13 @@ public abstract class InputDevice implements Enableable
     public InputDevice( InputSourceWindow sourceWindow, EventQueue eventQueue, String name ) throws InputSystemException
     {
         if ( sourceWindow == null )
-            throw( new InputSystemException( "The InputSourceWindow must not be null." ) );
+            throw new InputSystemException( "The InputSourceWindow must not be null." );
         
         this.sourceWindow = sourceWindow;
         this.eventQueue = eventQueue;
         this.name = name;
         
         if ( name == null )
-            throw( new InputSystemException( "The name must not be null." ) );
+            throw new InputSystemException( "The name must not be null." );
     }
 }

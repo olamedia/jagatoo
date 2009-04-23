@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -64,17 +64,17 @@ public class MD2TagFile
     
     public final int getNumTags()
     {
-        return( tagNames.length );
+        return ( tagNames.length );
     }
     
     public final String[] getTagNames()
     {
-        return( tagNames );
+        return ( tagNames );
     }
     
     public final Matrix4f[][] getMatrices()
     {
-        return( matrices );
+        return ( matrices );
     }
     
     private void readHeader( LittleEndianDataInputStream in ) throws IOException, IncorrectFormatException, ParsingException
@@ -111,7 +111,7 @@ public class MD2TagFile
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
         
-        return( tagNames );
+        return ( tagNames );
     }
     
     private Matrix4f readMatrix( LittleEndianDataInputStream in, boolean convertZup2Yup, float scale ) throws IOException
@@ -170,7 +170,7 @@ public class MD2TagFile
             m.m23( m.m23() * scale );
         }
         
-        return( m );
+        return ( m );
     }
     
     private Matrix4f[][] readMatrices( LittleEndianDataInputStream in, boolean convertZup2Yup, float scale ) throws IOException, IncorrectFormatException, ParsingException
@@ -200,7 +200,7 @@ public class MD2TagFile
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
         
-        return( matrices );
+        return ( matrices );
     }
     
     public MD2TagFile( InputStream in, boolean convertZup2Yup, float scale ) throws IOException, IncorrectFormatException, ParsingException

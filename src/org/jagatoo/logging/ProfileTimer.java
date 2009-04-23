@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -66,17 +66,17 @@ public class ProfileTimer
         
         public LogChannel getChannel()
         {
-            return( channel );
+            return ( channel );
         }
         
         public String getName()
         {
-            return( name );
+            return ( name );
         }
         
         public ProfileNode getParent()
         {
-            return( parent );
+            return ( parent );
         }
         
         public void printLog( int level )
@@ -136,7 +136,7 @@ public class ProfileTimer
             {
                 if ( child.name == n )
                 {
-                    return( child );
+                    return ( child );
                 }
                 
                 child = child.next;
@@ -146,7 +146,7 @@ public class ProfileTimer
             newChild.next = children;
             children = newChild;
             
-            return( newChild );
+            return ( newChild );
         }
         
         /**
@@ -175,7 +175,7 @@ public class ProfileTimer
                 totalTime += ( time - startTime );
             }
             
-            return( recursionCount == 0 );
+            return ( recursionCount == 0 );
         }
     }
     
@@ -251,7 +251,7 @@ public class ProfileTimer
     
     public static final boolean isProfilingEnabled()
     {
-        return( profilingEnabled );
+        return ( profilingEnabled );
     }
     
     private static synchronized ProfileContainer newContainer( LogChannel channel )
@@ -260,7 +260,7 @@ public class ProfileTimer
         c.next = containers;
         containers = c;
         
-        return( c );
+        return ( c );
     }
     
     /**
@@ -299,7 +299,7 @@ public class ProfileTimer
     {
         if ( !profilingEnabled )
         {
-            return( null );
+            return ( null );
         }
         
         ProfileContainer c = containers;
@@ -309,13 +309,13 @@ public class ProfileTimer
         {
             if ( t == c.thread )
             {
-                return( c.currentNode.getName() );
+                return ( c.currentNode.getName() );
             }
             
             c = c.next;
         }
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -373,7 +373,7 @@ public class ProfileTimer
      */
     public static long getTime()
     {
-        return( timer.getTime() );
+        return ( timer.getTime() );
     }
     
     /**
@@ -381,7 +381,7 @@ public class ProfileTimer
      */
     public static long getResolution()
     {
-        return( timer.getResolution() );
+        return ( timer.getResolution() );
     }
     
     /*

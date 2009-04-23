@@ -48,12 +48,12 @@ public class OBJModelPrototype
     
     public HashMap<String, OBJMaterial> getMaterialMap()
     {
-        return( matMap );
+        return ( matMap );
     }
     
     public OBJGroup getTopGroup()
     {
-        return( topGroup );
+        return ( topGroup );
     }
     
     public OBJModelPrototype( HashMap<String, OBJMaterial> matMap, OBJGroup topGroup )

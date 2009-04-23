@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,7 +50,7 @@ public abstract class InputActionCommand extends NoParamCommandBase implements L
      */
     public final int ordinal()
     {
-        return( ordinal );
+        return ( ordinal );
     }
     
     /**
@@ -60,11 +60,11 @@ public abstract class InputActionCommand extends NoParamCommandBase implements L
     {
         try
         {
-            return( execute( delta > 0 ) );
+            return ( execute( delta > 0 ) );
         }
         catch ( Throwable t )
         {
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     

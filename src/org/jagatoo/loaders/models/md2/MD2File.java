@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -113,7 +113,7 @@ public class MD2File
             path = path.replace( " ", "%20" );
         }
         
-        return( path );
+        return ( path );
     }
     
     private AbstractTexture loadTexture( String texName, URL baseURL, AppearanceFactory appFactory )
@@ -122,7 +122,7 @@ public class MD2File
         AbstractTexture texture = appFactory.loadOrGetTexture( texName, baseURL, true, true, true, true, true );
         
         if ( !appFactory.isFallbackTexture( texture ) )
-            return( texture );
+            return ( texture );
         
         int lastSlashPos = texName.lastIndexOf( '/' );
         if ( lastSlashPos >= 0 )
@@ -133,7 +133,7 @@ public class MD2File
             texture = appFactory.loadOrGetTexture( texBaseName, baseURL, true, true, true, true, true );
             
             if ( !appFactory.isFallbackTexture( texture ) )
-                return( texture );
+                return ( texture );
         }
         
         /*
@@ -143,7 +143,7 @@ public class MD2File
         
         JAGTLog.printlnEx( "Couldn't find texture resource \"", texName, "\"!" );
         
-        return( texture );
+        return ( texture );
     }
     
     private NamedObject createSkin( String skinName, URL baseURL, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingException
@@ -163,10 +163,10 @@ public class MD2File
             skinsCache.put( skinName, skin );
         }
         
-        return( skin );
+        return ( skin );
     }
     
-    private NamedObject[] readSkins( int skinsOffset, int numSkins, URL baseURL, AppearanceFactory appFactory, NodeFactory nodeFactory ) throws IOException, IncorrectFormatException, ParsingException
+    private NamedObject[] readSkins( int skinsOffset, int numSkins, URL baseURL, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
         JAGTLog.debug( "Loading MD2 skins..." );
@@ -184,7 +184,7 @@ public class MD2File
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
         
-        return( skins );
+        return ( skins );
     }
     
     private float[] readTextureCoordinates( int textureCoordsOffset, int numTexCoords, int skinWidth, int skinHeight ) throws IOException, IncorrectFormatException, ParsingException
@@ -217,7 +217,7 @@ public class MD2File
         */
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
         
-        return( data );
+        return ( data );
     }
     
     private int[][] readTriangles( int trianglesOffset, int numTriangles ) throws IOException, IncorrectFormatException, ParsingException
@@ -256,7 +256,7 @@ public class MD2File
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
         
-        return( data );
+        return ( data );
     }
     
     private Object[][] readFrames( int framesOffset, int numFrames, int numVertices, boolean convertZup2Yup, float scale ) throws IOException, IncorrectFormatException, ParsingException
@@ -311,7 +311,7 @@ public class MD2File
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
         
-        return( frames );
+        return ( frames );
     }
     
     private static final String getAnimName( String frameName )
@@ -322,10 +322,10 @@ public class MD2File
             i--;
         }
         
-        return( frameName.substring( 0, i + 1 ) );
+        return ( frameName.substring( 0, i + 1 ) );
     }
     
-    private void readGLCommands( int commandsOffset, int numGlCommandBytes, Object[][] framesData, GeometryFactory geomFactory, boolean convertZup2Yup, AnimationFactory animFactory, AppearanceFactory appFactory, URL baseURL, NodeFactory nodeFactory, NamedObject rootGroup, NamedObject[] skins, String skin, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
+    private void readGLCommands( int commandsOffset, Object[][] framesData, GeometryFactory geomFactory, boolean convertZup2Yup, AnimationFactory animFactory, AppearanceFactory appFactory, URL baseURL, NodeFactory nodeFactory, NamedObject rootGroup, NamedObject[] skins, String skin, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
         JAGTLog.debug( "Loading MD2 GL-commands..." );
@@ -622,11 +622,11 @@ public class MD2File
         {
             this.header = MD2Header.readHeader( this.in );
             
-            NamedObject[] skins = readSkins( header.offsetSkins, header.numSkins, baseURL, appFactory, nodeFactory );
+            NamedObject[] skins = readSkins( header.offsetSkins, header.numSkins, baseURL, appFactory );
             /*float[] texCoords = */readTextureCoordinates( header.offsetTexCoords, header.numTexCoords, header.skinWidth, header.skinHeight );
             /*int[][] triangles = */readTriangles( header.offsetTriangles, header.numTriangles );
             Object[][] frames = readFrames( header.offsetFrames, header.numFrames, header.numVertices, convertZup2Yup, scale );
-            readGLCommands( header.offsetGlCommands, header.numGlCommandBytes, frames, geomFactory, convertZup2Yup, animFactory, appFactory, baseURL, nodeFactory, rootGroup, skins, skin, siHandler );
+            readGLCommands( header.offsetGlCommands, frames, geomFactory, convertZup2Yup, animFactory, appFactory, baseURL, nodeFactory, rootGroup, skins, skin, siHandler );
         }
         finally
         {

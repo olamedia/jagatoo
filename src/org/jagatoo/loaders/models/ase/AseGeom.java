@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -108,6 +108,6 @@ public class AseGeom extends AseNode
          * has the effect of making the geometry coords realitive to it's pivot
          * point (but still in the correct location due to the translation)
          */
-        return( new Tuple3f( transform.tmPos.getY(), transform.tmPos.getZ(), transform.tmPos.getX() ) );
+        return ( new Tuple3f( transform.tmPos.getY(), transform.tmPos.getZ(), transform.tmPos.getX() ) );
     }
 }

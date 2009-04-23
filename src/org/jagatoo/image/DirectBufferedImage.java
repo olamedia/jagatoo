@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -81,19 +81,19 @@ public class DirectBufferedImage extends BufferedImage
     
     public final Type getDirectType()
     {
-        return( directType );
+        return ( directType );
     }
     
     public final int getNumBytes()
     {
-        return( numBytes );
+        return ( numBytes );
     }
     
     public final ByteBuffer getByteBuffer()
     {
         final DirectDataBufferByte dataBuffer = (DirectDataBufferByte)getRaster().getDataBuffer();
         
-        return( dataBuffer.getByteBuffer() );
+        return ( dataBuffer.getByteBuffer() );
     }
     
     private static class DirectWritableRaster extends WritableRaster
@@ -114,7 +114,7 @@ public class DirectBufferedImage extends BufferedImage
                                                  bandOffsets
                                                );
             
-            return( csm );
+            return ( csm );
         }
         
         public DirectWritableRaster( int width, int height, int bytesPerPixel, int[] bandOffsets, DirectDataBufferByte dataBuffer )
@@ -152,7 +152,7 @@ public class DirectBufferedImage extends BufferedImage
             bandOffsets[ i ] = i;
         }
         
-        return( bandOffsets );
+        return ( bandOffsets );
     }
     
     private static final int[] createNumBitsArray( int bytesPerPixel )
@@ -164,7 +164,7 @@ public class DirectBufferedImage extends BufferedImage
             numBits[ i ] = 8;
         }
         
-        return( numBits );
+        return ( numBits );
     }
     
     /**
@@ -208,7 +208,7 @@ public class DirectBufferedImage extends BufferedImage
         
         DirectBufferedImage newImage = new DirectBufferedImage( Type.DIRECT_RGBA/*, bb*/, cm, newRaster, false );
         
-        return( newImage );
+        return ( newImage );
     }
     
     /**
@@ -216,7 +216,7 @@ public class DirectBufferedImage extends BufferedImage
      */
     public static DirectBufferedImage makeDirectImageRGBA( int width, int height )
     {
-        return( makeDirectImageRGBA( width, height, 32 ) );
+        return ( makeDirectImageRGBA( width, height, 32 ) );
     }
     
     /**
@@ -249,7 +249,7 @@ public class DirectBufferedImage extends BufferedImage
         // create the buffered image
         DirectBufferedImage newImage = new DirectBufferedImage( Type.DIRECT_RGB/*, bb*/, cm, newRaster, false );
         
-        return( newImage );
+        return ( newImage );
     }
     
     /**
@@ -257,7 +257,7 @@ public class DirectBufferedImage extends BufferedImage
      */
     public static DirectBufferedImage makeDirectImageRGB( int width, int height )
     {
-        return( makeDirectImageRGB( width, height, 24 ) );
+        return ( makeDirectImageRGB( width, height, 24 ) );
     }
     
     /**
@@ -272,7 +272,7 @@ public class DirectBufferedImage extends BufferedImage
         DirectBufferedImage dest = makeDirectImageRGB( source.getWidth(), source.getHeight() );
         source.copyData( dest.getRaster() );
         
-        return( dest );
+        return ( dest );
     }
     
     public static DirectBufferedImage makeDirectImageTwoBytes( int width, int height, int pixelSize )
@@ -302,7 +302,7 @@ public class DirectBufferedImage extends BufferedImage
         // create the buffered image
         DirectBufferedImage newImage = new DirectBufferedImage( Type.DIRECT_ONE_BYTE/*, bb*/, cm, newRaster, false );
         
-        return( newImage );
+        return ( newImage );
     }
     
     /**
@@ -310,7 +310,7 @@ public class DirectBufferedImage extends BufferedImage
      */
     public static DirectBufferedImage makeDirectImageTwoBytes( int width, int height )
     {
-        return( makeDirectImageRGBA( width, height, 16 ) );
+        return ( makeDirectImageRGBA( width, height, 16 ) );
     }
     
     public static DirectBufferedImage makeDirectImageOneByte( int width, int height )
@@ -340,7 +340,7 @@ public class DirectBufferedImage extends BufferedImage
         // create the buffered image
         DirectBufferedImage newImage = new DirectBufferedImage( Type.DIRECT_ONE_BYTE/*, bb*/, cm, newRaster, false );
         
-        return( newImage );
+        return ( newImage );
     }
     
     /**
@@ -354,7 +354,7 @@ public class DirectBufferedImage extends BufferedImage
         DirectBufferedImage dest = makeDirectImageRGBA( source.getWidth(), source.getHeight() );
         source.copyData( dest.getRaster() );
         
-        return( dest );
+        return ( dest );
     }
     
     public static DirectBufferedImage make( Type type, int width, int height )
@@ -362,19 +362,19 @@ public class DirectBufferedImage extends BufferedImage
         switch ( type )
         {
             case DIRECT_RGBA:
-                return( makeDirectImageRGBA( width, height ) );
+                return ( makeDirectImageRGBA( width, height ) );
                 
             case DIRECT_RGB:
-                return( makeDirectImageRGB( width, height ) );
+                return ( makeDirectImageRGB( width, height ) );
                 
             case DIRECT_TWO_BYTES:
-                return( makeDirectImageTwoBytes( width, height ) );
+                return ( makeDirectImageTwoBytes( width, height ) );
                 
             case DIRECT_ONE_BYTE:
-                return( makeDirectImageOneByte( width, height ) );
+                return ( makeDirectImageOneByte( width, height ) );
         }
         
-        throw( new Error( "Unknown direct image type " + type ) );
+        throw new Error( "Unknown direct image type " + type );
     }
     
     
@@ -384,7 +384,7 @@ public class DirectBufferedImage extends BufferedImage
         Graphics2D g = (Graphics2D)dest.getGraphics();
         g.drawImage( source, 0, 0, dest.getWidth(), dest.getHeight(), null );
         
-        return( dest );
+        return ( dest );
     }
     
     public static DirectBufferedImage make( BufferedImage bi, boolean allowAlpha )
@@ -393,15 +393,15 @@ public class DirectBufferedImage extends BufferedImage
         
         if ( hasAlpha && allowAlpha )
         {
-            return( convertViaDrawing( bi, makeDirectImageRGBA( bi.getWidth(), bi.getHeight() ) ) );
+            return ( convertViaDrawing( bi, makeDirectImageRGBA( bi.getWidth(), bi.getHeight() ) ) );
         }
         
-        return( convertViaDrawing( bi, makeDirectImageRGB( bi.getWidth(), bi.getHeight() ) ) );
+        return ( convertViaDrawing( bi, makeDirectImageRGB( bi.getWidth(), bi.getHeight() ) ) );
     }
     
     public static DirectBufferedImage make( BufferedImage bi )
     {
-        return( make( bi, true ) );
+        return ( make( bi, true ) );
     }
     
     /**
@@ -422,7 +422,7 @@ public class DirectBufferedImage extends BufferedImage
         
         BufferedImage bi = ImageIO.read( in );
         
-        return( make( bi, allowAlpha ) );
+        return ( make( bi, allowAlpha ) );
     }
     
     /**
@@ -437,7 +437,7 @@ public class DirectBufferedImage extends BufferedImage
      */
     public static DirectBufferedImage loadDirectImage( InputStream in ) throws IOException
     {
-        return( loadDirectImage( in, true ) );
+        return ( loadDirectImage( in, true ) );
     }
     
     /**
@@ -453,12 +453,12 @@ public class DirectBufferedImage extends BufferedImage
      */
     public static DirectBufferedImage loadDirectImage( URL url, boolean allowAlpha ) throws IOException
     {
-        return( loadDirectImage( url.openStream(), allowAlpha ) );
+        return ( loadDirectImage( url.openStream(), allowAlpha ) );
     }
     
     public static BufferedImage loadDirectImage( URL url ) throws java.io.IOException
     {
-        return( loadDirectImage( url, true ) );
+        return ( loadDirectImage( url, true ) );
     }
     
     /**
@@ -474,7 +474,7 @@ public class DirectBufferedImage extends BufferedImage
      */
     public static DirectBufferedImage loadDirectImage( File file, boolean allowAlpha ) throws IOException
     {
-        return( loadDirectImage( new FileInputStream( file ), allowAlpha ) );
+        return ( loadDirectImage( new FileInputStream( file ), allowAlpha ) );
     }
     
     /**
@@ -489,7 +489,7 @@ public class DirectBufferedImage extends BufferedImage
      */
     public static DirectBufferedImage loadDirectImage( File file ) throws IOException
     {
-        return( loadDirectImage( file, true ) );
+        return ( loadDirectImage( file, true ) );
     }
     
     /**
@@ -504,11 +504,11 @@ public class DirectBufferedImage extends BufferedImage
      */
     public static DirectBufferedImage loadDirectImage( String name, boolean allowAlpha ) throws IOException
     {
-        return( loadDirectImage( new File( name ), allowAlpha ) );
+        return ( loadDirectImage( new File( name ), allowAlpha ) );
     }
     
     public static DirectBufferedImage loadDirectImage( String name ) throws IOException
     {
-        return( loadDirectImage( name, true ) );
+        return ( loadDirectImage( name, true ) );
     }
 }

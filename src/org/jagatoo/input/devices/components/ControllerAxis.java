@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -56,7 +56,7 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
      */
     public final Controller getController()
     {
-        return( controller );
+        return ( controller );
     }
     
     /**
@@ -64,7 +64,7 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
      */
     public final int getIndex()
     {
-        return( index );
+        return ( index );
     }
     
     private final void updateNormValue()
@@ -90,7 +90,7 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
      */
     public final float getMinValue()
     {
-        return( minValue );
+        return ( minValue );
     }
     
     /**
@@ -111,7 +111,7 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
      */
     public final float getMaxValue()
     {
-        return( maxValue );
+        return ( maxValue );
     }
     
     /**
@@ -130,7 +130,7 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
      */
     public final float getNormalizedValue()
     {
-        return( normValue );
+        return ( normValue );
     }
     
     protected abstract void setDeadZoneImpl( float zone );
@@ -144,17 +144,17 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
     
     public final float getDeadZone()
     {
-        return( deadZone );
+        return ( deadZone );
     }
     
     public final float getPovX()
     {
-        return( povX );
+        return ( povX );
     }
     
     public final float getPovY()
     {
-        return( povY );
+        return ( povY );
     }
     
     /**
@@ -163,7 +163,7 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
     @Override
     public String toString()
     {
-        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", index = " + getIndex() + ", value = " + getFloatValue() + " }" );
+        return ( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", index = " + getIndex() + ", value = " + getFloatValue() + " }" );
     }
     
     public ControllerAxis( Controller controller, int index, String name, float deadZone, float povX, float povY )

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,7 +45,7 @@ public class TextureStreamLocatorURL implements TextureStreamLocator
     
     public String getBaseDirName()
     {
-        return( new File( baseUrl.getFile() ).getAbsolutePath() );
+        return ( new File( baseUrl.getFile() ).getAbsolutePath() );
     }
     
     /** Creates a new instance of FileTextureStreamLocator */
@@ -56,7 +56,7 @@ public class TextureStreamLocatorURL implements TextureStreamLocator
     
     public URL getBaseUrl()
     {
-        return( baseUrl );
+        return ( baseUrl );
     }
     
     public void setBaseUrl( URL baseUrl )
@@ -69,11 +69,11 @@ public class TextureStreamLocatorURL implements TextureStreamLocator
         try
         {
             URL url = new URL( baseUrl, name );
-            return( url.openStream() );
+            return ( url.openStream() );
         }
         catch ( IOException ex )
         {
-            return( null );
+            return ( null );
         }
     }
 }

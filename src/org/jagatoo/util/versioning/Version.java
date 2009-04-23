@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,7 +52,7 @@ public class Version
      */
     public int getMajor()
     {
-        return( major );
+        return ( major );
     }
     
     /**
@@ -60,7 +60,7 @@ public class Version
      */
     public int getMinor()
     {
-        return( minor );
+        return ( minor );
     }
     
     /**
@@ -68,7 +68,7 @@ public class Version
      */
     public int getRevision()
     {
-        return( revision );
+        return ( revision );
     }
     
     /**
@@ -77,7 +77,7 @@ public class Version
      */
     public String getAttributes()
     {
-        return( attributes );
+        return ( attributes );
     }
     
     /**
@@ -87,7 +87,7 @@ public class Version
      */
     public int getBuild()
     {
-        return( build );
+        return ( build );
     }
     
     /**
@@ -99,9 +99,9 @@ public class Version
         final String base = getMajor() + "." + getMinor() + "." + getRevision();
         
         if (getAttributes() != null)
-            return( base + "-" + getAttributes() + " (build " + getBuild() + ")" );
-        else
-            return( base + " (build " + getBuild() + ")" );
+            return ( base + "-" + getAttributes() + " (build " + getBuild() + ")" );
+        
+        return ( base + " (build " + getBuild() + ")" );
     }
     
     /**

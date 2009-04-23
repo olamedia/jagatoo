@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -71,32 +71,32 @@ public class Cursor
     
     public final boolean isDirty()
     {
-        return( dirty );
+        return ( dirty );
     }
     
     public final String getName()
     {
-        return( name );
+        return ( name );
     }
     
     public final int getWidth()
     {
-        return( width );
+        return ( width );
     }
     
     public final int getHeight()
     {
-        return( height );
+        return ( height );
     }
     
     public final int getHotSpotX()
     {
-        return( hotSpotX );
+        return ( hotSpotX );
     }
     
     public final int getHotSpotY()
     {
-        return( hotSpotY );
+        return ( hotSpotY );
     }
     
     /**
@@ -104,7 +104,7 @@ public class Cursor
      */
     public final int getImagesCount()
     {
-        return( images.length );
+        return ( images.length );
     }
     
     /**
@@ -114,7 +114,7 @@ public class Cursor
      */
     public final BufferedImage getImage( int index )
     {
-        return( images[ index ] );
+        return ( images[ index ] );
     }
     
     /**
@@ -124,7 +124,7 @@ public class Cursor
      */
     public final int getDelay( int index )
     {
-        return( delays[ index ] );
+        return ( delays[ index ] );
     }
     
     public void setCursorObject( Object cursorImpl )
@@ -134,7 +134,7 @@ public class Cursor
     
     public Object getCursorObject()
     {
-        return( cursorImpl );
+        return ( cursorImpl );
     }
     
     /**
@@ -143,24 +143,24 @@ public class Cursor
     @Override
     public String toString()
     {
-        return( this.getClass().getName() + " \"" + ( ( getName() == null ) ? "NO_NAME" : getName() ) + "\"" );
+        return ( this.getClass().getName() + " \"" + ( ( getName() == null ) ? "NO_NAME" : getName() ) + "\"" );
     }
     
     public Cursor( BufferedImage[] images, int[] delays, int hotSpotX, int hotSpotY, String name )
     {
         if ( images.length == 0 )
         {
-            throw( new IllegalArgumentException( "You must provide at least one image." ) );
+            throw new IllegalArgumentException( "You must provide at least one image." );
         }
         
         if ( images.length != delays.length )
         {
-            throw( new IllegalArgumentException( "The images array and the delays array must have the same length." ) );
+            throw new IllegalArgumentException( "The images array and the delays array must have the same length." );
         }
         
         if ( images[ 0 ] == null )
         {
-            throw( new IllegalArgumentException( "None of the images must be null." ) );
+            throw new IllegalArgumentException( "None of the images must be null." );
         }
         
         final int width = images[ 0 ].getWidth();
@@ -170,12 +170,12 @@ public class Cursor
         {
             if ( images[ i ] == null )
             {
-                throw( new IllegalArgumentException( "None of the images must be null." ) );
+                throw new IllegalArgumentException( "None of the images must be null." );
             }
             
             if ( ( images[ i ].getWidth() != width ) || ( images[ i ].getHeight() != height ) )
             {
-                throw( new IllegalArgumentException( "All images must have the same size." ) );
+                throw new IllegalArgumentException( "All images must have the same size." );
             }
         }
         
@@ -217,7 +217,7 @@ public class Cursor
             images[ i ] = ImageIO.read( imageResources[ i ] );
         }
         
-        return( images );
+        return ( images );
     }
     
     public Cursor( URL[] imageResources, int[] delays, int hotSpotX, int hotSpotY, String name ) throws IOException

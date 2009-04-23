@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -84,17 +84,17 @@ public class OBJGroup extends OBJFaceList
     
     public String getName()
     {
-        return( name );
+        return ( name );
     }
     
     public boolean hasName()
     {
-        return( ( name != null ) && ( name.length() > 0 ) );
+        return ( ( name != null ) && ( name.length() > 0 ) );
     }
     
     public boolean isTopGroup()
     {
-        return( isTopGroup );
+        return ( isTopGroup );
     }
     
     public void addChild( OBJGroup group )
@@ -104,7 +104,7 @@ public class OBJGroup extends OBJFaceList
     
     public List<OBJGroup> getChildren()
     {
-        return( children );
+        return ( children );
     }
     
     private OBJGroup( String name, boolean isTopGroup, List<float[]> verts, List<float[]> normals, List<float[]> texs )
@@ -122,6 +122,6 @@ public class OBJGroup extends OBJFaceList
     
     public static OBJGroup createTopGroup( List<float[]> verts, List<float[]> normals, List<float[]> texs )
     {
-        return( new OBJGroup( "top", true, verts, normals, texs ) );
+        return ( new OBJGroup( "top", true, verts, normals, texs ) );
     }
 }

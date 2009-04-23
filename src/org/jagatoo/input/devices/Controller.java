@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -72,7 +72,7 @@ public abstract class Controller extends InputDevice
      */
     public final ControllerFactory getSourceFactory()
     {
-        return( sourceFactory );
+        return ( sourceFactory );
     }
     
     /**
@@ -80,7 +80,7 @@ public abstract class Controller extends InputDevice
      */
     public final int getAxesCount()
     {
-        return( axes.length );
+        return ( axes.length );
     }
     
     /**
@@ -90,7 +90,7 @@ public abstract class Controller extends InputDevice
      */
     public final ControllerAxis getAxis( int index )
     {
-        return( axes[ index ] );
+        return ( axes[ index ] );
     }
     
     /**
@@ -98,7 +98,7 @@ public abstract class Controller extends InputDevice
      */
     public final int getButtonsCount()
     {
-        return( buttons.length );
+        return ( buttons.length );
     }
     
     /**
@@ -108,7 +108,7 @@ public abstract class Controller extends InputDevice
      */
     public final ControllerButton getButton( int index )
     {
-        return( buttons[ index ] );
+        return ( buttons[ index ] );
     }
     
     /**
@@ -126,7 +126,7 @@ public abstract class Controller extends InputDevice
             
             boolean state = isButtonPressed( (ControllerButton)component );
             
-            return( state ? 1 : 0 );
+            return ( state ? 1 : 0 );
         }
         
         if ( component instanceof ControllerAxis )
@@ -136,7 +136,7 @@ public abstract class Controller extends InputDevice
             if ( axis.getController() != this )
                 throw new InputSystemRuntimeException( "The given ControllerAxis is not part of this Controller." );
             
-            return( axis.getIntValue() );
+            return ( axis.getIntValue() );
         }
         
         throw new InputSystemRuntimeException( "The Controller only supports ControllerButton and ControllerAxis instances for this method." );
@@ -147,7 +147,7 @@ public abstract class Controller extends InputDevice
      */
     public final boolean hasControllerListener()
     {
-        return( numListeners > 0 );
+        return ( numListeners > 0 );
     }
     
     /**
@@ -155,7 +155,7 @@ public abstract class Controller extends InputDevice
      */
     public final boolean hasListener()
     {
-        return( hasInputStateListener() || hasControllerListener() );
+        return ( hasInputStateListener() || hasControllerListener() );
     }
     
     /**
@@ -193,8 +193,8 @@ public abstract class Controller extends InputDevice
      */
     public final boolean isButtonPressed( ControllerButton button )
     {
-        //return( ( buttonState & button.getMaskValue() ) != 0 );
-        return( false );
+        //return ( ( buttonState & button.getMaskValue() ) != 0 );
+        return ( false );
     }
     
     /**
@@ -204,7 +204,7 @@ public abstract class Controller extends InputDevice
      */
     public final int getButtonState( ControllerButton button )
     {
-        return( isButtonPressed( button ) ? 1 : 0 );
+        return ( isButtonPressed( button ) ? 1 : 0 );
     }
     
     /**
@@ -219,13 +219,13 @@ public abstract class Controller extends InputDevice
     protected final ControllerButtonPressedEvent prepareControllerButtonPressed( ControllerButton button, long when )
     {
         if ( !isEnabled() || !hasListener() )
-            return( null );
+            return ( null );
         
         ControllerButtonPressedEvent e = ControllerEventPool.allocPressed( this, button, when, lastWhen_buttonPressed[ button.getIndex() ] );
         
         lastWhen_buttonPressed[ button.getIndex() ] = when;
         
-        return( e );
+        return ( e );
     }
     
     /**
@@ -268,13 +268,13 @@ public abstract class Controller extends InputDevice
     public final ControllerButtonReleasedEvent prepareControllerButtonReleased( ControllerButton button, long when )
     {
         if ( !isEnabled() || !hasListener() )
-            return( null );
+            return ( null );
         
         ControllerButtonReleasedEvent e = ControllerEventPool.allocReleased( this, button, when, lastWhen_buttonReleased[ button.getIndex() ] );
         
         lastWhen_buttonReleased[ button.getIndex() ] = when;
         
-        return( e );
+        return ( e );
     }
     
     /**
@@ -317,13 +317,13 @@ public abstract class Controller extends InputDevice
     public final ControllerAxisChangedEvent prepareControllerAxisChanged( ControllerAxis axis, float delta, long when )
     {
         if ( !isEnabled() || !hasListener() )
-            return( null );
+            return ( null );
         
         ControllerAxisChangedEvent e = ControllerEventPool.allocAxis( this, axis, delta, when, lastWhen_axisChanged[ axis.getIndex() ] );
         
         lastWhen_axisChanged[ axis.getIndex() ] = when;
         
-        return( e );
+        return ( e );
     }
     
     /**
@@ -381,7 +381,7 @@ public abstract class Controller extends InputDevice
     @Override
     public String toString()
     {
-        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", numAxes = " + getAxesCount() + ", numButtons = " + getButtonsCount() + " }" );
+        return ( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", numAxes = " + getAxesCount() + ", numButtons = " + getButtonsCount() + " }" );
     }
     
     /**
@@ -414,7 +414,7 @@ public abstract class Controller extends InputDevice
         
         if ( ( getAxesCount() == 0 ) && ( getButtonsCount() == 0 ) )
         {
-            throw( new InputSystemException( InputSystemException.Info.ILLEGAL_CONTROLLER_CONFIGURATION ) );
+            throw new InputSystemException( InputSystemException.Info.ILLEGAL_CONTROLLER_CONFIGURATION );
         }
         
         this.lastWhen_buttonPressed = new long[ buttons.length ];

@@ -52,37 +52,37 @@ public class Face
     
     public final int getCoordAIndex()
     {
-        return( a );
+        return ( a );
     }
     
     public final int getCoordBIndex()
     {
-        return( b );
+        return ( b );
     }
     
     public final int getCoordCIndex()
     {
-        return( c );
+        return ( c );
     }
     
     public final Point3f getCoordA()
     {
-        return( file.getContext().vertexCoords[a] );
+        return ( file.getContext().vertexCoords[a] );
     }
     
     public final Point3f getCoordB()
     {
-        return( file.getContext().vertexCoords[b] );
+        return ( file.getContext().vertexCoords[b] );
     }
     
     public final Point3f getCoordC()
     {
-        return( file.getContext().vertexCoords[c] );
+        return ( file.getContext().vertexCoords[c] );
     }
     
     public final Vector3f getNormal()
     {
-        return( normal );
+        return ( normal );
     }
     
     private final Vector3f calculateFaceNormal( int a, int b, int c )
@@ -101,7 +101,7 @@ public class Face
         
         //normal.negate();
         
-        return( normal );
+        return ( normal );
     }
     
     public Face( TDSFile file, int vertexA, int vertexB, int vertexC )

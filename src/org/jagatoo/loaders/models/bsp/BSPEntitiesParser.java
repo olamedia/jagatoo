@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,9 +49,9 @@ public class BSPEntitiesParser
     private static final String qs( String s )
     {
         if ( s == null )
-            return( null );
+            return ( null );
         
-        return( "\"" + s + "\"" );
+        return ( "\"" + s + "\"" );
     }
     
     public static abstract class BSPEntity
@@ -61,7 +61,7 @@ public class BSPEntitiesParser
         
         protected String getFieldsString()
         {
-            return( "    className = " + qs( className ) + "\n" +
+            return ( "    className = " + qs( className ) + "\n" +
                     "    className2 = " + qs( className2 ) + "\n"
                   );
         }
@@ -69,7 +69,7 @@ public class BSPEntitiesParser
         @Override
         public String toString()
         {
-            return( this.getClass().getSimpleName() + "\n{\n" + getFieldsString() + "}" );
+            return ( this.getClass().getSimpleName() + "\n{\n" + getFieldsString() + "}" );
         }
         
         protected static final String parseLineValue( String line )
@@ -77,9 +77,9 @@ public class BSPEntitiesParser
             int spacePos = line.indexOf( "\" \"" );
             
             if ( spacePos < 0 )
-                return( null );
+                return ( null );
             
-            return( line.substring( spacePos + 3, line.length() - 1 ) );
+            return ( line.substring( spacePos + 3, line.length() - 1 ) );
         }
         
         protected abstract void parseLine( String line );
@@ -135,7 +135,7 @@ public class BSPEntitiesParser
         private String getWadsFullString()
         {
             if ( wadsFull == null )
-                return( null );
+                return ( null );
             
             String s = "{ ";
             for ( int i = 0; i < wadsFull.length; i++ )
@@ -148,13 +148,13 @@ public class BSPEntitiesParser
             
             s += " }";
             
-            return( s );
+            return ( s );
         }
         
         private String getWadsString()
         {
             if ( wads == null )
-                return( null );
+                return ( null );
             
             String s = "{ ";
             for ( int i = 0; i < wads.length; i++ )
@@ -167,13 +167,13 @@ public class BSPEntitiesParser
             
             s += " }";
             
-            return( s );
+            return ( s );
         }
         
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() +
+            return ( super.getFieldsString() +
                     "    wadsFull = " + getWadsFullString() + "\n" +
                     "    wads = " + getWadsString() + "\n" +
                     "    chapterTitle = " + qs( chapterTitle ) + "\n" +
@@ -261,7 +261,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() +
+            return ( super.getFieldsString() +
                     "    origin = " + origin + "\n" +
                     "    angles = " + angles + "\n"
                   );
@@ -315,7 +315,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() );
+            return ( super.getFieldsString() );
         }
         
         @Override
@@ -339,7 +339,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() );
+            return ( super.getFieldsString() );
         }
         
         @Override
@@ -363,7 +363,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() );
+            return ( super.getFieldsString() );
         }
         
         @Override
@@ -387,7 +387,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() );
+            return ( super.getFieldsString() );
         }
         
         @Override
@@ -412,7 +412,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() +
+            return ( super.getFieldsString() +
                     "    origin = " + origin + "\n" +
                     "    style = " + style + "\n" +
                     "    lightColor = " + lightColor + "\n" +
@@ -483,7 +483,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() +
+            return ( super.getFieldsString() +
                     "    model = " + qs( model ) + "\n" +
                     "    delay = " + delay + "\n" +
                     "    explosion = " + explosion + "\n" +
@@ -585,7 +585,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() +
+            return ( super.getFieldsString() +
                     "    model = " + qs( model ) + "\n" +
                     "    _minLight = " + _minLight + "\n" +
                     "    height = " + height + "\n" +
@@ -664,7 +664,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() +
+            return ( super.getFieldsString() +
                     "    model = " + qs( model ) + "\n"
                   );
         }
@@ -695,7 +695,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() +
+            return ( super.getFieldsString() +
                     "    model = " + qs( model ) + "\n" +
                     "    renderColor = " + renderColor + "\n" +
                     "    renderAMT = " + renderAMT + "\n" +
@@ -752,7 +752,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() +
+            return ( super.getFieldsString() +
                     "    model = " + qs( model ) + "\n"
                   );
         }
@@ -787,7 +787,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() +
+            return ( super.getFieldsString() +
                     "    origin = " + origin + "\n" +
                     "    texture = " + qs( texture ) + "\n" +
                     "    angle = " + angle + "\n"
@@ -827,7 +827,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() +
+            return ( super.getFieldsString() +
                     "    origin = " + origin + "\n" +
                     "    targetName = " + qs( targetName ) + "\n"
                   );
@@ -862,7 +862,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() +
+            return ( super.getFieldsString() +
                     "    target = " + qs( target ) + "\n" +
                     "    spawnFlags = " + spawnFlags + "\n"
                   );
@@ -894,7 +894,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() );
+            return ( super.getFieldsString() );
         }
         
         @Override
@@ -914,7 +914,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() );
+            return ( super.getFieldsString() );
         }
         
         @Override
@@ -936,7 +936,7 @@ public class BSPEntitiesParser
         @Override
         protected String getFieldsString()
         {
-            return( super.getFieldsString() +
+            return ( super.getFieldsString() +
                     "    model = " + qs( model ) + "\n"
                   );
         }
@@ -1119,6 +1119,6 @@ public class BSPEntitiesParser
             e.printStackTrace();
         }
         
-        return( entities.toArray( new BSPEntity[ entities.size() ] ) );
+        return ( entities.toArray( new BSPEntity[ entities.size() ] ) );
     }
 }

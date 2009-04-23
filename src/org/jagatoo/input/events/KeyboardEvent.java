@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -65,7 +65,7 @@ public abstract class KeyboardEvent extends InputEvent
      */
     public final SubType getSubType()
     {
-        return( subType );
+        return ( subType );
     }
     
     /**
@@ -73,7 +73,7 @@ public abstract class KeyboardEvent extends InputEvent
      */
     public final Keyboard getKeyboard()
     {
-        return( keyboard );
+        return ( keyboard );
     }
     
     /**
@@ -81,7 +81,7 @@ public abstract class KeyboardEvent extends InputEvent
      */
     public final Key getKey()
     {
-        return( key );
+        return ( key );
     }
     
     /**
@@ -89,7 +89,7 @@ public abstract class KeyboardEvent extends InputEvent
      */
     public final int getModifierMask()
     {
-        return( modifierMask );
+        return ( modifierMask );
     }
     
     /**
@@ -100,9 +100,9 @@ public abstract class KeyboardEvent extends InputEvent
     public final int getKeyCode()
     {
         if ( key == null )
-            return( 0 );
-        else
-            return( key.getKeyCode() );
+            return ( 0 );
+        
+        return ( key.getKeyCode() );
     }
     
     /**
@@ -111,7 +111,7 @@ public abstract class KeyboardEvent extends InputEvent
     @Override
     public String toString()
     {
-        return( this.getClass().getSimpleName() + "( keyCode = " + getKeyCode() + ", keyChar = " + getKeyCode() + ", when = " + getWhen() + " )" );
+        return ( this.getClass().getSimpleName() + "( keyCode = " + getKeyCode() + ", keyChar = " + getKeyCode() + ", when = " + getWhen() + " )" );
     }
     
     /**

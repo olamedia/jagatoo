@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -92,7 +92,7 @@ public class COLLADAAction
      */
     public String getId()
     {
-        return( id );
+        return ( id );
     }
     
     /**
@@ -109,7 +109,7 @@ public class COLLADAAction
      */
     public Skeleton getSkeleton()
     {
-        return( skeleton );
+        return ( skeleton );
     }
     
     

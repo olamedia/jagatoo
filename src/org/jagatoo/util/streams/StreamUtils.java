@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -95,7 +95,7 @@ public class StreamUtils
      */
     public static final byte readByte( InputStream in ) throws IOException
     {
-        return( (byte)in.read() );
+        return ( (byte)in.read() );
     }
     
     /**
@@ -109,7 +109,7 @@ public class StreamUtils
      */
     public static final byte readByte( BufferedInputStream in ) throws IOException
     {
-        return( (byte)in.read() );
+        return ( (byte)in.read() );
     }
     
     /**
@@ -126,7 +126,7 @@ public class StreamUtils
     {
         int b = in.read();
         
-        return( (short)( b & 0xFF ) );
+        return ( (short)( b & 0xFF ) );
     }
     
     /**
@@ -143,7 +143,7 @@ public class StreamUtils
     {
         int b = in.read();
         
-        return( (short)( b & 0xFF ) );
+        return ( (short)( b & 0xFF ) );
     }
     
     /**
@@ -160,7 +160,7 @@ public class StreamUtils
         int s1 = ( in.read() & 0xFF ) << 8;
         int s2 = ( in.read() & 0xFF );
         
-        return( (short)( s1 | s2 ) );
+        return ( (short)( s1 | s2 ) );
     }
     
     /**
@@ -177,7 +177,7 @@ public class StreamUtils
         int s1 = ( in.read() & 0xFF ) << 8;
         int s2 = ( in.read() & 0xFF );
         
-        return( (short)( s1 | s2 ) );
+        return ( (short)( s1 | s2 ) );
     }
     
     /**
@@ -195,7 +195,7 @@ public class StreamUtils
         int high = (int)in.read();
         int low = (int)in.read();
         
-        return( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
+        return ( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
     }
     
     /**
@@ -213,7 +213,7 @@ public class StreamUtils
         int high = (int)in.read();
         int low = (int)in.read();
         
-        return( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
+        return ( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
     }
     
     /**
@@ -230,7 +230,7 @@ public class StreamUtils
         int s2 = ( in.read() & 0xFF );
         int s1 = ( in.read() & 0xFF ) << 8;
         
-        return( (short)( s1 | s2 ) );
+        return ( (short)( s1 | s2 ) );
     }
     
     /**
@@ -247,7 +247,7 @@ public class StreamUtils
         int s2 = ( in.read() & 0xFF );
         int s1 = ( in.read() & 0xFF ) << 8;
         
-        return( (short)( s1 | s2 ) );
+        return ( (short)( s1 | s2 ) );
     }
     
     /**
@@ -265,7 +265,7 @@ public class StreamUtils
         int low = (int)in.read();
         int high = (int)in.read();
         
-        return( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
+        return ( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
     }
     
     /**
@@ -283,7 +283,7 @@ public class StreamUtils
         int low = (int)in.read();
         int high = (int)in.read();
         
-        return( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
+        return ( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
     }
     
     /**
@@ -302,7 +302,7 @@ public class StreamUtils
         int i2 = ( in.read() & 0xFF ) << 8;
         int i1 = ( in.read() & 0xFF );
         
-        return( i4 | i3 | i2 | i1 );
+        return ( i4 | i3 | i2 | i1 );
     }
     
     /**
@@ -321,7 +321,7 @@ public class StreamUtils
         int i2 = ( in.read() & 0xFF ) << 8;
         int i1 = ( in.read() & 0xFF );
         
-        return( i4 | i3 | i2 | i1 );
+        return ( i4 | i3 | i2 | i1 );
     }
     
     /**
@@ -340,7 +340,7 @@ public class StreamUtils
         int i2 = ( in.read() & 0xFF ) << 16;
         int i1 = ( in.read() & 0xFF ) << 24;
         
-        return( i4 | i3 | i2 | i1 );
+        return ( i4 | i3 | i2 | i1 );
     }
     
     /**
@@ -359,7 +359,7 @@ public class StreamUtils
         int i3 = ( in.read() & 0xFF ) << 16;
         int i4 = ( in.read() & 0xFF ) << 24;
         
-        return( i4 | i3 | i2 | i1 );
+        return ( i4 | i3 | i2 | i1 );
     }
     
     /**
@@ -435,26 +435,24 @@ public class StreamUtils
             
             int nullIndex = ArrayUtils.indexOf( bytes, (byte)0 );
             if ( nullIndex == -1 )
-                return( new String( bytes ) );
-            else
-                return( new String( bytes, 0, nullIndex ) );
-        }
-        else
-        {
-            for ( int i = 0; i < maxLength; i++ )
-            {
-                int ib = in.read();
-                if ( ib == -1 )
-                    return( null );
-                byte b = (byte)ib;
-                if ( b == (byte)0 )
-                    return( new String( bytes, 0, i ) );
-                
-                bytes[i] = b;
-            }
+                return ( new String( bytes ) );
             
-            return( new String( bytes ) );
+            return ( new String( bytes, 0, nullIndex ) );
         }
+        
+        for ( int i = 0; i < maxLength; i++ )
+        {
+            int ib = in.read();
+            if ( ib == -1 )
+                return ( null );
+            byte b = (byte)ib;
+            if ( b == (byte)0 )
+                return ( new String( bytes, 0, i ) );
+            
+            bytes[i] = b;
+        }
+        
+        return ( new String( bytes ) );
     }
     
     /**
@@ -516,6 +514,6 @@ public class StreamUtils
      */
     public static final byte[] buildByteArray( InputStream in ) throws IOException
     {
-        return( buildByteArray( in, in.available() ) );
+        return ( buildByteArray( in, in.available() ) );
     }
 }

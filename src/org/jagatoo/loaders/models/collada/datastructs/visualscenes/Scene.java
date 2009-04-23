@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,7 +52,7 @@ public class Scene
      */
     public String getId()
     {
-        return( id );
+        return ( id );
     }
     
     /**
@@ -60,7 +60,7 @@ public class Scene
      */
     public String getName()
     {
-        return( name );
+        return ( name );
     }
     
     /**
@@ -68,7 +68,7 @@ public class Scene
      */
     public HashMap<String, Node> getNodes()
     {
-        return( nodes );
+        return ( nodes );
     }
     
     /**

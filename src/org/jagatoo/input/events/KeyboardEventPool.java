@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -61,12 +61,10 @@ public final class KeyboardEventPool
             {
                 KeyPressedEvent e = instances_pressed.remove( --n_pressed );
                 
-                return( e );
+                return ( e );
             }
-            else
-            {
-                return( new KeyPressedEvent() );
-            }
+            
+            return ( new KeyPressedEvent() );
         }
     }
     
@@ -76,7 +74,7 @@ public final class KeyboardEventPool
         
         e.set( keyboard, key, modifierMask, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     public static void freePressed( KeyPressedEvent e )
@@ -99,12 +97,10 @@ public final class KeyboardEventPool
             {
                 KeyReleasedEvent e = instances_released.remove( --n_released );
                 
-                return( e );
+                return ( e );
             }
-            else
-            {
-                return( new KeyReleasedEvent() );
-            }
+            
+            return ( new KeyReleasedEvent() );
         }
     }
     
@@ -114,7 +110,7 @@ public final class KeyboardEventPool
         
         e.set( keyboard, key, modifierMask, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     public static void freeReleased( KeyReleasedEvent e )
@@ -137,12 +133,10 @@ public final class KeyboardEventPool
             {
                 KeyTypedEvent e = instances_typed.remove( --n_typed );
                 
-                return( e );
+                return ( e );
             }
-            else
-            {
-                return( new KeyTypedEvent() );
-            }
+            
+            return ( new KeyTypedEvent() );
         }
     }
     
@@ -152,7 +146,7 @@ public final class KeyboardEventPool
         
         e.set( keyboard, keyChar, modifierMask, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     public static void freeTyped( KeyTypedEvent e )

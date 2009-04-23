@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,13 +48,13 @@ public class PixelProcessorRGBA extends PixelProcessor
     
     public static PixelProcessorRGBA getInstance()
     {
-        return( instance );
+        return ( instance );
     }
     
     @Override
     public final TextureImageFormat getTextureImageFormat()
     {
-        return( TextureImageFormat.RGBA );
+        return ( TextureImageFormat.RGBA );
     }
     
     @Override
@@ -157,7 +157,7 @@ public class PixelProcessorRGBA extends PixelProcessor
         trg.position( 0 );
         trg.limit( trgOffset0 + dataSize );
         
-        return( dataSize );
+        return ( dataSize );
     }
     
     /**

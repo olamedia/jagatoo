@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -59,7 +59,7 @@ public class CommandProcessor
      */
     public final LogChannel getLogChannel()
     {
-        return( logChannel );
+        return ( logChannel );
     }
     
     /**
@@ -67,7 +67,7 @@ public class CommandProcessor
      */
     public Command[] getRegisteredCommands()
     {
-        return( availableCommands );
+        return ( availableCommands );
     }
     
     /**
@@ -75,7 +75,7 @@ public class CommandProcessor
      */
     public Command getRegisteredCommand( String key )
     {
-        return( availableCommandsMap.get( key ) );
+        return ( availableCommandsMap.get( key ) );
     }
     
     /**
@@ -83,7 +83,7 @@ public class CommandProcessor
      */
     public final InputListener getInputListener()
     {
-        return( dispatcher );
+        return ( dispatcher );
     }
     
     /**
@@ -103,7 +103,7 @@ public class CommandProcessor
             availableCommands = newArray;
         }
         
-        return( command );
+        return ( command );
     }
     
     /**
@@ -226,7 +226,7 @@ public class CommandProcessor
     {
         if ( logChannel == null )
         {
-            throw( new NullPointerException( "logChannel must not be null" ) );
+            throw new NullPointerException( "logChannel must not be null" );
         }
         
         this.logChannel = logChannel;

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -55,7 +55,7 @@ public final class BufferUtils
      */
     public static ByteBuffer createByteBuffer( int size )
     {
-        return( ByteBuffer.allocateDirect( size ).order( ByteOrder.nativeOrder() ) );
+        return ( ByteBuffer.allocateDirect( size ).order( ByteOrder.nativeOrder() ) );
     }
     
     /**
@@ -70,7 +70,7 @@ public final class BufferUtils
         ByteBuffer buff = createByteBuffer( values.length );
         buff.flip();
         
-        return( buff );
+        return ( buff );
     }
     
     /**
@@ -83,7 +83,7 @@ public final class BufferUtils
      */
     public static ShortBuffer createShortBuffer( int size )
     {
-        return( createByteBuffer( size << 1 ).asShortBuffer() );
+        return ( createByteBuffer( size << 1 ).asShortBuffer() );
     }
     
     /**
@@ -100,7 +100,7 @@ public final class BufferUtils
         buff.put( values );
         buff.flip();
         
-        return( buff );
+        return ( buff );
     }
     
     /**
@@ -113,7 +113,7 @@ public final class BufferUtils
      */
     public static CharBuffer createCharBuffer( int size )
     {
-        return( createByteBuffer( size << 1 ).asCharBuffer() );
+        return ( createByteBuffer( size << 1 ).asCharBuffer() );
     }
     
     /**
@@ -130,7 +130,7 @@ public final class BufferUtils
         buff.put( values );
         buff.flip();
         
-        return( buff );
+        return ( buff );
     }
     
     /**
@@ -143,7 +143,7 @@ public final class BufferUtils
      */
     public static IntBuffer createIntBuffer( int size )
     {
-        return( createByteBuffer( size << 2 ).asIntBuffer() );
+        return ( createByteBuffer( size << 2 ).asIntBuffer() );
     }
     
     /**
@@ -160,7 +160,7 @@ public final class BufferUtils
         buff.put( values );
         buff.flip();
         
-        return( buff );
+        return ( buff );
     }
     
     /**
@@ -173,7 +173,7 @@ public final class BufferUtils
     */
     public static LongBuffer createLongBuffer( int size )
     {
-        return( createByteBuffer( size << 3 ).asLongBuffer() );
+        return ( createByteBuffer( size << 3 ).asLongBuffer() );
     }
     
     /**
@@ -190,7 +190,7 @@ public final class BufferUtils
         buff.put( values );
         buff.flip();
         
-        return( buff );
+        return ( buff );
     }
     
     /**
@@ -203,7 +203,7 @@ public final class BufferUtils
      */
     public static FloatBuffer createFloatBuffer( int size )
     {
-        return( createByteBuffer( size << 2 ).asFloatBuffer() );
+        return ( createByteBuffer( size << 2 ).asFloatBuffer() );
     }
     
     /**
@@ -220,7 +220,7 @@ public final class BufferUtils
         buff.put( values );
         buff.flip();
         
-        return( buff );
+        return ( buff );
     }
     
     /**
@@ -233,7 +233,7 @@ public final class BufferUtils
      */
     public static DoubleBuffer createDoubleBuffer( int size )
     {
-        return( createByteBuffer( size << 3 ).asDoubleBuffer() );
+        return ( createByteBuffer( size << 3 ).asDoubleBuffer() );
     }
     
     /**
@@ -250,7 +250,7 @@ public final class BufferUtils
         buff.put( values );
         buff.flip();
         
-        return( buff );
+        return ( buff );
     }
     
     /**
@@ -259,15 +259,15 @@ public final class BufferUtils
     public static int getElementSizeExponent( Buffer buf )
     {
         if ( buf instanceof ByteBuffer )
-            return( 0 );
+            return ( 0 );
         else if ( buf instanceof ShortBuffer || buf instanceof CharBuffer )
-            return( 1 );
+            return ( 1 );
         else if ( buf instanceof FloatBuffer || buf instanceof IntBuffer )
-            return( 2 );
+            return ( 2 );
         else if ( buf instanceof LongBuffer || buf instanceof DoubleBuffer )
-            return( 3 );
+            return ( 3 );
         else
-            throw( new IllegalStateException( "Unsupported buffer type: " + buf ) );
+            throw new IllegalStateException( "Unsupported buffer type: " + buf );
     }
     
     /**
@@ -277,6 +277,6 @@ public final class BufferUtils
      */
     public static int getOffset( Buffer buffer )
     {
-        return( buffer.position() << getElementSizeExponent( buffer ) );
+        return ( buffer.position() << getElementSizeExponent( buffer ) );
     }
 }

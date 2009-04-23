@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -67,7 +67,7 @@ public class LWJGLJInputInputDeviceFactory extends InputDeviceFactory
     @Override
     protected LWJGLMouse[] initMouses() throws InputSystemException
     {
-        return( (LWJGLMouse[])initMouses( lwjglFactory ) );
+        return ( (LWJGLMouse[])initMouses( lwjglFactory ) );
     }
     
     /**
@@ -76,7 +76,7 @@ public class LWJGLJInputInputDeviceFactory extends InputDeviceFactory
     @Override
     protected LWJGLKeyboard[] initKeyboards() throws InputSystemException
     {
-        return( (LWJGLKeyboard[])initKeyboards( lwjglFactory ) );
+        return ( (LWJGLKeyboard[])initKeyboards( lwjglFactory ) );
     }
     
     /**
@@ -85,7 +85,7 @@ public class LWJGLJInputInputDeviceFactory extends InputDeviceFactory
     @Override
     protected JInputController[] initControllers() throws InputSystemException
     {
-        return( (JInputController[])initControllers( jInputFactory ) );
+        return ( (JInputController[])initControllers( jInputFactory ) );
     }
     
     /**

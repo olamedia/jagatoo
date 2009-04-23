@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,17 +52,17 @@ public class SharedBufferedImage extends BufferedImage
     
     public final int getPixelSize()
     {
-        return( pixelSize );
+        return ( pixelSize );
     }
     
     public final int[] getPixelOffsets()
     {
-        return( pixelOffsets );
+        return ( pixelOffsets );
     }
     
     public final byte[] getSharedData()
     {
-        return( data );
+        return ( data );
     }
     
     protected SharedBufferedImage( int width, int height, ColorModel cm, DataBufferByte dbb, byte[] data, int scanlineStride, int pixelStride, int[] pixelOffsets )
@@ -127,7 +127,7 @@ public class SharedBufferedImage extends BufferedImage
                     cm = new ComponentColorModel( cs, nBits, false, false, Transparency.OPAQUE, 0 );
                 break;
             default:
-                throw( new IllegalArgumentException( "Unsupported pixelSize: " + pixelSize ) );
+                throw new IllegalArgumentException( "Unsupported pixelSize: " + pixelSize );
         }
         
         if ( data == null )
@@ -137,7 +137,7 @@ public class SharedBufferedImage extends BufferedImage
         
         DataBufferByte dbb = new DataBufferByte( data, data.length );
         
-        return( new SharedBufferedImage( width, height, cm, dbb, data, scanlineStride, pixelStride, pixelOffsets ) );
+        return ( new SharedBufferedImage( width, height, cm, dbb, data, scanlineStride, pixelStride, pixelOffsets ) );
     }
     
     public static final SharedBufferedImage create( int width, int height, int pixelSize, int[] pixelOffsets, byte[] data )
@@ -161,8 +161,8 @@ public class SharedBufferedImage extends BufferedImage
         }
         
         if ( hasAlpha == null )
-            throw( new IllegalArgumentException( "Unsupported pixelSize: " + pixelSize ) );
+            throw new IllegalArgumentException( "Unsupported pixelSize: " + pixelSize );
         
-        return( create( width, height, pixelSize, hasAlpha.booleanValue(), pixelOffsets, data ) );
+        return ( create( width, height, pixelSize, hasAlpha.booleanValue(), pixelOffsets, data ) );
     }
 }

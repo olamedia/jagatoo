@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,11 +57,11 @@ public class AWTInputDeviceFactory extends InputDeviceFactory
         {
             if ( ( currentMouses[ 0 ] instanceof AWTMouse ) && ( currentMouses[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
             {
-                return( new AWTMouse[] { (AWTMouse)currentMouses[ 0 ] } );
+                return ( new AWTMouse[] { (AWTMouse)currentMouses[ 0 ] } );
             }
         }
         
-        return( new AWTMouse[] { new AWTMouse( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
+        return ( new AWTMouse[] { new AWTMouse( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -76,11 +76,11 @@ public class AWTInputDeviceFactory extends InputDeviceFactory
         {
             if ( ( currentKeyboards[ 0 ] instanceof AWTKeyboard ) && ( currentKeyboards[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
             {
-                return( new AWTKeyboard[] { (AWTKeyboard)currentKeyboards[ 0 ] } );
+                return ( new AWTKeyboard[] { (AWTKeyboard)currentKeyboards[ 0 ] } );
             }
         }
         
-        return( new AWTKeyboard[] { new AWTKeyboard( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
+        return ( new AWTKeyboard[] { new AWTKeyboard( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -89,7 +89,7 @@ public class AWTInputDeviceFactory extends InputDeviceFactory
     @Override
     protected Controller[] initControllers() throws InputSystemException
     {
-        return( new Controller[ 0 ] );
+        return ( new Controller[ 0 ] );
     }
     
     /**

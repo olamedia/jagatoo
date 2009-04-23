@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -131,7 +131,7 @@ public class KCal3dLoader
             e.printStackTrace();
         }
         
-        return( data );
+        return ( data );
     }
     
     public static CalModel getCalModel( Cal3dModelDef modelDef, String name, URL baseURL )
@@ -175,13 +175,13 @@ public class KCal3dLoader
             
             model.update( 0.0f );
             
-            return( model );
+            return ( model );
         }
         catch ( Exception ex )
         {
             ex.printStackTrace();
             
-            return( null );
+            return ( null );
         }
     }
     
@@ -227,13 +227,13 @@ public class KCal3dLoader
                 coreModel.addCoreAnimation( anim.name, coreAnimation );
             }
             
-            return( coreModel );
+            return ( coreModel );
         }
         catch ( Exception ex )
         {
             ex.printStackTrace();
             
-            return( null );
+            return ( null );
         }
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -69,19 +69,19 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
         
         public int getWidth()
         {
-            return( xMax - xMin + 1 );
+            return ( xMax - xMin + 1 );
         }
         
         public int getHeight()
         {
-            return( yMax - yMin + 1 );
+            return ( yMax - yMin + 1 );
         }
         
         public static boolean checkFirstFourBytes( byte[] data )
         {
             // manufacturer: must be 10
             if ( data[ 0 ] != 10 )
-                return( false );
+                return ( false );
             
             // version: must be 0, 2, 3, 4 or 5
             switch ( data[ 1 ] )
@@ -93,12 +93,12 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
                 case 5:
                     break;
                 default:
-                    return( false );
+                    return ( false );
             }
             
             // encoding: must be 1
             if ( data[ 2 ] != 1 )
-                return( false );
+                return ( false );
             
             // bits-per-pixel: must be 1, 2, 4 or 8
             switch ( data[ 3 ] )
@@ -109,10 +109,10 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
                 case 8:
                     break;
                 default:
-                    return( false );
+                    return ( false );
             }
             
-            return( true );
+            return ( true );
         }
         
         private int readUnsignedShort( byte[] data, int i ) throws IOException
@@ -120,7 +120,7 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
             int low = (int)data[ i + 0 ];
             int high = (int)data[ i + 1 ];
             
-            return( ( ( high & 0xff ) << 8 ) | ( low & 0xff ) );
+            return ( ( ( high & 0xff ) << 8 ) | ( low & 0xff ) );
         }
         
         public PCXHeader( byte[] data ) throws IOException
@@ -204,7 +204,7 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
             }
             */
             
-            //return( ( 255 << 24 ) + ( cols[ i ][ 0 ] << 16 ) + ( cols[ i ][ 1 ] << 8 ) + ( cols[ i ][ 2 ] ) );
+            //return ( ( 255 << 24 ) + ( cols[ i ][ 0 ] << 16 ) + ( cols[ i ][ 1 ] << 8 ) + ( cols[ i ][ 2 ] ) );
         }
     }
     
@@ -217,7 +217,7 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
         
         if ( in.available() < headerSize )
         {
-            return( null );
+            return ( null );
         }
         
         final byte[] first4Bytes = new byte[ 4 ];
@@ -225,7 +225,7 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
         final byte[] headerData = new byte[ headerSize ];
         System.arraycopy( first4Bytes, 0, headerData, 0, 4 );
         if ( !PCXHeader.checkFirstFourBytes( headerData ) )
-            return( null );
+            return ( null );
         in.read( headerData, 4, headerSize - 4 );
         
         PCXHeader header;
@@ -235,7 +235,7 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
         }
         catch ( Throwable t )
         {
-            return( null );
+            return ( null );
         }
         
         byte[] data = StreamUtils.buildByteArray( in );
@@ -318,6 +318,6 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
         bb.position( 0 );
         bb.limit( byteOffset0 + ( width * height * dstBytesPerPixel ) );
         
-        return( image );
+        return ( image );
     }
 }

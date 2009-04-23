@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -97,12 +97,12 @@ public class PAKArchive
         int length = listing.getFileLength( filename );
         
         if ( offset == -1 )
-            throw( new FileNotFoundException( "File " + filename + " not found in PAK" ) );
+            throw new FileNotFoundException( "File " + filename + " not found in PAK" );
         
         InputStream in = new ByteArrayInputStream( data );
         in.skip( offset );
         
-        return( new RestrictedLengthInputStream( in, length ) );
+        return ( new RestrictedLengthInputStream( in, length ) );
     }
     
     /**
@@ -110,7 +110,7 @@ public class PAKArchive
      */
     public List<String> getFilenames()
     {
-        return( listing.getFilenames() );
+        return ( listing.getFilenames() );
     }
     
     /** 

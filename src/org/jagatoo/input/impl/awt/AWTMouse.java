@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -72,7 +72,7 @@ public class AWTMouse extends Mouse
     
     public static final MouseButton convertButton( int awtButton )
     {
-        return( buttonMap[ awtButton ] );
+        return ( buttonMap[ awtButton ] );
     }
     
     private java.awt.Component usedComponent;
@@ -105,7 +105,7 @@ public class AWTMouse extends Mouse
             }
             catch ( java.awt.AWTException e )
             {
-                throw( new InputSystemException( e ) );
+                throw new InputSystemException( e );
             }
         }
     }
@@ -134,15 +134,15 @@ public class AWTMouse extends Mouse
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t;
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t;
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t;
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -161,7 +161,7 @@ public class AWTMouse extends Mouse
         }
         catch ( Throwable t )
         {
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
         
         setPosition( centerX, centerY );
@@ -280,15 +280,15 @@ public class AWTMouse extends Mouse
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t;
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t;
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t;
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -314,15 +314,15 @@ public class AWTMouse extends Mouse
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t;
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t;
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t;
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -463,7 +463,7 @@ public class AWTMouse extends Mouse
         }
         catch ( Throwable t )
         {
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -509,7 +509,7 @@ public class AWTMouse extends Mouse
         }
         catch ( Throwable e )
         {
-            throw( new InputSystemException( e ) );
+            throw new InputSystemException( e );
         }
     }
 }

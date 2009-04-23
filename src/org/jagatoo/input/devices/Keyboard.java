@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,7 +70,7 @@ public abstract class Keyboard extends InputDevice
      */
     public final KeyboardFactory getSourceFactory()
     {
-        return( sourceFactory );
+        return ( sourceFactory );
     }
     
     /**
@@ -78,7 +78,7 @@ public abstract class Keyboard extends InputDevice
      */
     public final boolean hasKeyboardListener()
     {
-        return( listeners.size() > 0 );
+        return ( listeners.size() > 0 );
     }
     
     /**
@@ -86,7 +86,7 @@ public abstract class Keyboard extends InputDevice
      */
     public final boolean hasListener()
     {
-        return( hasInputStateListener() || hasKeyboardListener() );
+        return ( hasInputStateListener() || hasKeyboardListener() );
     }
     
     /**
@@ -127,7 +127,7 @@ public abstract class Keyboard extends InputDevice
     protected int applyModifier( Key key, boolean isKeyDown )
     {
         if ( key == null )
-            return( modifierMask );
+            return ( modifierMask );
         
         switch ( key.getKeyID() )
         {
@@ -171,7 +171,7 @@ public abstract class Keyboard extends InputDevice
                 break;
         }
         
-        return( modifierMask );
+        return ( modifierMask );
     }
     
     /**
@@ -179,7 +179,7 @@ public abstract class Keyboard extends InputDevice
      */
     public final int getModifierMask()
     {
-        return( modifierMask );
+        return ( modifierMask );
     }
     
     /**
@@ -197,13 +197,13 @@ public abstract class Keyboard extends InputDevice
     protected final KeyPressedEvent prepareKeyPressedEvent( Key key, int modifierMask, long when, long lastWhen )
     {
         if ( !isEnabled() || !hasListener() || ( key == null ) )
-            return( null );
+            return ( null );
         
         keyStates[ key.getKeyCode() - 1 ] = true;
         
         KeyPressedEvent e = KeyboardEventPool.allocPressed( this, key, modifierMask, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     /**
@@ -262,13 +262,13 @@ public abstract class Keyboard extends InputDevice
     protected final KeyReleasedEvent prepareKeyReleasedEvent( Key key, int modifierMask, long when, long lastWhen )
     {
         if ( !isEnabled() || !hasListener() || ( key == null ) )
-            return( null );
+            return ( null );
         
         keyStates[ key.getKeyCode() - 1 ] = false;
         
         KeyReleasedEvent e = KeyboardEventPool.allocReleased( this, key, modifierMask, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     /**
@@ -316,11 +316,11 @@ public abstract class Keyboard extends InputDevice
     protected final KeyTypedEvent prepareKeyTypedEvent( char keyChar, int modifierMask, long when, long lastWhen )
     {
         if ( !isEnabled() || !hasListener() || ( keyChar == '\0' ) )
-            return( null );
+            return ( null );
         
         KeyTypedEvent e = KeyboardEventPool.allocTyped( this, keyChar, modifierMask, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     /**
@@ -377,7 +377,7 @@ public abstract class Keyboard extends InputDevice
      */
     public final boolean isKeyPressed( Key key )
     {
-        return( keyStates[ key.getKeyCode() - 1 ] );
+        return ( keyStates[ key.getKeyCode() - 1 ] );
     }
     
     /**
@@ -388,9 +388,9 @@ public abstract class Keyboard extends InputDevice
     public final InputState getKeyState( Key key )
     {
         if ( isKeyPressed( key ) )
-            return( InputState.POSITIVE );
-        else
-            return( InputState.NEGATIVE );
+            return ( InputState.POSITIVE );
+        
+        return ( InputState.NEGATIVE );
     }
     
     /**
@@ -406,7 +406,7 @@ public abstract class Keyboard extends InputDevice
         
         boolean state = isKeyPressed( (Key)component );
         
-        return( state ? 1 : 0 );
+        return ( state ? 1 : 0 );
     }
     
     /**
@@ -415,7 +415,7 @@ public abstract class Keyboard extends InputDevice
     @Override
     public String toString()
     {
-        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", localization-mapping = \"" + KeyboardLocalizer.getCurrentMappingName() + "\" }" );
+        return ( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", localization-mapping = \"" + KeyboardLocalizer.getCurrentMappingName() + "\" }" );
     }
     
     /**

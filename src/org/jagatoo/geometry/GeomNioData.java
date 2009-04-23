@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,22 +54,22 @@ public abstract class GeomNioData
     
     public final int getMaxSize()
     {
-        return( maxSize );
+        return ( maxSize );
     }
     
     public final int getElemSize()
     {
-        return( elemSize );
+        return ( elemSize );
     }
     
     public final int getStride()
     {
-        return( stride );
+        return ( stride );
     }
     
     public final boolean isReversed()
     {
-        return( reversed );
+        return ( reversed );
     }
     
     /**
@@ -104,7 +104,7 @@ public abstract class GeomNioData
             freeIndex += size;
         }
         
-        return( a );
+        return ( a );
     }
     
     /**
@@ -127,17 +127,15 @@ public abstract class GeomNioData
     {
         if ( reversed )
         {
-            return( freeIndex );
+            return ( freeIndex );
         }
-        else
-        {
-            return( 0 );
-        }
+        
+        return ( 0 );
     }
     
     public int getCount()
     {
-        return( maxSize - freeIndex );
+        return ( maxSize - freeIndex );
     }
     
     public GeomNioData( int maxElems, int maxSize, int elemSize, int stride, boolean reversed )

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -83,7 +83,7 @@ public class LibraryGeometriesLoader
             }
         }
         
-        return( colladaLibGeoms );
+        return ( colladaLibGeoms );
     }
     
     /**
@@ -139,7 +139,7 @@ public class LibraryGeometriesLoader
                          );
         }
         
-        return( colGeom );
+        return ( colGeom );
     }
     
     /**
@@ -173,7 +173,7 @@ public class LibraryGeometriesLoader
             }
         }
         
-        return( sourcesMap );
+        return ( sourcesMap );
     }
     
     /**
@@ -259,7 +259,7 @@ public class LibraryGeometriesLoader
          * FILLING
          */
         
-        return( trianglesGeometry );
+        return ( trianglesGeometry );
     }
     
     /**
@@ -335,6 +335,6 @@ public class LibraryGeometriesLoader
         // It says it needs to be max + 1
         meshDataInfo.maxOffset += 1;
         
-        return( meshDataInfo );
+        return ( meshDataInfo );
     }
 }

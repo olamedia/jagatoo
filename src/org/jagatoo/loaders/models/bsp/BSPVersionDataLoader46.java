@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -63,7 +63,7 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         try
         {
             prototype.entities = BSPPrototypeLoader.readEntities( bspFile, bspDir );
-            prototype.wadFiles = BSPPrototypeLoader.readWADFiles( bspFile, bspDir, prototype.entities );
+            prototype.wadFiles = BSPPrototypeLoader.readWADFiles( bspFile, prototype.entities );
             prototype.baseTextures = BSPPrototypeLoader.readTextures( bspFile, bspDir, prototype.wadFiles, prototype.entities, appFactory );
             prototype.planes = BSPPrototypeLoader.readPlanes( bspFile, bspDir, worldScale );
             prototype.nodes = BSPPrototypeLoader.readNodes( bspFile, bspDir );
@@ -88,15 +88,15 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
             throw new ParsingException( e );
         }
         
-        return( prototype );
+        return ( prototype );
     }
     
     private static final float[] getNormal( Vector3f normal, boolean convertZup2Yup )
     {
         if ( convertZup2Yup )
-            return( new float[] { normal.getX(), normal.getZ(), -normal.getY() } );
-        else
-            return( new float[] { normal.getX(), normal.getY(), normal.getZ() } );
+            return ( new float[] { normal.getX(), normal.getZ(), -normal.getY() } );
+        
+        return ( new float[] { normal.getX(), normal.getY(), normal.getZ() } );
     }
     
     /**
@@ -155,7 +155,7 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         
         geomFactory.finalizeGeometry( ga, geomType, 0, face.numOfVerts, 0, index.length );
         
-        return( ga );
+        return ( ga );
     }
     
     private NamedObject convertFaceToSurfacePatch( int faceIndex, BSPFace face, BSPVertex[] vertices, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale )
@@ -165,7 +165,7 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         for ( int i = 0; i < face.numOfVerts; i++ )
             control[ i ] = vertices[ face.vertexIndex + i ];
         
-        PatchSurface ps = new PatchSurface( control, face.numOfVerts, face.size[ 0 ], face.size[ 1 ] );
+        PatchSurface ps = new PatchSurface( control, face.size[ 0 ], face.size[ 1 ] );
         
         GeometryType geomType = GeometryType.INDEXED_TRIANGLE_ARRAY;
         
@@ -199,7 +199,7 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         
         geomFactory.finalizeGeometry( ga, geomType, 0, ps.mPoints.length, 0, ps.mIndices.length );
         
-        return( ga );
+        return ( ga );
     }
     
     /**
@@ -245,20 +245,26 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         
         geomFactory.finalizeGeometry( ga, geomType, 0, face.numOfVerts, 0, index.length );
         
-        return( ga );
+        return ( ga );
     }
     
     /**
      * Creates a billboard from the given face.
      * 
-     * @param face 
-     * @return 
+     * @param faceIndex
+     * @param face
+     * @param vertices
+     * @param meshVertices
+     * @param geomFactory
+     * @param convertZup2Yup
+     * @param worldScale
+     * @return the new billboard geometry 
      */
     private NamedObject convertFaceToBillboard( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale )
     {
         System.out.println( "TODO: Implement the abstract creation of Billboard geometry" );
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -269,16 +275,16 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
         switch ( face.type )
         {
             case 1:
-                return( convertFaceToIndexedGeom( faceIndex, face, vertices, meshVertices, geomFactory, convertZup2Yup, worldScale ) );
+                return ( convertFaceToIndexedGeom( faceIndex, face, vertices, meshVertices, geomFactory, convertZup2Yup, worldScale ) );
             
             case 2:
-                return( convertFaceToSurfacePatch( faceIndex, face, vertices, geomFactory, convertZup2Yup, worldScale ) );
+                return ( convertFaceToSurfacePatch( faceIndex, face, vertices, geomFactory, convertZup2Yup, worldScale ) );
             
             case 3:
-                return( convertFaceToIndexedGeom( faceIndex, face, vertices, meshVertices, geomFactory, convertZup2Yup, worldScale ) );
+                return ( convertFaceToIndexedGeom( faceIndex, face, vertices, meshVertices, geomFactory, convertZup2Yup, worldScale ) );
                 
             case 4:
-                return( convertFaceToBillboard( faceIndex, face, vertices, meshVertices, geomFactory, convertZup2Yup, worldScale ) );
+                return ( convertFaceToBillboard( faceIndex, face, vertices, meshVertices, geomFactory, convertZup2Yup, worldScale ) );
         }
         
         throw new Error( "Unsupported face type " + face.type );

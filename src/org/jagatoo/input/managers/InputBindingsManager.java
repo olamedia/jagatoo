@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -80,12 +80,12 @@ public class InputBindingsManager< A extends InputAction >
     
     public final int getNumActions()
     {
-        return( boundKeys.length );
+        return ( boundKeys.length );
     }
     
     public final Set< DeviceComponent > getBoundInputComponents()
     {
-        return( keyBindings.keySet() );
+        return ( keyBindings.keySet() );
     }
     
     public final int getBoundInputComponents( DeviceComponent[] result )
@@ -101,12 +101,12 @@ public class InputBindingsManager< A extends InputAction >
             result[i++] = comp;
         }
         
-        return( i );
+        return ( i );
     }
     
     public final Collection< A > getBoundActions()
     {
-        return( keyBindings.values() );
+        return ( keyBindings.values() );
     }
     
     public final void getBoundActions( DeviceComponent[] components, InputAction[] result )
@@ -151,13 +151,13 @@ public class InputBindingsManager< A extends InputAction >
                         
                         notifyUnbound( comp, InputBindingsSet.values()[ i ], prevBound );
                         
-                        return( prevBound );
+                        return ( prevBound );
                     }
                 }
             }
         }
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -172,7 +172,7 @@ public class InputBindingsManager< A extends InputAction >
         DeviceComponent[] bounds = boundKeys[ action.ordinal() ];
         
         if ( bounds == null )
-            return( null );
+            return ( null );
         
         DeviceComponent prev = null;
         DeviceComponent[] prevs = new DeviceComponent[ NUM_KEY_SETS ];
@@ -190,7 +190,7 @@ public class InputBindingsManager< A extends InputAction >
                 unbind( prevs[ i ] );
         }
         
-        return( prev );
+        return ( prev );
     }
     
     /**
@@ -202,14 +202,14 @@ public class InputBindingsManager< A extends InputAction >
     public final A getBoundAction( DeviceComponent comp, InputBindingsSet set )
     {
         if ( set == null )
-            return( keyBindings.get( comp ) );
+            return ( keyBindings.get( comp ) );
         
         final A result = keyBindings.get( comp );
         
         if ( ( boundKeys[ result.ordinal() ] != null ) && ( boundKeys[ result.ordinal() ][ set.ordinal() ] == comp ) )
-            return( result );
+            return ( result );
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -219,7 +219,7 @@ public class InputBindingsManager< A extends InputAction >
      */
     public final A getBoundAction( DeviceComponent comp )
     {
-        return( getBoundAction( comp, null ) );
+        return ( getBoundAction( comp, null ) );
     }
     
     /**
@@ -233,9 +233,9 @@ public class InputBindingsManager< A extends InputAction >
         final DeviceComponent[] keys = boundKeys[ action.ordinal() ];
         
         if ( keys == null )
-            return( null );
-        else
-            return( keys[ set.ordinal() ] );
+            return ( null );
+        
+        return ( keys[ set.ordinal() ] );
     }
     
     /**
@@ -284,7 +284,7 @@ public class InputBindingsManager< A extends InputAction >
         
         notifyBound( comp, set, action );
         
-        return( set );
+        return ( set );
     }
     
     /**
@@ -297,7 +297,7 @@ public class InputBindingsManager< A extends InputAction >
      */
     public final InputBindingsSet bind( DeviceComponent comp, A action )
     {
-        return( bind( comp, action, null ) );
+        return ( bind( comp, action, null ) );
     }
     
     /**
@@ -374,7 +374,7 @@ public class InputBindingsManager< A extends InputAction >
      */
     public Map< DeviceComponent, A > getInputBindingsMap()
     {
-        return( keyBindings );
+        return ( keyBindings );
     }
     
     /**

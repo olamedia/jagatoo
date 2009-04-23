@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -224,7 +224,7 @@ public class SWTKeyboard extends Keyboard
             result = CHAR_CONVERSION.get( Character.toLowerCase( ev.character ) );
         }
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -233,7 +233,7 @@ public class SWTKeyboard extends Keyboard
     @Override
     protected boolean hasKeyStateChanged( Key key, boolean keyState )
     {
-        return( true );
+        return ( true );
     }
     
     /**
@@ -296,15 +296,15 @@ public class SWTKeyboard extends Keyboard
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t;
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t;
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t;
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
         
         lastGameTimeDelta = System.nanoTime() - nanoTime;
@@ -321,7 +321,7 @@ public class SWTKeyboard extends Keyboard
         }
         catch ( Throwable t )
         {
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -398,7 +398,7 @@ public class SWTKeyboard extends Keyboard
         }
         catch ( Throwable e )
         {
-            throw( new InputSystemException( e ) );
+            throw new InputSystemException( e );
         }
     }
 }

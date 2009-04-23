@@ -55,12 +55,12 @@ public class OBJFace
     
     public OBJMaterial getMaterial()
     {
-        return( mat );
+        return ( mat );
     }
     
     public int getCount()
     {
-        return( ( vData.length - 2 ) * 3 );
+        return ( ( vData.length - 2 ) * 3 );
     }
     
     private int findIndex( float[] vt )
@@ -69,11 +69,11 @@ public class OBJFace
         {
             if ( faceList.getVertexList().get( vData[ i ] ) == vt )
             {
-                return( i );
+                return ( i );
             }
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     public void configure( float[][] dataVerts, float[][] dataNormals, float[][] dataTexs, int index )

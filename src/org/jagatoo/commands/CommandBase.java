@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,7 +50,7 @@ public abstract class CommandBase implements Command
      */
     public final String getKey()
     {
-        return( key );
+        return ( key );
     }
     
     /**
@@ -58,7 +58,7 @@ public abstract class CommandBase implements Command
      */
     public final String getText()
     {
-        return( text );
+        return ( text );
     }
     
     /**
@@ -66,7 +66,7 @@ public abstract class CommandBase implements Command
      */
     public String getLocalizedText()
     {
-        return( getText() );
+        return ( getText() );
     }
     
     /**
@@ -74,16 +74,16 @@ public abstract class CommandBase implements Command
      */
     public final int getNumParameters()
     {
-        return( paramsArray.length );
+        return ( paramsArray.length );
     }
     
     public Object[] createParametersArray( ArrayList< String > parameters )
     {
         if ( parameters == null )
-            return( null );
+            return ( null );
         
         if ( parameters.size() != getNumParameters() )
-            throw( new IllegalArgumentException( "number of parameters must be " + getNumParameters() + ". Got " + parameters.size() + "." ) );
+            throw new IllegalArgumentException( "number of parameters must be " + getNumParameters() + ". Got " + parameters.size() + "." );
         
         for ( int i = 0; i < getNumParameters(); i++ )
         {
@@ -110,7 +110,7 @@ public abstract class CommandBase implements Command
             }
         }
         
-        return( paramsArray );
+        return ( paramsArray );
     }
     
     /**
@@ -118,7 +118,7 @@ public abstract class CommandBase implements Command
      */
     public final String execute( Object[] parameters ) throws CommandException
     {
-        return( execute( null, parameters ) );
+        return ( execute( null, parameters ) );
     }
     
     /**
@@ -126,7 +126,7 @@ public abstract class CommandBase implements Command
      */
     public String execute( Boolean inputInfo, CommandLine commandLine ) throws CommandException
     {
-        return( execute( inputInfo, createParametersArray( commandLine.getParameters() ) ) );
+        return ( execute( inputInfo, createParametersArray( commandLine.getParameters() ) ) );
     }
     
     /**
@@ -134,7 +134,7 @@ public abstract class CommandBase implements Command
      */
     public String execute( CommandLine commandLine ) throws CommandException
     {
-        return( execute( createParametersArray( commandLine.getParameters() ) ) );
+        return ( execute( createParametersArray( commandLine.getParameters() ) ) );
     }
     
     /**
@@ -143,7 +143,7 @@ public abstract class CommandBase implements Command
     @Override
     public int hashCode()
     {
-        return( getKey().hashCode() );
+        return ( getKey().hashCode() );
     }
     
     /**
@@ -153,9 +153,9 @@ public abstract class CommandBase implements Command
     public boolean equals( Object o )
     {
         if ( !( o instanceof Command ) )
-            return( false );
+            return ( false );
         
-        return( getKey().equals( ((Command)o).getKey() ) );
+        return ( getKey().equals( ((Command)o).getKey() ) );
     }
     
     public CommandBase( final String key, final String text, final int numParams )

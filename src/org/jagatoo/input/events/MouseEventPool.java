@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -71,12 +71,10 @@ public final class MouseEventPool
             {
                 MouseMovedEvent e = instances_moved.remove( --n_moved );
                 
-                return( e );
+                return ( e );
             }
-            else
-            {
-                return( new MouseMovedEvent() );
-            }
+            
+            return ( new MouseMovedEvent() );
         }
     }
     
@@ -86,7 +84,7 @@ public final class MouseEventPool
         
         e.set( mouse, x, y, dx, dy, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     public static void freeMoved( MouseMovedEvent e )
@@ -109,12 +107,10 @@ public final class MouseEventPool
             {
                 MouseButtonPressedEvent e = instances_pressed.remove( --n_pressed );
                 
-                return( e );
+                return ( e );
             }
-            else
-            {
-                return( new MouseButtonPressedEvent() );
-            }
+            
+            return ( new MouseButtonPressedEvent() );
         }
     }
     
@@ -124,7 +120,7 @@ public final class MouseEventPool
         
         e.set( mouse, button, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     public static void freePressed( MouseButtonPressedEvent e )
@@ -147,12 +143,10 @@ public final class MouseEventPool
             {
                 MouseButtonReleasedEvent e = instances_released.remove( --n_released );
                 
-                return( e );
+                return ( e );
             }
-            else
-            {
-                return( new MouseButtonReleasedEvent() );
-            }
+            
+            return ( new MouseButtonReleasedEvent() );
         }
     }
     
@@ -162,7 +156,7 @@ public final class MouseEventPool
         
         e.set( mouse, button, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     public static void freeReleased( MouseButtonReleasedEvent e )
@@ -185,12 +179,10 @@ public final class MouseEventPool
             {
                 MouseButtonClickedEvent e = instances_clicked.remove( --n_clicked );
                 
-                return( e );
+                return ( e );
             }
-            else
-            {
-                return( new MouseButtonClickedEvent() );
-            }
+            
+            return ( new MouseButtonClickedEvent() );
         }
     }
     
@@ -200,7 +192,7 @@ public final class MouseEventPool
         
         e.set( mouse, button, 1, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     public static void freeClicked( MouseButtonClickedEvent e )
@@ -223,12 +215,10 @@ public final class MouseEventPool
             {
                 MouseWheelEvent e = instances_wheel.remove( --n_wheel );
                 
-                return( e );
+                return ( e );
             }
-            else
-            {
-                return( new MouseWheelEvent() );
-            }
+            
+            return ( new MouseWheelEvent() );
         }
     }
     
@@ -238,7 +228,7 @@ public final class MouseEventPool
         
         e.set( mouse, wheel, wheelDelta, isPageMove, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     public static void freeWheel( MouseWheelEvent e )
@@ -261,12 +251,10 @@ public final class MouseEventPool
             {
                 MouseStoppedEvent e = instances_stopped.remove( --n_stopped );
                 
-                return( e );
+                return ( e );
             }
-            else
-            {
-                return( new MouseStoppedEvent() );
-            }
+            
+            return ( new MouseStoppedEvent() );
         }
     }
     
@@ -276,7 +264,7 @@ public final class MouseEventPool
         
         e.set( mouse, x, y, when, lastWhen );
         
-        return( e );
+        return ( e );
     }
     
     public static void freeStopped( MouseStoppedEvent e )

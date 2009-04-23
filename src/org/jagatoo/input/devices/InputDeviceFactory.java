@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -55,7 +55,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     
     public final InputSourceWindow getSourceWindow()
     {
-        return( sourceWindow );
+        return ( sourceWindow );
     }
     
     //private static Keyboard[] staticCachedKeyboards = null;
@@ -73,7 +73,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      */
     protected final InputDeviceFactory getMasterFactory()
     {
-        return( masterFactory );
+        return ( masterFactory );
     }
     
     protected final InputDeviceFactory findSourceFactory()
@@ -85,12 +85,12 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
             sourceFactory = sourceFactory.getMasterFactory();
         }
         
-        return( sourceFactory );
+        return ( sourceFactory );
     }
     
     protected EventQueue getEveneQueue()
     {
-        return( eventQueue );
+        return ( eventQueue );
     }
     
     private synchronized final void setCachedKeyboards( Keyboard[] keyboards )
@@ -107,10 +107,10 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     {
         /*
         if ( useStaticArrays )
-            return( staticCachedKeyboards );
+            return ( staticCachedKeyboards );
         else
         */
-            return( cachedKeyboards );
+            return ( cachedKeyboards );
     }
     
     private synchronized final void setCachedMouses( Mouse[] mouses )
@@ -127,10 +127,10 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     {
         /*
         if ( useStaticArrays )
-            return( staticCachedMouses );
+            return ( staticCachedMouses );
         else
         */
-            return( cachedMouses );
+            return ( cachedMouses );
     }
     
     private synchronized final void setCachedControllers( Controller[] controllers )
@@ -144,9 +144,9 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     protected synchronized final Controller[] getCachedControllers()
     {
         if ( useStaticArrays )
-            return( staticCachedControllers );
-        else
-            return( cachedControllers );
+            return ( staticCachedControllers );
+        
+        return ( cachedControllers );
     }
     
     protected synchronized void flushCache( boolean keyboards, boolean mouses, boolean controllers )
@@ -211,7 +211,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      */
     protected static final Keyboard[] initKeyboards( InputDeviceFactory factory ) throws InputSystemException
     {
-        return( factory.initKeyboards() );
+        return ( factory.initKeyboards() );
     }
     
     /**
@@ -224,7 +224,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
             setCachedKeyboards( initKeyboards() );
         }
         
-        return( getCachedKeyboards() );
+        return ( getCachedKeyboards() );
     }
     
     /**
@@ -232,7 +232,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      */
     public final Keyboard[] getKeyboards() throws InputSystemException
     {
-        return( getKeyboards( false ) );
+        return ( getKeyboards( false ) );
     }
     
     /**
@@ -247,7 +247,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      */
     protected static final Mouse[] initMouses( InputDeviceFactory factory ) throws InputSystemException
     {
-        return( factory.initMouses() );
+        return ( factory.initMouses() );
     }
     
     /**
@@ -260,7 +260,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
             setCachedMouses( initMouses() );
         }
         
-        return( getCachedMouses() );
+        return ( getCachedMouses() );
     }
     
     /**
@@ -268,7 +268,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      */
     public final Mouse[] getMouses() throws InputSystemException
     {
-        return( getMouses( false ) );
+        return ( getMouses( false ) );
     }
     
     /**
@@ -283,18 +283,18 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
         public int compare( Controller c1, Controller c2 )
         {
             if ( c1.getAxesCount() < c2.getAxesCount() )
-                return( +1 );
+                return ( +1 );
             
             if ( c1.getAxesCount() > c2.getAxesCount() )
-                return( -1 );
+                return ( -1 );
             
             if ( c1.getButtonsCount() < c2.getButtonsCount() )
-                return( +1 );
+                return ( +1 );
             
             if ( c1.getButtonsCount() > c2.getButtonsCount() )
-                return( -1 );
+                return ( -1 );
             
-            return( 0 );
+            return ( 0 );
         }
         
         public static Controller[] sort( Controller[] controllers )
@@ -306,7 +306,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
              */
             Arrays.sort( controllers, instance );
             
-            return( controllers );
+            return ( controllers );
         }
     }
     
@@ -317,7 +317,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      */
     protected static final Controller[] initControllers( InputDeviceFactory factory ) throws InputSystemException
     {
-        return( ControllerSorter.sort( factory.initControllers() ) );
+        return ( ControllerSorter.sort( factory.initControllers() ) );
     }
     
     /**
@@ -330,7 +330,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
             setCachedControllers( initControllers() );
         }
         
-        return( getCachedControllers() );
+        return ( getCachedControllers() );
     }
     
     /**
@@ -338,7 +338,7 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      */
     public final Controller[] getControllers() throws InputSystemException
     {
-        return( getControllers( false ) );
+        return ( getControllers( false ) );
     }
     
     protected abstract void destroyImpl( InputSystem inputSystem ) throws InputSystemException;

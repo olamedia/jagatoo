@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -82,12 +82,12 @@ public class LWJGLController extends Controller
     
     protected final org.lwjgl.input.Controller getController()
     {
-        return( implController );
+        return ( implController );
     }
     
     protected final int getIndex()
     {
-        return( implController.getIndex() );
+        return ( implController.getIndex() );
     }
     
     protected final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
@@ -172,15 +172,15 @@ public class LWJGLController extends Controller
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t;
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t;
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t;
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -200,7 +200,7 @@ public class LWJGLController extends Controller
     public void collectEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
         if ( eventQueue == null )
-            throw( new InputSystemException( "EventQueue must not be null here!" ) );
+            throw new InputSystemException( "EventQueue must not be null here!" );
         
         collectOrFireEvents( is, eventQueue, nanoTime );
     }
@@ -237,15 +237,15 @@ public class LWJGLController extends Controller
             catch ( Throwable t )
             {
                 if ( t instanceof InputSystemException )
-                    throw( (InputSystemException)t );
+                    throw (InputSystemException)t;
                 
                 if ( t instanceof Error )
-                    throw( (Error)t );
+                    throw (Error)t;
                 
                 if ( t instanceof RuntimeException )
-                    throw( (RuntimeException)t );
+                    throw (RuntimeException)t;
                 
-                throw( new InputSystemException( t ) );
+                throw new InputSystemException( t );
             }
             
             lastUpdateTime = nanoTime;
@@ -271,15 +271,15 @@ public class LWJGLController extends Controller
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t );
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t );
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t );
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t ) );
         }
         */
     }
@@ -296,7 +296,7 @@ public class LWJGLController extends Controller
             axes[ i ] = new LWJGLControllerAxis( this, controller, i );
         }
         
-        return( axes );
+        return ( axes );
     }
     
     @Override
@@ -311,7 +311,7 @@ public class LWJGLController extends Controller
             buttons[ i ] = new ControllerButton( this, i, controller.getButtonName( i ) );
         }
         
-        return( buttons );
+        return ( buttons );
     }
     
     protected LWJGLController( ControllerFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue, org.lwjgl.input.Controller implController ) throws InputSystemException

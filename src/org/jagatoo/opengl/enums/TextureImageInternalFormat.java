@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -223,17 +223,17 @@ public enum TextureImageInternalFormat
     
     public final boolean hasAlpha()
     {
-        return( hasAlpha );
+        return ( hasAlpha );
     }
     
     public final boolean isCompressed()
     {
-        return( isCompressed );
+        return ( isCompressed );
     }
     
     public final int toOpenGL()
     {
-        return( glValue );
+        return ( glValue );
     }
     
     public static final TextureImageInternalFormat getFallbackInternalFormat( TextureImageFormat format )
@@ -241,12 +241,12 @@ public enum TextureImageInternalFormat
         switch ( format )
         {
             case RGB:
-                return( TextureImageInternalFormat.RGB );
+                return ( TextureImageInternalFormat.RGB );
             case RGBA:
-                return( TextureImageInternalFormat.RGBA );
+                return ( TextureImageInternalFormat.RGBA );
         }
         
-        return( ( format == TextureImageFormat.DEPTH ) ? null : TextureImageInternalFormat.RGBA );
+        return ( ( format == TextureImageFormat.DEPTH ) ? null : TextureImageInternalFormat.RGBA );
     }
     
     private TextureImageInternalFormat( boolean hasAlpha, boolean isCompressed, int glValue )

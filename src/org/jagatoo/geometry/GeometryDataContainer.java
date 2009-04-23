@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -89,7 +89,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     public final boolean hasColorAlpha()
     {
         if ( colors == null )
-            throw( new Error( "no colors set" ) );
+            throw new Error( "no colors set" );
         
         return ( colorSize == 4 );
     }
@@ -138,7 +138,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      *
     public final boolean isBoundsDirty()
     {
-        return( cachedBounds == null );
+        return ( cachedBounds == null );
     }
     
     void setCachedBounds( Bounds b )
@@ -148,7 +148,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     
     final Bounds getCachedBounds()
     {
-        return( cachedBounds );
+        return ( cachedBounds );
     }
     
     **
@@ -165,7 +165,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     public void calculateFaceNormals( boolean apply, Vector3f[] faceNormals, Vector3f[] vertexNormals )
     {
         if ( !( this instanceof WriteableTriangleContainer ) )
-            throw( new Error( "Not an instance of WriteableTriangleContainer" ) );
+            throw new Error( "Not an instance of WriteableTriangleContainer" ) );
         
         WriteableTriangleContainer wtc = (WriteableTriangleContainer)this;
         
@@ -409,7 +409,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      */
     public final GeomNioFloatData getColorData()
     {
-        return( colors );
+        return ( colors );
     }
     
     /**
@@ -425,7 +425,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      */
     public final long getColorsOffset()
     {
-        return( colorsOffset );
+        return ( colorsOffset );
     }
     
     private final void rebuildTexCoordSetMap()
@@ -503,7 +503,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     public final GeomNioFloatData getTexCoordsData( int unit )
     {
         if ( texCoords == null )
-            return( null );
+            return ( null );
         
         if ( texCoords.length > unit )
             return ( texCoords[ unit ] );
@@ -562,7 +562,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     public final GeomNioFloatData getVertexAttribData( int index )
     {
         if ( vertexAttribs == null )
-            return( null );
+            return ( null );
         
         if ( vertexAttribs.length > index )
             return ( vertexAttribs[ index ] );
@@ -627,7 +627,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
         /*
         else if ( normals.getElemSize() != 3 )
         {
-            throw( new IllegalArgumentException( "mismatching normals size" ) );
+            throw new IllegalArgumentException( "mismatching normals size" ) );
         }
         */
         
@@ -755,7 +755,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     public Vector3f getNormal( int index, Vector3f normal )
     {
         if ( !hasNormals() )
-            throw( new IllegalStateException( "No normals defined" ) );
+            throw new IllegalStateException( "No normals defined" );
         
         normals.get( index, getNormalsOffset() / 4L, normal );
         
@@ -1047,7 +1047,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
             
             return ( true );
         }
-        else if ( unit < texCoords.length )
+        
+        if ( unit < texCoords.length )
         {
             final GeomNioFloatData old = texCoords[ unit ];
             if ( old == null )
@@ -1060,27 +1061,23 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
                 
                 return ( true );
             }
-            else
-            {
-                if ( textureUnitSize[ unit ] == texCoordSize )
-                    return ( true );
-                else
-                    throw new IllegalArgumentException( "mismatching TexCoord size" );
-            }
-        }
-        else
-        {
-            GeomNioFloatData[] texCoords2 = new GeomNioFloatData[ unit + 1 ];
-            System.arraycopy( texCoords, 0, texCoords2, 0, texCoords.length );
-            texCoords = texCoords2;
-            createTexCoord( unit, texCoordSize );
-            rebuildTexCoordSetMap();
             
-            if ( isInterleaved() )
-                makeInterleaved();
+            if ( textureUnitSize[ unit ] == texCoordSize )
+                return ( true );
             
-            return ( true );
+            throw new IllegalArgumentException( "mismatching TexCoord size" );
         }
+        
+        GeomNioFloatData[] texCoords2 = new GeomNioFloatData[ unit + 1 ];
+        System.arraycopy( texCoords, 0, texCoords2, 0, texCoords.length );
+        texCoords = texCoords2;
+        createTexCoord( unit, texCoordSize );
+        rebuildTexCoordSetMap();
+        
+        if ( isInterleaved() )
+            makeInterleaved();
+        
+        return ( true );
     }
     
     /**
@@ -1376,8 +1373,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
             {
                 if ( vertexAttribsSize[ attribIndex ] == attribSize )
                     return;
-                else
-                    throw new IllegalArgumentException( "mismatching attribute size" );
+                
+                throw new IllegalArgumentException( "mismatching attribute size" );
             }
         }
         else

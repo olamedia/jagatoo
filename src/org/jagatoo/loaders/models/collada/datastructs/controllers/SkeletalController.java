@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -99,7 +99,7 @@ public class SkeletalController extends Controller implements AnimatableModel
      */
     public String getSourceMeshId()
     {
-        return( sourceMeshId );
+        return ( sourceMeshId );
     }
     
     // // // // // // ANIMATION PART - BEGINS// // // // // //
@@ -203,7 +203,7 @@ public class SkeletalController extends Controller implements AnimatableModel
         }
         
     	if ( !playing )
-    	    return( this.destinationGeometry );
+    	    return ( this.destinationGeometry );
     	
         if ( skeleton == null )
         {
@@ -222,7 +222,7 @@ public class SkeletalController extends Controller implements AnimatableModel
             KeyFrameComputer.computeTuple3f( currentTime, skeleton.transKeyFrames, skeleton.relativeTranslation );
             
             if ( currentAction == null )
-                return( destinationGeometry );
+                return ( destinationGeometry );
             
             if ( !bonesPrepared )
             {
@@ -306,7 +306,7 @@ public class SkeletalController extends Controller implements AnimatableModel
         	
             // Check if there is any influence!
         	if ( influences.length <= 0 )
-        	    //return( destinationGeometry );
+        	    //return ( destinationGeometry );
         	    continue;
         	
             final int vi3 = vi * 3;
@@ -340,7 +340,7 @@ public class SkeletalController extends Controller implements AnimatableModel
         Point3f.toPool( coordTrans );
         Point3f.toPool( coord0 );
         
-        return( destinationGeometry );
+        return ( destinationGeometry );
     }
     
     // // // // // // ANIMATION PART - ENDS// // // // // //
@@ -358,38 +358,38 @@ public class SkeletalController extends Controller implements AnimatableModel
     
     public final COLLADAAction getAction( String id )
     {
-        return( actions.get( id ) );
+        return ( actions.get( id ) );
     }
     
     public final HashMap<String, COLLADAAction> getActions()
     {
-        return( actions );
+        return ( actions );
     }
     
     public ColladaProtoypeModel getPrototypeModel()
     {
         // TODO Auto-generated method stub
-        return( null );
+        return ( null );
     }
     
     public final int numActions()
     {
-        return( actions.values().size() );
+        return ( actions.values().size() );
     }
     
     public final boolean hasActions()
     {
-        return( numActions() > 0 );
+        return ( numActions() > 0 );
     }
     
     public final boolean isLooping()
     {
-        return( loop );
+        return ( loop );
     }
     
     public final boolean isPlaying()
     {
-        return( playing );
+        return ( playing );
     }
     
     public void calcActions( String actionId )

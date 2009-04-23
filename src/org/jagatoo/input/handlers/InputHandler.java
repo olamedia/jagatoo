@@ -71,12 +71,12 @@ public abstract class InputHandler< A extends InputAction >
     
     public InputBindingsManager< A > getBindingsManager()
     {
-        return( bindingsManager );
+        return ( bindingsManager );
     }
     
     public InputStatesManager getStatesManager()
     {
-        return( statesManager );
+        return ( statesManager );
     }
     
     /**
@@ -94,7 +94,7 @@ public abstract class InputHandler< A extends InputAction >
      */
     public final boolean isMouseSmoothingEnabled()
     {
-        return( mouseSmoothingEnabled );
+        return ( mouseSmoothingEnabled );
     }
     
     /**
@@ -117,7 +117,7 @@ public abstract class InputHandler< A extends InputAction >
      */
     public final int getSuspendMask()
     {
-        return( suspendMask );
+        return ( suspendMask );
     }
     
     public void setMouseMovementSuspended( boolean suspended )
@@ -130,7 +130,7 @@ public abstract class InputHandler< A extends InputAction >
     
     public final boolean isMouseMovementSuspended()
     {
-        return( ( suspendMask & MOUSE_MOVEMENT_SUSPENDED ) > 0 );
+        return ( ( suspendMask & MOUSE_MOVEMENT_SUSPENDED ) > 0 );
     }
     
     public void setMouseButtonsSuspended( boolean suspended )
@@ -143,7 +143,7 @@ public abstract class InputHandler< A extends InputAction >
     
     public final boolean isMouseButtonsSuspended()
     {
-        return( ( suspendMask & MOUSE_BUTTONS_SUSPENDED ) > 0 );
+        return ( ( suspendMask & MOUSE_BUTTONS_SUSPENDED ) > 0 );
     }
     
     public void setMouseWheelSuspended( boolean suspended )
@@ -156,7 +156,7 @@ public abstract class InputHandler< A extends InputAction >
     
     public boolean isMouseWheelSuspended()
     {
-        return( ( suspendMask & MOUSE_WHEEL_SUSPENDED ) > 0 );
+        return ( ( suspendMask & MOUSE_WHEEL_SUSPENDED ) > 0 );
     }
     
     public void setMouseSuspended( boolean suspended )
@@ -168,7 +168,7 @@ public abstract class InputHandler< A extends InputAction >
     
     public final boolean isMouseSuspended()
     {
-        return( isMouseMovementSuspended() || isMouseButtonsSuspended() || isMouseWheelSuspended() );
+        return ( isMouseMovementSuspended() || isMouseButtonsSuspended() || isMouseWheelSuspended() );
     }
     
     public void setKeyboardSuspended( boolean suspended )
@@ -181,7 +181,7 @@ public abstract class InputHandler< A extends InputAction >
     
     public final boolean isKeyboardSuspended()
     {
-        return( ( suspendMask & KEYBOARD_SUSPENDED ) > 0 );
+        return ( ( suspendMask & KEYBOARD_SUSPENDED ) > 0 );
     }
     
     /**
@@ -207,7 +207,7 @@ public abstract class InputHandler< A extends InputAction >
      */
     public final InputSourceWindow getAttachedSourceWindow()
     {
-        return( attachedISW );
+        return ( attachedISW );
     }
     
     /**
@@ -232,7 +232,7 @@ public abstract class InputHandler< A extends InputAction >
      */
     public final boolean isSuspended()
     {
-        return( isKeyboardSuspended() || isMouseMovementSuspended() || isMouseButtonsSuspended() || isMouseWheelSuspended() );
+        return ( isKeyboardSuspended() || isMouseMovementSuspended() || isMouseButtonsSuspended() || isMouseWheelSuspended() );
     }
     
     /**
@@ -312,12 +312,12 @@ public abstract class InputHandler< A extends InputAction >
      */
     public final InputSystem getInputSystem()
     {
-        return( inputSystem );
+        return ( inputSystem );
     }
     
     protected InputStatesManager createInputStatesManager( InputBindingsManager< A > bindingsManager )
     {
-        return( new InputStatesManager( bindingsManager ) );
+        return ( new InputStatesManager( bindingsManager ) );
     }
     
     public InputHandler( InputBindingsManager< A > bindingsManager )

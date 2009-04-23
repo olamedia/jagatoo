@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -76,7 +76,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
     
     public final int getPointer()
     {
-        return( pointer );
+        return ( pointer );
     }
     
     /**
@@ -89,7 +89,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         
         pointer++;
         
-        return( i );
+        return ( i );
     }
     
     /**
@@ -103,7 +103,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         if ( result > 0 )
             pointer += result;
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -137,7 +137,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         if ( result > 0L )
             pointer += (int)result;
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -150,7 +150,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         if ( result > 0 )
             pointer += n;
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -162,7 +162,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         
         pointer++;;
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -174,7 +174,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         
         pointer++;;
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -186,7 +186,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         
         pointer++;;
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -199,7 +199,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         
         pointer += 2;
         
-        return( (short)( ( high << 8 ) | ( low & 0xFF ) ) );
+        return ( (short)( ( high << 8 ) | ( low & 0xFF ) ) );
     }
     
     /**
@@ -212,7 +212,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         
         pointer += 2;
         
-        return( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
+        return ( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
     }
     
     /**
@@ -224,7 +224,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         
         pointer += 2;
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -239,7 +239,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         
         pointer += 4;
         
-        return( ( ( i0 & 0xFF ) << 24 ) | ( ( i1 & 0xFF ) << 16 ) | ( ( i2 & 0xFF ) << 8 ) | ( i3 & 0xFF ) );
+        return ( ( ( i0 & 0xFF ) << 24 ) | ( ( i1 & 0xFF ) << 16 ) | ( ( i2 & 0xFF ) << 8 ) | ( i3 & 0xFF ) );
     }
     
     /**
@@ -258,7 +258,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         
         pointer += 8;
         
-        return( ( (long)( i0 & 0xff ) << 56 ) |
+        return ( ( (long)( i0 & 0xff ) << 56 ) |
                 ( (long)( i1 & 0xff ) << 48 ) |
                 ( (long)( i2 & 0xff ) << 40 ) |
                 ( (long)( i3 & 0xff ) << 32 ) |
@@ -274,7 +274,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
      */
     public float readFloat() throws IOException
     {
-        return( Float.intBitsToFloat( readInt() ) );
+        return ( Float.intBitsToFloat( readInt() ) );
     }
     
     /**
@@ -282,7 +282,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
      */
     public double readDouble() throws IOException
     {
-        return( Double.longBitsToDouble( readLong() ) );
+        return ( Double.longBitsToDouble( readLong() ) );
     }
     
     /**
@@ -295,7 +295,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
         
         pointer += result.length() + 1;
         
-        return( result );
+        return ( result );
     }
     
     /**
@@ -305,7 +305,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
     {
         // The pointer offset cannot be predicted!
         
-        return( din.readUTF() );
+        return ( din.readUTF() );
     }
     
     /**
@@ -331,7 +331,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
             pointer += Math.min( result.length() + 1, maxLength );
         */
         
-        return( result );
+        return ( result );
     }
     
     public LittleEndianDataInputStream( InputStream in )

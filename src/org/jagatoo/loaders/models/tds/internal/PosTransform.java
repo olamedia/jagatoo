@@ -72,11 +72,11 @@ public class PosTransform
         {
             if ( frames.get( i ).frameIndex == frameNumber )
             {
-                return( i );
+                return ( i );
             }
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     /*
@@ -86,7 +86,7 @@ public class PosTransform
         tg = (TransformGroup)tg.getChild( 0 );
         tg = (TransformGroup)tg.getChild( 0 );
         
-        return( (org.xith3d.scenegraph.Shape3D)tg.getChild( 0 ) );
+        return ( (org.xith3d.scenegraph.Shape3D)tg.getChild( 0 ) );
     }
     */
     
@@ -157,7 +157,7 @@ public class PosTransform
         
         s += " )";
         
-        return( s );
+        return ( s );
     }
     
     public PosTransform()

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,24 +49,24 @@ public final class ArrayUtils
     public static final boolean equals( float[] a, float[] b )
     {
         if ( a == b )
-            return( true );
+            return ( true );
         
         if ( a == null )
-            return( false );
+            return ( false );
         
         if ( b == null )
-            return( false );
+            return ( false );
         
         if ( a.length != b.length )
-            return( false );
+            return ( false );
         
         for ( int i = 0; i < a.length; i++ )
         {
             if ( a[ i ] != b[ i ] )
-                return( false );
+                return ( false );
         }
         
-        return( true );
+        return ( true );
     }
     
     /**
@@ -125,6 +125,231 @@ public final class ArrayUtils
     }
     
     /**
+     * Dumps the contents of the given array to stdout.
+     * 
+     * @param array
+     * @param maxElemsPerLine
+     */
+    public static final void dumpArray( final double[] array, final int maxElemsPerLine )
+    {
+        if ( array == null )
+        {
+            System.out.println( (String)null );
+            return;
+        }
+        
+        int line = 0;
+        
+        System.out.print( "[ " );
+        for ( int i = 0; i < array.length; i++ )
+        {
+            if ( ( i > 0 ) && ( ( i % maxElemsPerLine ) == 0 ) )
+            {
+                System.out.println();
+                System.out.print( "  " );
+                line++;
+            }
+            
+            System.out.print( array[ i ] );
+            
+            if ( i < array.length - 1 )
+            {
+                System.out.print( ", " );
+            }
+        }
+        
+        if ( line > 0 )
+        {
+            System.out.println();
+            System.out.println( "]" );
+        }
+        else
+        {
+            System.out.println( " ]" );
+        }
+    }
+    
+    /**
+     * Dumps the contents of the given array to stdout (in one line).
+     * 
+     * @param array
+     */
+    public static final void dumpArray( final double[] array )
+    {
+        dumpArray( array, Integer.MAX_VALUE );
+    }
+    
+    /**
+     * Dumps the contents of the given array to stdout.
+     * 
+     * @param array
+     * @param maxElemsPerLine
+     */
+    public static final void dumpArray( final int[] array, final int maxElemsPerLine )
+    {
+        if ( array == null )
+        {
+            System.out.println( (String)null );
+            return;
+        }
+        
+        int line = 0;
+        
+        System.out.print( "[ " );
+        for ( int i = 0; i < array.length; i++ )
+        {
+            if ( ( i > 0 ) && ( ( i % maxElemsPerLine ) == 0 ) )
+            {
+                System.out.println();
+                System.out.print( "  " );
+                line++;
+            }
+            
+            System.out.print( array[ i ] );
+            
+            if ( i < array.length - 1 )
+            {
+                System.out.print( ", " );
+            }
+        }
+        
+        if ( line > 0 )
+        {
+            System.out.println();
+            System.out.println( "]" );
+        }
+        else
+        {
+            System.out.println( " ]" );
+        }
+    }
+    
+    /**
+     * Dumps the contents of the given array to stdout (in one line).
+     * 
+     * @param array
+     */
+    public static final void dumpArray( final int[] array )
+    {
+        dumpArray( array, Integer.MAX_VALUE );
+    }
+    
+    /**
+     * Dumps the contents of the given array to stdout.
+     * 
+     * @param array
+     * @param maxElemsPerLine
+     */
+    public static final void dumpArray( final short[] array, final int maxElemsPerLine )
+    {
+        if ( array == null )
+        {
+            System.out.println( (String)null );
+            return;
+        }
+        
+        int line = 0;
+        
+        System.out.print( "[ " );
+        for ( int i = 0; i < array.length; i++ )
+        {
+            if ( ( i > 0 ) && ( ( i % maxElemsPerLine ) == 0 ) )
+            {
+                System.out.println();
+                System.out.print( "  " );
+                line++;
+            }
+            
+            System.out.print( array[ i ] );
+            
+            if ( i < array.length - 1 )
+            {
+                System.out.print( ", " );
+            }
+        }
+        
+        if ( line > 0 )
+        {
+            System.out.println();
+            System.out.println( "]" );
+        }
+        else
+        {
+            System.out.println( " ]" );
+        }
+    }
+    
+    /**
+     * Dumps the contents of the given array to stdout (in one line).
+     * 
+     * @param array
+     */
+    public static final void dumpArray( final short[] array )
+    {
+        dumpArray( array, Integer.MAX_VALUE );
+    }
+    
+    /**
+     * Dumps the contents of the given array to stdout.
+     * 
+     * @param array
+     * @param handleLikeUnsigned
+     * @param maxElemsPerLine
+     */
+    public static final void dumpArray( final byte[] array, boolean handleLikeUnsigned, final int maxElemsPerLine )
+    {
+        if ( array == null )
+        {
+            System.out.println( (String)null );
+            return;
+        }
+        
+        int line = 0;
+        
+        System.out.print( "[ " );
+        for ( int i = 0; i < array.length; i++ )
+        {
+            if ( ( i > 0 ) && ( ( i % maxElemsPerLine ) == 0 ) )
+            {
+                System.out.println();
+                System.out.print( "  " );
+                line++;
+            }
+            
+            if ( handleLikeUnsigned )
+                System.out.print( array[ i ] & 0xFF );
+            else
+                System.out.print( array[ i ] );
+            
+            if ( i < array.length - 1 )
+            {
+                System.out.print( ", " );
+            }
+        }
+        
+        if ( line > 0 )
+        {
+            System.out.println();
+            System.out.println( "]" );
+        }
+        else
+        {
+            System.out.println( " ]" );
+        }
+    }
+    
+    /**
+     * Dumps the contents of the given array to stdout (in one line).
+     * 
+     * @param array
+     * @param handleLikeUnsigned
+     */
+    public static final void dumpArray( final byte[] array, boolean handleLikeUnsigned )
+    {
+        dumpArray( array, handleLikeUnsigned, Integer.MAX_VALUE );
+    }
+    
+    /**
      * Ensures, the given int array has the desired length.<br>
      * <b>The ensured array is returned!</b>
      * 
@@ -147,7 +372,7 @@ public final class ArrayUtils
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
         }
         
-        return( array );
+        return ( array );
     }
     
     /**
@@ -173,7 +398,7 @@ public final class ArrayUtils
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
         }
         
-        return( array );
+        return ( array );
     }
     
     /**
@@ -201,7 +426,7 @@ public final class ArrayUtils
             Arrays.fill( array, oldCapacity, newCapacity - 1, paddValue );
         }
         
-        return( array );
+        return ( array );
     }
     
     /**
@@ -227,7 +452,7 @@ public final class ArrayUtils
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
         }
         
-        return( array );
+        return ( array );
     }
     
     /**
@@ -255,7 +480,7 @@ public final class ArrayUtils
             Arrays.fill( array, oldCapacity, newCapacity - 1, paddValue );
         }
         
-        return( array );
+        return ( array );
     }
     
     /**
@@ -281,7 +506,7 @@ public final class ArrayUtils
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
         }
         
-        return( array );
+        return ( array );
     }
     
     /**
@@ -309,7 +534,7 @@ public final class ArrayUtils
             Arrays.fill( array, oldCapacity, newCapacity - 1, paddValue );
         }
         
-        return( array );
+        return ( array );
     }
     
     /**
@@ -336,7 +561,7 @@ public final class ArrayUtils
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
         }
         
-        return( array );
+        return ( array );
     }
     
     /**
@@ -354,10 +579,10 @@ public final class ArrayUtils
         for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -373,10 +598,10 @@ public final class ArrayUtils
         for ( int i = 0; i < array.length; i++ )
         {
             if ( array[ i ] == element )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -394,10 +619,10 @@ public final class ArrayUtils
         for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -413,10 +638,10 @@ public final class ArrayUtils
         for ( int i = 0; i < array.length; i++ )
         {
             if ( array[ i ] == element )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -434,10 +659,10 @@ public final class ArrayUtils
         for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -453,10 +678,10 @@ public final class ArrayUtils
         for ( int i = 0; i < array.length; i++ )
         {
             if ( array[ i ] == element )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -474,10 +699,10 @@ public final class ArrayUtils
         for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -493,10 +718,10 @@ public final class ArrayUtils
         for ( int i = 0; i < array.length; i++ )
         {
             if ( array[ i ] == element )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -514,10 +739,10 @@ public final class ArrayUtils
         for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -533,10 +758,10 @@ public final class ArrayUtils
         for ( int i = 0; i < array.length; i++ )
         {
             if ( array[ i ] == element )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -554,10 +779,10 @@ public final class ArrayUtils
         for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -573,10 +798,10 @@ public final class ArrayUtils
         for ( int i = 0; i < array.length; i++ )
         {
             if ( array[ i ] == element )
-                return( true );
+                return ( true );
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -597,15 +822,15 @@ public final class ArrayUtils
             if ( strict || ( array[ i ] == null ) )
             {
                 if ( array[ i ] == element )
-                    return( true );
+                    return ( true );
             }
             else if ( array[ i ].equals( element ) )
             {
-                return( true );
+                return ( true );
             }
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -624,15 +849,15 @@ public final class ArrayUtils
             if ( strict || ( array[ i ] == null ) )
             {
                 if ( array[ i ] == element )
-                    return( true );
+                    return ( true );
             }
             else if ( array[ i ].equals( element ) )
             {
-                return( true );
+                return ( true );
             }
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -650,10 +875,10 @@ public final class ArrayUtils
         for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
-                return( i );
+                return ( i );
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     /**
@@ -666,7 +891,7 @@ public final class ArrayUtils
      */
     public static final int indexOf( byte[] array, byte element )
     {
-        return( indexOf( array, 0, array.length - 1, element ) );
+        return ( indexOf( array, 0, array.length - 1, element ) );
     }
     
     /**
@@ -684,10 +909,10 @@ public final class ArrayUtils
         for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
-                return( i );
+                return ( i );
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     /**
@@ -700,7 +925,7 @@ public final class ArrayUtils
      */
     public static final int indexOf( short[] array, short element )
     {
-        return( indexOf( array, 0, array.length - 1, element ) );
+        return ( indexOf( array, 0, array.length - 1, element ) );
     }
     
     /**
@@ -718,10 +943,10 @@ public final class ArrayUtils
         for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
-                return( i );
+                return ( i );
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     /**
@@ -734,7 +959,7 @@ public final class ArrayUtils
      */
     public static final int indexOf( int[] array, int element )
     {
-        return( indexOf( array, 0, array.length - 1, element ) );
+        return ( indexOf( array, 0, array.length - 1, element ) );
     }
     
     /**
@@ -752,10 +977,10 @@ public final class ArrayUtils
         for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
-                return( i );
+                return ( i );
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     /**
@@ -768,7 +993,7 @@ public final class ArrayUtils
      */
     public static final int indexOf( long[] array, long element )
     {
-        return( indexOf( array, 0, array.length - 1, element ) );
+        return ( indexOf( array, 0, array.length - 1, element ) );
     }
     
     /**
@@ -786,10 +1011,10 @@ public final class ArrayUtils
         for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
-                return( i );
+                return ( i );
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     /**
@@ -802,7 +1027,7 @@ public final class ArrayUtils
      */
     public static final int indexOf( float[] array, float element )
     {
-        return( indexOf( array, 0, array.length - 1, element ) );
+        return ( indexOf( array, 0, array.length - 1, element ) );
     }
     
     /**
@@ -820,10 +1045,10 @@ public final class ArrayUtils
         for ( int i = start; i <= limit; i++ )
         {
             if ( array[ i ] == element )
-                return( i );
+                return ( i );
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     /**
@@ -836,7 +1061,7 @@ public final class ArrayUtils
      */
     public static final int indexOf( double[] array, double element )
     {
-        return( indexOf( array, 0, array.length - 1, element ) );
+        return ( indexOf( array, 0, array.length - 1, element ) );
     }
     
     /**
@@ -857,15 +1082,15 @@ public final class ArrayUtils
             if ( strict || ( array[ i ] == null ) )
             {
                 if ( array[ i ] == element )
-                    return( i );
+                    return ( i );
             }
             else if ( array[ i ].equals( element ) )
             {
-                return( i );
+                return ( i );
             }
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     /**
@@ -879,7 +1104,7 @@ public final class ArrayUtils
      */
     public static final int indexOf( Object[] array, Object element, boolean strict )
     {
-        return( indexOf( array, 0, array.length - 1, element, strict ) );
+        return ( indexOf( array, 0, array.length - 1, element, strict ) );
     }
     
     private ArrayUtils()

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -84,7 +84,7 @@ public class OBJMaterial
      */
     public String getName()
     {
-        return( name );
+        return ( name );
     }
     
     /**
@@ -115,7 +115,7 @@ public class OBJMaterial
      */
     public float[] getColor()
     {
-        return( color );
+        return ( color );
     }
     
     /**
@@ -146,7 +146,7 @@ public class OBJMaterial
      */
     public float[] getAmbientColor()
     {
-        return( ambientColor );
+        return ( ambientColor );
     }
     
     /**
@@ -177,7 +177,7 @@ public class OBJMaterial
      */
     public float[] getDiffuseColor()
     {
-        return( diffuseColor );
+        return ( diffuseColor );
     }
     
     /**
@@ -208,7 +208,7 @@ public class OBJMaterial
      */
     public float[] getSpecularColor()
     {
-        return( specularColor );
+        return ( specularColor );
     }
     
     /**
@@ -226,7 +226,7 @@ public class OBJMaterial
      */
     public float getShininess()
     {
-        return( shininess );
+        return ( shininess );
     }
     
     /**
@@ -244,7 +244,7 @@ public class OBJMaterial
      */
     public String getTextureName()
     {
-        return( textureName );
+        return ( textureName );
     }
     
     public OBJMaterial( String name )

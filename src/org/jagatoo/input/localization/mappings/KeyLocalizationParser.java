@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -110,7 +110,7 @@ public class KeyLocalizationParser
                             }
                             else
                             {
-                                return( null );
+                                return ( null );
                             }
                             
                             isInQuotes = false;
@@ -137,12 +137,12 @@ public class KeyLocalizationParser
                             }
                             else
                             {
-                                return( null );
+                                return ( null );
                             }
                         }
                         else if ( ch == '"' )
                         {
-                            return( null );
+                            return ( null );
                         }
                         else
                         {
@@ -164,7 +164,7 @@ public class KeyLocalizationParser
                     }
                     else
                     {
-                        return( null );
+                        return ( null );
                     }
                 }
                 break;
@@ -172,7 +172,7 @@ public class KeyLocalizationParser
                 case 3:
                 {
                     if ( key == null )
-                        return( null );
+                        return ( null );
                     
                     if ( Character.isWhitespace( ch ) )
                     {
@@ -208,15 +208,13 @@ public class KeyLocalizationParser
                                 
                                 map.put( key, value );
                                 
-                                return( key );
+                                return ( key );
                             }
                             
-                            return( null );
+                            return ( null );
                         }
-                        else
-                        {
-                            stringBuffer.append( ch );
-                        }
+                        
+                        stringBuffer.append( ch );
                     }
                     else
                     {
@@ -228,19 +226,18 @@ public class KeyLocalizationParser
                                 
                                 map.put( key, value );
                                 
-                                return( key );
+                                return ( key );
                             }
                             
-                            return( null );
+                            return ( null );
                         }
-                        else if ( ch == '"' )
+                        
+                        if ( ch == '"' )
                         {
-                            return( null );
+                            return ( null );
                         }
-                        else
-                        {
-                            stringBuffer.append( ch );
-                        }
+                        
+                        stringBuffer.append( ch );
                     }
                 }
                 break;
@@ -248,7 +245,7 @@ public class KeyLocalizationParser
         }
         
         if ( ( key == null ) || ( phase < 4 ) )
-            return( null );
+            return ( null );
         
         if ( ( value == null ) && ( stringBuffer.length() > 0 ) )
         {
@@ -259,10 +256,10 @@ public class KeyLocalizationParser
         {
             map.put( key, value );
             
-            return( key );
+            return ( key );
         }
         
-        return( null );
+        return ( null );
     }
     
     public static int parse( InputStream in, Map< String, String > map ) throws IOException
@@ -306,11 +303,11 @@ public class KeyLocalizationParser
         }
         */
         
-        return( numValidLines );
+        return ( numValidLines );
     }
     
     public static int parse( URL resource, Map< String, String > map ) throws IOException
     {
-        return( parse( resource.openStream(), map ) );
+        return ( parse( resource.openStream(), map ) );
     }
 }

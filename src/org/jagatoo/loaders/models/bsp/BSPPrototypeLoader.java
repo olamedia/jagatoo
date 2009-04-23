@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -109,7 +109,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kEntities not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kEntities );
@@ -132,7 +132,7 @@ public class BSPPrototypeLoader
         }
         */
         
-        return( entities );
+        return ( entities );
     }
     
     private static final boolean urlExists( URL url )
@@ -142,11 +142,11 @@ public class BSPPrototypeLoader
         try
         {
             in = url.openStream();
-            return( in != null );
+            return ( in != null );
         }
         catch ( Throwable t )
         {
-            return( false );
+            return ( false );
         }
         finally
         {
@@ -174,7 +174,7 @@ public class BSPPrototypeLoader
             for ( int i = 0; i < wadFiles.size(); i++ )
             {
                 if ( wadFiles.get( i ).getWADFilename().equals( filename ) )
-                    return( false );
+                    return ( false );
             }
             
             try
@@ -182,7 +182,7 @@ public class BSPPrototypeLoader
                 WADFile wadFile = new WADFile( url );
                 wadFiles.add( wadFile );
                 
-                return( true );
+                return ( true );
             }
             catch ( IOException e )
             {
@@ -191,10 +191,10 @@ public class BSPPrototypeLoader
             }
         }
         
-        return( false );
+        return ( false );
     }
     
-    protected static WADFile[] readWADFiles( BSPFile file, BSPDirectory bspDir, BSPEntity[] entities ) throws IOException
+    protected static WADFile[] readWADFiles( BSPFile file, BSPEntity[] entities ) throws IOException
     {
         if ( entities == null )
         {
@@ -203,7 +203,7 @@ public class BSPPrototypeLoader
         
         if ( file.getBaseURL() == null )
         {
-            return( new WADFile[ 0 ] );
+            return ( new WADFile[ 0 ] );
         }
         
         ArrayList<WADFile> wadFiles = new ArrayList<WADFile>();
@@ -239,7 +239,7 @@ public class BSPPrototypeLoader
         
         addStandardWAD( file.getBaseURL(), file.getName(), wadFiles );
         
-        return( wadFiles.toArray( new WADFile[ wadFiles.size() ] ) );
+        return ( wadFiles.toArray( new WADFile[ wadFiles.size() ] ) );
     }
     
     private static void setupTexture( AbstractTexture texture, String textureName, AppearanceFactory appFactory )
@@ -280,7 +280,7 @@ public class BSPPrototypeLoader
                         {
                             setupTexture( textures[0], textureName, appFactory );
                             
-                            return( textures );
+                            return ( textures );
                         }
                     }
                     catch ( IOException e )
@@ -301,32 +301,30 @@ public class BSPPrototypeLoader
             
             setupTexture( texture, textureName, appFactory );
             
-            return( new AbstractTexture[] { texture } );
+            return ( new AbstractTexture[] { texture } );
         }
-        else
+        
+        String texNameForURL = textureName;
+        if ( texNameForURL.startsWith( "{" ) )
+            texNameForURL = texNameForURL.substring( 1 );
+        
+        AbstractTexture texture = null;
+        try
         {
-            String texNameForURL = textureName;
-            if ( texNameForURL.startsWith( "{" ) )
-                texNameForURL = texNameForURL.substring( 1 );
-            
-            AbstractTexture texture = null;
-            try
-            {
-                texture = appFactory.loadTexture( new URL( baseURL, texNameForURL + ".tga" ), false, true, true, true, false );
-                if ( texture == null )
-                    texture = appFactory.loadTexture( new URL( baseURL, texNameForURL + ".jpg" ), false, true, true, true, true );
-            }
-            catch ( MalformedURLException e )
-            {
-                e.printStackTrace();
-                
-                texture = appFactory.getFallbackTexture();
-            }
-            
-            setupTexture( texture, textureName, appFactory );
-            
-            return( new AbstractTexture[] { texture } );
+            texture = appFactory.loadTexture( new URL( baseURL, texNameForURL + ".tga" ), false, true, true, true, false );
+            if ( texture == null )
+                texture = appFactory.loadTexture( new URL( baseURL, texNameForURL + ".jpg" ), false, true, true, true, true );
         }
+        catch ( MalformedURLException e )
+        {
+            e.printStackTrace();
+            
+            texture = appFactory.getFallbackTexture();
+        }
+        
+        setupTexture( texture, textureName, appFactory );
+        
+        return ( new AbstractTexture[] { texture } );
     }
     
     protected static AbstractTexture[][] readTextures( BSPFile file, BSPDirectory bspDir, WADFile[] wadFiles, BSPEntity[] entities, AppearanceFactory appFactory ) throws IOException
@@ -335,7 +333,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kTextures not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kTextures );
@@ -417,7 +415,7 @@ public class BSPPrototypeLoader
             }
         }
         
-        return( textures );
+        return ( textures );
     }
     
     private static void changeGamma( AbstractTextureImage img, float factor )
@@ -459,7 +457,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kLightmaps not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         int w = 128;
@@ -507,7 +505,7 @@ public class BSPPrototypeLoader
             lightMaps[ i ] = appFactory.createTexture( texImg0, true );
         }
         
-        return( lightMaps );
+        return ( lightMaps );
     }
     
     protected static byte[] readLightmapData( BSPFile file, BSPDirectory bspDir ) throws IOException
@@ -516,12 +514,12 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kLightmaps not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kLightmaps );
         
-        return( file.readFully( file.lumps[ bspDir.kLightmaps ].length ) );
+        return ( file.readFully( file.lumps[ bspDir.kLightmaps ].length ) );
     }
     
     /**
@@ -540,7 +538,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kTexInfo not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( kTexInfo );
@@ -569,7 +567,7 @@ public class BSPPrototypeLoader
             texInfo.flags = file.readInt();
         }
         
-        return( texInfos );
+        return ( texInfos );
     }
     
     protected static BSPVertex[] readVertices( BSPFile file, BSPDirectory bspDir ) throws IOException
@@ -578,7 +576,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kVertices not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kVertices );
@@ -634,7 +632,7 @@ public class BSPPrototypeLoader
             }
         }
         
-        return( vertices );
+        return ( vertices );
     }
     
     protected static int[] readMeshVertices( BSPFile file, BSPDirectory bspDir ) throws IOException
@@ -643,7 +641,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kMeshVerts not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kMeshVerts );
@@ -655,7 +653,7 @@ public class BSPPrototypeLoader
             meshVertices[ i ] = file.readInt();
         }
         
-        return( meshVertices );
+        return ( meshVertices );
     }
     
     /**
@@ -672,7 +670,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kBrushSides not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kBrushSides );
@@ -690,7 +688,7 @@ public class BSPPrototypeLoader
             edge.vindices[ 1 ] = file.readUnsignedShort();
         }
         
-        return( edges );
+        return ( edges );
     }
     
     protected static int[] readSurfEdges( BSPFile file, BSPDirectory bspDir) throws IOException
@@ -699,7 +697,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kBrushSides not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kSurfEdges );
@@ -712,7 +710,7 @@ public class BSPPrototypeLoader
             surfEdges[ i ] = file.readInt();
         }
         
-        return( surfEdges );
+        return ( surfEdges );
     }
     
     protected static BSPFace[] readFaces( BSPFile file, BSPDirectory bspDir ) throws IOException
@@ -721,7 +719,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kFaces not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kFaces );
@@ -752,7 +750,7 @@ public class BSPPrototypeLoader
                 face.lightmapID = file.readInt();   // int lightofs : start of [ numstyles * surfsize ] samples
             }
             
-            return( faces );
+            return ( faces );
         }
         else if ( file.getVersion() == 46 )
         {
@@ -800,10 +798,10 @@ public class BSPPrototypeLoader
                 //System.out.println( "type=" + face.type + ", verts " + face.numOfVerts + ", " + face.numMeshVerts );
             }
             
-            return( faces );
+            return ( faces );
         }
         
-        return( null );
+        return ( null );
     }
     
     protected static BSPVisData readVisData( BSPFile file, BSPDirectory bspDir, int leafCount ) throws IOException
@@ -811,7 +809,7 @@ public class BSPPrototypeLoader
         if ( bspDir.kVisData < 0 )
         {
             //JAGTLog.debug( "kVisData not currently supported by ", bspDir.getClass().getSimpleName() );
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kVisData );
@@ -842,7 +840,7 @@ public class BSPPrototypeLoader
             visData.pBitsets = file.readFully( visData.bytesPerCluster * visData.numOfClusters );
         }
         
-        return( visData );
+        return ( visData );
     }
     
     protected static BSPPlane[] readPlanes( BSPFile file, BSPDirectory bspDir, float worldScale ) throws IOException
@@ -851,7 +849,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kPlanes not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         int entryLength = 0;
@@ -883,7 +881,7 @@ public class BSPPrototypeLoader
             //System.out.println( i + ": " + planes[ i ].normal + ", " + planes[ i ].d );
         }
         
-        return( planes );
+        return ( planes );
     }
     
     protected static BSPNode[] readNodes( BSPFile file, BSPDirectory bspDir ) throws IOException
@@ -892,7 +890,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kNodes not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kNodes );
@@ -980,7 +978,7 @@ public class BSPPrototypeLoader
             }
         }
         
-        return( nodes );
+        return ( nodes );
     }
     
     protected static BSPLeaf[] readLeafs( BSPFile file, BSPDirectory bspDir ) throws IOException
@@ -989,7 +987,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kLeafs not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         int entryLength = 0;
@@ -1074,7 +1072,7 @@ public class BSPPrototypeLoader
             }
         }
         
-        return( leafs );
+        return ( leafs );
     }
     
     protected static int[] readLeafFaces( BSPFile file, BSPDirectory bspDir ) throws IOException
@@ -1083,7 +1081,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kLeafFaces not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kLeafFaces );
@@ -1095,7 +1093,7 @@ public class BSPPrototypeLoader
             leafFaces[ i ] = file.readInt();
         }
         
-        return( leafFaces );
+        return ( leafFaces );
     }
     
     protected static BSPBrush[] readBrushes( BSPFile file, BSPDirectory bspDir ) throws IOException
@@ -1104,7 +1102,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kBrushes not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kBrushes );
@@ -1121,7 +1119,7 @@ public class BSPPrototypeLoader
             brush.textureID = file.readInt();
         }
         
-        return( brushes );
+        return ( brushes );
     }
     
     protected static BSPBrushSide[] readBrushSides( BSPFile file, BSPDirectory bspDir ) throws IOException
@@ -1130,7 +1128,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kBrushSides not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kBrushSides );
@@ -1146,7 +1144,7 @@ public class BSPPrototypeLoader
             brushSide.textureID = file.readInt();
         }
         
-        return( brushSides );
+        return ( brushSides );
     }
     
     protected static BSPModel[] readModels( BSPFile file, BSPDirectory bspDir ) throws IOException
@@ -1155,7 +1153,7 @@ public class BSPPrototypeLoader
         {
             //JAGTLog.debug( "kModels not currently supported by ", bspDir.getClass().getSimpleName() );
             
-            return( null );
+            return ( null );
         }
         
         file.seek( bspDir.kModels );
@@ -1193,7 +1191,7 @@ public class BSPPrototypeLoader
                 model.numOfFaces   = file.readInt();
             }
             
-            return( models );
+            return ( models );
         }
         else if ( file.getVersion() == 46 )
         {
@@ -1219,10 +1217,10 @@ public class BSPPrototypeLoader
                 model.numOfBrushes = file.readInt();
             }
             
-            return( models );
+            return ( models );
         }
         
-        return( null );
+        return ( null );
     }
     
     /**
@@ -1252,7 +1250,7 @@ public class BSPPrototypeLoader
         
         BSPConverter.convert( prototype, appFactory, nodeFactory, sceneGroup, mainGroupType, worldScale, bspFile.getBaseURL(), siHandler );
         
-        return( prototype );
+        return ( prototype );
     }
     
     /**
@@ -1268,7 +1266,7 @@ public class BSPPrototypeLoader
         
         BSPFile bspFile = new BSPFile( in, filename, baseURL );
         
-        return( load( bspFile, geomFactory, convertZup2Yup, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
+        return ( load( bspFile, geomFactory, convertZup2Yup, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
     }
     
     /**
@@ -1276,6 +1274,6 @@ public class BSPPrototypeLoader
      */
     public static BSPScenePrototype load( URL url, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
-        return( load( url.openStream(), LoaderUtils.extractFilenameWithoutExt( url ), LoaderUtils.extractBaseURL( url ), geomFactory, convertZup2Yup, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
+        return ( load( url.openStream(), LoaderUtils.extractFilenameWithoutExt( url ), LoaderUtils.extractBaseURL( url ), geomFactory, convertZup2Yup, worldScale, appFactory, nodeFactory, sceneGroup, mainGroupType, siHandler ) );
     }
 }

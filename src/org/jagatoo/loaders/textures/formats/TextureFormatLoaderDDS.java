@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -108,18 +108,18 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
     {
         if ( in.available() < 2 * 4 )
         {
-            return( null );
+            return ( null );
         }
         
         if ( readInt( in ) != 0x20534444 ) // "DDS "
         {
-            return( null );
+            return ( null );
         }
         
         final int headerByteSize = readInt( in ); // size of the header
         if ( headerByteSize != 124 )
         {
-            return( null );
+            return ( null );
         }
         final int headerIntSize = headerByteSize / 4;
         
@@ -190,7 +190,7 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
                             break;
                         }
                         
-                        throw( new IOException( "Unsupported 8 bit color format: red = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_R_BIT_MASK ] ) + ", green" + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_G_BIT_MASK ] ) + ", blue = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_B_BIT_MASK ] ) + ", alpha = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_RGB_ALPHA_BIT_MASK ] ) ) );
+                        throw new IOException( "Unsupported 8 bit color format: red = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_R_BIT_MASK ] ) + ", green" + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_G_BIT_MASK ] ) + ", blue = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_B_BIT_MASK ] ) + ", alpha = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_RGB_ALPHA_BIT_MASK ] ) );
                         
                     case 16:
                         ddsPixelSize = 2;
@@ -245,15 +245,15 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
                             break;
                         }
                         
-                        throw( new IOException( "Unsupported 16 bit color format: red = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_R_BIT_MASK ] ) + ", green = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_G_BIT_MASK ] ) + ", blue = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_B_BIT_MASK ] ) + ", alpha = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_RGB_ALPHA_BIT_MASK ] ) ) );
+                        throw new IOException( "Unsupported 16 bit color format: red = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_R_BIT_MASK ] ) + ", green = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_G_BIT_MASK ] ) + ", blue = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_B_BIT_MASK ] ) + ", alpha = " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_RGB_ALPHA_BIT_MASK ] ) );
                         
                     default:
-                        throw( new IOException( "Unsupported color depth: " + header[ HEADER_FIELD_PIXEL_FORMAT_RGB_BIT_COUNT ] ) );
+                        throw new IOException( "Unsupported color depth: " + header[ HEADER_FIELD_PIXEL_FORMAT_RGB_BIT_COUNT ] );
                 }
                 break;
             
             default:
-                throw( new IOException( "Unknown compression format: " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_FOUR_CC ] ) ) );
+                throw new IOException( "Unknown compression format: " + Integer.toHexString( header[ HEADER_FIELD_PIXEL_FORMAT_FOUR_CC ] ) );
         }
         
         AbstractTexture tex = texFactory.createTexture( readAlpha );
@@ -336,7 +336,7 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
             }
         }
         
-        return( tex );
+        return ( tex );
     }
     
     protected byte[] tmpReadBuffer = new byte[ 64 ];
@@ -348,7 +348,7 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
             int read = in.read( data, off, len );
             if ( read <= 0 )
             {
-                throw( new EOFException() );
+                throw new EOFException();
             }
             off += read;
             len -= read;
@@ -367,7 +367,7 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
         byte[] tmp = tmpReadBuffer;
         readFully( in, tmp, 0, 4 );
         
-        return( ( ( tmp[ 3 ] & 255 ) << 24 ) | ( ( tmp[ 2 ] & 255 ) << 16 ) | ( ( tmp[ 1 ] & 255 ) << 8 ) | ( ( tmp[ 0 ] & 255 ) ) );
+        return ( ( ( tmp[ 3 ] & 255 ) << 24 ) | ( ( tmp[ 2 ] & 255 ) << 16 ) | ( ( tmp[ 1 ] & 255 ) << 8 ) | ( ( tmp[ 0 ] & 255 ) ) );
     }
     
     protected static final byte[] tab2 = new byte[ 4 ];

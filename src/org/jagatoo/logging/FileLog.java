@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -76,7 +76,7 @@ public class FileLog implements LogInterface
     
     public final int getLogLevel()
     {
-        return( logLevel );
+        return ( logLevel );
     }
     
     public final void setChannelFilter( int filter )
@@ -86,12 +86,12 @@ public class FileLog implements LogInterface
     
     public final int getChannelFilter()
     {
-        return( channelFilter );
+        return ( channelFilter );
     }
     
     public final boolean acceptsChannel( LogChannel channel )
     {
-        return( ( channelFilter & channel.getID() ) > 0 );
+        return ( ( channelFilter & channel.getID() ) > 0 );
     }
     
     /**

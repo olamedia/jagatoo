@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,7 +51,7 @@ public abstract class CommandsRegistry< C extends Command >
     {
         if ( array == null )
         {
-            return( (C[])new Object[ 1 ] );
+            return ( (C[])new Object[ 1 ] );
         }
         
         final int minCapacity = array.length + 1;
@@ -67,7 +67,7 @@ public abstract class CommandsRegistry< C extends Command >
             System.arraycopy( oldArray, 0, array, 0, oldCapacity );
         }
         
-        return( array );
+        return ( array );
     }
     */
 
@@ -91,7 +91,7 @@ public abstract class CommandsRegistry< C extends Command >
      */
     public final int getCommandID( Command command )
     {
-        return( commandIDs.get( command ) );
+        return ( commandIDs.get( command ) );
     }
     
     /**
@@ -101,7 +101,7 @@ public abstract class CommandsRegistry< C extends Command >
      */
     public final Command getCommandByID( int commandID )
     {
-        return( (Command)values()[ commandID ] );
+        return ( (Command)values()[ commandID ] );
     }
     
     public final Object[] values()
@@ -116,12 +116,12 @@ public abstract class CommandsRegistry< C extends Command >
             }
         }
         
-        return( commands );
+        return ( commands );
     }
     
     public final C valueOf( String key )
     {
-        return( commandsMap.get( key ) );
+        return ( commandsMap.get( key ) );
     }
     
     @SuppressWarnings("unchecked")
@@ -130,9 +130,9 @@ public abstract class CommandsRegistry< C extends Command >
         for ( int i = 0; i < commands.length; i++ )
         {
             if ( ((C)commands[ i ]).getKey().equalsIgnoreCase( str ) )
-                return( (C)commands[ i ] );
+                return ( (C)commands[ i ] );
         }
         
-        return( null );
+        return ( null );
     }
 }

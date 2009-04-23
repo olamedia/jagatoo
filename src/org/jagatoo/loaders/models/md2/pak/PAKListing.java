@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -112,7 +112,7 @@ public class PAKListing
      */
     public List<String> getFilenames()
     {
-        return( filenames );
+        return ( filenames );
     }
     
     /**
@@ -124,14 +124,10 @@ public class PAKListing
     {
         FileIndex index = map.get( name );
         
-        if ( index != null )
-        {
-            return( index.offset );
-        }
-        else
-        {
-            return( -1 );
-        }
+        if ( index == null )
+            return ( -1 );
+        
+        return ( index.offset );
     }
     
     /**
@@ -143,14 +139,10 @@ public class PAKListing
     {
         FileIndex index = map.get( name );
         
-        if ( index != null )
-        {
-            return( index.length );
-        }
-        else
-        {
-            return( -1 );
-        }
+        if ( index == null )
+            return ( -1 );
+        
+        return ( index.length );
     }
     
     /**

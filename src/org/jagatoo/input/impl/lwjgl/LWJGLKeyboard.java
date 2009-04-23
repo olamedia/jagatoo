@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -169,7 +169,7 @@ public class LWJGLKeyboard extends Keyboard
         if ( ( key == Keys.DELETE ) && ( keyChar != '\0' ) )
             key = Keys.NUMPAD_DECIMAL;
         
-        return( key );
+        return ( key );
     }
     
     /*
@@ -187,7 +187,7 @@ public class LWJGLKeyboard extends Keyboard
     @Override
     protected boolean hasKeyStateChanged( Key key, boolean keyState )
     {
-        return( true );
+        return ( true );
     }
     
     private boolean triggerTyped( char keyChar, int modifierMask, long nanoTime, long lastNanoTime, EventQueue eventQueue )
@@ -195,14 +195,14 @@ public class LWJGLKeyboard extends Keyboard
         final KeyTypedEvent typedEv = prepareKeyTypedEvent( keyChar, modifierMask, nanoTime, lastNanoTime );
         
         if ( typedEv == null )
-            return( false );
+            return ( false );
         
         if ( eventQueue != null )
             eventQueue.enqueue( typedEv );
         else
             fireOnKeyTyped( typedEv, true );
         
-        return( true );
+        return ( true );
     }
     
     protected final void collectOrFireEvents( InputSystem is, EventQueue eventQueue, long nanoTime, boolean acceptsEvents ) throws InputSystemException
@@ -210,10 +210,10 @@ public class LWJGLKeyboard extends Keyboard
         final boolean isQueued = ( eventQueue != null );
         
         if ( !org.lwjgl.opengl.Display.isCreated() )
-            throw( new InputSystemException( "Display is not created." ) );
+            throw new InputSystemException( "Display is not created." );
         
         if ( !org.lwjgl.input.Keyboard.isCreated() )
-            throw( new InputSystemException( "Mouse is not created." ) );
+            throw new InputSystemException( "Mouse is not created." );
         
         try
         {
@@ -295,15 +295,15 @@ public class LWJGLKeyboard extends Keyboard
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t;
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t;
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t;
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -323,7 +323,7 @@ public class LWJGLKeyboard extends Keyboard
     public void collectEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
         if ( eventQueue == null )
-            throw( new InputSystemException( "EventQueue must not be null here!" ) );
+            throw new InputSystemException( "EventQueue must not be null here!" );
         
         final boolean acceptEvents = ( isEnabled() && getSourceWindow().receivesInputEvents() );
         
@@ -365,7 +365,7 @@ public class LWJGLKeyboard extends Keyboard
         }
         catch ( Throwable t )
         {
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -380,7 +380,7 @@ public class LWJGLKeyboard extends Keyboard
         }
         catch ( org.lwjgl.LWJGLException e )
         {
-            throw( new InputSystemException( e ) );
+            throw new InputSystemException( e );
         }
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,7 +47,7 @@ public class Key extends DigitalDeviceComponent
      */
     public final KeyID getKeyID()
     {
-        return( keyID );
+        return ( keyID );
     }
     
     /**
@@ -58,7 +58,7 @@ public class Key extends DigitalDeviceComponent
      */
     public final int getKeyCode()
     {
-        return( keyCode );
+        return ( keyCode );
     }
     
     /**
@@ -66,7 +66,7 @@ public class Key extends DigitalDeviceComponent
      */
     public final boolean hasKeyChar()
     {
-        return( hasKeyChar );
+        return ( hasKeyChar );
     }
     
     /**
@@ -76,9 +76,9 @@ public class Key extends DigitalDeviceComponent
     public boolean equals( Object key )
     {
         if ( !(key instanceof Key ) )
-            return( false );
+            return ( false );
         
-        return( this.getName().equals( ((Key)key).getName() ) );
+        return ( this.getName().equals( ((Key)key).getName() ) );
     }
     
     /**
@@ -87,7 +87,7 @@ public class Key extends DigitalDeviceComponent
     @Override
     public int hashCode()
     {
-        return( getName().hashCode() );
+        return ( getName().hashCode() );
     }
     
     /**
@@ -96,7 +96,7 @@ public class Key extends DigitalDeviceComponent
     @Override
     public String toString()
     {
-        return( "Key { name = " + getName() + ", ID = " + getDeviceComponentID() + ", keyCode = " + getKeyCode() + " }" );
+        return ( "Key { name = " + getName() + ", ID = " + getDeviceComponentID() + ", keyCode = " + getKeyCode() + " }" );
     }
     
     public Key( String keyName, boolean hasKeyChar )

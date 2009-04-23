@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -120,7 +120,7 @@ public abstract class AbstractTextureLoader
             
             this.textureCache = textureCache;
             
-            return( prevCache );
+            return ( prevCache );
         }
     }
     
@@ -129,7 +129,7 @@ public abstract class AbstractTextureLoader
      */
     public final TextureCache getCache()
     {
-        return( textureCache );
+        return ( textureCache );
     }
     
     /**
@@ -159,7 +159,7 @@ public abstract class AbstractTextureLoader
         
         addTextureStreamLocator( tsl );
         
-        return( tsl );
+        return ( tsl );
     }
     
     /**
@@ -175,7 +175,7 @@ public abstract class AbstractTextureLoader
      */
     public synchronized TextureStreamLocatorURL addTextureStreamLocator( URL baseURL, String resName ) throws MalformedURLException
     {
-        return( addTextureStreamLocator( new URL( baseURL, resName ) ) );
+        return ( addTextureStreamLocator( new URL( baseURL, resName ) ) );
     }
     
     /**
@@ -193,7 +193,7 @@ public abstract class AbstractTextureLoader
         
         addTextureStreamLocator( tsl );
         
-        return( tsl );
+        return ( tsl );
     }
     
     /**
@@ -211,7 +211,7 @@ public abstract class AbstractTextureLoader
         
         addTextureStreamLocator( tsl );
         
-        return( tsl );
+        return ( tsl );
     }
     
     /**
@@ -223,7 +223,7 @@ public abstract class AbstractTextureLoader
      */
     public synchronized boolean removeTextureStreamLocator( TextureStreamLocator tsl )
     {
-        return( textureStreamLocators.remove( tsl ) );
+        return ( textureStreamLocators.remove( tsl ) );
     }
     
     /**
@@ -247,7 +247,7 @@ public abstract class AbstractTextureLoader
      */
     public synchronized boolean removeTextureImageFormatLoader( TextureImageFormatLoader l )
     {
-        return( textureImageFormatLoaders.remove( l ) );
+        return ( textureImageFormatLoaders.remove( l ) );
     }
     
     /**
@@ -271,7 +271,7 @@ public abstract class AbstractTextureLoader
      */
     public synchronized boolean removeTextureFormatLoader( TextureFormatLoader tsl )
     {
-        return( textureFormatLoaders.remove( tsl ) );
+        return ( textureFormatLoaders.remove( tsl ) );
     }
     
     /**
@@ -298,7 +298,7 @@ public abstract class AbstractTextureLoader
      */
     public final TextureImageFormatLoader getFallbackTextureImageFormatLoader()
     {
-        return( fallbackTextureImageFormatLoader );
+        return ( fallbackTextureImageFormatLoader );
     }
     
     
@@ -313,7 +313,7 @@ public abstract class AbstractTextureLoader
             MipmapGenerator.createMipMaps( ti, tex, texFactory );
         }
         
-        return( tex );
+        return ( tex );
     }
     
     private static final void resetInputStreamIfTexIsNull( Object tex, BufferedInputStream in )
@@ -354,7 +354,7 @@ public abstract class AbstractTextureLoader
             resetInputStreamIfTexIsNull( ti, in );
         }
         
-        return( ti );
+        return ( ti );
     }
     
     private AbstractTexture tryToLoadFromTextureFormatLoaders( BufferedInputStream in, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, TextureFactory texFactory )
@@ -377,7 +377,7 @@ public abstract class AbstractTextureLoader
             resetInputStreamIfTexIsNull( tex, in );
         }
         
-        return( tex );
+        return ( tex );
     }
     
     private AbstractTexture loadFromFallbackLoader( BufferedInputStream in, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, TextureFactory texFactory )
@@ -401,7 +401,7 @@ public abstract class AbstractTextureLoader
         
         resetInputStreamIfTexIsNull( ti, in );
         
-        return( tex );
+        return ( tex );
     }
     
     /**
@@ -420,7 +420,7 @@ public abstract class AbstractTextureLoader
     {
         if ( in == null )
         {
-            return( null );
+            return ( null );
         }
         
         int available = 0;
@@ -433,7 +433,7 @@ public abstract class AbstractTextureLoader
             if ( !e.getMessage().contains( "Stream closed" ) )
                 e.printStackTrace();
             
-            return( null );
+            return ( null );
         }
         
         AbstractTextureImage texImg = null;
@@ -481,7 +481,7 @@ public abstract class AbstractTextureLoader
             //e.printStackTrace();
         }
         
-        return( texImg );
+        return ( texImg );
     }
     
     /**
@@ -500,7 +500,7 @@ public abstract class AbstractTextureLoader
     {
         if ( in == null )
         {
-            return( null );
+            return ( null );
         }
         
         int available = 0;
@@ -513,7 +513,7 @@ public abstract class AbstractTextureLoader
             if ( !e.getMessage().contains( "Stream closed" ) )
                 e.printStackTrace();
             
-            return( null );
+            return ( null );
         }
         
         AbstractTexture tex = null;
@@ -552,7 +552,7 @@ public abstract class AbstractTextureLoader
             //e.printStackTrace();
         }
         
-        return( tex );
+        return ( tex );
     }
     
     
@@ -560,7 +560,7 @@ public abstract class AbstractTextureLoader
     {
         String cacheKey = name + "-" + ( acceptAlpha ? "RGBA?" : "RGB" ) + "-" + ( loadMipmaps ? "MULTI_LEVEL_MIPMAP" : "BASE_LEVEL" ) + "-" + ( flipVertically ? "flipped" : "" ) + "-" + ( allowStreching ? "streched?" : "unstreched" );
         
-        return( cacheKey );
+        return ( cacheKey );
     }
     
     protected final AbstractTexture checkCache( String name, String key )
@@ -568,18 +568,18 @@ public abstract class AbstractTextureLoader
         synchronized ( getCache() )
         {
             if ( !getCache().isEnabled() )
-                return( null );
+                return ( null );
             
             AbstractTexture tex = getCache().get( key );
             
             if ( tex == null )
             {
-                return( null );
+                return ( null );
             }
             
             JAGTLog.debug( "Texture [", name, "] taken from cache" );
             
-            return( tex );
+            return ( tex );
         }
     }
     
@@ -611,10 +611,10 @@ public abstract class AbstractTextureLoader
         
         if ( in instanceof BufferedInputStream )
         {
-            return( (BufferedInputStream)in );
+            return ( (BufferedInputStream)in );
         }
         
-        return( new BufferedInputStream( in ) );
+        return ( new BufferedInputStream( in ) );
     }
     
     
@@ -647,7 +647,7 @@ public abstract class AbstractTextureLoader
         
         if ( ( name == null ) || name.equals( "" ) )
         {
-            return( null );
+            return ( null );
         }
         
         AbstractTextureImage texImg = null;
@@ -658,7 +658,7 @@ public abstract class AbstractTextureLoader
         
         ProfileTimer.endProfile();
         
-        return( texImg );
+        return ( texImg );
     }
     
     /**
@@ -705,7 +705,7 @@ public abstract class AbstractTextureLoader
         
         if ( ( name == null ) || name.equals( "" ) )
         {
-            return( null );
+            return ( null );
         }
         
         AbstractTexture tex = null;
@@ -714,7 +714,7 @@ public abstract class AbstractTextureLoader
         
         if ( ( tex = checkCache( name, cacheKey ) ) != null )
         {
-            return( tex );
+            return ( tex );
         }
         
         BufferedInputStream in = getInputStream( name );
@@ -740,7 +740,7 @@ public abstract class AbstractTextureLoader
         
         ProfileTimer.endProfile();
         
-        return( tex );
+        return ( tex );
     }
     
     /**
@@ -769,7 +769,7 @@ public abstract class AbstractTextureLoader
     {
         if ( imageURL == null )
         {
-            return( null );
+            return ( null );
         }
         
         AbstractTexture tex = null;
@@ -787,13 +787,13 @@ public abstract class AbstractTextureLoader
             RuntimeException re = new RuntimeException();
             re.initCause( e );
             
-            throw( re );
+            throw re;
         }
         
         /*
         if ( ( tex = checkCache( name, cacheKey ) ) != null )
         {
-            return( tex );
+            return ( tex );
         }
         */
         
@@ -810,7 +810,7 @@ public abstract class AbstractTextureLoader
         
         if ( in == null )
         {
-            return( null );
+            return ( null );
         }
         
         if ( !( in instanceof BufferedInputStream ) )
@@ -839,7 +839,7 @@ public abstract class AbstractTextureLoader
             onTextureLoaded( tex, name );
         }
         
-        return( tex );
+        return ( tex );
     }
     
     

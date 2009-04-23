@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,7 +51,7 @@ public class MouseSmoothingSwitchAction extends AbstractLabeledInvokableInputAct
         ih.setMouseSmoothingEnabled( !ih.isMouseSmoothingEnabled() );
         //System.out.println( ih.isMouseSmoothingEnabled() );
         
-        return( SUCCESS );
+        return ( SUCCESS );
     }
     
     public MouseSmoothingSwitchAction( int ordinal, String text, InputHandler< ? > ih )

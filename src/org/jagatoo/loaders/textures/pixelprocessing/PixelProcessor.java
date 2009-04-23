@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,17 +49,17 @@ public abstract class PixelProcessor
     
     public final int getPixelSize()
     {
-        return( pixelSize );
+        return ( pixelSize );
     }
     
     public final int getLineSize( int width )
     {
-        return( getPixelSize() * width );
+        return ( getPixelSize() * width );
     }
     
     public final int getStartOffset( int x, int y, int width )
     {
-        return( ( x * getPixelSize() ) + ( y * getLineSize( width ) ) );
+        return ( ( x * getPixelSize() ) + ( y * getLineSize( width ) ) );
     }
     
     public abstract TextureImageFormat getTextureImageFormat();
@@ -77,7 +77,7 @@ public abstract class PixelProcessor
         
         readImageData( img, 0, 0, width, height, bb, 0, flipVertically );
         
-        return( ti );
+        return ( ti );
     }
     
     /**
@@ -130,14 +130,14 @@ public abstract class PixelProcessor
         trg.position( 0 );
         trg.limit( trgOffset0 + dataSize );
         
-        return( trgImg );
+        return ( trgImg );
     }
     
     protected PixelProcessor( int pixelSize )
     {
         if ( ( pixelSize < 1 ) || ( pixelSize > 4 ) )
         {
-            throw( new IllegalArgumentException( "Unsupported pixelSize: " + pixelSize ) );
+            throw new IllegalArgumentException( "Unsupported pixelSize: " + pixelSize );
         }
         
         this.pixelSize = pixelSize;
@@ -151,13 +151,13 @@ public abstract class PixelProcessor
             case INTENSITY:
             case LUMINANCE:
             case ALPHA:
-                return( PixelProcessorLUM.getInstance() );
+                return ( PixelProcessorLUM.getInstance() );
                 
             case RGB:
-                return( PixelProcessorRGB.getInstance() );
+                return ( PixelProcessorRGB.getInstance() );
                 
             case RGBA:
-                return( PixelProcessorRGBA.getInstance() );
+                return ( PixelProcessorRGBA.getInstance() );
                 
             default:
                 throw new Error( "PixelProcessor for format " + tiFormat + " not (yet) available" );
@@ -170,13 +170,13 @@ public abstract class PixelProcessor
         {
             case LUMINANCE:
             case DEPTH:
-                return( PixelProcessorLUM.getInstance() );
+                return ( PixelProcessorLUM.getInstance() );
                 
             case RGB:
-                return( PixelProcessorRGB.getInstance() );
+                return ( PixelProcessorRGB.getInstance() );
                 
             case RGBA:
-                return( PixelProcessorRGBA.getInstance() );
+                return ( PixelProcessorRGBA.getInstance() );
                 
             default:
                 throw new Error( "PixelProcessor for format not (yet) available" );
@@ -203,31 +203,22 @@ public abstract class PixelProcessor
         {
             case LUMINANCE:
             case DEPTH:
-                return( PixelProcessorLUM.getInstance() );
+                return ( PixelProcessorLUM.getInstance() );
                 
             case RGB:
                 if ( imgIsGrey )
-                {
-                    return( PixelProcessorLUM.getInstance() );
-                }
-                else
-                {
-                    return( PixelProcessorRGB.getInstance() );
-                }
+                    return ( PixelProcessorLUM.getInstance() );
+                
+                return ( PixelProcessorRGB.getInstance() );
                 
             case RGBA:
                 if ( imgHasAlpha )
-                {
-                    return( PixelProcessorRGBA.getInstance() );
-                }
-                else if ( imgIsGrey )
-                {
-                    return( PixelProcessorLUM.getInstance() );
-                }
-                else
-                {
-                    return( PixelProcessorRGB.getInstance() );
-                }
+                    return ( PixelProcessorRGBA.getInstance() );
+                
+                if ( imgIsGrey )
+                    return ( PixelProcessorLUM.getInstance() );
+                
+                return ( PixelProcessorRGB.getInstance() );
                 
             default:
                 throw new IllegalArgumentException( "Unsupported format: " + texFormat );
@@ -254,21 +245,21 @@ public abstract class PixelProcessor
         {
             if ( imgHasAlpha )
             {
-                return( PixelProcessorRGBA.getInstance() );
+                return ( PixelProcessorRGBA.getInstance() );
             }
             else if ( imgIsGrey )
             {
-                return( PixelProcessorLUM.getInstance() );
+                return ( PixelProcessorLUM.getInstance() );
             }
             
-            return( PixelProcessorRGB.getInstance() );
+            return ( PixelProcessorRGB.getInstance() );
         }
         
         if ( imgIsGrey )
         {
-            return( PixelProcessorLUM.getInstance() );
+            return ( PixelProcessorLUM.getInstance() );
         }
         
-        return( PixelProcessorRGB.getInstance() );
+        return ( PixelProcessorRGB.getInstance() );
     }
 }

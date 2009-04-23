@@ -37,7 +37,7 @@ public class Rotations
         quat.set( matrix );
         quat.normalize();
         
-        return( quat );
+        return ( quat );
     }
     
     /**
@@ -51,7 +51,7 @@ public class Rotations
      */
     public static Quaternion4f toQuaternion( float rotX, float rotY, float rotZ )
     {
-        return( toQuaternion( rotX, rotY, rotZ, new Quaternion4f() ) );
+        return ( toQuaternion( rotX, rotY, rotZ, new Quaternion4f() ) );
     }
     
     /**
@@ -75,7 +75,7 @@ public class Rotations
      */
     public static Quaternion4f toQuaternion( Tuple3f tup, Quaternion4f quat )
     {
-    	return( toQuaternion( tup.getX(), tup.getY(), tup.getZ(), quat ) );
+    	return ( toQuaternion( tup.getX(), tup.getY(), tup.getZ(), quat ) );
     }
     
     /**
@@ -96,7 +96,7 @@ public class Rotations
         euler.setY( euler.getY() );
         euler.setZ( euler.getZ() );
         
-        return( euler );
+        return ( euler );
     }
     
     /**
@@ -120,7 +120,7 @@ public class Rotations
             cosHalfHangle
         );
         
-        return( quat );
+        return ( quat );
     }
     
     private Rotations() {}

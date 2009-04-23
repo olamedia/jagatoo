@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,7 +57,7 @@ public class JInputController extends Controller
     
     protected final net.java.games.input.Controller getController()
     {
-        return( controller );
+        return ( controller );
     }
     
     final net.java.games.input.Event event = new net.java.games.input.Event();
@@ -147,15 +147,15 @@ public class JInputController extends Controller
         catch ( Throwable t )
         {
             if ( t instanceof InputSystemException )
-                throw( (InputSystemException)t );
+                throw (InputSystemException)t;
             
             if ( t instanceof Error )
-                throw( (Error)t );
+                throw (Error)t;
             
             if ( t instanceof RuntimeException )
-                throw( (RuntimeException)t );
+                throw (RuntimeException)t;
             
-            throw( new InputSystemException( t ) );
+            throw new InputSystemException( t );
         }
     }
     
@@ -175,7 +175,7 @@ public class JInputController extends Controller
     public void collectEvents( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
         if ( eventQueue == null )
-            throw( new InputSystemException( "EventQueue must not be null here!" ) );
+            throw new InputSystemException( "EventQueue must not be null here!" );
         
         final boolean acceptEvents = ( isEnabled() && getSourceWindow().receivesInputEvents() );
         
@@ -224,14 +224,14 @@ public class JInputController extends Controller
             if ( component.getIdentifier() instanceof net.java.games.input.Component.Identifier.Axis )
             {
                 int index = numAxes++;
-                axes0[ index ] = new JInputControllerAxis( this, controller, component, index );
+                axes0[ index ] = new JInputControllerAxis( this, component, index );
             }
         }
         
         JInputControllerAxis[] axes1 = new JInputControllerAxis[ numAxes ];
         System.arraycopy( axes0, 0, axes1, 0, numAxes );
         
-        return( axes1 );
+        return ( axes1 );
     }
     
     @Override
@@ -248,14 +248,14 @@ public class JInputController extends Controller
             if ( component.getIdentifier() instanceof net.java.games.input.Component.Identifier.Button )
             {
                 int index = numButtons++;
-                buttons0[ index ] = new JInputControllerButton( this, controller, component, index );
+                buttons0[ index ] = new JInputControllerButton( this, component, index );
             }
         }
         
         JInputControllerButton[] buttons1 = new JInputControllerButton[ numButtons ];
         System.arraycopy( buttons0, 0, buttons1, 0, numButtons );
         
-        return( buttons1 );
+        return ( buttons1 );
     }
     
     protected JInputController( ControllerFactory factory, InputSourceWindow sourceWindow, EventQueue eventQueue, net.java.games.input.Controller controller ) throws InputSystemException

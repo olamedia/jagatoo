@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -90,7 +90,7 @@ public class MD3File
             path = path.replace( " ", "%20" );
         }
         
-        return( path );
+        return ( path );
     }
     
     private void readFrames() throws IOException, IncorrectFormatException, ParsingException
@@ -114,7 +114,7 @@ public class MD3File
     {
         if ( header.numTags == 0 )
         {
-            return( null );
+            return ( null );
         }
         
         long t0 = System.currentTimeMillis();
@@ -183,7 +183,7 @@ public class MD3File
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
         
-        return( tagFrames );
+        return ( tagFrames );
     }
     
     private AbstractTexture loadTexture( String texName, URL baseURL, AppearanceFactory appFactory )
@@ -192,7 +192,7 @@ public class MD3File
         AbstractTexture texture = appFactory.loadOrGetTexture( texName, baseURL, true, true, true, true, true );
         
         if ( !appFactory.isFallbackTexture( texture ) )
-            return( texture );
+            return ( texture );
         
         if ( texName.endsWith( ".tga" ) )
         {
@@ -202,13 +202,13 @@ public class MD3File
             texture = appFactory.loadOrGetTexture( texBaseName, baseURL, true, true, true, true, true );
             
             if ( !appFactory.isFallbackTexture( texture ) )
-                return( texture );
+                return ( texture );
             
             // Try as jpeg...
             texture = appFactory.loadOrGetTexture( texBaseName + ".jpg", baseURL, true, true, true, true, true );
             
             if ( !appFactory.isFallbackTexture( texture ) )
-                return( texture );
+                return ( texture );
         }
         else
         {
@@ -216,7 +216,7 @@ public class MD3File
             texture = appFactory.loadOrGetTexture( texName + ".jpg", baseURL, true, true, true, true, true );
             
             if ( !appFactory.isFallbackTexture( texture ) )
-                return( texture );
+                return ( texture );
         }
         
         int lastSlashPos = texName.lastIndexOf( '/' );
@@ -228,7 +228,7 @@ public class MD3File
             texture = appFactory.loadOrGetTexture( texBaseName, baseURL, true, true, true, true, true );
             
             if ( !appFactory.isFallbackTexture( texture ) )
-                return( texture );
+                return ( texture );
             
             if ( texBaseName.endsWith( ".tga" ) )
             {
@@ -238,13 +238,13 @@ public class MD3File
                 texture = appFactory.loadOrGetTexture( texBaseName, baseURL, true, true, true, true, true );
                 
                 if ( !appFactory.isFallbackTexture( texture ) )
-                    return( texture );
+                    return ( texture );
                 
                 // Try as jpeg...
                 texture = appFactory.loadOrGetTexture( texBaseName + ".jpg", baseURL, true, true, true, true, true );
                 
                 if ( !appFactory.isFallbackTexture( texture ) )
-                    return( texture );
+                    return ( texture );
             }
             else
             {
@@ -252,7 +252,7 @@ public class MD3File
                 texture = appFactory.loadOrGetTexture( texBaseName + ".jpg", baseURL, true, true, true, true, true );
                 
                 if ( !appFactory.isFallbackTexture( texture ) )
-                    return( texture );
+                    return ( texture );
             }
         }
         
@@ -263,10 +263,10 @@ public class MD3File
         
         JAGTLog.printlnEx( "Couldn't find texture resource \"", texName, "\"!" );
         
-        return( texture );
+        return ( texture );
     }
     
-    private NamedObject[] readShaders( int shadersOffset, int numShaders, URL baseURL, AppearanceFactory appFactory, NodeFactory nodeFactory ) throws IOException, IncorrectFormatException, ParsingException
+    private NamedObject[] readShaders( int shadersOffset, int numShaders, URL baseURL, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();
         JAGTLog.debug( "Loading MD3 shaders..." );
@@ -300,7 +300,7 @@ public class MD3File
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
         
-        return( shaders );
+        return ( shaders );
     }
     
     private void readTriangles( int trianglesOffset, int numTriangles, GeometryFactory geomFactory, NamedObject geometry ) throws IOException, IncorrectFormatException, ParsingException
@@ -448,7 +448,7 @@ public class MD3File
         
         JAGTLog.debug( "done. (", ( System.currentTimeMillis() - t0 ) / 1000f, " seconds)" );
         
-        return( keyFrames );
+        return ( keyFrames );
     }
     
     private void readSurfaces( URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, AnimationFactory animFactory, Matrix4f[][] frameTags, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
@@ -485,7 +485,7 @@ public class MD3File
                                                                           false, new int[] { 2 }, null
                                                                         );
             
-            NamedObject[] shaders = readShaders( shadersOffset, numShaders, baseURL, appFactory, nodeFactory );
+            NamedObject[] shaders = readShaders( shadersOffset, numShaders, baseURL, appFactory );
             readTriangles( trianglesOffset, numTriangles, geomFactory, geometry );
             readTextureCoordinates( textureCoordsOffset, numVertices, geomFactory, geometry );
             Object[] keyFrames = readCoordinatesAndNormals( numFrames, coordNormalOffset, numVertices, geomFactory, convertZup2Yup, scale, geometry, animFactory );

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,7 +47,7 @@ public class Polygon
     
     public List<float[]> getVertices()
     {
-        return( vertices );
+        return ( vertices );
     }
     
     public void add( float[] v )
@@ -68,11 +68,11 @@ public class Polygon
             
             if ( ArrayUtils.equals( vert, point ) )
             {
-                return( true );
+                return ( true );
             }
         }
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -86,7 +86,7 @@ public class Polygon
         {
             list.add( this );
             
-            return( list );
+            return ( list );
         }
         else if ( vertices.size() > 3 )
         {
@@ -102,10 +102,10 @@ public class Polygon
                 list.add( tri );
             }
             
-            return( list );
+            return ( list );
         }
         
-        return( null );
+        return ( null );
     }
     
     public void print()

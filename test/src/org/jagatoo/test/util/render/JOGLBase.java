@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,18 +45,18 @@ public abstract class JOGLBase implements GLEventListener
     
     public final Frame getFrame()
     {
-        return( frame );
+        return ( frame );
     }
     
     public final GLCanvas getCanvas()
     {
-        return( canvas );
+        return ( canvas );
     }
     
     protected void unavailableExtension( String message )
     {
         JOptionPane.showMessageDialog( null, message, "Unavailable extension", JOptionPane.ERROR_MESSAGE );
-        throw( new GLException( message ) );
+        throw new GLException( message );
     }
     
     protected void checkExtension( GL gl, String extensionName )

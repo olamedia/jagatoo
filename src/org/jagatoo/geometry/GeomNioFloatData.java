@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -63,15 +63,15 @@ public class GeomNioFloatData extends GeomNioData
      */
     public final FloatBuffer getBuffer()
     {
-        return( buffer );
+        return ( buffer );
     }
     
     public final int getElemStride()
     {
         if ( floatStride == 0 )
-            return( getElemSize() );
+            return ( getElemSize() );
         
-        return( floatStride );
+        return ( floatStride );
     }
     
     /**
@@ -86,7 +86,7 @@ public class GeomNioFloatData extends GeomNioData
         buffer.rewind();
         buffer.get( f );
         
-        return( f );
+        return ( f );
     }
     
     /**
@@ -270,7 +270,7 @@ public class GeomNioFloatData extends GeomNioData
     {
         buffer.position( index * getElemStride() + (int)elemOffset );
         
-        return( buffer.get() );
+        return ( buffer.get() );
     }
     
     public final void set( TupleNf<?> tuple )
@@ -383,7 +383,7 @@ public class GeomNioFloatData extends GeomNioData
             this.buffer.rewind();
         }
         
-        return( data );
+        return ( data );
     }
     
     public GeomNioFloatData( int maxElements, int elemSize, int stride, boolean reversed )

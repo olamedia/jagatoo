@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -105,7 +105,7 @@ public final class OBJPrototypeLoader
         vector[ 1 ] = Float.parseFloat( tokens.nextToken() );
         vector[ 2 ] = Float.parseFloat( tokens.nextToken() );
         
-        return( vector );
+        return ( vector );
     }
     
     private static float[] parseTexCoord( String line )
@@ -119,7 +119,7 @@ public final class OBJPrototypeLoader
         texCoord[ 0 ] = Float.parseFloat( tokens.nextToken() );
         texCoord[ 1 ] = Float.parseFloat( tokens.nextToken() );
         
-        return( texCoord );
+        return ( texCoord );
     }
     
     private static float[] parseColor( String token )
@@ -132,7 +132,7 @@ public final class OBJPrototypeLoader
         color[ 1 ] = Float.parseFloat( tokens.nextToken() );
         color[ 2 ] = Float.parseFloat( tokens.nextToken() );
         
-        return( color );
+        return ( color );
     }
     
     private static List<OBJMaterial> parseMatLib( URL baseURL, String name ) throws IOException
@@ -247,14 +247,14 @@ public final class OBJPrototypeLoader
             }
         }
         
-        return( matList );
+        return ( matList );
     }
     
     public static OBJModelPrototype load( InputStream in, URL baseURL, float[] geomOffset ) throws IOException
     {
         if ( ( geomOffset != null ) && ( geomOffset.length != 3 ) )
         {
-            throw( new IllegalArgumentException( "geomOffset must be either null or length 3." ) );
+            throw new IllegalArgumentException( "geomOffset must be either null or length 3." );
         }
         
         BufferedReader br = new BufferedReader( new InputStreamReader( in ) );
@@ -360,12 +360,12 @@ public final class OBJPrototypeLoader
             br.close();
         }
         
-        return( new OBJModelPrototype( matMap, topGroup ) );
+        return ( new OBJModelPrototype( matMap, topGroup ) );
     }
     
     public static OBJModelPrototype load( InputStream in, URL baseURL ) throws IOException
     {
-        return( load( in, baseURL, null ) );
+        return ( load( in, baseURL, null ) );
     }
     
     public static void load( InputStream in, URL baseURL, AppearanceFactory appFactory, String skin, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException

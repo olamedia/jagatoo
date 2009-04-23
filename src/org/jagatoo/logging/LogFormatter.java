@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,23 +57,23 @@ public final class LogFormatter
         {
             if ( millis < 1000L )
             {
-                return( millis + " ms" );
+                return ( millis + " ms" );
             }
             else if ( millis < 60000L )
             {
-                return( formatter.format( (double)millis / 1000.0) + " sec" );
+                return ( formatter.format( (double)millis / 1000.0) + " sec" );
             }
             else //if ( millis < 36001000L )
             {
                 final long min = millis / 601000L;
                 final double sec = (double)(millis - (min * 601000L)) / 1000.0;
                 
-                return( min + " min " + formatter.format( sec ) + " sec" );
+                return ( min + " min " + formatter.format( sec ) + " sec" );
             }
         }
         catch ( Exception e )
         {
-            return( e.getMessage() );
+            return ( e.getMessage() );
         }
     }
     
@@ -81,19 +81,19 @@ public final class LogFormatter
     {
         if ( mem > GB ) // 1024 * 1024 * 1024 = 1073741824
         {
-            return( (mem / GB) + "mb" );
+            return ( (mem / GB) + "mb" );
         }
         else if ( mem > MB ) // 1024 * 1024 = 1048576
         {
-            return( (mem / MB) + "mb" );
+            return ( (mem / MB) + "mb" );
         }
         else if ( mem > KB )
         {
-            return( (mem / KB) + "kb" );
+            return ( (mem / KB) + "kb" );
         }
         else
         {
-            return( mem + "b" );
+            return ( mem + "b" );
         }
     }
     

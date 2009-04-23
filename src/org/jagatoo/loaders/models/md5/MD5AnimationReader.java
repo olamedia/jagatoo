@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -171,7 +171,7 @@ public class MD5AnimationReader
             bones[i] = bone;
         }
         
-        return( animFactory.createBoneAnimationKeyFrame( bones ) );
+        return ( animFactory.createBoneAnimationKeyFrame( bones ) );
     }
     
     public static void load( InputStream in, String filename, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, NamedObject[] shapes, Object[][][] boneWeights, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException

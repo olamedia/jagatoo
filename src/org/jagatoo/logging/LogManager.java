@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -168,7 +168,7 @@ public class LogManager
      */
     public final String getIndentationString()
     {
-        return( indentationString );
+        return ( indentationString );
     }
     
     /**
@@ -186,7 +186,7 @@ public class LogManager
      */
     public final int getIndentation()
     {
-        return( indentation );
+        return ( indentation );
     }
     
     public final void setTimestampingEnabled( boolean enabled )
@@ -196,7 +196,7 @@ public class LogManager
     
     public final boolean isTimestampingEnabled()
     {
-        return( timestampsEnabled );
+        return ( timestampsEnabled );
     }
     
     public final void setChannelsVisible( boolean visible )
@@ -206,7 +206,7 @@ public class LogManager
     
     public final boolean areChannelsVisible()
     {
-        return( channelsVisible );
+        return ( channelsVisible );
     }
     
     public final void addDebuggingPackage( String pkg )
@@ -221,14 +221,14 @@ public class LogManager
     
     public final HashSet<String> getDebuggingPackageFiler()
     {
-        return( debugPackageFilter );
+        return ( debugPackageFilter );
     }
     
     private String getTimeString()
     {
         final long delta = System.currentTimeMillis() - startTime;
         
-        return( LogFormatter.formatTime( delta ) );
+        return ( LogFormatter.formatTime( delta ) );
     }
     
     private static String getMemory()
@@ -237,7 +237,7 @@ public class LogManager
         final long mem = runtime.totalMemory();
         final long free = runtime.freeMemory();
         
-        return( LogFormatter.formatMemory( mem - free ) + "/" + LogFormatter.formatMemory( mem ) );
+        return ( LogFormatter.formatMemory( mem - free ) + "/" + LogFormatter.formatMemory( mem ) );
     }
     
     /**
@@ -284,15 +284,15 @@ public class LogManager
     public final boolean isAnyLogInterfaceRegistered( LogChannel channel, int logLevel )
     {
         if ( logs.size() == 0 )
-            return( false );
+            return ( false );
         
         if ( minRegisteredLogLevel < logLevel )
-            return( false );
+            return ( false );
         
         if ( ( registeredChannels & channel.getID() ) == 0 )
-            return( false );
+            return ( false );
         
-        return( true );
+        return ( true );
     }
     
     private static final String getCallerPackage()
@@ -310,7 +310,7 @@ public class LogManager
         }
         
         if ( ( callerClass == null ) || ( callerClass.length() == 0 ) )
-            return( "" );
+            return ( "" );
         
         final int lastDot = callerClass.lastIndexOf( '.' );
         final String callerPackage;
@@ -319,7 +319,7 @@ public class LogManager
         else
             callerPackage = "";
         
-        return( callerPackage );
+        return ( callerPackage );
     }
     
     private final String composeMessage( String prefix1, String prefix2, Object[] message )
@@ -336,13 +336,13 @@ public class LogManager
         }
         
         if ( ( prefix1 != null ) && ( prefix2 != null ) )
-            return( prefix1 + prefix2 + strBuff.toString() );
+            return ( prefix1 + prefix2 + strBuff.toString() );
         else if ( prefix1 != null )
-            return( prefix1 + strBuff.toString() );
+            return ( prefix1 + strBuff.toString() );
         else if ( prefix2 != null )
-            return( prefix2 + strBuff.toString() );
+            return ( prefix2 + strBuff.toString() );
         else
-            return( strBuff.toString() );
+            return ( strBuff.toString() );
     }
     
     private final synchronized void internalPrint( LogChannel channel, int logLevel, Object[] message, boolean appendNL )
@@ -471,6 +471,6 @@ public class LogManager
         if ( instance == null )
             instance = new LogManager();
         
-        return( instance );
+        return ( instance );
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -77,7 +77,7 @@ public final class Log
      */
     public static final LogManager getLogManager()
     {
-        return( logMgr );
+        return ( logMgr );
     }
     
     /**
@@ -95,7 +95,7 @@ public final class Log
      */
     public static final String getIndentationString()
     {
-        return( logMgr.getIndentationString() );
+        return ( logMgr.getIndentationString() );
     }
     
     /**
@@ -113,7 +113,7 @@ public final class Log
      */
     public static final int getIndentation()
     {
-        return( logMgr.getIndentation() );
+        return ( logMgr.getIndentation() );
     }
     
     /**

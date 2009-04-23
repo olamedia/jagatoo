@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -96,7 +96,7 @@ public class BSPClusterManager implements BSPVisibilityUpdater
     
     public final BitSet getBitSet()
     {
-        return( shapeBitset );
+        return ( shapeBitset );
     }
     
     /**
@@ -127,19 +127,19 @@ public class BSPClusterManager implements BSPVisibilityUpdater
                 index = nodes[ node + 2 ];
         }
         
-        return( leafToCluster[ -( index + 1 ) ] );
+        return ( leafToCluster[ -( index + 1 ) ] );
     }
     
     private final boolean isClusterVisible( int camCluster, int testCluster )
     {
         int i = ( camCluster * bspVisData.bytesPerCluster ) + ( testCluster / 8 );
         
-        return( ( bspVisData.pBitsets[ i ] & ( 1 << ( testCluster & 0x07 ) ) ) != 0 );
+        return ( ( bspVisData.pBitsets[ i ] & ( 1 << ( testCluster & 0x07 ) ) ) != 0 );
         
         /*
         int i = ( camCluster * bspVisData.bytesPerCluster * 8 ) + testCluster;
         
-        return( visData[ i ] );
+        return ( visData[ i ] );
         */
     }
     
@@ -158,7 +158,7 @@ public class BSPClusterManager implements BSPVisibilityUpdater
      */
     public boolean isPVSUsed()
     {
-        return( usePVS );
+        return ( usePVS );
     }
     
     private int lastCluster = -2;
@@ -186,7 +186,7 @@ public class BSPClusterManager implements BSPVisibilityUpdater
             
             Point3f.toPool( camPos );
             
-            return( true );
+            return ( true );
         }
         
         int camCluster = getCluster( camPos );
@@ -194,7 +194,7 @@ public class BSPClusterManager implements BSPVisibilityUpdater
         {
             Point3f.toPool( camPos );
             
-            return( false );
+            return ( false );
         }
         
         lastCluster = camCluster;
@@ -231,7 +231,7 @@ public class BSPClusterManager implements BSPVisibilityUpdater
         
         Point3f.toPool( camPos );
         
-        return( true );
+        return ( true );
     }
     
     /*
@@ -252,7 +252,7 @@ public class BSPClusterManager implements BSPVisibilityUpdater
             }
         }
         
-        return( bitset );
+        return ( bitset );
     }
     */
     
@@ -274,7 +274,7 @@ public class BSPClusterManager implements BSPVisibilityUpdater
             }
         }
         
-        return( decompressed );
+        return ( decompressed );
     }
     */
     
@@ -318,7 +318,7 @@ public class BSPClusterManager implements BSPVisibilityUpdater
             nodes[ j + 2 ] = bspNodes[ i ].back;
         }
         
-        return( nodes );
+        return ( nodes );
     }
     
     /**
@@ -332,7 +332,7 @@ public class BSPClusterManager implements BSPVisibilityUpdater
         {
             //if (Xith3DDefaults.getLocalDebug( BSPLoader.DEBUG ))
             //System.out.println( "no faces, but " + leaf.numOfLeafBrushes + " brushes" );
-            return( new int[] {} );
+            return ( new int[] {} );
         }
         
         int[] leafFaces2 = new int[ leaf.numOfLeafFaces ];
@@ -357,7 +357,7 @@ public class BSPClusterManager implements BSPVisibilityUpdater
         
         clusterLeafs[ leaf.cluster ][ clusterLeafs[ leaf.cluster ].length - 1 ] = leafFaces2;
         
-        return( leafFaces2 );
+        return ( leafFaces2 );
         
         //if (Xith3DDefaults.getLocalDebug( BSPLoader.DEBUG ))
         //System.out.println( "there are " + smap.size() + " unique textures in " + leaf.numOfLeafFaces + " faces" );
@@ -380,7 +380,7 @@ public class BSPClusterManager implements BSPVisibilityUpdater
             planes[ j + 3 ] = bspPlanes[ i ].d;
         }
         
-        return( planes );
+        return ( planes );
     }
     
     /**
@@ -417,6 +417,6 @@ public class BSPClusterManager implements BSPVisibilityUpdater
         JAGTLog.debug( "total leaves = ", prototype.leafs.length );
         JAGTLog.debug( "total faces = ", prototype.geometries[0].length );
         
-        return( new BSPClusterManager( prototype.visData, clusterLeafs, leafToCluster, planes, nodes, faceBitset ) );
+        return ( new BSPClusterManager( prototype.visData, clusterLeafs, leafToCluster, planes, nodes, faceBitset ) );
     }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -64,7 +64,7 @@ public class MouseMovedEvent extends MouseEvent
      */
     public final int getX()
     {
-        return( x );
+        return ( x );
     }
     
     /**
@@ -72,7 +72,7 @@ public class MouseMovedEvent extends MouseEvent
      */
     public final int getY()
     {
-        return( y );
+        return ( y );
     }
     
     /**
@@ -80,7 +80,7 @@ public class MouseMovedEvent extends MouseEvent
      */
     public final int getDX()
     {
-        return( dx );
+        return ( dx );
     }
     
     /**
@@ -88,7 +88,7 @@ public class MouseMovedEvent extends MouseEvent
      */
     public final int getDY()
     {
-        return( dy );
+        return ( dy );
     }
     
     
@@ -98,7 +98,7 @@ public class MouseMovedEvent extends MouseEvent
     @Override
     public String toString()
     {
-        return( "MouseMovedEvent( pos = (" + getX() + ", " + getY() + "), " +
+        return ( "MouseMovedEvent( pos = (" + getX() + ", " + getY() + "), " +
                 "delta = (" + getDX() + ", " + getDY() + "), " +
                 "buttonsState = " + getMouse().getButtonsState() + ", " +
                 "when = " + getWhen() +
@@ -125,6 +125,11 @@ public class MouseMovedEvent extends MouseEvent
     protected MouseMovedEvent( Mouse mouse, int x, int y, int dx, int dy, long when, long lastWhen )
     {
         super( mouse, SubType.MOVED, null, when, lastWhen );
+        
+        this.x = x;
+        this.y = y;
+        this.dx = dx;
+        this.dy = dy;
     }
     
     /**

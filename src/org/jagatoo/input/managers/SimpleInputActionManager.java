@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -66,7 +66,7 @@ public class SimpleInputActionManager implements InputStateListener
             instance = new SimpleInputActionManager();
         }
         
-        return( instance );
+        return ( instance );
     }
     
     public void addActionListener( SimpleInputActionListener l )
@@ -84,16 +84,16 @@ public class SimpleInputActionManager implements InputStateListener
     
     public final int getNumBoundActions()
     {
-        return( actionMap.size() );
+        return ( actionMap.size() );
     }
     
     public void bindAction( DeviceComponent comp, Object action )
     {
         if ( comp == null )
-            throw( new IllegalArgumentException( "comp must not be null" ) );
+            throw new IllegalArgumentException( "comp must not be null" );
         
         if ( action == null )
-            throw( new IllegalArgumentException( "action must not be null" ) );
+            throw new IllegalArgumentException( "action must not be null" );
         
         actionMap.put( comp, action );
         
@@ -109,7 +109,7 @@ public class SimpleInputActionManager implements InputStateListener
     public void unbindAction( DeviceComponent comp )
     {
         if ( comp == null )
-            throw( new IllegalArgumentException( "comp must not be null" ) );
+            throw new IllegalArgumentException( "comp must not be null" );
         
         actionMap.remove( comp );
         
@@ -125,7 +125,7 @@ public class SimpleInputActionManager implements InputStateListener
     public void unbindAction( Object action )
     {
         if ( action == null )
-            throw( new IllegalArgumentException( "action must not be null" ) );
+            throw new IllegalArgumentException( "action must not be null" );
         
         DeviceComponent mappedComp = null;
         
@@ -148,7 +148,7 @@ public class SimpleInputActionManager implements InputStateListener
     
     public final Object getBoundAction( DeviceComponent comp )
     {
-        return( actionMap.get( comp ) );
+        return ( actionMap.get( comp ) );
     }
     
     protected void notifyListeners( Object action, int delta, int state )
@@ -172,7 +172,7 @@ public class SimpleInputActionManager implements InputStateListener
         {
             notifyListeners( action, delta, state );
             
-            return( true );
+            return ( true );
         }
         
         if ( delta > 0 )
@@ -186,7 +186,7 @@ public class SimpleInputActionManager implements InputStateListener
             {
                 notifyListeners( action, 1, 1 );
                 
-                return( true );
+                return ( true );
             }
         }
         else
@@ -200,11 +200,11 @@ public class SimpleInputActionManager implements InputStateListener
             {
                 notifyListeners( action, 1, 1 );
                 
-                return( true );
+                return ( true );
             }
         }
         
-        return( false );
+        return ( false );
     }
     
     public void onInputStateChanged( InputEvent e, DeviceComponent comp, int delta, int state )

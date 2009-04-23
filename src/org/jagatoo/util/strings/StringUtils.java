@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,7 +46,7 @@ public final class StringUtils
     public static final boolean isNumeric( String str )
     {
         if ( ( str == null ) || ( str.length() == 0 ) )
-            return( false );
+            return ( false );
         
         for ( int i = 0; i < str.length(); i++ )
         {
@@ -55,11 +55,11 @@ public final class StringUtils
             if ( ( !Character.isDigit( ch ) ) && ( ch != '.' ) )
             {
                 if ( ( i > 0 ) && ( ch != '-' ) && ( ch != '+' ) )
-                    return( false );
+                    return ( false );
             }
         }
         
-        return( true );
+        return ( true );
     }
     
     /**
@@ -72,9 +72,9 @@ public final class StringUtils
     public static final boolean isBoolean( String str )
     {
         if ( ( str == null ) || ( str.length() == 0 ) )
-            return( false );
+            return ( false );
         
-        return( str.equalsIgnoreCase( "true" ) || str.equalsIgnoreCase( "false" ) );
+        return ( str.equalsIgnoreCase( "true" ) || str.equalsIgnoreCase( "false" ) );
     }
     
     public static final String unquoteString( String s )
@@ -83,21 +83,18 @@ public final class StringUtils
         {
             if ( s.charAt( s.length() - 1 ) == '\"' )
             {
-                return( s.substring( 1, s.length() - 1 ) );
+                return ( s.substring( 1, s.length() - 1 ) );
             }
-            else
-            {
-                return( s.substring( 1, s.length() - 0 ) );
-            }
+            
+            return ( s.substring( 1, s.length() - 0 ) );
         }
-        else if ( s.charAt( s.length() - 1 ) == '\"' )
+        
+        if ( s.charAt( s.length() - 1 ) == '\"' )
         {
-            return( s.substring( 1, s.length() - 1 ) );
+            return ( s.substring( 1, s.length() - 1 ) );
         }
-        else
-        {
-            return( s );
-        }
+        
+        return ( s );
     }
     
     private StringUtils()

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -131,7 +131,7 @@ public class BSPConverter
     {
         if ( geometry == null )
         {
-            return( null );
+            return ( null );
         }
         
         final String appKey;
@@ -198,7 +198,7 @@ public class BSPConverter
             appCache.put( appKey, app );
         }
         
-        return( nodeFactory.createShape( "Shape" + faceIndex, geometry, app, boundsType ) );
+        return ( nodeFactory.createShape( "Shape" + faceIndex, geometry, app, boundsType ) );
     }
     
     private static Object[] convertFacesToShapes( int sourceBSPVersion, BSPModel[] models, BSPFace[] faces, NamedObject[][] geometries, AbstractTexture[][] baseTextures, AbstractTexture[] lightMaps, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, float worldScale, SpecialItemsHandler siHandler )
@@ -314,7 +314,7 @@ public class BSPConverter
             }
         }
         
-        return( new Object[] { bspTreeGroup, faceBitset } );
+        return ( new Object[] { bspTreeGroup, faceBitset } );
     }
     
     /*
@@ -356,7 +356,7 @@ public class BSPConverter
         trans.m13( entLoc.origin.getZ() * worldScale );
         trans.m23( -entLoc.origin.getY() * worldScale );
         
-        return( trans );
+        return ( trans );
     }
     
     private static void convertEntities( BSPEntity[] entities, float worldScale, URL baseURL, SpecialItemsHandler siHandler, NodeFactory nodeFactory, NamedObject sceneGroup )

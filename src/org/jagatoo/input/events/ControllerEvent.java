@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -56,7 +56,7 @@ public abstract class ControllerEvent extends InputEvent
     
     public final SubType getSubType()
     {
-        return( subType );
+        return ( subType );
     }
     
     /**
@@ -64,7 +64,7 @@ public abstract class ControllerEvent extends InputEvent
      */
     public final Controller getController()
     {
-        return( controller );
+        return ( controller );
     }
     
     /**
@@ -90,7 +90,7 @@ public abstract class ControllerEvent extends InputEvent
     protected void set( ControllerEvent e )
     {
         if ( e.getType() != this.getType() )
-            throw( new IllegalArgumentException( "mismatching types" ) );
+            throw new IllegalArgumentException( "mismatching types" );
         
         super.set( e.getComponent(), e.getWhen(), e.getLastWhen() );
         

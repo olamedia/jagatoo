@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,7 +45,7 @@ public abstract class MouseButtonEvent extends MouseEvent
      */
     public final int getX()
     {
-        return( getMouse().getCurrentX() );
+        return ( getMouse().getCurrentX() );
     }
     
     /**
@@ -53,7 +53,7 @@ public abstract class MouseButtonEvent extends MouseEvent
      */
     public final int getY()
     {
-        return( getMouse().getCurrentY() );
+        return ( getMouse().getCurrentY() );
     }
     
     
@@ -62,17 +62,17 @@ public abstract class MouseButtonEvent extends MouseEvent
      */
     public final MouseButton getButton()
     {
-        return( (MouseButton)getComponent() );
+        return ( (MouseButton)getComponent() );
     }
     
     public final InputState getButtonState()
     {
-        return( getMouse().getButtonState( getButton() ) );
+        return ( getMouse().getButtonState( getButton() ) );
     }
     
     public final boolean getButtonBooleanState()
     {
-        return( getMouse().isButtonPressed( getButton() ) );
+        return ( getMouse().isButtonPressed( getButton() ) );
     }
     
     /**
@@ -81,7 +81,7 @@ public abstract class MouseButtonEvent extends MouseEvent
     @Override
     public String toString()
     {
-        return( "MouseButtonEvent( pos = (" + getX() + ", " + getY() + "), " +
+        return ( "MouseButtonEvent( pos = (" + getX() + ", " + getY() + "), " +
                 "button = " + getButton() + ", " +
                 "buttonsState = " + getMouse().getButtonsState() + ", " +
                 "when = " + getWhen() + ", " +

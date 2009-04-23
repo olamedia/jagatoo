@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -97,7 +97,7 @@ public abstract class TextureFactory
             dataSize = width * height * pixelSize;
         }
         
-        return( createTextureImageImpl( width, height, orgWidth, orgHeight, pixelSize, dataSize, internalFormat, format ) );
+        return ( createTextureImageImpl( width, height, orgWidth, orgHeight, pixelSize, dataSize, internalFormat, format ) );
     }
     
     /**
@@ -116,7 +116,7 @@ public abstract class TextureFactory
      */
     public final AbstractTextureImage createTextureImage( int width, int height, int orgWidth, int orgHeight, int pixelSize, TextureImageInternalFormat internalFormat, TextureImageFormat format )
     {
-        return( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, -1, internalFormat, format ) );
+        return ( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, -1, internalFormat, format ) );
     }
     
     /**
@@ -134,7 +134,7 @@ public abstract class TextureFactory
      */
     public final AbstractTextureImage createTextureImage( int width, int height, int orgWidth, int orgHeight, int pixelSize, TextureImageFormat format )
     {
-        return( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, TextureImageInternalFormat.getFallbackInternalFormat( format ), format ) );
+        return ( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, TextureImageInternalFormat.getFallbackInternalFormat( format ), format ) );
     }
     
     /**
@@ -154,7 +154,7 @@ public abstract class TextureFactory
     {
         TextureImageFormat format = withAlphaChannel ? TextureImageFormat.RGBA : TextureImageFormat.RGB;
         
-        return( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, TextureImageInternalFormat.getFallbackInternalFormat( format ), format ) );
+        return ( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, TextureImageInternalFormat.getFallbackInternalFormat( format ), format ) );
     }
     
     /**
@@ -193,7 +193,7 @@ public abstract class TextureFactory
                 throw new Error( "Unsupported pixel-size: " + pixelSize );
         }
         
-        return( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, format ) );
+        return ( createTextureImage( width, height, orgWidth, orgHeight, pixelSize, format ) );
     }
     
     /**
@@ -216,7 +216,7 @@ public abstract class TextureFactory
      */
     public final AbstractTexture createTexture( TextureType type, TextureFormat format )
     {
-        return( createTextureImpl( type, format ) );
+        return ( createTextureImpl( type, format ) );
     }
     
     /**
@@ -228,7 +228,7 @@ public abstract class TextureFactory
      */
     public final AbstractTexture createTexture( TextureFormat format )
     {
-        return( createTexture( TextureType.TEXTURE_2D, format ) );
+        return ( createTexture( TextureType.TEXTURE_2D, format ) );
     }
     
     /**
@@ -240,7 +240,7 @@ public abstract class TextureFactory
      */
     public final AbstractTexture createTexture( TextureImageFormat imageFormat )
     {
-        return( createTexture( TextureType.TEXTURE_2D, TextureFormat.getFormat( imageFormat ) ) );
+        return ( createTexture( TextureType.TEXTURE_2D, TextureFormat.getFormat( imageFormat ) ) );
     }
     
     /**
@@ -254,6 +254,6 @@ public abstract class TextureFactory
      */
     public final AbstractTexture createTexture( boolean withAlphaChannel )
     {
-        return( createTexture( TextureType.TEXTURE_2D, withAlphaChannel ? TextureFormat.RGBA : TextureFormat.RGB ) );
+        return ( createTexture( TextureType.TEXTURE_2D, withAlphaChannel ? TextureFormat.RGBA : TextureFormat.RGB ) );
     }
 }

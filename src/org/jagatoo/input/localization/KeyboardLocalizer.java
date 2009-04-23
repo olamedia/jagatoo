@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -84,7 +84,7 @@ public class KeyboardLocalizer
         else
             KeyboardLocalizer.mapping = mapping;
         
-        return( KeyboardLocalizer.mapping );
+        return ( KeyboardLocalizer.mapping );
     }
     
     /**
@@ -95,7 +95,7 @@ public class KeyboardLocalizer
     public static void setMapping( Mapping mapping )
     {
         if ( mapping == null )
-            throw( new IllegalArgumentException( "mapping must not be null" ) );
+            throw new IllegalArgumentException( "mapping must not be null" );
         
         KeyboardLocalizer.mapping = mapping;
     }
@@ -111,7 +111,7 @@ public class KeyboardLocalizer
         if ( mapping == null )
             autoselectMapping();
         
-        return( mapping );
+        return ( mapping );
     }
     
     /**
@@ -122,8 +122,8 @@ public class KeyboardLocalizer
         Mapping mapping = getMapping();
         
         if ( mapping == null )
-            return( "[NO MAPPING]" );
+            return ( "[NO MAPPING]" );
         
-        return( mapping.getClass().getName() );
+        return ( mapping.getClass().getName() );
     }
 }

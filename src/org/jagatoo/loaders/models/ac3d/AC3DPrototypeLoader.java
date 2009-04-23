@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -125,7 +125,7 @@ public class AC3DPrototypeLoader
         
         //System.out.println( "Found AC3D file of format version " + formatVersion );
         
-        return( formatVersion );
+        return ( formatVersion );
     }
     
     /**
@@ -184,7 +184,7 @@ public class AC3DPrototypeLoader
         tokenizer.nextToken();// trans
         translucency = Float.parseFloat( tokenizer.nextToken() );
         
-        return( new Object[] { material, translucency } );
+        return ( new Object[] { material, translucency } );
     }
     
     /**
@@ -263,7 +263,7 @@ public class AC3DPrototypeLoader
             textCoords[ i * 2 + 1 ] = t;
         }
         
-        return( new AC3DSurface( type, twoSided, shaded, material, surfVerts, ( hasTexCoords ? textCoords : null ) ) );
+        return ( new AC3DSurface( type, twoSided, shaded, material, surfVerts, ( hasTexCoords ? textCoords : null ) ) );
     }
     
     private static NamedObject texAttribs = null;
@@ -297,7 +297,7 @@ public class AC3DPrototypeLoader
         NamedObject appearance = appCache.appearanceCache.get( appCacheKey );
         if ( appearance != null )
         {
-            return( appearance );
+            return ( appearance );
         }
         
         appearance = appFactory.createAppearance( "", 0 );
@@ -393,7 +393,7 @@ public class AC3DPrototypeLoader
         
         appCache.appearanceCache.put( appCacheKey, appearance );
         
-        return( appearance );
+        return ( appearance );
     }
     
     private static void transformVertexCoords( float[] vcs, Matrix4f t )

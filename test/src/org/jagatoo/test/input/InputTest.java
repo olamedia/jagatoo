@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -119,7 +119,7 @@ public class InputTest implements InputListener, InputHotPlugListener
     
     private static final boolean isDebugFlagSet( int flag )
     {
-        return( ( debugMask & flag ) != 0 );
+        return ( ( debugMask & flag ) != 0 );
     }
     
     public void onKeyPressed( KeyPressedEvent e, Key key )
@@ -212,7 +212,7 @@ public class InputTest implements InputListener, InputHotPlugListener
      */
     public long getMouseStopDelay()
     {
-        return( 500000000L );
+        return ( 500000000L );
     }
     
     public void onMouseStopped( MouseStoppedEvent e, int x, int y )
@@ -270,17 +270,17 @@ public class InputTest implements InputListener, InputHotPlugListener
     {
         public final int ordinal()
         {
-            return( MyInputBinding.values().length );
+            return ( MyInputBinding.values().length );
         }
         
         public String invokeAction( InputDevice device, DeviceComponent comp, int delta, int state, long nanoTime )
         {
             if ( !isDebugFlagSet( DEBUG_MASK_TEST_ACTION ) )
-                return( null );
+                return ( null );
             
             System.out.println( "TestAction: " + delta + ", " + state );
             
-            return( "ok" );
+            return ( "ok" );
         }
     }
     
@@ -298,7 +298,7 @@ public class InputTest implements InputListener, InputHotPlugListener
             if ( isDebugFlagSet( DEBUG_MASK_MYACTION ) )
                 System.out.println( "Invoked action: " + this );
             
-            return( "ok" );
+            return ( "ok" );
         }
     }
     
@@ -472,7 +472,7 @@ public class InputTest implements InputListener, InputHotPlugListener
         
         public Object getDrawable()
         {
-            return( null );
+            return ( null );
         }
         
         public InputDeviceFactory getInputDeviceFactory( InputSystem inputSystem )
@@ -483,22 +483,22 @@ public class InputTest implements InputListener, InputHotPlugListener
                 deviceFactory = new org.jagatoo.input.impl.mixed.LWJGLJInputInputDeviceFactory( this, inputSystem.getEventQueue() );
             }
             
-            return( deviceFactory );
+            return ( deviceFactory );
         }
         
         public boolean receivesInputEvents()
         {
-            return( true );
+            return ( true );
         }
         
         public int getWidth()
         {
-            return( org.lwjgl.opengl.Display.getDisplayMode().getWidth() );
+            return ( org.lwjgl.opengl.Display.getDisplayMode().getWidth() );
         }
         
         public int getHeight()
         {
-            return( org.lwjgl.opengl.Display.getDisplayMode().getHeight() );
+            return ( org.lwjgl.opengl.Display.getDisplayMode().getHeight() );
         }
         
         public void setCursor( Cursor cursor )
@@ -512,7 +512,7 @@ public class InputTest implements InputListener, InputHotPlugListener
         
         public Cursor getCursor()
         {
-            return( cursor );
+            return ( cursor );
         }
     };
     
@@ -525,7 +525,7 @@ public class InputTest implements InputListener, InputHotPlugListener
         
         public java.awt.Component getDrawable()
         {
-            return( component );
+            return ( component );
         }
         
         public InputDeviceFactory getInputDeviceFactory( InputSystem inputSystem )
@@ -536,22 +536,22 @@ public class InputTest implements InputListener, InputHotPlugListener
                 deviceFactory = new org.jagatoo.input.impl.mixed.AWTJInputInputDeviceFactory( this, inputSystem.getEventQueue() );
             }
             
-            return( deviceFactory );
+            return ( deviceFactory );
         }
         
         public boolean receivesInputEvents()
         {
-            return( true );
+            return ( true );
         }
         
         public int getWidth()
         {
-            return( component.getWidth() );
+            return ( component.getWidth() );
         }
         
         public int getHeight()
         {
-            return( component.getHeight() );
+            return ( component.getHeight() );
         }
         
         public void setCursor( Cursor cursor )
@@ -565,7 +565,7 @@ public class InputTest implements InputListener, InputHotPlugListener
         
         public Cursor getCursor()
         {
-            return( cursor );
+            return ( cursor );
         }
         
         public AWTSourceWindow( java.awt.Component component )

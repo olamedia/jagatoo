@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,7 +49,7 @@ public class GeomNioIntData extends GeomNioData
      */
     public final IntBuffer getBuffer()
     {
-        return( buffer );
+        return ( buffer );
     }
     
     /**
@@ -64,7 +64,7 @@ public class GeomNioIntData extends GeomNioData
         buffer.rewind();
         buffer.get( f );
         
-        return( f );
+        return ( f );
     }
     
     @Override
@@ -162,7 +162,7 @@ public class GeomNioIntData extends GeomNioData
             this.buffer.rewind();
         }
         
-        return( data );
+        return ( data );
     }
     
     public GeomNioIntData( int maxElems, int elemSize, int stride, boolean reversed )

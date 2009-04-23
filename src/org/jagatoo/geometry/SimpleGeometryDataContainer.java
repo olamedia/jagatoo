@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -220,7 +220,7 @@ public class SimpleGeometryDataContainer implements VertexContainer
      */
     public final int getValidVertexCount()
     {
-        return( numVertices );
+        return ( numVertices );
     }
     
     /**
@@ -228,9 +228,17 @@ public class SimpleGeometryDataContainer implements VertexContainer
      */
     public final int getMaxVertexCount()
     {
-        return( maxVertices );
+        return ( maxVertices );
     }
     
+    /**
+     * @param maxElements
+     * @param elemSize
+     * @param stride
+     * @param reversed
+     * 
+     * @return a new instance
+     */
     protected GeomNioFloatData newNioFloatData( int maxElements, int elemSize, int stride, boolean reversed )
     {
         return ( new GeomNioFloatData( maxElements, elemSize, reversed ) );
@@ -244,7 +252,7 @@ public class SimpleGeometryDataContainer implements VertexContainer
     protected final void checkCoordsExistence( int coordsSize )
     {
         if ( coordsSize != this.coordsSize )
-            throw( new IllegalArgumentException( "given coordinate has wrong size. Found " + coordsSize + ", expected " + this.coordsSize + "." ) );
+            throw new IllegalArgumentException( "given coordinate has wrong size. Found " + coordsSize + ", expected " + this.coordsSize + "." );
         
         if ( !isInterleaved && ( coords == null ) )
         {
@@ -325,7 +333,7 @@ public class SimpleGeometryDataContainer implements VertexContainer
         
         if ( floatArray.length % coordsSize != 0 )
         {
-            throw( new IllegalArgumentException( "the size of the coordinate array must be a multiple of 3" ) );
+            throw new IllegalArgumentException( "the size of the coordinate array must be a multiple of 3" );
         }
         coords.set( vertexIndex, coordsSize, coordsOffset / 4L, floatArray );
     }
@@ -520,7 +528,7 @@ public class SimpleGeometryDataContainer implements VertexContainer
      */
     public final int getIndex( int i )
     {
-        return( indexData.get( i ) );
+        return ( indexData.get( i ) );
     }
     
     /**
@@ -528,7 +536,7 @@ public class SimpleGeometryDataContainer implements VertexContainer
      */
     public final GeomNioIntData getIndexData()
     {
-        return( indexData );
+        return ( indexData );
     }
     
     /**
@@ -536,7 +544,7 @@ public class SimpleGeometryDataContainer implements VertexContainer
      */
     public final int getNumStrips()
     {
-        return( this.stripCounts.length );
+        return ( this.stripCounts.length );
     }
     
     /**
@@ -554,7 +562,7 @@ public class SimpleGeometryDataContainer implements VertexContainer
      */
     public final int[] getStripCounts()
     {
-        return( stripCounts );
+        return ( stripCounts );
     }
     
     /**
@@ -587,6 +595,12 @@ public class SimpleGeometryDataContainer implements VertexContainer
         this.coords = newNioFloatData( maxVertices, 3, 0, reversed );
     }
     
+    /**
+     * Copies details from the given container.
+     * 
+     * @param o
+     * @param forceDuplicate
+     */
     protected void copyFrom( SimpleGeometryDataContainer o, boolean forceDuplicate )
     {
         //this.maxVertices = o.maxVertices;

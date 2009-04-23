@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -55,7 +55,7 @@ public class MouseWheel extends AnalogDeviceComponent
          */
         public final MouseWheel getWheel()
         {
-            return( wheel );
+            return ( wheel );
         }
         
         /**
@@ -63,7 +63,7 @@ public class MouseWheel extends AnalogDeviceComponent
          */
         public final int getIntValue()
         {
-            return( intValue );
+            return ( intValue );
         }
         
         protected WheelUpDownComponent( Type type, String name, MouseWheel wheel, int intValue )
@@ -88,7 +88,7 @@ public class MouseWheel extends AnalogDeviceComponent
      */
     public final Mouse getMouse()
     {
-        return( mouse );
+        return ( mouse );
     }
     
     /**
@@ -97,7 +97,7 @@ public class MouseWheel extends AnalogDeviceComponent
      */
     public final WheelUpDownComponent getUp()
     {
-        return( up );
+        return ( up );
     }
     
     /**
@@ -106,7 +106,7 @@ public class MouseWheel extends AnalogDeviceComponent
      */
     public final WheelUpDownComponent getDown()
     {
-        return( down );
+        return ( down );
     }
     
     /**

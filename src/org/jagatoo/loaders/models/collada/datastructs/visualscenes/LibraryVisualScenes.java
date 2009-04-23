@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,7 +51,7 @@ public class LibraryVisualScenes
      */
     public final HashMap<String, Scene> getScenes()
     {
-        return( scenes );
+        return ( scenes );
     }
     
     /**
@@ -59,7 +59,7 @@ public class LibraryVisualScenes
      */
     public final HashMap<String, Skeleton> getSkeletons()
     {
-        return( skeletons );
+        return ( skeletons );
     }
     
     /**

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -93,7 +93,7 @@ public abstract class Mouse extends InputDevice
      */
     public final MouseFactory getSourceFactory()
     {
-        return( sourceFactory );
+        return ( sourceFactory );
     }
     
     /**
@@ -129,9 +129,9 @@ public abstract class Mouse extends InputDevice
     public final boolean isMouseStopManagerRunning()
     {
         if ( stopManager == null )
-            return( false );
+            return ( false );
         
-        return( stopManager.isSearching() );
+        return ( stopManager.isSearching() );
     }
     
     protected final void notifyMouseStopManager( long nanoTime )
@@ -147,7 +147,7 @@ public abstract class Mouse extends InputDevice
      */
     public final MouseAxis getXAxis()
     {
-        return( xAxis );
+        return ( xAxis );
     }
     
     /**
@@ -155,7 +155,7 @@ public abstract class Mouse extends InputDevice
      */
     public final MouseAxis getYAxis()
     {
-        return( yAxis );
+        return ( yAxis );
     }
     
     /**
@@ -195,7 +195,7 @@ public abstract class Mouse extends InputDevice
      */
     public final int getCurrentX()
     {
-        return( xAxis.getIntValue() );
+        return ( xAxis.getIntValue() );
     }
     
     /**
@@ -203,7 +203,7 @@ public abstract class Mouse extends InputDevice
      */
     public final int getCurrentY()
     {
-        return( yAxis.getIntValue() );
+        return ( yAxis.getIntValue() );
     }
     
     /**
@@ -211,7 +211,7 @@ public abstract class Mouse extends InputDevice
      */
     public final int getButtonsCount()
     {
-        return( buttons.length );
+        return ( buttons.length );
     }
     
     /**
@@ -219,7 +219,7 @@ public abstract class Mouse extends InputDevice
      */
     public final MouseButton getButton( int index )
     {
-        return( buttons[ index ] );
+        return ( buttons[ index ] );
     }
     
     /**
@@ -277,7 +277,7 @@ public abstract class Mouse extends InputDevice
      */
     public final int getButtonsState()
     {
-        return( buttonState );
+        return ( buttonState );
     }
     
     /**
@@ -285,7 +285,7 @@ public abstract class Mouse extends InputDevice
      */
     public final MouseWheel getWheel()
     {
-        return( wheel );
+        return ( wheel );
     }
     
     /**
@@ -295,7 +295,7 @@ public abstract class Mouse extends InputDevice
      */
     public final boolean isButtonPressed( MouseButton button )
     {
-        return( ( buttonState & button.getMaskValue() ) != 0 );
+        return ( ( buttonState & button.getMaskValue() ) != 0 );
     }
     
     /**
@@ -306,9 +306,9 @@ public abstract class Mouse extends InputDevice
     public final InputState getButtonState( MouseButton button )
     {
         if ( isButtonPressed( button ) )
-            return( InputState.POSITIVE );
-        else
-            return( InputState.NEGATIVE );
+            return ( InputState.POSITIVE );
+        
+        return ( InputState.NEGATIVE );
     }
     
     /**
@@ -321,7 +321,7 @@ public abstract class Mouse extends InputDevice
         {
             boolean state = isButtonPressed( (MouseButton)component );
             
-            return( state ? 1 : 0 );
+            return ( state ? 1 : 0 );
         }
         
         if ( component instanceof MouseWheel )
@@ -329,16 +329,16 @@ public abstract class Mouse extends InputDevice
             if ( ( component != MouseWheel.GLOBAL_WHEEL ) && ( component != getWheel() ) )
                 throw new InputSystemRuntimeException( "The given MouseWheel is not part of this Mouse." );
             
-            return( getWheel().getIntValue() );
+            return ( getWheel().getIntValue() );
         }
         
         if ( component instanceof MouseAxis )
         {
             if ( component == getXAxis() )
-                return( getCurrentX() );
+                return ( getCurrentX() );
             
             if ( component == getYAxis() )
-                return( getCurrentY() );
+                return ( getCurrentY() );
             
             throw new InputSystemRuntimeException( "The given MouseAxis is not part of this Mouse." );
         }
@@ -397,7 +397,7 @@ public abstract class Mouse extends InputDevice
      */
     public final boolean hasMouseListener()
     {
-        return( stopListeners.size() > 0 );
+        return ( stopListeners.size() > 0 );
     }
     
     /**
@@ -405,7 +405,7 @@ public abstract class Mouse extends InputDevice
      */
     public final boolean hasListener()
     {
-        return( hasInputStateListener() || hasMouseListener() );
+        return ( hasInputStateListener() || hasMouseListener() );
     }
     
     /**
@@ -461,13 +461,13 @@ public abstract class Mouse extends InputDevice
         addButtonsState( button );
         
         if ( !isEnabled() || !hasListener() )
-            return( null );
+            return ( null );
         
         MouseButtonPressedEvent e = MouseEventPool.allocPressed( this, button, when, lastWhen_buttonPressed );
         
         lastWhen_buttonPressed = when;
         
-        return( e );
+        return ( e );
     }
     
     /**
@@ -513,7 +513,7 @@ public abstract class Mouse extends InputDevice
         removeButtonsState( button );
         
         if ( !isEnabled() || !hasListener() )
-            return( null );
+            return ( null );
         
         MouseButtonReleasedEvent e = MouseEventPool.allocReleased( this, button, when, lastWhen_buttonReleased );
         
@@ -528,7 +528,7 @@ public abstract class Mouse extends InputDevice
         
         lastWhen_buttonReleased = when;
         
-        return( e );
+        return ( e );
     }
     
     /**
@@ -620,18 +620,18 @@ public abstract class Mouse extends InputDevice
     protected final MouseMovedEvent prepareMouseMovedEvent( int x, int y, int dx, int dy, long when )
     {
         if ( !isEnabled() || !hasListener() )
-            return( null );
+            return ( null );
         
         notifyMouseStopManager( when );
         
         if ( numListeners == 0 )
-            return( null );
+            return ( null );
         
         MouseMovedEvent e = MouseEventPool.allocMoved( this, x, y, dx, dy, when, lastWhen_moved );
         
         lastWhen_moved = when;
         
-        return( e );
+        return ( e );
     }
     
     /**
@@ -686,18 +686,18 @@ public abstract class Mouse extends InputDevice
         final MouseWheel wheel = getWheel();
         
         if ( wheel == null )
-            return( null );
+            return ( null );
         
         wheel.addValue( wheelDelta );
         
         if ( !isEnabled() || !hasListener() )
-            return( null );
+            return ( null );
         
         MouseWheelEvent e = MouseEventPool.allocWheel( this, wheel, wheelDelta, isPageMove, when, lastWhen_wheelMoved );
         
         lastWhen_wheelMoved = when;
         
-        return( e );
+        return ( e );
     }
     
     /**
@@ -809,7 +809,7 @@ public abstract class Mouse extends InputDevice
      */
     public final boolean isAbsolute()
     {
-        return( isAbsolute );
+        return ( isAbsolute );
     }
     
     /**
@@ -818,7 +818,7 @@ public abstract class Mouse extends InputDevice
     @Override
     public String toString()
     {
-        return( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", numButtons = " + getButtonsCount() + ", hasWheel = " + ( getWheel() != null ) + " }" );
+        return ( this.getClass().getSimpleName() + " { name = \"" + getName() + "\", numButtons = " + getButtonsCount() + ", hasWheel = " + ( getWheel() != null ) + " }" );
     }
     
     /**

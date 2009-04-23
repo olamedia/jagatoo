@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,11 +49,9 @@ public class BinaryUtils {
 				break;
 			}
 		}
-		if( len == 0 ) {
+		if( len == 0 )
 			return null;
-		} else {
-			return new String(array, 0, len);
-		}
+		return new String(array, 0, len);
 	}
 
 	public static int[] readIntArray(LittleEndianDataInputStream in, int length)

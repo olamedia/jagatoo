@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,7 +49,7 @@ public class SkeletonIterator implements Iterator<Bone>
 	 */
 	public boolean hasNext()
 	{
-		return( ( currentIndex + 1 ) < bones.size() );
+		return ( ( currentIndex + 1 ) < bones.size() );
 	}
 	
     /**
@@ -57,7 +57,7 @@ public class SkeletonIterator implements Iterator<Bone>
      */
 	public Bone next()
 	{
-		return( bones.get( ++currentIndex ) );
+		return ( bones.get( ++currentIndex ) );
 	}
 	
     /**
@@ -65,7 +65,7 @@ public class SkeletonIterator implements Iterator<Bone>
      */
 	public void remove()
 	{
-		throw( new UnsupportedOperationException( "Can not remove a bone" ) );
+		throw new UnsupportedOperationException( "Can not remove a bone" );
 	}
     
     /**

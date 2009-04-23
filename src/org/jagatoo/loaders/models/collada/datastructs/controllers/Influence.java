@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,19 +46,19 @@ public class Influence
     
 	public final Matrix4f getMatrix()
 	{
-	    return( matrix );
+	    return ( matrix );
 	}
     
     /*
     public final Quaternion4f getQuaternion()
     {
-        return( quat );
+        return ( quat );
     }
     */
 	
 	public final float getWeight()
 	{
-	    return( weight );
+	    return ( weight );
 	}
 	
     public Influence( Matrix4f matrix, float weight )

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -201,7 +201,7 @@ public class AseConverter
                 geomFactory.setTexCoords( geom, GEOM_TYPE, 0, 2, 0, texcoords, 0, nFaces * 3 );
             }
             
-            return( geom );
+            return ( geom );
         }
         catch ( Exception e )
         {
@@ -224,7 +224,7 @@ public class AseConverter
             
             if ( app != null )
             {
-                return( app );
+                return ( app );
             }
         }
         
@@ -337,7 +337,7 @@ public class AseConverter
             appearanceCache.put( app.getName(), app );
         }
         
-        return( app );
+        return ( app );
     }
     
     /**
@@ -376,25 +376,23 @@ public class AseConverter
                 }
             }
             
-            return( group );
+            return ( group );
         }
-        else
+        
+        try
         {
-            try
-            {
-                NamedObject app = getAppearance( aseGeom, m, appFactory, baseURL );
-                NamedObject geom = getTriangleArray( aseGeom.mesh, -1, m.diffuseMap, geomOffset, geomFactory );
-                
-                NamedObject shape = nodeFactory.createShape( "", geom, app, BoundsType.SPHERE );
-                
-                return( shape );
-            }
-            catch ( Throwable t )
-            {
-                t.printStackTrace();
-                
-                return( nodeFactory.createDummyNode() );
-            }
+            NamedObject app = getAppearance( aseGeom, m, appFactory, baseURL );
+            NamedObject geom = getTriangleArray( aseGeom.mesh, -1, m.diffuseMap, geomOffset, geomFactory );
+            
+            NamedObject shape = nodeFactory.createShape( "", geom, app, BoundsType.SPHERE );
+            
+            return ( shape );
+        }
+        catch ( Throwable t )
+        {
+            t.printStackTrace();
+            
+            return ( nodeFactory.createDummyNode() );
         }
     }
     
@@ -415,7 +413,7 @@ public class AseConverter
         
         NamedObject shape = nodeFactory.createShape( geom.getName(), geom, app, BoundsType.SPHERE );
         
-        return( shape );
+        return ( shape );
     }
     */
     
@@ -442,7 +440,7 @@ public class AseConverter
                                            0f, 0f, 0f, 1f
                                          );
         
-        return( transform );
+        return ( transform );
     }
     */
     
@@ -501,7 +499,7 @@ public class AseConverter
             
             //applyPivotTranslation( aseGroup, tg, pivotOffset );
             
-            return( tg );
+            return ( tg );
         }
         else
         {
@@ -514,7 +512,7 @@ public class AseConverter
             // Applies translation using the passed pivot offset (ie. parent pivot point).
             //applyPivotTranslation( aseGeom, tg, pivotOffset );
             
-            return( tg );
+            return ( tg );
         }
     }
     */
@@ -574,7 +572,7 @@ public class AseConverter
     {
         if ( TGT_GROUPS_ONLY && TGT_NO_GROUPS )
         {
-            throw( new IllegalArgumentException( "Can't use both AseFile.TGT_GROUPS_ONLY and AseFile.TGT_NOGROUPS together.  Perhaps you want the AseFile.getModel() method" ) );
+            throw new IllegalArgumentException( "Can't use both AseFile.TGT_GROUPS_ONLY and AseFile.TGT_NOGROUPS together.  Perhaps you want the AseFile.getModel() method" );
         }
         
         // Geometry Transform
@@ -689,7 +687,7 @@ public class AseConverter
     {
         if ( TGT_GROUPS_ONLY && TGT_NO_GROUPS )
         {
-            throw( new IllegalArgumentException( "Can't use both AseFile.TGT_GROUPS_ONLY and AseFile.TGT_NOGROUPS together.  Perhaps you want the AseFile.getModel() method" ) );
+            throw new IllegalArgumentException( "Can't use both AseFile.TGT_GROUPS_ONLY and AseFile.TGT_NOGROUPS together.  Perhaps you want the AseFile.getModel() method" );
         }
         
         // Add in 90 degree X-axis rotation if set

@@ -72,11 +72,11 @@ public class ScaleTransform
         {
             if ( frames.get( i ).frameIndex == frameNumber )
             {
-                return( i );
+                return ( i );
             }
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     public void getScaleAtTime( float time, Tuple3f scale )
@@ -152,7 +152,7 @@ public class ScaleTransform
         
         s += " )";
         
-        return( s );
+        return ( s );
     }
     
     public ScaleTransform()

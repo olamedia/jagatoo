@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,11 +57,11 @@ public class SWTInputDeviceFactory extends InputDeviceFactory
         {
             if ( ( currentMouses[ 0 ] instanceof SWTMouse ) && ( currentMouses[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
             {
-                return( new SWTMouse[] { (SWTMouse)currentMouses[ 0 ] } );
+                return ( new SWTMouse[] { (SWTMouse)currentMouses[ 0 ] } );
             }
         }
         
-        return( new SWTMouse[] { new SWTMouse( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
+        return ( new SWTMouse[] { new SWTMouse( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -76,11 +76,11 @@ public class SWTInputDeviceFactory extends InputDeviceFactory
         {
             if ( ( currentKeyboards[ 0 ] instanceof SWTKeyboard ) && ( currentKeyboards[ 0 ].getSourceWindow() == this.getSourceWindow() ) )
             {
-                return( new SWTKeyboard[] { (SWTKeyboard)currentKeyboards[ 0 ] } );
+                return ( new SWTKeyboard[] { (SWTKeyboard)currentKeyboards[ 0 ] } );
             }
         }
         
-        return( new SWTKeyboard[] { new SWTKeyboard( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
+        return ( new SWTKeyboard[] { new SWTKeyboard( findSourceFactory(), getSourceWindow(), getEveneQueue() ) } );
     }
     
     /**
@@ -89,7 +89,7 @@ public class SWTInputDeviceFactory extends InputDeviceFactory
     @Override
     protected Controller[] initControllers() throws InputSystemException
     {
-        return( new Controller[ 0 ] );
+        return ( new Controller[ 0 ] );
     }
     
     /**

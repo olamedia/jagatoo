@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,7 +70,7 @@ public abstract class DeviceComponent
      */
     public final int getDeviceComponentID()
     {
-        return( id );
+        return ( id );
     }
     
     /**
@@ -78,7 +78,7 @@ public abstract class DeviceComponent
      */
     public final String getName()
     {
-        return( name );
+        return ( name );
     }
     
     /**
@@ -86,7 +86,7 @@ public abstract class DeviceComponent
      */
     public String getLocalizedName()
     {
-        return( KeyboardLocalizer.getMapping().getLocalizedKeyName( this ) );
+        return ( KeyboardLocalizer.getMapping().getLocalizedKeyName( this ) );
     }
     
     /**
@@ -94,7 +94,7 @@ public abstract class DeviceComponent
      */
     public final Type getType()
     {
-        return( type );
+        return ( type );
     }
     
     /**
@@ -102,7 +102,7 @@ public abstract class DeviceComponent
      */
     public final boolean isDigital()
     {
-        return( this instanceof DigitalDeviceComponent );
+        return ( this instanceof DigitalDeviceComponent );
     }
     
     /**
@@ -110,7 +110,7 @@ public abstract class DeviceComponent
      */
     public final boolean isAnalog()
     {
-        return( this instanceof AnalogDeviceComponent );
+        return ( this instanceof AnalogDeviceComponent );
     }
     
     /**
@@ -185,15 +185,15 @@ public abstract class DeviceComponent
     private final int findActionIndex( InvokableInputAction action, InputDevice device )
     {
         if ( actions == null )
-            return( -1 );
+            return ( -1 );
         
         for ( int i = 0; i < actions.length; i++ )
         {
             if ( ( actions[ i ].equals( action ) ) && ( ( device == null ) || ( device == actionDevices[ i ] ) ) )
-                return( i );
+                return ( i );
         }
         
-        return( -1 );
+        return ( -1 );
     }
     
     /**

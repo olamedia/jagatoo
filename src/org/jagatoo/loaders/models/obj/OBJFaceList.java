@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -92,7 +92,7 @@ public class OBJFaceList
     
     public List<OBJFace> getFaces()
     {
-        return( faces );
+        return ( faces );
     }
     
     /*
@@ -104,7 +104,7 @@ public class OBJFaceList
     
     public List<float[]> getVertexList()
     {
-        return( verts );
+        return ( verts );
     }
     
     /*
@@ -116,7 +116,7 @@ public class OBJFaceList
     
     public List<float[]> getNormalList()
     {
-        return( normals );
+        return ( normals );
     }
     
     /*
@@ -128,7 +128,7 @@ public class OBJFaceList
     
     public List<float[]> getTexList()
     {
-        return( texs );
+        return ( texs );
     }
     
     public void setNormalsUsed( boolean used )
@@ -138,12 +138,12 @@ public class OBJFaceList
     
     public boolean normalsUsed()
     {
-        return( normalsUsed );
+        return ( normalsUsed );
     }
     
     public boolean normalsSupported()
     {
-        return( supportNormals );
+        return ( supportNormals );
     }
     
     public void setTexturesUsed( boolean used )
@@ -153,12 +153,12 @@ public class OBJFaceList
     
     public boolean texturesUsed()
     {
-        return( texturesUsed );
+        return ( texturesUsed );
     }
     
     public boolean texturesSupported()
     {
-        return( supportTextures );
+        return ( supportTextures );
     }
     
     
@@ -166,20 +166,20 @@ public class OBJFaceList
     {
         if ( token.length() == 0 )
         {
-            return( -1 );
+            return ( -1 );
         }
         
-        return( Integer.parseInt( token ) );
+        return ( Integer.parseInt( token ) );
     }
     
     private int parseVertIndex(String token)
     {
         if ( token.indexOf( "/" ) >= 0 )
         {
-            return( parseInt( token.substring( 0, token.indexOf( "/" ) ) ) );
+            return ( parseInt( token.substring( 0, token.indexOf( "/" ) ) ) );
         }
         
-        return( parseInt( token ) );
+        return ( parseInt( token ) );
     }
     
     private int parseTextureIndex( String token )
@@ -190,7 +190,7 @@ public class OBJFaceList
         
         if ( slashPos < 0 )
         {
-            return( -1 );
+            return ( -1 );
         }
         token = token.substring( slashPos + 1 );
         slashPos = token.indexOf( "/" );
@@ -203,7 +203,7 @@ public class OBJFaceList
                 texturesUsed = true;
             }
             
-            return( result );
+            return ( result );
         }
         
         result = parseInt( token );
@@ -212,7 +212,7 @@ public class OBJFaceList
             texturesUsed = true;
         }
         
-        return( result );
+        return ( result );
     }
     
     private int parseNormalIndex( String token )
@@ -221,12 +221,12 @@ public class OBJFaceList
         
         if (token.indexOf( "/" ) < 0)
         {
-            return( -1 );
+            return ( -1 );
         }
         token = token.substring( token.indexOf( "/" ) + 1 );
         if ( token.indexOf( "/" ) < 0 )
         {
-            return( -1 );
+            return ( -1 );
         }
         token = token.substring( token.indexOf( "/" ) + 1 );
         
@@ -238,7 +238,7 @@ public class OBJFaceList
                normalsUsed = true;
             }
             
-            return( result );
+            return ( result );
         }
         
         result = parseInt( token );
@@ -247,7 +247,7 @@ public class OBJFaceList
            normalsUsed = true;
         }
         
-        return( result );
+        return ( result );
     }
     
     public void add( String line, OBJMaterial mat )

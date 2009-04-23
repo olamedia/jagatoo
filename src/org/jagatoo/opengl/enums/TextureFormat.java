@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -61,7 +61,7 @@ public enum TextureFormat
     
     public final boolean hasAlpha()
     {
-        return( hasAlpha );
+        return ( hasAlpha );
     }
     
     public static final TextureFormat getFormat( TextureImageFormat tiFormat )
@@ -69,16 +69,16 @@ public enum TextureFormat
         switch ( tiFormat )
         {
             case RGB:
-                return( TextureFormat.RGB );
+                return ( TextureFormat.RGB );
                 
             case DEPTH:
-                return( TextureFormat.DEPTH );
+                return ( TextureFormat.DEPTH );
                 
             case LUMINANCE:
-                return( TextureFormat.LUMINANCE );
+                return ( TextureFormat.LUMINANCE );
                 
             default:
-                return( TextureFormat.RGBA );
+                return ( TextureFormat.RGBA );
         }
     }
     
@@ -87,16 +87,16 @@ public enum TextureFormat
         switch ( this )
         {
             case DEPTH:
-                return( TextureImageFormat.DEPTH );
+                return ( TextureImageFormat.DEPTH );
                 
             case LUMINANCE:
-                return( TextureImageFormat.LUMINANCE );
+                return ( TextureImageFormat.LUMINANCE );
                 
             case RGB:
-                return( TextureImageFormat.RGB );
+                return ( TextureImageFormat.RGB );
                 
             case RGBA:
-                return( TextureImageFormat.RGBA );
+                return ( TextureImageFormat.RGBA );
                 
             default:
                 throw new Error( "Unsupported Format for conversion: " + this );

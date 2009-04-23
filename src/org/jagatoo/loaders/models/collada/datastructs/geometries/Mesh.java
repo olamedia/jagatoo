@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,7 +60,7 @@ public class Mesh
     
     public final MeshSources getSources()
     {
-        return( sources );
+        return ( sources );
     }
     
     public final void setVertexIndices( int[] vertexIndices )
@@ -70,7 +70,7 @@ public class Mesh
     
     public final int[] getVertexIndices()
     {
-        return( vertexIndices );
+        return ( vertexIndices );
     }
     
     public final void setNormalIndices( int[] normalIndices )
@@ -80,7 +80,7 @@ public class Mesh
     
     public final int[] getNormalIndices()
     {
-        return( normalIndices );
+        return ( normalIndices );
     }
     
     public final void setColorIndices( int[] colorIndices )
@@ -90,7 +90,7 @@ public class Mesh
     
     public final int[] getColorIndices()
     {
-        return( colorIndices );
+        return ( colorIndices );
     }
     
     public final void setUVIndices( int[][] uvIndices )
@@ -100,7 +100,7 @@ public class Mesh
     
     public final int[][] getUVIndices()
     {
-        return( uvIndices );
+        return ( uvIndices );
     }
     
     /**
@@ -115,7 +115,7 @@ public class Mesh
         newMesh.colorIndices = colorIndices;
         newMesh.uvIndices = uvIndices;
         
-        return( newMesh );
+        return ( newMesh );
     }
     
     /**

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -129,20 +129,20 @@ public enum TextureFilter
     
     public final int getOpenGLMagFilter()
     {
-        return( glValueMagFilter );
+        return ( glValueMagFilter );
     }
     
     public final int getOpenGLMinFilter( boolean mipmapping )
     {
         if ( mipmapping )
-            return( glValueMinFilter_mipmapping );
-        else
-            return( glValueMinFilter_no_mipmapping );
+            return ( glValueMinFilter_mipmapping );
+        
+        return ( glValueMinFilter_no_mipmapping );
     }
     
     public final int getAnisotropicLevel()
     {
-        return( anisotropicLevel );
+        return ( anisotropicLevel );
     }
     
     public final TextureMagFilter deriveMagFilter()
@@ -150,19 +150,19 @@ public enum TextureFilter
         switch ( this )
         {
             case POINT:
-                return( TextureMagFilter.POINT );
+                return ( TextureMagFilter.POINT );
             case BILINEAR:
-                return( TextureMagFilter.BILINEAR );
+                return ( TextureMagFilter.BILINEAR );
             case TRILINEAR:
-                return( TextureMagFilter.BILINEAR );
+                return ( TextureMagFilter.BILINEAR );
             case ANISOTROPIC_2:
-                return( TextureMagFilter.BILINEAR );
+                return ( TextureMagFilter.BILINEAR );
             case ANISOTROPIC_4:
-                return( TextureMagFilter.BILINEAR );
+                return ( TextureMagFilter.BILINEAR );
             case ANISOTROPIC_8:
-                return( TextureMagFilter.BILINEAR );
+                return ( TextureMagFilter.BILINEAR );
             case ANISOTROPIC_16:
-                return( TextureMagFilter.BILINEAR );
+                return ( TextureMagFilter.BILINEAR );
         }
         
         throw new Error( "Should not happen!" );
@@ -173,19 +173,19 @@ public enum TextureFilter
         switch ( this )
         {
             case POINT:
-                return( TextureMinFilter.POINT );
+                return ( TextureMinFilter.POINT );
             case BILINEAR:
-                return( TextureMinFilter.BILINEAR );
+                return ( TextureMinFilter.BILINEAR );
             case TRILINEAR:
-                return( TextureMinFilter.TRILINEAR );
+                return ( TextureMinFilter.TRILINEAR );
             case ANISOTROPIC_2:
-                return( TextureMinFilter.ANISOTROPIC_2 );
+                return ( TextureMinFilter.ANISOTROPIC_2 );
             case ANISOTROPIC_4:
-                return( TextureMinFilter.ANISOTROPIC_4 );
+                return ( TextureMinFilter.ANISOTROPIC_4 );
             case ANISOTROPIC_8:
-                return( TextureMinFilter.ANISOTROPIC_8 );
+                return ( TextureMinFilter.ANISOTROPIC_8 );
             case ANISOTROPIC_16:
-                return( TextureMinFilter.ANISOTROPIC_16 );
+                return ( TextureMinFilter.ANISOTROPIC_16 );
         }
         
         throw new Error( "Should not happen!" );

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,11 +47,11 @@ public class LoaderUtils
         
         int lastSlashPos = file.lastIndexOf( '/' );
         if ( lastSlashPos < 0 )
-            return( null );
+            return ( null );
         else if ( lastSlashPos == file.length() - 1 )
             throw new IllegalArgumentException( "You cannot pass a directory as the url parameter!" );
         else
-            return( new URL( proto + file.substring( 0, lastSlashPos + 1 ) ) );
+            return ( new URL( proto + file.substring( 0, lastSlashPos + 1 ) ) );
     }
     
     public static final URL extractBaseURL( File file ) throws IOException
@@ -59,29 +59,27 @@ public class LoaderUtils
         if ( file.isDirectory() )
             throw new IllegalArgumentException( "You cannot pass a directory as the file parameter!" );
         
-        return( file.getAbsoluteFile().getParentFile().toURI().toURL() );
+        return ( file.getAbsoluteFile().getParentFile().toURI().toURL() );
     }
     
     public static final URL extractBaseURL( String filename ) throws IOException
     {
-        return( extractBaseURL( new File( filename ) ) );
+        return ( extractBaseURL( new File( filename ) ) );
     }
     
     public static final String extractFilenameWithoutExt( URL url, String ext )
     {
         String filename = url.getFile();
         
-        //return( filename.substring( filename.lastIndexOf( '/' ) + 1, filename.length() - ext.length() - 1 ) );
+        //return ( filename.substring( filename.lastIndexOf( '/' ) + 1, filename.length() - ext.length() - 1 ) );
         
         int lastSlashPos = filename.lastIndexOf( '/' );
         if ( lastSlashPos < 0 )
         {
-            return( filename.substring( 0, filename.length() - ext.length() - 1 ) );
+            return ( filename.substring( 0, filename.length() - ext.length() - 1 ) );
         }
-        else
-        {
-            return( filename.substring( lastSlashPos + 1, filename.length() - ext.length() - 1 ) );
-        }
+        
+        return ( filename.substring( lastSlashPos + 1, filename.length() - ext.length() - 1 ) );
     }
     
     public static final String extractFilenameWithoutExt( URL url )
@@ -94,18 +92,16 @@ public class LoaderUtils
             int lastDotPos = filename.lastIndexOf( '.' );
             
             if ( lastDotPos < 0 )
-                return( filename );
-            else
-                return( filename.substring( 0, lastDotPos ) );
-        }
-        else
-        {
-            int lastDotPos = filename.lastIndexOf( '.' );
+                return ( filename );
             
-            if ( lastDotPos < 0 )
-                return( filename.substring( lastSlashPos + 1, filename.length() ) );
-            else
-                return( filename.substring( lastSlashPos + 1, lastDotPos ) );
+            return ( filename.substring( 0, lastDotPos ) );
         }
+        
+        int lastDotPos = filename.lastIndexOf( '.' );
+        
+        if ( lastDotPos < 0 )
+            return ( filename.substring( lastSlashPos + 1, filename.length() ) );
+        
+        return ( filename.substring( lastSlashPos + 1, lastDotPos ) );
     }
 }

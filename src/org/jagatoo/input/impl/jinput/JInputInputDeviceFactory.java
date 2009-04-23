@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -89,7 +89,7 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
             JInputMouse[] mouses = new JInputMouse[ numMouses ];
             System.arraycopy( tmpMouses, 0, mouses, 0, numMouses );
             
-            return( mouses );
+            return ( mouses );
         }
         catch ( NoClassDefFoundError ncdfe )
         {
@@ -97,8 +97,8 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
             
             Log.error( InputSystem.LOG_CHANNEL, message );
             
-            throw( new InputSystemException( message, ncdfe ) );
-            //return( new JInputMouse[ 0 ] );
+            throw new InputSystemException( message, ncdfe );
+            //return ( new JInputMouse[ 0 ] );
         }
     }
     
@@ -148,7 +148,7 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
             JInputKeyboard[] keyboards = new JInputKeyboard[ numKeyboards ];
             System.arraycopy( tmpKeyboards, 0, keyboards, 0, numKeyboards );
             
-            return( keyboards );
+            return ( keyboards );
         }
         catch ( NoClassDefFoundError ncdfe )
         {
@@ -156,31 +156,31 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
             
             Log.error( InputSystem.LOG_CHANNEL, message );
             
-            throw( new InputSystemException( message, ncdfe ) );
-            //return( new JInputKeyboard[ 0 ] );
+            throw new InputSystemException( message, ncdfe );
+            //return ( new JInputKeyboard[ 0 ] );
         }
     }
     
     private static final boolean isController( net.java.games.input.Controller.Type type )
     {
         if ( type == net.java.games.input.Controller.Type.FINGERSTICK )
-            return( true );
+            return ( true );
         if ( type == net.java.games.input.Controller.Type.GAMEPAD )
-            return( true );
+            return ( true );
         if ( type == net.java.games.input.Controller.Type.HEADTRACKER )
-            return( true );
+            return ( true );
         if ( type == net.java.games.input.Controller.Type.RUDDER )
-            return( true );
+            return ( true );
         if ( type == net.java.games.input.Controller.Type.STICK )
-            return( true );
+            return ( true );
         if ( type == net.java.games.input.Controller.Type.TRACKBALL )
-            return( true );
+            return ( true );
         if ( type == net.java.games.input.Controller.Type.TRACKPAD )
-            return( true );
+            return ( true );
         if ( type == net.java.games.input.Controller.Type.WHEEL )
-            return( true );
+            return ( true );
         
-        return( false );
+        return ( false );
     }
     
     /**
@@ -228,7 +228,7 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
                             {
                                 if ( ise.getInfo() != InputSystemException.Info.ILLEGAL_CONTROLLER_CONFIGURATION )
                                 {
-                                    throw( ise );
+                                    throw ise;
                                 }
                             }
                         }
@@ -239,7 +239,7 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
             JInputController[] controllers2 = new JInputController[ numControllers ];
             System.arraycopy( tmpControllers, 0, controllers2, 0, numControllers );
             
-            return( controllers2 );
+            return ( controllers2 );
         }
         catch ( NoClassDefFoundError ncdfe )
         {
@@ -247,8 +247,8 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
             
             Log.error( InputSystem.LOG_CHANNEL, message );
             
-            throw( new InputSystemException( message, ncdfe ) );
-            //return( new JInputController[ 0 ] );
+            throw new InputSystemException( message, ncdfe );
+            //return ( new JInputController[ 0 ] );
         }
     }
     

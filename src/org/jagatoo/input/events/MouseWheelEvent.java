@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2008, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -54,7 +54,7 @@ public class MouseWheelEvent extends MouseEvent
      */
     public final int getWheelDelta()
     {
-        return( wheelDelta );
+        return ( wheelDelta );
     }
     
     /**
@@ -62,7 +62,7 @@ public class MouseWheelEvent extends MouseEvent
      */
     public final boolean isPageMove()
     {
-        return( isPageMove );
+        return ( isPageMove );
     }
     
     /**
@@ -71,7 +71,7 @@ public class MouseWheelEvent extends MouseEvent
     @Override
     public String toString()
     {
-        return( "MouseWheelEvent( pos = (" + getMouse().getCurrentX() + ", " + getMouse().getCurrentY() + "), " +
+        return ( "MouseWheelEvent( pos = (" + getMouse().getCurrentX() + ", " + getMouse().getCurrentY() + "), " +
                 "buttonsState = " + getMouse().getButtonsState() + ", " +
                 "wheel = " + getWheelDelta() + (isPageMove() ? " (PAGE)" : "") + ", " +
                 "when = " + getWhen() +
