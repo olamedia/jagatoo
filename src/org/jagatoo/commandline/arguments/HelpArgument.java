@@ -38,10 +38,12 @@ import org.jagatoo.commandline.Argument;
  */
 public class HelpArgument extends Argument
 {
+    public static final HelpArgument INSTANCE = new HelpArgument();
+    
     /**
      * Creates a new help-argument.
      */
-    public HelpArgument()
+    private HelpArgument()
     {
         super( 'h', "help", "Display this help screen", false );
     }
