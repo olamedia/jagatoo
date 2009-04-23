@@ -114,7 +114,7 @@ public class Argument
         }
         catch ( Throwable t )
         {
-            throw new CommandLineParsingException( t.getMessage(), t );
+            throw new CommandLineParsingException( "Invalid value for " + this + ": " + rawValue, t );
         }
     }
     
