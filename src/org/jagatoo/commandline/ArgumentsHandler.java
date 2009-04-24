@@ -42,7 +42,7 @@ public abstract class ArgumentsHandler
      * @param arg the detected argument (null for loose values)
      * @param value the value (null for no-value-arguments)
      */
-    public abstract void handleArgument( Argument arg, Object value );
+    protected abstract void handleArgument( Argument arg, Object value );
     
     /**
      * This method is called when a serious error is detected byy the parser.
@@ -52,8 +52,15 @@ public abstract class ArgumentsHandler
      * 
      * @throws CommandLineParsingException
      */
-    public void onError( int chunk, String message ) throws CommandLineParsingException
+    protected void onError( int chunk, String message ) throws CommandLineParsingException
     {
         throw new CommandLineParsingException( chunk, message );
     }
+    
+    /**
+     * This method is called after the whole command line has been parsed.
+     * 
+     * @throws CommandLineParsingException
+     */
+    protected abstract void validate() throws CommandLineParsingException;
 }
