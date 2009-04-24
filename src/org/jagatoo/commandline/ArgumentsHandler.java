@@ -50,17 +50,17 @@ public abstract class ArgumentsHandler
      * @param chunk the command line chunk number
      * @param message the error message
      * 
-     * @throws CommandLineParsingException
+     * @throws CommandlineParsingException
      */
-    protected void onError( int chunk, String message ) throws CommandLineParsingException
+    protected void onError( int chunk, String message ) throws CommandlineParsingException
     {
-        throw new CommandLineParsingException( chunk, message );
+        throw new CommandlineParsingException( chunk, message );
     }
     
     /**
      * This method is called after the whole command line has been parsed.
      * 
-     * @throws CommandLineParsingException
+     * @throws CommandlineParsingException
      */
-    protected abstract void validate() throws CommandLineParsingException;
+    protected abstract void validate() throws CommandlineParsingException;
 }

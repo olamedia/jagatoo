@@ -34,7 +34,7 @@ package org.jagatoo.commandline;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class CommandLineParsingException extends Exception
+public class CommandlineParsingException extends Exception
 {
     private static final long serialVersionUID = -3035509896189395590L;
     
@@ -50,26 +50,26 @@ public class CommandLineParsingException extends Exception
         return ( chunk );
     }
     
-    public CommandLineParsingException( int chunk, String message )
+    public CommandlineParsingException( int chunk, String message )
     {
         super( message );
         
         this.chunk = chunk;
     }
     
-    public CommandLineParsingException( int chunk, String message, Throwable cause )
+    public CommandlineParsingException( int chunk, String message, Throwable cause )
     {
         super( message, cause );
         
         this.chunk = chunk;
     }
     
-    public CommandLineParsingException( String message )
+    public CommandlineParsingException( String message )
     {
         this( -1, message );
     }
     
-    public CommandLineParsingException( String message, Throwable cause )
+    public CommandlineParsingException( String message, Throwable cause )
     {
         this( -1, message, cause );
     }

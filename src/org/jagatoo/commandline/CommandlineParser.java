@@ -34,26 +34,32 @@ import java.util.ArrayList;
 import org.jagatoo.util.strings.SimpleStringTokenizer;
 
 /**
+ * <p>
  * Parses standard command lines.
+ * </p>
+ * <p>
+ * These commandlines ca have the form:
+ * -a -xf 0 --long-option "option value" -long-option2 value2
+ * </p>
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class CommandLineParser
+public class CommandlineParser
 {
     private final ArgumentsRegistry argReg;
     private final ArgumentsHandler handler;
     
-    private void onError( int chunk, String message ) throws CommandLineParsingException
+    private void onError( int chunk, String message ) throws CommandlineParsingException
     {
         handler.onError( chunk, message );
     }
     
-    private Argument onArgument( int chunk, String argName ) throws CommandLineParsingException
+    private Argument onArgument( int chunk, String argName ) throws CommandlineParsingException
     {
         Argument arg = argReg.getArgument( argName );
         
         if ( arg == null )
-            throw new CommandLineParsingException( chunk, "There is no argument \"" + argName + "\"." );
+            throw new CommandlineParsingException( chunk, "There is no argument \"" + argName + "\"." );
         
         if ( arg.needsValue() )
         {
@@ -65,7 +71,7 @@ public class CommandLineParser
         return ( null );
     }
     
-    private void onArgumentComplete( Argument arg, String rawValue ) throws CommandLineParsingException
+    private void onArgumentComplete( Argument arg, String rawValue ) throws CommandlineParsingException
     {
         if ( rawValue == null )
             handler.handleArgument( arg, null );
@@ -75,7 +81,7 @@ public class CommandLineParser
             handler.handleArgument( arg, arg.parseValue( rawValue ) );
     }
     
-    private Argument parseSingleCharArguments( int chunkNum, String chunk ) throws CommandLineParsingException
+    private Argument parseSingleCharArguments( int chunkNum, String chunk ) throws CommandlineParsingException
     {
         Argument lastArg = null;
         
@@ -86,7 +92,7 @@ public class CommandLineParser
             lastArg = argReg.getArgument( ch );
             
             if ( lastArg == null )
-                throw new CommandLineParsingException( chunkNum, "There is no argument '" + ch + "'." );
+                throw new CommandlineParsingException( chunkNum, "There is no argument '" + ch + "'." );
             
             if ( !lastArg.needsValue() )
             {
@@ -105,11 +111,11 @@ public class CommandLineParser
     /**
      * Parses a command line from an array of chunks.
      * 
-     * @param chunks
+     * @param chunks the chunks as passed to a main() method (a String split by white spaces, quoted Strings kept together omitting quotes)
      * 
-     * @throws CommandLineParsingException
+     * @throws CommandlineParsingException
      */
-    public void parseCommandLine( String[] chunks ) throws CommandLineParsingException
+    public void parseCommandline( String[] chunks ) throws CommandlineParsingException
     {
         int minusCount = 0;
         char lastChar = '\0';
@@ -186,15 +192,15 @@ public class CommandLineParser
     /**
      * Parses a command line from a single String.
      * 
-     * @param commandLine
+     * @param commandline the complete commandline as one String
      * 
-     * @throws CommandLineParsingException
+     * @throws CommandlineParsingException
      */
-    public void parseCommandLine( String commandLine ) throws CommandLineParsingException
+    public void parseCommandline( String commandline ) throws CommandlineParsingException
     {
         ArrayList<String> argsList = new ArrayList<String>();
         
-        SimpleStringTokenizer tokenizer = new SimpleStringTokenizer( commandLine );
+        SimpleStringTokenizer tokenizer = new SimpleStringTokenizer( commandline );
         tokenizer.useQuotes( true );
         
         while ( tokenizer.hasMoreTokens() )
@@ -202,10 +208,16 @@ public class CommandLineParser
             argsList.add( tokenizer.nextToken() );
         }
         
-        parseCommandLine( argsList.toArray( new String[ argsList.size() ] ) );
+        parseCommandline( argsList.toArray( new String[ argsList.size() ] ) );
     }
     
-    public CommandLineParser( ArgumentsRegistry argReg, ArgumentsHandler handler )
+    /**
+     * Creates a new {@link CommandlineParser}.
+     * 
+     * @param argReg
+     * @param handler
+     */
+    public CommandlineParser( ArgumentsRegistry argReg, ArgumentsHandler handler )
     {
         if ( argReg == null )
             throw new IllegalArgumentException( "argReg must not be null." );

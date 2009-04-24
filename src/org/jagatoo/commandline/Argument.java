@@ -90,7 +90,7 @@ public class Argument
      * 
      * @return the parsed value (by default the input String is passed back).
      */
-    protected Object parseValueImpl( String rawValue ) throws CommandLineParsingException
+    protected Object parseValueImpl( String rawValue ) throws CommandlineParsingException
     {
         return ( rawValue );
     }
@@ -102,19 +102,19 @@ public class Argument
      * 
      * @return the parsed value.
      */
-    public final Object parseValue( String rawValue ) throws CommandLineParsingException
+    public final Object parseValue( String rawValue ) throws CommandlineParsingException
     {
         try
         {
             return ( parseValueImpl( rawValue ) );
         }
-        catch ( CommandLineParsingException e )
+        catch ( CommandlineParsingException e )
         {
             throw e;
         }
         catch ( Throwable t )
         {
-            throw new CommandLineParsingException( "Invalid value for " + this + ": " + rawValue, t );
+            throw new CommandlineParsingException( "Invalid value for " + this + ": " + rawValue, t );
         }
     }
     
