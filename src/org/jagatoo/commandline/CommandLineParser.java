@@ -179,6 +179,8 @@ public class CommandLineParser
         {
             onError( chunks.length, "No value provided for argument " + lastValueArg );
         }
+        
+        handler.validate();
     }
     
     /**
