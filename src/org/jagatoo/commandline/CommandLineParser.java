@@ -68,11 +68,11 @@ public class CommandLineParser
     private void onArgumentComplete( Argument arg, String rawValue ) throws CommandLineParsingException
     {
         if ( rawValue == null )
-            handler.onArgument( arg, null );
+            handler.handleArgument( arg, null );
         else if ( arg == null )
-            handler.onArgument( null, rawValue );
+            handler.handleArgument( null, rawValue );
         else
-            handler.onArgument( arg, arg.parseValue( rawValue ) );
+            handler.handleArgument( arg, arg.parseValue( rawValue ) );
     }
     
     private Argument parseSingleCharArguments( int chunkNum, String chunk ) throws CommandLineParsingException

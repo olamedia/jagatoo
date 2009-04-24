@@ -42,7 +42,7 @@ public abstract class ArgumentsHandler
      * @param arg the detected argument (null for loose values)
      * @param value the value (null for no-value-arguments)
      */
-    public abstract void onArgument( Argument arg, Object value );
+    public abstract void handleArgument( Argument arg, Object value );
     
     /**
      * This method is called when a serious error is detected byy the parser.
