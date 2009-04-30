@@ -53,6 +53,7 @@ public interface TextureFormatLoader
      * 
      * @param in the InputStream to load the Texture from
      * @param acceptAlpha
+     * @param flipVertically
      * @param loadMipmaps
      * @param allowStreching If true, the image is streched to power-of-two width and height, if necessary. 
      * @param texFactory
@@ -62,5 +63,5 @@ public interface TextureFormatLoader
      * 
      * @throws IOException
      */
-    public AbstractTexture loadTexture( BufferedInputStream in, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, TextureFactory texFactory ) throws IOException;
+    public AbstractTexture loadTexture( BufferedInputStream in, boolean acceptAlpha, boolean flipVertically, boolean loadMipmaps, boolean allowStreching, TextureFactory texFactory ) throws IOException;
 }

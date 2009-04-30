@@ -367,7 +367,7 @@ public abstract class AbstractTextureLoader
             
             try
             {
-                tex = tfl.loadTexture( in, acceptAlpha, loadMipmaps, allowStreching, texFactory );
+                tex = tfl.loadTexture( in, acceptAlpha, flipVertically, loadMipmaps, allowStreching, texFactory );
             }
             catch ( IOException e )
             {

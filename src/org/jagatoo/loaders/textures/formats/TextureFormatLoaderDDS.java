@@ -104,7 +104,7 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
     {
     }
     
-    public AbstractTexture loadTexture( BufferedInputStream in, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, TextureFactory texFactory ) throws IOException
+    public AbstractTexture loadTexture( BufferedInputStream in, boolean acceptAlpha, boolean flipVertically, boolean loadMipmaps, boolean allowStreching, TextureFactory texFactory ) throws IOException
     {
         if ( in.available() < 2 * 4 )
         {
