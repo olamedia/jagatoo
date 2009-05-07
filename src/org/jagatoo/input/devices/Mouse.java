@@ -31,6 +31,7 @@ package org.jagatoo.input.devices;
 
 import java.util.ArrayList;
 
+import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.InputSystemRuntimeException;
 import org.jagatoo.input.devices.components.ControllerButton;
@@ -73,12 +74,9 @@ public abstract class Mouse extends InputDevice
     
     private boolean isAbsolute = true;
     
-    private MouseStopManager stopManager = null;
-    
     private int buttonState = 0;
     
     private final ArrayList< MouseListener > listeners = new ArrayList< MouseListener >();
-    private final ArrayList< MouseStopListener > stopListeners = new ArrayList< MouseStopListener >();
     private int numListeners = 0;
     
     private final MouseButtonClickedEvent[] clickedEvents;
@@ -88,6 +86,8 @@ public abstract class Mouse extends InputDevice
     private long lastWhen_moved = -1L;
     private long lastWhen_wheelMoved = -1L;
     
+    private MouseStopManager stopManager = new MouseStopManager();
+    
     /**
      * @return the {@link MouseFactory}, that created this instance.
      */
@@ -96,50 +96,12 @@ public abstract class Mouse extends InputDevice
         return ( sourceFactory );
     }
     
-    /**
-     * Starts the {@link MouseStopManager}'s thread.<br>
-     * mouse-stop-events are generated.
-     * 
-     * @throws InputSystemException
-     */
-    public final void startMouseStopManager() throws InputSystemException
-    {
-        if ( stopManager == null )
-            stopManager = new MouseStopManager( this, stopListeners );
-        
-        stopManager.start();
-    }
-    
-    /**
-     * Stops the {@link MouseStopManager}'s thread.
-     * 
-     * @throws InputSystemException
-     */
-    public final void stopMouseStopManager() throws InputSystemException
-    {
-        if ( stopManager == null )
-            return;
-        
-        stopManager.stopMe();
-    }
-    
-    /**
-     * @return <code>true</code>, if the {@link MouseStopManager} is currently started.
-     */
-    public final boolean isMouseStopManagerRunning()
-    {
-        if ( stopManager == null )
-            return ( false );
-        
-        return ( stopManager.isSearching() );
-    }
-    
     protected final void notifyMouseStopManager( long nanoTime )
     {
         if ( stopManager == null )
             return;
         
-        stopManager.notifyMouseMoved( nanoTime );
+        stopManager.notifyMouseMoved( this, nanoTime );
     }
     
     /**
@@ -354,25 +316,7 @@ public abstract class Mouse extends InputDevice
      */
     public void addMouseStopListener( MouseStopListener l )
     {
-        if ( stopManager != null )
-        {
-            stopManager.addMouseStopListener( l );
-            
-            return;
-        }
-        
-        boolean contains = false;
-        for ( int i = 0; i < stopListeners.size(); i++ )
-        {
-            if ( stopListeners.get( i ) == l )
-            {
-                contains = true;
-                break;
-            }
-        }
-        
-        if ( !contains )
-            stopListeners.add( l );
+        stopManager.addMouseStopListener( l );
     }
     
     /**
@@ -382,22 +326,15 @@ public abstract class Mouse extends InputDevice
      */
     public void removeMouseStopListener( MouseStopListener l )
     {
-        if ( stopManager != null )
-        {
-            stopManager.removeMouseStopListener( l );
-            
-            return;
-        }
-        
-        stopListeners.remove( l );
+        stopManager.removeMouseStopListener( l );
     }
     
     /**
-     * @return true, of at least one {@link MouseListener} is currently registered.
+     * @return true, of at least one {@link MouseStopListener} is currently registered.
      */
     public final boolean hasMouseListener()
     {
-        return ( stopListeners.size() > 0 );
+        return ( stopManager.hasMouseListener() );
     }
     
     /**
@@ -761,7 +698,7 @@ public abstract class Mouse extends InputDevice
             case STOPPED:
                 if ( stopManager != null )
                 {
-                    stopManager.fireOnMouseStopped( (MouseStoppedEvent)e, consumeEvent );
+                    stopManager.fireOnMouseStopped( this, (MouseStoppedEvent)e, consumeEvent );
                 }
                 else if ( consumeEvent )
                 {
@@ -813,6 +750,32 @@ public abstract class Mouse extends InputDevice
     }
     
     /**
+     * Processes pending events from the system
+     * and directly fires them (notifes the listeners).<br>
+     * This method also flushes the EventQueue, if the previously
+     * called {@link #collectEvents(InputSystem, EventQueue, long)}
+     * method placed events into it.
+     * 
+     * @param is
+     * @param eventQueue
+     * @param nanoTime
+     * 
+     * @throws InputSystemException
+     */
+    protected abstract void updateMouse( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException;
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void update( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    {
+        updateMouse( is, eventQueue, nanoTime );
+        
+        stopManager.update( this, nanoTime );
+    }
+    
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -832,14 +795,6 @@ public abstract class Mouse extends InputDevice
     @Override
     public final void destroy() throws InputSystemException
     {
-        if ( stopManager != null )
-        {
-            if ( stopManager.isSearching() )
-                stopManager.stopMe();
-            
-            stopManager = null;
-        }
-        
         this.setAbsolute( true );
         
         destroyImpl();

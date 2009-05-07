@@ -280,7 +280,7 @@ public class JInputMouse extends Mouse
      * {@inheritDoc}
      */
     @Override
-    public void update( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
+    public void updateMouse( InputSystem is, EventQueue eventQueue, long nanoTime ) throws InputSystemException
     {
         collectOrFireEvents( is, null, nanoTime, true );
         

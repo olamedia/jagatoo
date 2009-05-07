@@ -31,7 +31,6 @@ package org.jagatoo.input.managers;
 
 import java.util.ArrayList;
 
-import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.events.MouseEventPool;
 import org.jagatoo.input.events.MouseStoppedEvent;
@@ -42,22 +41,16 @@ import org.jagatoo.input.listeners.MouseStopListener;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class MouseStopManager implements Runnable
+public class MouseStopManager
 {
     private static final long LAST_MOVED_RESET_TIME = Long.MAX_VALUE - 100000000000L;
     
-    private final Mouse mouse;
-    private final ArrayList< MouseStopListener > listeners;
+    private final ArrayList< MouseStopListener > listeners = new ArrayList< MouseStopListener >();
     private long[] stopDelays = null;
     private long[] lastMovedTimes = null;
     private int numListeners = 0;
     
-    private long lastKnownGameTime = -1L;
-    
     private long lastWhen_stopped = -1L;
-    
-    private boolean isSearching = false;
-    private boolean isThreadRunning = false;
     
     /**
      * Adds a {@link MouseStopListener} to this Mouse to be notified
@@ -67,17 +60,7 @@ public class MouseStopManager implements Runnable
      */
     public void addMouseStopListener( MouseStopListener l )
     {
-        boolean contains = false;
-        for ( int i = 0; i < listeners.size(); i++ )
-        {
-            if ( listeners.get( i ) == l )
-            {
-                contains = true;
-                break;
-            }
-        }
-        
-        if ( !contains )
+        if ( !listeners.contains( l ) )
         {
             listeners.add( l );
             
@@ -140,21 +123,24 @@ public class MouseStopManager implements Runnable
         numListeners = listeners.size();
     }
     
-    public final boolean isSearching()
+    /**
+     * @return true, of at least one {@link MouseStopListener} is currently registered.
+     */
+    public final boolean hasMouseListener()
     {
-        return ( isSearching );
+        return ( numListeners > 0 );
     }
     
     /**
      * Prepares a {@link MouseStoppedEvent} for bein fired.<br>
      * The event is not fired from this method.<br>
      * 
-     * @param button
+     * @param mouse
      * @param when
      * 
      * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
      */
-    public final MouseStoppedEvent prepareMouseStoppedEvent( long when )
+    private final MouseStoppedEvent prepareMouseStoppedEvent( Mouse mouse, long when )
     {
         if ( !mouse.isEnabled() || ( numListeners == 0 ) )
             return ( null );
@@ -186,10 +172,11 @@ public class MouseStopManager implements Runnable
      * Fires a {@link MouseStoppedEvent} and pushes it back to the pool,
      * if consumeEvent is true.
      * 
+     * @param mouse
      * @param e
      * @param consumeEvent
      */
-    public final void fireOnMouseStopped( MouseStoppedEvent e, boolean consumeEvent )
+    public final void fireOnMouseStopped( Mouse mouse, MouseStoppedEvent e, boolean consumeEvent )
     {
         if ( !mouse.isEnabled() || ( numListeners == 0 ) )
         {
@@ -208,98 +195,48 @@ public class MouseStopManager implements Runnable
     }
     
     /**
-     * {@inheritDoc}
+     * Notifies this StopManager of a mouse-moved event, so that it can
+     * know, when the mouse has not moved for a while an hence has stopped.
+     * 
+     * @param mouse
+     * @param nanoTime
      */
-    public void run()
-    {
-        isThreadRunning = true;
-        
-        long t;
-        
-        isSearching = true;
-        
-        while ( isSearching )
-        {
-            t = System.nanoTime();
-            
-            MouseStoppedEvent e = null;
-            
-            for ( int i = 0; i < numListeners; i++ )
-            {
-                if ( t >= lastMovedTimes[ i ] + stopDelays[ i ] )
-                {
-                    lastMovedTimes[ i ] = LAST_MOVED_RESET_TIME;
-                    
-                    if ( e == null )
-                    {
-                        e = prepareMouseStoppedEvent( lastKnownGameTime );
-                    }
-                    
-                    fireOnMouseStopped( e, listeners.get( i ), false );
-                }
-            }
-            
-            if ( e != null )
-            {
-                MouseEventPool.freeStopped( e );
-            }
-            
-            try { Thread.sleep( 10L ); } catch ( InterruptedException ex ) { /*ex.printStackTrace();*/ }
-        }
-        
-        isThreadRunning = false;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public void start() throws InputSystemException
-    {
-        if ( isThreadRunning )
-            throw new InputSystemException( "The MouseStopManager is already running!" );
-        
-        for ( int i = 0; i < numListeners; i++ )
-        {
-            lastMovedTimes[ i ] = LAST_MOVED_RESET_TIME;
-        }
-        
-        new Thread( this ).start();
-    }
-    
-    public void stopMe() throws InputSystemException
-    {
-        if ( !isThreadRunning )
-            throw new InputSystemException( "The MouseStopManager is not running!" );
-        
-        this.isSearching = false;
-    }
-    
-    public final void notifyMouseMoved( long nanoTime )
+    public final void notifyMouseMoved( Mouse mouse, long nanoTime )
     {
         for ( int i = 0; i < numListeners; i++ )
         {
-            lastMovedTimes[ i ] = System.nanoTime();
+            lastMovedTimes[ i ] = nanoTime;
         }
-        
-        this.lastKnownGameTime = nanoTime;
     }
     
-    public MouseStopManager( Mouse mouse, ArrayList< MouseStopListener > stopListeners )
+    public final void update( Mouse mouse, long nanoTime )
     {
-        this.mouse = mouse;
-        this.listeners = stopListeners;
-        this.numListeners = listeners.size();
+        long t = nanoTime;
         
-        if ( numListeners > 0 )
+        MouseStoppedEvent e = null;
+        
+        for ( int i = 0; i < numListeners; i++ )
         {
-            stopDelays = new long[ numListeners ];
-            lastMovedTimes = new long[ numListeners ];
-            
-            for ( int i = 0; i < numListeners; i++ )
+            if ( t >= lastMovedTimes[ i ] + stopDelays[ i ] )
             {
-                stopDelays[ i ] = listeners.get( i ).getMouseStopDelay();
                 lastMovedTimes[ i ] = LAST_MOVED_RESET_TIME;
+                
+                if ( e == null )
+                {
+                    e = prepareMouseStoppedEvent( mouse, nanoTime );
+                }
+                
+                fireOnMouseStopped( e, listeners.get( i ), false );
             }
         }
+        
+        if ( e != null )
+        {
+            MouseEventPool.freeStopped( e );
+        }
+    }
+    
+    public MouseStopManager()
+    {
     }
 }
