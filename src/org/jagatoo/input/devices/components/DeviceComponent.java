@@ -148,7 +148,6 @@ public abstract class DeviceComponent
      * state change.
      * 
      * @param action the action to bind
-     * @param device the InputDevice to use
      */
     public void bindAction( InvokableInputAction action )
     {
