@@ -27,54 +27,34 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.image;
+package org.jagatoo.commands;
 
-import java.awt.image.DataBuffer;
-import java.nio.ByteBuffer;
-
-import org.jagatoo.util.nio.BufferUtils;
+import java.util.Comparator;
 
 /**
- * Concrete class which backs a data buffer with a native {@link ByteBuffer}.
+ * This is a {@link Comparator}, that sorts {@link Command}s alphabetically
+ * by their keys.
  * 
- * @author David Yazel
+ * @author Marvin Froehlich (aka Qudus)
  */
-public class DirectDataBufferByte extends DataBuffer
+public class AlphabeticalCommandsKeyComparator implements Comparator<Command>
 {
-    private ByteBuffer bb;
+    private static final AlphabeticalCommandsKeyComparator INSTANCE = new AlphabeticalCommandsKeyComparator();
     
-    public final ByteBuffer getByteBuffer()
+    public static final AlphabeticalCommandsKeyComparator getInstance()
     {
-        return ( bb );
+        return ( INSTANCE );
     }
     
-    @Override
-    public int getElem( int bank, int i )
+    /**
+     * {@inheritDoc}
+     */
+    public int compare( Command cmd1, Command cmd2 )
     {
-        return ( bb.get( i ) );
+        return ( cmd1.getKey().compareTo( cmd2.getKey() ) );
     }
     
-    @Override
-    public void setElem( int bank, int i, int val )
+    protected AlphabeticalCommandsKeyComparator()
     {
-        bb.put( i, (byte)val );
-    }
-    
-    public DirectDataBufferByte( ByteBuffer bb )
-    {
-        super( TYPE_BYTE, bb.capacity() );
-        
-        this.bb = bb;
-        //this.bb.limit( bb.capacity() );
-        //this.bb.position( 0 );
-    }
-    
-    public DirectDataBufferByte( int size )
-    {
-        super( TYPE_BYTE, size );
-        
-        bb = BufferUtils.createByteBuffer( size );
-        bb.limit( size );
-        bb.position( 0 );
     }
 }

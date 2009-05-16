@@ -37,6 +37,7 @@ import java.awt.image.ComponentColorModel;
 import java.awt.image.DataBuffer;
 import java.awt.image.Raster;
 import java.awt.image.WritableRaster;
+import java.nio.ByteBuffer;
 
 /**
  * Provides static factory methods to create {@link BufferedImage}s.
@@ -80,5 +81,13 @@ public class BufferedImageFactory
     public static final SharedBufferedImage createSharedBufferedImage( int width, int height, int pixelSize, int[] pixelOffsets, byte[] data )
     {
         return ( SharedBufferedImage.create( width, height, pixelSize, pixelOffsets, data ) );
+    }
+    
+    public static DirectBufferedImage createDirectBufferedImage( int width, int height, boolean hasAlpha, int[] pixelOffsets, ByteBuffer bb )
+    {
+        if ( hasAlpha )
+            return ( DirectBufferedImage.makeDirectImageRGBA( width, height, pixelOffsets, bb ) );
+        
+        return ( DirectBufferedImage.makeDirectImageRGB( width, height, pixelOffsets, bb ) );
     }
 }

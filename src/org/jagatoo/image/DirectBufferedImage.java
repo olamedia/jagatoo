@@ -170,6 +170,39 @@ public class DirectBufferedImage extends BufferedImage
     /**
      * Creates a buffered image which is backed by a NIO byte buffer
      */
+    public static DirectBufferedImage makeDirectImageRGBA( int width, int height, int[] bandOffsets, ByteBuffer bb )
+    {
+        final int pixelSize = bb.limit() * 8 / ( width * height );
+        final int bytesPerPixel = (int)( pixelSize / 8 );
+        
+        //int[] bandOffsets = createBandOffsets( bytesPerPixel );
+        if ( bandOffsets == null )
+            bandOffsets = new int[] { 3, 2, 1, 0 };
+        
+        // create the backing store
+        DirectDataBufferByte buffer = new DirectDataBufferByte( bb );
+        
+        // build the raster with 4 bytes per pixel
+        
+        WritableRaster newRaster = new DirectWritableRaster( width, height, bytesPerPixel, bandOffsets, buffer );
+        
+        // create a standard sRGB color space
+        ColorSpace cs = ColorSpace.getInstance( ColorSpace.CS_sRGB );
+        
+        // create a color model which has three 8 bit values for RGB
+        int[] nBits = createNumBitsArray( bytesPerPixel );
+        ColorModel cm = new ComponentColorModel( cs, nBits, true, false, Transparency.TRANSLUCENT, 0 );
+        
+        // create the buffered image
+        
+        DirectBufferedImage newImage = new DirectBufferedImage( Type.DIRECT_RGBA/*, bb*/, cm, newRaster, false );
+        
+        return ( newImage );
+    }
+    
+    /**
+     * Creates a buffered image which is backed by a NIO byte buffer
+     */
     public static DirectBufferedImage makeDirectImageRGBA( int width, int height, int pixelSize )
     {
         final int bytesPerPixel = (int)( pixelSize / 8 );
@@ -217,6 +250,38 @@ public class DirectBufferedImage extends BufferedImage
     public static DirectBufferedImage makeDirectImageRGBA( int width, int height )
     {
         return ( makeDirectImageRGBA( width, height, 32 ) );
+    }
+    
+    /**
+     * Creates a buffered image which is backed by a NIO byte buffer
+     */
+    public static DirectBufferedImage makeDirectImageRGB( int width, int height, int[] bandOffsets, ByteBuffer bb )
+    {
+        final int pixelSize = bb.limit() * 8 / ( width * height );
+        final int bytesPerPixel = (int)( pixelSize / 8 );
+        
+        if ( bandOffsets == null )
+            bandOffsets = createBandOffsets( bytesPerPixel );
+        
+        // create the backing store
+        
+        // create a data buffer wrapping the byte array
+        DirectDataBufferByte buffer = new DirectDataBufferByte( bb );
+        
+        // build the raster with 3 bytes per pixel
+        WritableRaster newRaster = new DirectWritableRaster( width, height, bytesPerPixel, bandOffsets, buffer );
+        
+        // create a standard sRGB color space
+        ColorSpace cs = ColorSpace.getInstance( ColorSpace.CS_sRGB );
+        
+        // create a color model which has three 8 bit values for RGB
+        int[] nBits = createNumBitsArray( bytesPerPixel );
+        ColorModel cm = new ComponentColorModel( cs, nBits, false, false, Transparency.OPAQUE, 0 );
+        
+        // create the buffered image
+        DirectBufferedImage newImage = new DirectBufferedImage( Type.DIRECT_RGB/*, bb*/, cm, newRaster, false );
+        
+        return ( newImage );
     }
     
     /**
