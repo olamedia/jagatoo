@@ -38,10 +38,11 @@ import org.jagatoo.util.nio.BufferUtils;
  * Concrete class which backs a data buffer with a native {@link ByteBuffer}.
  * 
  * @author David Yazel
+ * @author Marvin Froehlich (aka Qudus)
  */
 public class DirectDataBufferByte extends DataBuffer
 {
-    private ByteBuffer bb;
+    private final ByteBuffer bb;
     
     public final ByteBuffer getByteBuffer()
     {

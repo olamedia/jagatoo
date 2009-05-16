@@ -173,7 +173,7 @@ public class DirectBufferedImage extends BufferedImage
     public static DirectBufferedImage makeDirectImageRGBA( int width, int height, int[] bandOffsets, ByteBuffer bb )
     {
         final int pixelSize = bb.limit() * 8 / ( width * height );
-        final int bytesPerPixel = (int)( pixelSize / 8 );
+        final int bytesPerPixel = pixelSize / 8;
         
         //int[] bandOffsets = createBandOffsets( bytesPerPixel );
         if ( bandOffsets == null )
@@ -205,7 +205,7 @@ public class DirectBufferedImage extends BufferedImage
      */
     public static DirectBufferedImage makeDirectImageRGBA( int width, int height, int pixelSize )
     {
-        final int bytesPerPixel = (int)( pixelSize / 8 );
+        final int bytesPerPixel = pixelSize / 8;
         
         //int[] bandOffsets = createBandOffsets( bytesPerPixel );
         int[] bandOffsets = { 3, 2, 1, 0 };
@@ -258,7 +258,7 @@ public class DirectBufferedImage extends BufferedImage
     public static DirectBufferedImage makeDirectImageRGB( int width, int height, int[] bandOffsets, ByteBuffer bb )
     {
         final int pixelSize = bb.limit() * 8 / ( width * height );
-        final int bytesPerPixel = (int)( pixelSize / 8 );
+        final int bytesPerPixel = pixelSize / 8;
         
         if ( bandOffsets == null )
             bandOffsets = createBandOffsets( bytesPerPixel );
@@ -289,7 +289,7 @@ public class DirectBufferedImage extends BufferedImage
      */
     public static DirectBufferedImage makeDirectImageRGB( int width, int height, int pixelSize )
     {
-        final int bytesPerPixel = (int)( pixelSize / 8 );
+        final int bytesPerPixel = pixelSize / 8;
         
         int[] bandOffsets = createBandOffsets( bytesPerPixel );
         
@@ -342,7 +342,7 @@ public class DirectBufferedImage extends BufferedImage
     
     public static DirectBufferedImage makeDirectImageTwoBytes( int width, int height, int pixelSize )
     {
-        final int bytesPerPixel = (int)( pixelSize / 8 );
+        final int bytesPerPixel = pixelSize / 8;
         
         int[] bandOffsets = createBandOffsets( bytesPerPixel );
         

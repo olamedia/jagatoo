@@ -6,11 +6,11 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-public class DirectBufferedImageTest
+public class DirectBufferedImageBenchmark
 {
-    public DirectBufferedImageTest() throws Exception
+    public DirectBufferedImageBenchmark() throws Exception
     {
-        BufferedImage src = ImageIO.read( new File( "/media/sda6/workspace/xith-tk/test-resources/textures/crate.png" ) );
+        BufferedImage src = ImageIO.read( new File( "test/data/textures/crate.png" ) );
         
         //BufferedImage dst = new BufferedImage( src.getWidth(), src.getHeight(), BufferedImage.TYPE_4BYTE_ABGR );
         BufferedImage dst = org.jagatoo.image.DirectBufferedImage.makeDirectImageRGBA( src.getWidth(), src.getHeight() );
@@ -63,6 +63,6 @@ public class DirectBufferedImageTest
     
     public static void main( String[] args ) throws Exception
     {
-        new DirectBufferedImageTest();
+        new DirectBufferedImageBenchmark();
     }
 }
