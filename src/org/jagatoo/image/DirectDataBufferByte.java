@@ -49,12 +49,18 @@ public class DirectDataBufferByte extends DataBuffer
         return ( bb );
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getElem( int bank, int i )
     {
-        return ( bb.get( i ) );
+        return ( bb.get( i ) & 0xFF );
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setElem( int bank, int i, int val )
     {

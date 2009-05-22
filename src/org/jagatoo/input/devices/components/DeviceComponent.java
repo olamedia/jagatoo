@@ -52,6 +52,21 @@ public abstract class DeviceComponent
         CONTROLLER_BUTTON,
         CONTROLLER_AXIS,
         ;
+        
+        public final boolean isKeyboardComponent()
+        {
+            return ( this == KEY );
+        }
+        
+        public final boolean isMouseComponent()
+        {
+            return ( ( this == MOUSE_AXIS ) || ( this == MOUSE_BUTTON ) || ( this == MOUSE_WHEEL ) );
+        }
+        
+        public final boolean isControllerComponent()
+        {
+            return ( ( this == CONTROLLER_AXIS ) || ( this == CONTROLLER_BUTTON ) );
+        }
     }
     
     protected static int nextID = 1;

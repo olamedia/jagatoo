@@ -695,11 +695,12 @@ public abstract class AbstractTextureLoader
      * @param loadMipmaps create mipmaps?
      * @param allowStreching If true, the image is streched to power-of-two width and height, if necessary.
      * @param texFactory
-     * @param writeToCache 
+     * @param useCache
+     * @param writeToCache ignored, if useCache is false
      * 
      * @return The {@link AbstractTexture} object or a null, if it was not found.
      */
-    protected AbstractTexture loadOrGetTexture( String name, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, TextureFactory texFactory, boolean writeToCache )
+    protected AbstractTexture loadOrGetTexture( String name, boolean flipVertically, boolean acceptAlpha, boolean loadMipmaps, boolean allowStreching, TextureFactory texFactory, boolean useCache, boolean writeToCache )
     {
         ProfileTimer.startProfile( JAGTLog.LOG_CHANNEL, "TextureLoader::loadOrGetTexture" );
         
@@ -712,7 +713,7 @@ public abstract class AbstractTextureLoader
         
         String cacheKey = generateCacheKey( name, acceptAlpha, loadMipmaps, flipVertically, allowStreching );
         
-        if ( ( tex = checkCache( name, cacheKey ) ) != null )
+        if ( useCache && ( ( tex = checkCache( name, cacheKey ) ) != null ) )
         {
             return ( tex );
         }
@@ -727,10 +728,13 @@ public abstract class AbstractTextureLoader
             // We don't put it in the cache if it has not been loaded, or
             // it will never be loaded correctly (if created after having
             // tried once to load it.
-            if ( getCache().isEnabled() && writeToCache )
+            if ( useCache && writeToCache && getCache().isEnabled() )
             {
-                getCache().add( cacheKey, tex );
-                tex.setCacheKey( cacheKey );
+                synchronized ( getCache() )
+                {
+                    getCache().add( cacheKey, tex );
+                    tex.setCacheKey( cacheKey );
+                }
             }
             
             tex.setName( name );
