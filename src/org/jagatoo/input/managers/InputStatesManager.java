@@ -35,10 +35,14 @@ import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.InputSystemException;
 import org.jagatoo.input.actions.InputAction;
 import org.jagatoo.input.actions.InvokableInputAction;
+import org.jagatoo.input.devices.Controller;
 import org.jagatoo.input.devices.InputDevice;
+import org.jagatoo.input.devices.Keyboard;
 import org.jagatoo.input.devices.Mouse;
 import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.devices.components.InputState;
+import org.jagatoo.input.devices.components.MouseAxis;
+import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseWheel;
 import org.jagatoo.logging.Log;
 
@@ -49,9 +53,17 @@ import org.jagatoo.logging.Log;
  */
 public class InputStatesManager
 {
+    public static final int MOUSE_AXES_SUSPENDED = 1;
+    public static final int MOUSE_BUTTONS_SUSPENDED = 2;
+    public static final int MOUSE_WHEEL_SUSPENDED = 4;
+    public static final int KEYBOARD_SUSPENDED = 8;
+    public static final int CONTROLLERS_SUSPENDED = 16;
+    
     private final InputBindingsManager< ? extends InputAction > bindingsManager;
     
     private InputStatesManipulator manipulator = null;
+    
+    private int suspendMask = 0;
     
     private final int numStates;
     
@@ -60,7 +72,8 @@ public class InputStatesManager
     
     private short[] prevStates;
     private short[] currStates;
-    private final short[] tmpStates;
+    private final short[] tmpPrevStates;
+    private final short[] tmpCurrStates;
     
     private boolean swapper = false;
     
@@ -75,6 +88,40 @@ public class InputStatesManager
         }
         
         return ( manipulator );
+    }
+    
+    /**
+     * Suspends or resumes this InputStatesManager.<br>
+     * 
+     * @see #MOUSE_AXES_SUSPENDED
+     * @see #MOUSE_BUTTONS_SUSPENDED
+     * @see #MOUSE_WHEEL_SUSPENDED
+     * @see #KEYBOARD_SUSPENDED
+     * @see #CONTROLLERS_SUSPENDED
+     * 
+     * If an InputStatesManager is suspended, it will ignore any input.
+     * 
+     * @param suspendMask
+     */
+    public void setSuspendMask( int suspendMask )
+    {
+        this.suspendMask = suspendMask;
+    }
+    
+    /**
+     * @return the suspendMask.<br>
+     * 
+     * @see #MOUSE_AXES_SUSPENDED
+     * @see #MOUSE_BUTTONS_SUSPENDED
+     * @see #MOUSE_WHEEL_SUSPENDED
+     * @see #KEYBOARD_SUSPENDED
+     * @see #CONTROLLERS_SUSPENDED
+     * 
+     * If an InputStatesManager is suspended, it will ignore any input.
+     */
+    public final int getSuspendMask()
+    {
+        return ( suspendMask );
     }
     
     /**
@@ -144,7 +191,7 @@ public class InputStatesManager
             
             try
             {
-                invAction.invokeAction( device, comp, ( tmpStates[ ordinal ] - prevStates[ ordinal ] ), tmpStates[ ordinal ], nanoTime );
+                invAction.invokeAction( device, comp, ( tmpCurrStates[ ordinal ] - tmpPrevStates[ ordinal ] ), tmpCurrStates[ ordinal ], nanoTime );
             }
             catch ( InputSystemException ex )
             {
@@ -154,7 +201,7 @@ public class InputStatesManager
         }
     }
     
-    private final int updateState_( final InputDevice device, final DeviceComponent comp, final int state, long nanoTime )
+    private final int updateState_( final InputDevice device, final DeviceComponent comp, final int state, long nanoTime, boolean mouseAxesIgnored, boolean mouseButtonsIgnored, boolean mouseWheelIgnored, boolean keyboardIgnored, boolean controllersIgnored )
     {
         final InputAction action = bindingsManager.getBoundAction( comp );
         
@@ -163,9 +210,20 @@ public class InputStatesManager
         
         final int ordinal = action.ordinal();
         
-        tmpStates[ ordinal ] = (short)state;
+        tmpCurrStates[ ordinal ] = (short)state;
         
-        if ( tmpStates[ ordinal ] != prevStates[ ordinal ] )
+        if ( mouseAxesIgnored && ( comp instanceof MouseAxis ) )
+            tmpPrevStates[ ordinal ] = (short)state;
+        else if ( mouseButtonsIgnored && ( comp instanceof MouseButton ) )
+            tmpPrevStates[ ordinal ] = (short)state;
+        else if ( mouseWheelIgnored && ( comp instanceof MouseWheel ) )
+            tmpPrevStates[ ordinal ] = (short)state;
+        else if ( keyboardIgnored && ( device instanceof Keyboard ) )
+            tmpPrevStates[ ordinal ] = (short)state;
+        else if ( controllersIgnored && ( device instanceof Controller ) )
+            tmpPrevStates[ ordinal ] = (short)state;
+        
+        if ( tmpCurrStates[ ordinal ] != tmpPrevStates[ ordinal ] )
         {
             invokeAction( device, comp, ordinal, action, nanoTime );
         }
@@ -173,34 +231,44 @@ public class InputStatesManager
         return ( ordinal );
     }
     
-    private final void updateWheelStates( final Mouse mouse, final MouseWheel wheel, final int state, final int delta, long nanoTime )
+    private final void updateWheelStates( final Mouse mouse, final MouseWheel wheel, final int state, final int delta, long nanoTime, boolean mouseAxesIgnored, boolean mouseButtonsIgnored, boolean mouseWheelIgnored, boolean keyboardIgnored, boolean controllersIgnored )
     {
         if ( wheel != MouseWheel.GLOBAL_WHEEL )
-            updateWheelStates( mouse, MouseWheel.GLOBAL_WHEEL, state, delta, nanoTime );
-        
-        updateState_( mouse, wheel, state, nanoTime );
-        
-        final int result;
-        if ( delta > 0 )
-            result = updateState_( mouse, wheel.getUp(), 1, nanoTime );
-        else
-            result = updateState_( mouse, wheel.getDown(), 1, nanoTime );
-        
-        if ( result >= 0 )
         {
-            currStates[ result ] = 0;
+            updateWheelStates( mouse, MouseWheel.GLOBAL_WHEEL, state, delta, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
+        }
+        else
+        {
+            updateState_( mouse, wheel, state, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
+            
+            final int result;
+            if ( delta > 0 )
+                result = updateState_( mouse, wheel.getUp(), 1, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
+            else
+                result = updateState_( mouse, wheel.getDown(), 1, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
+            
+            if ( result >= 0 )
+            {
+                currStates[ result ] = 0;
+            }
         }
     }
     
     final void internalUpdateState( final InputDevice device, final DeviceComponent comp, final int state, final int delta, long nanoTime )
     {
+        final boolean mouseAxesIgnored = ( ( suspendMask & MOUSE_AXES_SUSPENDED ) != 0 );
+        final boolean mouseButtonsIgnored = ( ( suspendMask & MOUSE_BUTTONS_SUSPENDED ) != 0 );
+        final boolean mouseWheelIgnored = ( ( suspendMask & MOUSE_WHEEL_SUSPENDED ) != 0 );
+        final boolean keyboardIgnored = ( ( suspendMask & KEYBOARD_SUSPENDED ) != 0 );
+        final boolean controllersIgnored = ( ( suspendMask & CONTROLLERS_SUSPENDED ) != 0 );
+        
         if ( comp.getType() == DeviceComponent.Type.MOUSE_WHEEL )
         {
-            updateWheelStates( (Mouse)device, (MouseWheel)comp, state, delta, nanoTime );
+            updateWheelStates( (Mouse)device, (MouseWheel)comp, state, delta, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
         }
         else
         {
-            updateState_( device, comp, state, nanoTime );
+            updateState_( device, comp, state, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
         }
     }
     
@@ -224,7 +292,9 @@ public class InputStatesManager
             prevStates = states1;
         }
         
-        System.arraycopy( tmpStates, 0, currStates, 0, numStates );
+        System.arraycopy( tmpPrevStates, 0, prevStates, 0, numStates );
+        System.arraycopy( tmpCurrStates, 0, currStates, 0, numStates );
+        System.arraycopy( tmpCurrStates, 0, tmpPrevStates, 0, numStates );
         
         //System.out.println( prevStates[ 0 ] + ", " + currStates[ 0 ] );
         
@@ -351,13 +421,15 @@ public class InputStatesManager
         
         this.states1 = new short[ numActions ];
         this.states2 = new short[ numActions ];
-        this.tmpStates = new short[ numActions ];
+        this.tmpPrevStates = new short[ numActions ];
+        this.tmpCurrStates = new short[ numActions ];
         
         for ( int i = 0; i < numActions; i++ )
         {
             states1[ i ] = 0;
             states2[ i ] = 0;
-            tmpStates[ i ] = 0;
+            tmpPrevStates[ i ] = 0;
+            tmpCurrStates[ i ] = 0;
         }
         
         prevStates = states1;

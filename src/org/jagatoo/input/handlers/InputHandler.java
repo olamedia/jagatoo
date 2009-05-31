@@ -58,7 +58,8 @@ public abstract class InputHandler< A extends InputAction >
     public static final int MOUSE_BUTTONS_SUSPENDED = 2;
     public static final int MOUSE_WHEEL_SUSPENDED = 4;
     public static final int KEYBOARD_SUSPENDED = 8;
-    public static final int FIRST_USER_SUSPEND_FLAG = 16;
+    public static final int CONTROLLERS_SUSPENDED = 16;
+    public static final int FIRST_USER_SUSPEND_FLAG = 32;
     
     private InputSystem inputSystem = null;
     protected int suspendMask = 0;
@@ -98,34 +99,55 @@ public abstract class InputHandler< A extends InputAction >
     }
     
     /**
-     * Suspends or resumes this FirstPersonInputHandler.<br>
-     * You can OR MOUSE_SUSPENDED and KEYBOARD_SUSPENDED.<br>
-     * <br>
-     * If an FirstPersonInputAdapter is suspended, it will ignore any input.
+     * Suspends or resumes this InputHandler.<br>
+     * 
+     * @see #MOUSE_MOVEMENT_SUSPENDED
+     * @see #MOUSE_BUTTONS_SUSPENDED
+     * @see #MOUSE_WHEEL_SUSPENDED
+     * @see #KEYBOARD_SUSPENDED
+     * @see #CONTROLLERS_SUSPENDED
+     * 
+     * If an InputHandler is suspended, it will ignore any input.
      * 
      * @param suspendMask
      */
-    public void setSuspendMask( int suspendMask )
+    public boolean setSuspendMask( int suspendMask )
     {
+        if ( suspendMask == this.suspendMask )
+            return ( false );
+        
         this.suspendMask = suspendMask;
+        
+        if ( getStatesManager() != null )
+        {
+            getStatesManager().setSuspendMask( suspendMask );
+        }
+        
+        return ( true );
     }
     
     /**
      * @return the suspendMask.<br>
-     * <br>
-     * If a FirstPersonInputHandler is suspended, it will ignore any input.
+     * 
+     * @see #MOUSE_MOVEMENT_SUSPENDED
+     * @see #MOUSE_BUTTONS_SUSPENDED
+     * @see #MOUSE_WHEEL_SUSPENDED
+     * @see #KEYBOARD_SUSPENDED
+     * @see #CONTROLLERS_SUSPENDED
+     * 
+     * If an InputHandler is suspended, it will ignore any input.
      */
     public final int getSuspendMask()
     {
         return ( suspendMask );
     }
     
-    public void setMouseMovementSuspended( boolean suspended )
+    public final void setMouseMovementSuspended( boolean suspended )
     {
         if ( suspended )
             setSuspendMask( suspendMask | MOUSE_MOVEMENT_SUSPENDED );
-        else if ( isMouseMovementSuspended() )
-            setSuspendMask( suspendMask - ( suspendMask & MOUSE_MOVEMENT_SUSPENDED ) );
+        else
+            setSuspendMask( suspendMask & ~MOUSE_MOVEMENT_SUSPENDED );
     }
     
     public final boolean isMouseMovementSuspended()
@@ -133,12 +155,12 @@ public abstract class InputHandler< A extends InputAction >
         return ( ( suspendMask & MOUSE_MOVEMENT_SUSPENDED ) > 0 );
     }
     
-    public void setMouseButtonsSuspended( boolean suspended )
+    public final void setMouseButtonsSuspended( boolean suspended )
     {
         if ( suspended )
             setSuspendMask( suspendMask | MOUSE_BUTTONS_SUSPENDED );
-        else if ( isMouseMovementSuspended() )
-            setSuspendMask( suspendMask - ( suspendMask & MOUSE_BUTTONS_SUSPENDED ) );
+        else
+            setSuspendMask( suspendMask & ~MOUSE_BUTTONS_SUSPENDED );
     }
     
     public final boolean isMouseButtonsSuspended()
@@ -146,20 +168,20 @@ public abstract class InputHandler< A extends InputAction >
         return ( ( suspendMask & MOUSE_BUTTONS_SUSPENDED ) > 0 );
     }
     
-    public void setMouseWheelSuspended( boolean suspended )
+    public final void setMouseWheelSuspended( boolean suspended )
     {
         if ( suspended )
             setSuspendMask( suspendMask | MOUSE_WHEEL_SUSPENDED );
-        else if ( isMouseMovementSuspended() )
-            setSuspendMask( suspendMask - ( suspendMask & MOUSE_WHEEL_SUSPENDED ) );
+        else
+            setSuspendMask( suspendMask & ~MOUSE_WHEEL_SUSPENDED );
     }
     
-    public boolean isMouseWheelSuspended()
+    public final boolean isMouseWheelSuspended()
     {
         return ( ( suspendMask & MOUSE_WHEEL_SUSPENDED ) > 0 );
     }
     
-    public void setMouseSuspended( boolean suspended )
+    public final void setMouseSuspended( boolean suspended )
     {
         setMouseMovementSuspended( suspended );
         setMouseButtonsSuspended( suspended );
@@ -171,17 +193,30 @@ public abstract class InputHandler< A extends InputAction >
         return ( isMouseMovementSuspended() || isMouseButtonsSuspended() || isMouseWheelSuspended() );
     }
     
-    public void setKeyboardSuspended( boolean suspended )
+    public final void setKeyboardSuspended( boolean suspended )
     {
         if ( suspended )
             setSuspendMask( suspendMask | KEYBOARD_SUSPENDED );
-        else if ( isMouseMovementSuspended() )
-            setSuspendMask( suspendMask - ( suspendMask & KEYBOARD_SUSPENDED ) );
+        else
+            setSuspendMask( suspendMask & ~KEYBOARD_SUSPENDED );
     }
     
     public final boolean isKeyboardSuspended()
     {
         return ( ( suspendMask & KEYBOARD_SUSPENDED ) > 0 );
+    }
+    
+    public final void setControllersSuspended( boolean suspended )
+    {
+        if ( suspended )
+            setSuspendMask( suspendMask | CONTROLLERS_SUSPENDED );
+        else
+            setSuspendMask( suspendMask & ~CONTROLLERS_SUSPENDED );
+    }
+    
+    public final boolean areControllersSuspended()
+    {
+        return ( ( suspendMask & CONTROLLERS_SUSPENDED ) > 0 );
     }
     
     /**
