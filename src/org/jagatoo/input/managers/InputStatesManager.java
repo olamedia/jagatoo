@@ -201,7 +201,7 @@ public class InputStatesManager
         }
     }
     
-    private final int updateState_( final InputDevice device, final DeviceComponent comp, final int state, long nanoTime, boolean mouseAxesIgnored, boolean mouseButtonsIgnored, boolean mouseWheelIgnored, boolean keyboardIgnored, boolean controllersIgnored )
+    private final int updateState_( final InputDevice device, final DeviceComponent comp, int state, long nanoTime, boolean mouseAxesIgnored, boolean mouseButtonsIgnored, boolean mouseWheelIgnored, boolean keyboardIgnored, boolean controllersIgnored )
     {
         final InputAction action = bindingsManager.getBoundAction( comp );
         
@@ -210,8 +210,6 @@ public class InputStatesManager
         
         final int ordinal = action.ordinal();
         
-        tmpCurrStates[ ordinal ] = (short)state;
-        
         if ( mouseAxesIgnored && ( comp instanceof MouseAxis ) )
             tmpPrevStates[ ordinal ] = (short)state;
         else if ( mouseButtonsIgnored && ( comp instanceof MouseButton ) )
@@ -219,9 +217,11 @@ public class InputStatesManager
         else if ( mouseWheelIgnored && ( comp instanceof MouseWheel ) )
             tmpPrevStates[ ordinal ] = (short)state;
         else if ( keyboardIgnored && ( device instanceof Keyboard ) )
-            tmpPrevStates[ ordinal ] = (short)state;
+            { state = 0; tmpPrevStates[ ordinal ] = (short)state; }
         else if ( controllersIgnored && ( device instanceof Controller ) )
             tmpPrevStates[ ordinal ] = (short)state;
+        
+        tmpCurrStates[ ordinal ] = (short)state;
         
         if ( tmpCurrStates[ ordinal ] != tmpPrevStates[ ordinal ] )
         {
