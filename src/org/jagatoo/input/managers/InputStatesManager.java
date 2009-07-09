@@ -44,6 +44,7 @@ import org.jagatoo.input.devices.components.InputState;
 import org.jagatoo.input.devices.components.MouseAxis;
 import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.devices.components.MouseWheel;
+import org.jagatoo.input.devices.components.MouseWheel.WheelUpDownComponent;
 import org.jagatoo.logging.Log;
 
 /**
@@ -216,6 +217,8 @@ public class InputStatesManager
             tmpPrevStates[ ordinal ] = (short)state;
         else if ( mouseWheelIgnored && ( comp instanceof MouseWheel ) )
             tmpPrevStates[ ordinal ] = (short)state;
+        else if ( mouseWheelIgnored && ( comp instanceof WheelUpDownComponent ) )
+            tmpPrevStates[ ordinal ] = (short)state;
         else if ( keyboardIgnored && ( device instanceof Keyboard ) )
             { state = 0; tmpPrevStates[ ordinal ] = (short)state; }
         else if ( controllersIgnored && ( device instanceof Controller ) )
@@ -233,28 +236,21 @@ public class InputStatesManager
     
     private final void updateWheelStates( final Mouse mouse, final MouseWheel wheel, final int state, final int delta, long nanoTime, boolean mouseAxesIgnored, boolean mouseButtonsIgnored, boolean mouseWheelIgnored, boolean keyboardIgnored, boolean controllersIgnored )
     {
-        if ( wheel != MouseWheel.GLOBAL_WHEEL )
-        {
-            updateWheelStates( mouse, MouseWheel.GLOBAL_WHEEL, state, delta, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
-        }
+        updateState_( mouse, wheel, state, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
+        
+        final int result;
+        if ( delta > 0 )
+            result = updateState_( mouse, wheel.getUp(), 1, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
         else
+            result = updateState_( mouse, wheel.getDown(), 1, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
+        
+        if ( !mouseWheelIgnored && ( result >= 0 ) )
         {
-            updateState_( mouse, wheel, state, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
-            
-            final int result;
-            if ( delta > 0 )
-                result = updateState_( mouse, wheel.getUp(), 1, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
-            else
-                result = updateState_( mouse, wheel.getDown(), 1, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
-            
-            if ( result >= 0 )
-            {
-                currStates[ result ] = 0;
-            }
+            tmpPrevStates[ result ] = 0;
         }
     }
     
-    final void internalUpdateState( final InputDevice device, final DeviceComponent comp, final int state, final int delta, long nanoTime )
+    final void internalUpdateState( final InputDevice device, DeviceComponent comp, final int state, final int delta, long nanoTime )
     {
         final boolean mouseAxesIgnored = ( ( suspendMask & MOUSE_AXES_SUSPENDED ) != 0 );
         final boolean mouseButtonsIgnored = ( ( suspendMask & MOUSE_BUTTONS_SUSPENDED ) != 0 );
@@ -264,6 +260,9 @@ public class InputStatesManager
         
         if ( comp.getType() == DeviceComponent.Type.MOUSE_WHEEL )
         {
+            if ( comp != MouseWheel.GLOBAL_WHEEL )
+                comp = MouseWheel.GLOBAL_WHEEL;
+            
             updateWheelStates( (Mouse)device, (MouseWheel)comp, state, delta, nanoTime, mouseAxesIgnored, mouseButtonsIgnored, mouseWheelIgnored, keyboardIgnored, controllersIgnored );
         }
         else
