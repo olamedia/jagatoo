@@ -42,12 +42,12 @@ public class InputStatesManipulator
     private final Short[] states;
     
     /**
-     * Sets the key-state for the given action.
+     * Sets the state for the given action.
      * 
      * @param action
-     * @param state the state. Use null to not override the real key-state.
+     * @param state the state. Use null to not override the real input-state.
      */
-    public final void setKeyState( InputAction action, Short state )
+    public final void setState( InputAction action, Short state )
     {
         states[ action.ordinal() ] = state;
     }
@@ -55,9 +55,9 @@ public class InputStatesManipulator
     /**
      * @param action
      * 
-     * @return the current state for the given action.
+     * @return the current state for the given action. (null, if the state is not manipulated).
      */
-    public final Short getKeyState( InputAction action )
+    public final Short getState( InputAction action )
     {
         return ( states[ action.ordinal() ] );
     }
