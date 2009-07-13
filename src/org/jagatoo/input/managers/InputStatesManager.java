@@ -81,7 +81,7 @@ public class InputStatesManager
     /**
      * @return the {@link InputStatesManipulator} for this manager.
      */
-    public InputStatesManipulator getKeyStatesManipulator()
+    public InputStatesManipulator getInputStatesManipulator()
     {
         if ( manipulator == null )
         {
@@ -89,6 +89,15 @@ public class InputStatesManager
         }
         
         return ( manipulator );
+    }
+    
+    /**
+     * @deprecated renamed to {@link #getInputStatesManipulator()}
+     */
+    @Deprecated
+    public final InputStatesManipulator getKeyStatesManipulator()
+    {
+        return ( getInputStatesManipulator() );
     }
     
     /**
