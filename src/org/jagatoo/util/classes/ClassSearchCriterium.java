@@ -27,28 +27,22 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders;
+package org.jagatoo.util.classes;
 
 /**
- * Exception used to indicate that a file of an incorrect type
- * was passed to a loader.
+ * This works similar to a Comparator.
+ * It tests a class for specific constraints.
  * 
- * @author Amos Wenger (aka BlueSky)
- * 
- * @deprecated Use {@link org.jagatoo.util.errorhandling.ParsingException} instead.
+ * @author Marvin Froehlich (aka Qudus)
  */
-@Deprecated
-public class IncorrectFormatException extends RuntimeException
+public interface ClassSearchCriterium
 {
-    private static final long serialVersionUID = -8681216953582870323L;
-    
-    public IncorrectFormatException()
-    {
-        super();
-    }
-    
-    public IncorrectFormatException( String s )
-    {
-        super( s );
-    }
+    /**
+     * Tests the given Class for a specific constraint.
+     * 
+     * @param clazz
+     * 
+     * @return true, if the test is successful
+     */
+    public boolean check( Class<?> clazz );
 }

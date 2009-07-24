@@ -31,7 +31,6 @@ package org.jagatoo.util.errorhandling;
 
 /**
  * @author David Yazel
- * @author Marvin Froehlich (aka Qudus) [code cleaning]
  */
 public class UnsupportedFunction extends Error
 {

@@ -39,7 +39,6 @@ import org.jagatoo.util.arrays.ArrayUtils;
  * polygon.  Usually this is a triagle or a quad.
  * 
  * @author David Yazel
- * @author Marvin Froehlich (aka Qudus) [code cleaning]
  */
 public class Polygon
 {

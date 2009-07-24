@@ -167,7 +167,8 @@ public class TextureFormatLoaderDDS implements TextureFormatLoader
                 blockSize = 16;
                 break;
             
-            case 0x34545844: // FOURCC_DXT5
+            case 0x34545844: // FOURCC_DXT5 // TODO: possibly this is not DXT5, but something like DXT2 or DXT4.
+            case 0x35545844: // FOURCC_DXT5
                 // DXT5's compression ratio is 4:1
                 readAlpha = acceptAlpha;
                 texImgFormat = TextureImageFormat.RGBA_DXT5;

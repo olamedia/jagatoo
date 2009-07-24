@@ -44,8 +44,8 @@ import java.util.HashMap;
 
 import org.jagatoo.image.BufferedImageFactory;
 import org.jagatoo.image.SharedBufferedImage;
-import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingException;
+import org.jagatoo.util.errorhandling.IncorrectFormatException;
+import org.jagatoo.util.errorhandling.ParsingException;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity;
 import org.jagatoo.loaders.models.bsp.BSPEntitiesParser.BSPEntity_worldspawn;

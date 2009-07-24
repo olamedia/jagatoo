@@ -27,58 +27,40 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.md3;
+package org.jagatoo.util.classes;
 
-import java.io.IOException;
-
-import org.jagatoo.util.errorhandling.IncorrectFormatException;
-import org.jagatoo.util.streams.LittleEndianDataInputStream;
+import java.lang.annotation.Annotation;
 
 /**
- * Insert type comment here.
+ * This is a ClassSearcher Criterium, that ensures, that checked class
+ * is annotated with a certain Annotation.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class MD3Header
+public class AnnotationCriterium implements ClassSearchCriterium
 {
-    public static final int MAGIC_NUMBER = 0x33504449;
+    private Class<? extends Annotation> annot;
     
-    public final int version;
-    public final String name;
-    public final int flags;
-    public final int numFrames;
-    public final int numTags;
-    public final int numSurfaces;
-    public final int numSkins;
-    public final int frameOffset;
-    public final int tagOffset;
-    public final int surfaceOffset;
-    public final int fileOffset;
-    
-    private MD3Header( LittleEndianDataInputStream in ) throws IOException, IncorrectFormatException
+    public final Class<? extends Annotation> getAnnotation()
     {
-        int ident = in.readInt();
-        if ( ident != MAGIC_NUMBER )
-            throw new IncorrectFormatException( "This is not an MD3 file!" );
-        
-        version = in.readInt();
-        if ( version != 15 )
-            throw new IncorrectFormatException( "Unsupported MD3 version " + version + ". Currently ony version 15 is supported." );
-        
-        name = MD3File.fixPath( in.readCString( 64, true ) );
-        flags = in.readInt();
-        numFrames = in.readInt();
-        numTags = in.readInt();
-        numSurfaces = in.readInt();
-        numSkins = in.readInt();
-        frameOffset = in.readInt();
-        tagOffset = in.readInt();
-        surfaceOffset = in.readInt();
-        fileOffset = in.readInt();
+        return ( annot );
     }
     
-    public static final MD3Header readHeader( LittleEndianDataInputStream in ) throws IOException, IncorrectFormatException
+    /**
+     * {@inheritDoc}
+     */
+    public boolean check( Class<?> clazz )
     {
-        return ( new MD3Header( in ) );
+        if ( clazz.getAnnotation( getAnnotation() ) != null )
+        {
+            return ( true );
+        }
+        
+        return ( false );
+    }
+    
+    public AnnotationCriterium( Class<? extends Annotation> annotation )
+    {
+        this.annot = annotation;
     }
 }

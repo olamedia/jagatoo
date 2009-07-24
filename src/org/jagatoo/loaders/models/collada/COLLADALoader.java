@@ -37,7 +37,7 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.jagatoo.loaders.ParsingException;
+import org.jagatoo.util.errorhandling.ParsingException;
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.datastructs.ColladaProtoypeModel;
 import org.jagatoo.loaders.models.collada.stax.XMLCOLLADA;

@@ -41,7 +41,7 @@ import java.io.OutputStream;
  * http://mindprod.com
  * 
  * @author Yann RICHET
- * @author Marvin Froehlich (aka Qudus) [code cleaning]
+ * @author Marvin Froehlich (aka Qudus)
  */
 public class LittleEndianDataOutputStream implements DataOutput
 {

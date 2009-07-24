@@ -30,8 +30,8 @@
 package org.jagatoo.loaders.models.md5;
 
 import org.jagatoo.datatypes.NamedObject;
-import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingException;
+import org.jagatoo.util.errorhandling.IncorrectFormatException;
+import org.jagatoo.util.errorhandling.ParsingException;
 import org.jagatoo.loaders.models._util.AnimationFactory;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.models._util.GeometryFactory;
@@ -68,6 +68,7 @@ public class MD5MeshReader
 {
     private class MD5Bone
     {
+        @SuppressWarnings( "unused" )
         public final String name;
         public final Vector3f translation;
         public final Quaternion4f rotation;
@@ -82,6 +83,7 @@ public class MD5MeshReader
     
     private class MD5Mesh
     {
+        @SuppressWarnings( "unused" )
         public String name;
         
         public NamedObject shader;

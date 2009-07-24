@@ -67,7 +67,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import org.jagatoo.loaders.IncorrectFormatException;
+import org.jagatoo.util.errorhandling.IncorrectFormatException;
 import org.jagatoo.loaders.models.bsp.lumps.BSPLump;
 import org.jagatoo.util.streams.StreamUtils;
 

@@ -64,7 +64,7 @@ package org.jagatoo.loaders.models.md2;
 
 import java.io.IOException;
 
-import org.jagatoo.loaders.IncorrectFormatException;
+import org.jagatoo.util.errorhandling.IncorrectFormatException;
 import org.jagatoo.util.streams.LittleEndianDataInputStream;
 
 /**

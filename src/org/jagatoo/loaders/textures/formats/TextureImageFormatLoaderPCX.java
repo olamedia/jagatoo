@@ -47,6 +47,7 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
     /**
      * The header data block
      */
+    @SuppressWarnings( "unused" )
     private static class PCXHeader
     {
         public byte    manufacturer;

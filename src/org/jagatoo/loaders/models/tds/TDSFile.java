@@ -42,8 +42,8 @@ import java.lang.reflect.Array;
 import java.net.URL;
 
 import org.jagatoo.datatypes.NamedObject;
-import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingException;
+import org.jagatoo.util.errorhandling.IncorrectFormatException;
+import org.jagatoo.util.errorhandling.ParsingException;
 import org.openmali.vecmath2.Matrix3f;
 
 import org.jagatoo.loaders.models._util.AnimationFactory;

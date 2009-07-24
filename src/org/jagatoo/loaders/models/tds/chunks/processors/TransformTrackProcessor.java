@@ -34,7 +34,7 @@
 package org.jagatoo.loaders.models.tds.chunks.processors;
 
 import org.jagatoo.datatypes.NamedObject;
-import org.jagatoo.loaders.IncorrectFormatException;
+import org.jagatoo.util.errorhandling.IncorrectFormatException;
 import org.jagatoo.loaders.models._util.AnimationFactory;
 import org.jagatoo.loaders.models._util.NodeFactory;
 import org.jagatoo.loaders.models._util.SpecialItemsHandler;

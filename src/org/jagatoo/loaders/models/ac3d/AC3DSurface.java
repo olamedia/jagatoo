@@ -69,8 +69,7 @@ package org.jagatoo.loaders.models.ac3d;
  * to the same vertex as as index i in the texture coordinate array.
  * 
  * @author Jeremy
- * @author Amos Wenger (aka BlueSky) [code cleaning]
- * @author Marvin Froehlich (aka Qudus) [code cleaning]
+ * @author Marvin Froehlich (aka Qudus)
  * 
  * @version 1.1
  */

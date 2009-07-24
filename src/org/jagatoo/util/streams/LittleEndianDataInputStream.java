@@ -66,7 +66,7 @@ import java.io.InputStream;
  * @see java.io.DataInputStream
  * 
  * @author Erwin Vervaet (klr8@fragland.net)
- * @author Marvin Froehlich (aka Qudus) [code cleaning]
+ * @author Marvin Froehlich (aka Qudus)
  */
 public class LittleEndianDataInputStream extends FilterInputStream implements DataInput
 {

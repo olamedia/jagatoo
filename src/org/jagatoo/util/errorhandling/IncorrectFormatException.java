@@ -27,18 +27,16 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders;
+package org.jagatoo.util.errorhandling;
 
 /**
  * Exception used to indicate that a file of an incorrect type
  * was passed to a loader.
  * 
  * @author Amos Wenger (aka BlueSky)
- * 
- * @deprecated Use {@link org.jagatoo.util.errorhandling.ParsingException} instead.
  */
-@Deprecated
-public class IncorrectFormatException extends RuntimeException
+@SuppressWarnings( "deprecation" )
+public class IncorrectFormatException extends org.jagatoo.loaders.IncorrectFormatException
 {
     private static final long serialVersionUID = -8681216953582870323L;
     

@@ -36,7 +36,7 @@ import org.jagatoo.util.timing.TimerInterface;
  * the whole engine.
  * 
  * @author David Yazel
- * @author Marvin Froehlich (aka Qudus) [code cleaning]
+ * @author Marvin Froehlich (aka Qudus)
  * @author Amos Wenger
  */
 public class ProfileTimer

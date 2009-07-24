@@ -43,7 +43,7 @@ import java.nio.ByteBuffer;
  * Provides static factory methods to create {@link BufferedImage}s.
  * 
  * @author David Yazel
- * @author Marvin Froehlich (aka Qudus) [code cleaning]
+ * @author Marvin Froehlich (aka Qudus)
  */
 public class BufferedImageFactory
 {

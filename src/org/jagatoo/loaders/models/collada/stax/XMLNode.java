@@ -37,7 +37,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.jagatoo.loaders.ParsingException;
+import org.jagatoo.util.errorhandling.ParsingException;
 import org.jagatoo.logging.JAGTLog;
 import org.openmali.FastMath;
 import org.openmali.vecmath2.Matrix4f;

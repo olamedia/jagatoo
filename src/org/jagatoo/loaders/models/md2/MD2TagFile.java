@@ -33,8 +33,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.jagatoo.loaders.IncorrectFormatException;
-import org.jagatoo.loaders.ParsingException;
+import org.jagatoo.util.errorhandling.IncorrectFormatException;
+import org.jagatoo.util.errorhandling.ParsingException;
 import org.jagatoo.logging.JAGTLog;
 import org.jagatoo.util.streams.LittleEndianDataInputStream;
 import org.openmali.vecmath2.Matrix4f;

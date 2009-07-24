@@ -34,8 +34,10 @@ package org.jagatoo.loaders;
  * a problem parsing the specified file.
  * 
  * @author Amos Wenger (aka BlueSky)
- * @author Marvin Froehlich (aka Qudus) [code cleaning]
+ * 
+ * @deprecated Use {@link org.jagatoo.util.errorhandling.ParsingException} instead.
  */
+@Deprecated
 public class ParsingException extends RuntimeException
 {
     private static final long serialVersionUID = 8739835886126935739L;

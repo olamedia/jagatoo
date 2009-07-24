@@ -36,7 +36,7 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.jagatoo.loaders.IncorrectFormatException;
+import org.jagatoo.util.errorhandling.IncorrectFormatException;
 import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
 import org.jagatoo.loaders.models.collada.stax.XMLChannel.ChannelType;
 import org.jagatoo.logging.JAGTLog;
