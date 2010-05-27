@@ -33,8 +33,6 @@
  */
 package org.jagatoo.input.impl.lwjgl;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
 import org.jagatoo.input.render.Cursor;
@@ -63,7 +61,7 @@ public class LWJGLCursorConverter
         
         final int numImages = cursor.getImagesCount();
         
-        IntBuffer imagesBuffer = ByteBuffer.allocateDirect( width * height * numImages * 4).order( ByteOrder.nativeOrder() ).asIntBuffer();
+        IntBuffer imagesBuffer = BufferUtils.createIntBuffer( width * height * numImages );
         imagesBuffer.position( 0 );
         
         for ( int i = 0; i < numImages; i++ )

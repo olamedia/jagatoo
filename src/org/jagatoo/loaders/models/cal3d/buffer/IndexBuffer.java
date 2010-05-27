@@ -29,41 +29,40 @@
  */
 package org.jagatoo.loaders.models.cal3d.buffer;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
-
 /** IndexBuffer provides a wrapper to IntBuffer for geometry index data.
  *  TODO: Provide ShortBuffer or ByteBuffer as more compact alternatives depending on geometry size.
  * @author Dave Lloyd, (c) Short Fuze Ltd., 2003.
  */
 public class IndexBuffer {
-    IntBuffer intBuffer;
-    ShortBuffer shortBuffer;
-    ByteBuffer byteBuffer;
-    int length;
+    private final int[] intBuffer;
+    private final int length;
+    private int pos;
     
     public IndexBuffer(int length) {
         this.length = length;
         
-        intBuffer = ByteBuffer.allocateDirect(length*4).order(ByteOrder.nativeOrder()).asIntBuffer();
+        intBuffer = new int[length];
+        
+        pos = 0;
     }
     
     public void put(int n, int x) {
-        intBuffer.put(n, x);
+        intBuffer[n] = x;
+        pos = n + 1;
     }
     
     public int get(int n) {
-        return intBuffer.get(n);
+        return intBuffer[n];
     }
     
-    public void put(int [ ] x) {
-        intBuffer.put(x);
+    public void put(int[] x) {
+        System.arraycopy(x, 0, intBuffer, pos, x.length);
+        pos += x.length;
     }
     
-    public void put(int n, int [ ] x) {
-        intBuffer.put(x, n, x.length);
+    public void put(int n, int[] x) {
+        System.arraycopy(x, 0, intBuffer, n, x.length);
+        pos = n + x.length;
     }
     
     /* Put a whole triangle into the index buffer.
@@ -71,9 +70,10 @@ public class IndexBuffer {
      * Unaligned triangles do not make sense in OpenGL.
      */
     public void putTri(int n, int a, int b, int c) {
-        intBuffer.put(3*n+0, a);
-        intBuffer.put(3*n+1, b);
-        intBuffer.put(3*n+2, c);
+        intBuffer[3*n+0] = a;
+        intBuffer[3*n+1] = b;
+        intBuffer[3*n+2] = c;
+        pos = 3*n+3;
     }
     
     /* Put a whole quad into the index buffer.
@@ -81,17 +81,18 @@ public class IndexBuffer {
      * Unaligned quads do not make sense in OpenGL.
      */
     public void putQuad(int n, int a, int b, int c, int d) {
-        intBuffer.put(4*n+0, a);
-        intBuffer.put(4*n+1, b);
-        intBuffer.put(4*n+2, c);
-        intBuffer.put(4*n+3, d);
+        intBuffer[4*n+0] = a;
+        intBuffer[4*n+1] = b;
+        intBuffer[4*n+2] = c;
+        intBuffer[4*n+3] = d;
+        pos = 4*n+4;
     }
     
-    public int size() {
+    public final int size() {
         return length;
     }
     
-    public IntBuffer getBuffer() {
+    public final int[] getBuffer() {
         return intBuffer;
     }
 }

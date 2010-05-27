@@ -59,6 +59,7 @@ import org.openmali.vecmath2.Vertex3f;
  */
 public class BSPVersionDataLoader30 implements BSPVersionDataLoader
 {
+    @SuppressWarnings( "unused" )
     public static byte[] decompressVis( int numLeafs, byte[] compressed )
     {
         //dumpCompressedVisData( compressed );

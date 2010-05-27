@@ -77,6 +77,12 @@ public class Cal3dController
         getInternalModel().getMixer().clearCycle(anim, 0f);
     }
     
+    /**
+     * 
+     * @param anim
+     * @param delay
+     * @param duration
+     */
     public void setAnimation(String anim, float delay, float duration)
     {
         if (animationExists(anim))

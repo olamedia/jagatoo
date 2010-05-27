@@ -46,6 +46,28 @@ import java.nio.ShortBuffer;
  */
 public final class BufferUtils
 {
+    private static boolean useDirectBuffers = true;
+    
+    /**
+     * Sets whether to generally create direct buffers, if true, non-direct buffers otherwise.
+     * 
+     * @param b
+     */
+    public static void setUseDirectBuffers( boolean b )
+    {
+        useDirectBuffers = b;
+    }
+    
+    /**
+     * Gets whether to generally create direct buffers, if true, non-direct buffers otherwise.
+     * 
+     * @return whether to generally create direct buffers, if true, non-direct buffers otherwise.
+     */
+    public static final boolean getUseDirectBuffers()
+    {
+        return ( useDirectBuffers );
+    }
+    
     /**
      * Constructs a direct native-ordered bytebuffer with the specified size.
      * 
@@ -55,7 +77,10 @@ public final class BufferUtils
      */
     public static ByteBuffer createByteBuffer( int size )
     {
-        return ( ByteBuffer.allocateDirect( size ).order( ByteOrder.nativeOrder() ) );
+        if ( useDirectBuffers )
+            return ( ByteBuffer.allocateDirect( size ).order( ByteOrder.nativeOrder() ) );
+        
+        return ( ByteBuffer.allocate( size ).order( ByteOrder.nativeOrder() ) );
     }
     
     /**

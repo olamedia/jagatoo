@@ -184,7 +184,7 @@ public class SWTMouse extends Mouse
     /**
      * Moves the mouse back to the center.
      */
-    private void recenter() throws InputSystemException
+    private void recenter()
     {
         if ( control.getDisplay().getThread().equals( Thread.currentThread() ) )
         {
@@ -228,14 +228,7 @@ public class SWTMouse extends Mouse
                 calibY = ( calibY - mouseY );
                 //System.out.println( calibX + ", " + calibY );
                 
-                try
-                {
-                    recenter();
-                }
-                catch ( InputSystemException e )
-                {
-                    e.printStackTrace();
-                }
+                recenter();
                 calibrationStep = -1;
                 break;
         }
@@ -470,14 +463,7 @@ public class SWTMouse extends Mouse
                                 
                                 getEventQueue().enqueue( e );
                                 
-                                try
-                                {
-                                    recenter();
-                                }
-                                catch ( InputSystemException ise )
-                                {
-                                    ise.printStackTrace();
-                                }
+                                recenter();
                             }
                         }
                     }

@@ -126,6 +126,8 @@ public abstract class Mouse extends InputDevice
      * 
      * @param x
      * @param y
+     * 
+     * @throws InputSystemException
      */
     protected void setPosition( int x, int y ) throws InputSystemException
     {

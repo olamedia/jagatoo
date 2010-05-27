@@ -222,11 +222,19 @@ public final class ResourceCache< K, T >
         return ( value );
     }
     
+    /**
+     * 
+     * @param key
+     */
     public void removeByKey( K key )
     {
         removeEntry( key );
     }
     
+    /**
+     * 
+     * @param obj
+     */
     public void removeByObject( T obj )
     {
         // TODO: implement removal

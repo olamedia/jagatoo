@@ -97,7 +97,7 @@ public class TextureImageFormatLoaderImageIOImageInputStream implements TextureI
         return ( bi );
     }
     
-    private static AbstractTextureImage createTextureImage( SharedBufferedImage img, boolean acceptAlpha, boolean flipVertically, boolean allowStreching, TextureFactory texFactory ) throws IOException
+    private static AbstractTextureImage createTextureImage( SharedBufferedImage img, boolean acceptAlpha, boolean flipVertically, boolean allowStreching, TextureFactory texFactory )
     {
         final int orgWidth = img.getWidth();
         final int orgHeight = img.getHeight();

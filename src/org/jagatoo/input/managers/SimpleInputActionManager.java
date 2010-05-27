@@ -214,7 +214,7 @@ public class SimpleInputActionManager implements InputStateListener
         
         Object action = getBoundAction( comp );
         
-        if ( ( action == null ) && ( comp != null ) && ( comp.getType() == DeviceComponent.Type.MOUSE_WHEEL ) )
+        if ( ( action == null ) && ( comp.getType() == DeviceComponent.Type.MOUSE_WHEEL ) )
         {
             if ( checkMouseWheel( comp, delta, state ) )
                 return;

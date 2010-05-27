@@ -146,7 +146,7 @@ public class MD2File
         return ( texture );
     }
     
-    private NamedObject createSkin( String skinName, URL baseURL, AppearanceFactory appFactory ) throws IOException, IncorrectFormatException, ParsingException
+    private NamedObject createSkin( String skinName, URL baseURL, AppearanceFactory appFactory ) throws IncorrectFormatException, ParsingException
     {
         NamedObject skin = skinsCache.get( skinName );
         
@@ -187,6 +187,17 @@ public class MD2File
         return ( skins );
     }
     
+    /**
+     * 
+     * @param textureCoordsOffset
+     * @param numTexCoords
+     * @param skinWidth
+     * @param skinHeight
+     * @return
+     * @throws IOException
+     * @throws IncorrectFormatException
+     * @throws ParsingException
+     */
     private float[] readTextureCoordinates( int textureCoordsOffset, int numTexCoords, int skinWidth, int skinHeight ) throws IOException, IncorrectFormatException, ParsingException
     {
         long t0 = System.currentTimeMillis();

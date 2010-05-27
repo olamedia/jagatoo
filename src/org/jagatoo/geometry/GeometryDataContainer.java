@@ -828,7 +828,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      */
     public void setColor( int vertexIndex, float[] floatArray )
     {
-        if ( !checkColorsExistence( floatArray.length, floatArray != null ) )
+        int l = ( floatArray != null ) ? floatArray.length : 0;
+        if ( !checkColorsExistence( l, floatArray != null ) )
             return;
         
         colors.set( vertexIndex, colorSize, colorsOffset / 4L, floatArray, 0, colorSize );
@@ -842,7 +843,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      */
     public void setColor( int vertexIndex, Colorf colorf )
     {
-        if ( !checkColorsExistence( colorf.hasAlpha() ? 4 : 3, colorf != null ) )
+        int s = ( colorf != null ) ? ( colorf.hasAlpha() ? 4 : 3 ) : 3;
+        if ( !checkColorsExistence( s, colorf != null ) )
             return;
         
         colors.set( vertexIndex, colorSize, colorsOffset / 4L, colorf );
@@ -877,7 +879,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      */
     public void setColors( int vertexIndex, Colorf[] colorfArray )
     {
-        if ( !checkColorsExistence( colorfArray[ 0 ].hasAlpha() ? 4 : 3, colorfArray != null ) )
+        int s = ( colorfArray != null ) ? ( colorfArray[ 0 ].hasAlpha() ? 4 : 3 ) : 3;
+        if ( !checkColorsExistence( s, colorfArray != null ) )
             return;
         
         for ( int i = 0; i < colorfArray.length; i++ )
@@ -918,7 +921,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      */
     public void setColors( int vertexIndex, Colorf[] colorfArray, int startIndex, int length )
     {
-        final int colorSize = colorfArray[ 0 ].hasAlpha() ? 4 : 3;
+        final int colorSize = ( colorfArray != null ) ? ( colorfArray[ 0 ].hasAlpha() ? 4 : 3 ) : 3;
         
         if ( !checkColorsExistence( colorSize, colorfArray != null ) )
             return;
@@ -1452,7 +1455,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      */
     public void setVertexAttributes( int attribIndex, int vertexIndex, TupleNf<?>[] values )
     {
-        checkAttributeExistence( attribIndex, values[ 0 ].getSize(), values != null );
+        int s = ( values != null ) ? values[ 0 ].getSize() : 0;
+        checkAttributeExistence( attribIndex, s, values != null );
         
         if ( values == null )
             return;
@@ -1495,7 +1499,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      */
     public void setVertexAttributes( int attribIndex, int vertexIndex, TupleNf<?>[] values, int startIndex, int length )
     {
-        checkAttributeExistence( attribIndex, values[ 0 ].getSize(), values != null );
+        int s = ( values != null ) ? values[ 0 ].getSize() : 0;
+        checkAttributeExistence( attribIndex, s, values != null );
         
         if ( values == null )
             return;

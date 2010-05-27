@@ -196,10 +196,8 @@ public class SkeletalController extends Controller implements AnimatableModel
                 throw new Error( "Only TrianglesGeometry is supported for now ! " +
                                  "Make sure, your model is triangulated when exporting from your modeling tool." );
             }
-            else
-            {
-                this.destinationGeometry = sourceGeom.copy();
-            }
+            
+            this.destinationGeometry = sourceGeom.copy();
         }
         
     	if ( !playing )

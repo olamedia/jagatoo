@@ -51,6 +51,7 @@ public abstract class AbstractIniParser
      * 
      * @param lineNr
      * @param group
+     * @param comment
      * 
      * @return true, to indicate, that parsing should be proceeded, false to stop parsing.
      * 

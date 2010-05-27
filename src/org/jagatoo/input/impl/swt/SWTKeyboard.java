@@ -342,11 +342,11 @@ public class SWTKeyboard extends Keyboard
                 public void keyPressed( org.eclipse.swt.events.KeyEvent _e )
                 {
                     final org.jagatoo.input.devices.components.Key key = convertKey( _e );
-                    final int keyIndex = key.getKeyCode() - 1;
-                    final long when = System.nanoTime() - lastGameTimeDelta;
                     
                     if ( key != null )
                     {
+                        final int keyIndex = key.getKeyCode() - 1;
+                        final long when = System.nanoTime() - lastGameTimeDelta;
                         final int modifierMask = applyModifier( key, true );
                         
                         long lastWhen = lastPressedTimes[ keyIndex ];
@@ -375,11 +375,11 @@ public class SWTKeyboard extends Keyboard
                 public void keyReleased( org.eclipse.swt.events.KeyEvent _e )
                 {
                     final org.jagatoo.input.devices.components.Key key = convertKey( _e );
-                    final int keyIndex = key.getKeyCode() - 1;
-                    final long when = System.nanoTime() - lastGameTimeDelta;
                     
                     if ( key != null )
                     {
+                        final int keyIndex = key.getKeyCode() - 1;
+                        final long when = System.nanoTime() - lastGameTimeDelta;
                         final int modifierMask = applyModifier( key, false );
                         
                         long lastWhen = lastReleasedTimes[ keyIndex ];

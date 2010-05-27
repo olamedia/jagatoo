@@ -29,10 +29,10 @@
  */
 package org.jagatoo.loaders.models.cal3d.buffer;
 
-import org.openmali.vecmath2.Vector2f;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
+import org.jagatoo.util.nio.BufferUtils;
+import org.openmali.vecmath2.Vector2f;
 
 /** TexCoord2fBuffer provides a wrapper to FloatBuffer for TexCoord2f.
  *  It is also the intended extension point for high-performance implementations
@@ -44,7 +44,7 @@ public class TexCoord2fBuffer {
     int length;
     
     public TexCoord2fBuffer(int length) {
-        floatBuffer = ByteBuffer.allocateDirect(length*4*2).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        floatBuffer = BufferUtils.createFloatBuffer(length*2);
         this.length = length;
     }
     

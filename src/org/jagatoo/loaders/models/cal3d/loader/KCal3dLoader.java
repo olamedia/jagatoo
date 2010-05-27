@@ -134,6 +134,13 @@ public class KCal3dLoader
         return ( data );
     }
     
+    /**
+     * 
+     * @param modelDef
+     * @param name
+     * @param baseURL
+     * @return
+     */
     public static CalModel getCalModel( Cal3dModelDef modelDef, String name, URL baseURL )
     {
         try

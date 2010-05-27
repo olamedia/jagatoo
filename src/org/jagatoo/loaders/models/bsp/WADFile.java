@@ -419,7 +419,7 @@ public class WADFile
         bb.limit( limit0 );
     }
     
-    private AbstractTexture[] readSkyTextures( BSPEntity[] entities, AbstractTexture sampleTexture, AppearanceFactory appFactory, URL baseURL ) throws IOException
+    private AbstractTexture[] readSkyTextures( BSPEntity[] entities, AbstractTexture sampleTexture, AppearanceFactory appFactory, URL baseURL )
     {
         BSPEntity_worldspawn entity_worlspawn = null;
         for ( int i = 0; i < entities.length; i++ )

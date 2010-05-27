@@ -351,7 +351,7 @@ public class JInputMouse extends Mouse
         */
     }
     
-    private static int init_getNumButtons( net.java.games.input.Mouse mouse ) throws InputSystemException
+    private static int init_getNumButtons( net.java.games.input.Mouse mouse )
     {
         net.java.games.input.Component[] comps = mouse.getComponents();
         
@@ -377,7 +377,7 @@ public class JInputMouse extends Mouse
         return ( compMap.size() - oldCount );
     }
     
-    private static boolean init_hasWheel( net.java.games.input.Mouse mouse ) throws InputSystemException
+    private static boolean init_hasWheel( net.java.games.input.Mouse mouse )
     {
         net.java.games.input.Component[] comps = mouse.getComponents();
         

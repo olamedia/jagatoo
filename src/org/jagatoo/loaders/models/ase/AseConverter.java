@@ -66,10 +66,10 @@ public class AseConverter
 {
     private static final GeometryType GEOM_TYPE = GeometryType.TRIANGLE_ARRAY;
     
-    private static final boolean TGT_GROUPS_ONLY = false;
-    private static final boolean TGT_NO_GROUPS = false;
-    private static final boolean TGT_NO_TRANSLATE_TG = false;
-    //private static final boolean TGT_NO_ROOT = false;
+    private static boolean TGT_GROUPS_ONLY = false;
+    private static boolean TGT_NO_GROUPS = false;
+    private static boolean TGT_NO_TRANSLATE_TG = false;
+    //private static boolean TGT_NO_ROOT = false;
     
     private final HashMap<String, NamedObject> appearanceCache = new HashMap<String, NamedObject>();
     

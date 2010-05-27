@@ -406,8 +406,8 @@ public class CalCoreSubmesh {
     public boolean isTangentsEnabled(int mapId) {
         if (tangentsEnabled == null || mapId < 0 || mapId >= tangentsEnabled.length)
             return false;
-        else
-            return tangentsEnabled [mapId];
+        
+        return tangentsEnabled [mapId];
     }
     
     public void setTangentsEnabled(int mapId, boolean enabled) {

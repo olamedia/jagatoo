@@ -296,6 +296,18 @@ public class TDSFile
         din.close();
     }
     
+    /**
+     * 
+     * @param in
+     * @param baseURL
+     * @param appFactory
+     * @param geomFactory
+     * @param convertZup2Yup
+     * @param nodeFactory
+     * @param animFactory
+     * @param siHandler
+     * @throws IOException
+     */
     private TDSFile( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, NodeFactory nodeFactory, AnimationFactory animFactory, SpecialItemsHandler siHandler ) throws IOException
     {
         if ( !( in instanceof BufferedInputStream ) )

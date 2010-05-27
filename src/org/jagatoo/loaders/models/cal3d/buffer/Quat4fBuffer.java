@@ -29,11 +29,11 @@
  */
 package org.jagatoo.loaders.models.cal3d.buffer;
 
-import org.openmali.vecmath2.Quaternion4f;
 import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
+import org.jagatoo.util.nio.BufferUtils;
+import org.openmali.vecmath2.Quaternion4f;
 
 /** Quat4fBuffer provides a wrapper to FloatBuffer for Quat4f.
  *  It is also the intended extension point for high-performance implementations
@@ -44,7 +44,7 @@ public class Quat4fBuffer {
     FloatBuffer floatBuffer;
     
     public Quat4fBuffer(int length) {
-        floatBuffer = ByteBuffer.allocateDirect(length*4*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        floatBuffer = BufferUtils.createFloatBuffer(length*4);
     }
     
     public void put(int n, float x, float y, float z, float w) {

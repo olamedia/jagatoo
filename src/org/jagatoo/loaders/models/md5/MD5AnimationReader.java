@@ -61,7 +61,7 @@ import java.util.ArrayList;
  */
 public class MD5AnimationReader
 {
-    private static Object calcFrame( float[] baseFrame, ArrayList<String> boneDefs, float[] values, AnimationFactory animFactory, boolean convertZup2Yup, float scale )
+    private static Object calcFrame( float[] baseFrame, ArrayList<String> boneDefs, float[] values, AnimationFactory animFactory, boolean convertZup2Yup/*, float scale*/ )
     {
         SimpleStringTokenizer st = new SimpleStringTokenizer( "" );
         
@@ -174,6 +174,25 @@ public class MD5AnimationReader
         return ( animFactory.createBoneAnimationKeyFrame( bones ) );
     }
     
+    /**
+     * 
+     * @param in
+     * @param filename
+     * @param baseURL
+     * @param appFactory
+     * @param geomFactory
+     * @param convertZup2Yup
+     * @param scale
+     * @param nodeFactory
+     * @param shapes
+     * @param boneWeights
+     * @param animFactory
+     * @param siHandler
+     * @param rootGroup
+     * @throws IOException
+     * @throws IncorrectFormatException
+     * @throws ParsingException
+     */
     public static void load( InputStream in, String filename, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, NamedObject[] shapes, Object[][][] boneWeights, AnimationFactory animFactory, SpecialItemsHandler siHandler, NamedObject rootGroup ) throws IOException, IncorrectFormatException, ParsingException
     {
         float[] baseFrame = null;
@@ -350,7 +369,7 @@ public class MD5AnimationReader
                     }
                 }
                 
-                frames.add( calcFrame( baseFrame, boneDefs, frameValues, animFactory, convertZup2Yup, scale ) );
+                frames.add( calcFrame( baseFrame, boneDefs, frameValues, animFactory, convertZup2Yup/*, scale*/ ) );
             }
         }
         

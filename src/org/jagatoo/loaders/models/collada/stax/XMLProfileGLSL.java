@@ -41,6 +41,8 @@ public class XMLProfileGLSL {
     /**
      * Not implemented yet, constructor here so that
      * JiBX doesn't complain.
+     * 
+     * @param str
      */
     public XMLProfileGLSL(String str) {}
     

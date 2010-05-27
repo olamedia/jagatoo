@@ -41,6 +41,8 @@ public class XMLProfileCG {
     /**
      * Not implemented yet, constructor here so that
      * JiBX doesn't complain.
+     * 
+     * @param str
      */
     public XMLProfileCG(String str) {}
     

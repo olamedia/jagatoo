@@ -297,6 +297,8 @@ public class CalModel {
      *  This method may be of use if a model has several compatible skeletons
      *  such as a simple body and a body with full facial rig.
      *  Otherwise it is principally of use during the design phase.
+     *  
+     *  @param coreSkeleton
      */
     public synchronized void setCoreSkeleton(CalCoreSkeleton coreSkeleton) {
         // create the skeleton from the core skeleton

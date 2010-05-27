@@ -49,12 +49,14 @@ public class CalCoreTrack {
             if (o1 instanceof Float) {
                 if (o2 instanceof Float)
                     return Float.compare(((Float) o1).floatValue(), ((Float) o2).floatValue());
-                else
-                    return Float.compare(((Float) o1).floatValue(), ((CalCoreKeyframe) o2).time);
-            } else if (o2 instanceof Float)
+                
+                return Float.compare(((Float) o1).floatValue(), ((CalCoreKeyframe) o2).time);
+            }
+            
+            if (o2 instanceof Float)
                 return Float.compare(((CalCoreKeyframe) o1).time, ((Float) o2).floatValue());
-            else
-                return Float.compare(((CalCoreKeyframe) o1).time, ((CalCoreKeyframe) o2).time);
+            
+            return Float.compare(((CalCoreKeyframe) o1).time, ((CalCoreKeyframe) o2).time);
         }
         @SuppressWarnings("unused")
 		public boolean equals(Object o1, Object o2) { return compare(o1, o2) == 0; }

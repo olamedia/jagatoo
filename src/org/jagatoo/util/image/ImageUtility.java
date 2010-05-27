@@ -52,6 +52,7 @@ import javax.imageio.ImageIO;
 import org.jagatoo.image.DirectBufferedImage;
 import org.jagatoo.image.SharedBufferedImage;
 import org.jagatoo.logging.JAGTLog;
+import org.jagatoo.util.nio.BufferUtils;
 
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGEncodeParam;
@@ -470,7 +471,7 @@ public class ImageUtility
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write( img, "pnm", baos );
-        ByteBuffer bb = ByteBuffer.allocateDirect( 1 );
+        ByteBuffer bb = BufferUtils.createByteBuffer( baos.size() );
         bb.put( baos.toByteArray() );
         bb.rewind();
         

@@ -41,7 +41,6 @@ import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.models._util.AppearanceFactory;
 import org.jagatoo.loaders.models._util.GeometryFactory;
 import org.jagatoo.loaders.models._util.NodeFactory;
-import org.jagatoo.loaders.models.tds.chunks.processors.FaceArrayProcessor;
 import org.jagatoo.opengl.enums.FaceCullMode;
 import org.openmali.vecmath2.Point3f;
 import org.openmali.vecmath2.TexCoord2f;
@@ -227,7 +226,7 @@ public class ModelContext
                     }
                 }
                 
-                GeometryFactory.GeometryType geomType = FaceArrayProcessor.CREATE_INDEXED_GEOMETRY ? GeometryFactory.GeometryType.INDEXED_TRIANGLE_ARRAY : GeometryFactory.GeometryType.TRIANGLE_ARRAY;
+                GeometryFactory.GeometryType geomType = /*!FaceArrayProcessor.CREATE_INDEXED_GEOMETRY ? GeometryFactory.GeometryType.TRIANGLE_ARRAY :*/ GeometryFactory.GeometryType.INDEXED_TRIANGLE_ARRAY;
                 for ( int i = 0; i < coords.length; i++ )
                 {
                     geomFactory.setCoordinate( geometry, geomType, i, coords[i].getX(), coords[i].getY(), coords[i].getZ() );

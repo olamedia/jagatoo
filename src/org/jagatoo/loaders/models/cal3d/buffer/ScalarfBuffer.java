@@ -30,9 +30,9 @@
 package org.jagatoo.loaders.models.cal3d.buffer;
 
 import java.nio.Buffer;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
+import org.jagatoo.util.nio.BufferUtils;
 
 /** ScalarfBuffer provides a wrapper to FloatBuffer for floats.
  *  It is also the intended extension point for high-performance implementations
@@ -45,7 +45,7 @@ public class ScalarfBuffer {
     
     public ScalarfBuffer(int length) {
         this.length = length;
-        floatBuffer = ByteBuffer.allocateDirect(length*4).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        floatBuffer = BufferUtils.createFloatBuffer(length);
     }
     
     public void set(ScalarfBuffer v) {

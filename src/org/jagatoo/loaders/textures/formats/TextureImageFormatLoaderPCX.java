@@ -171,7 +171,7 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
          *
          * @param data the byte-data of the input
          */
-        public PCXPalette( byte[] data ) throws IOException
+        public PCXPalette( byte[] data )
         {
             final int palSize = 3 * 256;
             

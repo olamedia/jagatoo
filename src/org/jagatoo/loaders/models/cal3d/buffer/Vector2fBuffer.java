@@ -29,10 +29,10 @@
  */
 package org.jagatoo.loaders.models.cal3d.buffer;
 
-import org.openmali.vecmath2.Vector2f;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
+import org.jagatoo.util.nio.BufferUtils;
+import org.openmali.vecmath2.Vector2f;
 
 /** Vector2fBuffer provides a wrapper to FloatBuffer for Vector2f.
  *  It is also the intended extension point for high-performance implementations
@@ -43,7 +43,7 @@ public class Vector2fBuffer {
     FloatBuffer floatBuffer;
     
     public Vector2fBuffer(int length) {
-        floatBuffer = ByteBuffer.allocateDirect(length*4*2).order(ByteOrder.nativeOrder()).asFloatBuffer();
+        floatBuffer = BufferUtils.createFloatBuffer(length*2);
     }
     
     public void put(int n, float x, float y) {

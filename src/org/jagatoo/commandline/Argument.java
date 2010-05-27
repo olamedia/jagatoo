@@ -89,6 +89,8 @@ public class Argument
      * @param rawValue the raw String value
      * 
      * @return the parsed value (by default the input String is passed back).
+     * 
+     * @throws CommandlineParsingException
      */
     protected Object parseValueImpl( String rawValue ) throws CommandlineParsingException
     {
