@@ -190,6 +190,7 @@ public class ArgumentsRegistry
      * Dumps all registered arguments.
      * 
      * @param maxLineWidth
+     * @param out
      */
     public void dump( int maxLineWidth, java.io.PrintStream out )
     {

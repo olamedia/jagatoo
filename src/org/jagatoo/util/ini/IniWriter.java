@@ -52,6 +52,7 @@ public class IniWriter
     private int minEqualSignPosition = -1;
     private int minValuePosition = -1;
     private int minCommentPosition = -1;
+    private String nullValue = "N/A";
     
     private boolean isFirstLine = true;
     private boolean isInGroup = false;
@@ -192,6 +193,48 @@ public class IniWriter
     }
     
     /**
+     * Sets the String to be written for a null value.
+     * 
+     * @param nullValue
+     */
+    public void setNullValue( String nullValue )
+    {
+        if ( nullValue == null )
+            throw new IllegalArgumentException( "nullValue must not be null." );
+        
+        this.nullValue = nullValue;
+    }
+    
+    /**
+     * Gets the String to be written for a null value.
+     * 
+     * @return the String to be written for a null value.
+     */
+    public final String getNullValue()
+    {
+        return ( nullValue );
+    }
+    
+    /**
+     * Gets the String to write to the ini file from the passed value.
+     * 
+     * @param value the value to write to the ini file
+     * @param quoteValue if <code>true</code>, the value will be enclosed by double quotes, if <code>false</code>, no quotes will be used, if <code>null</code> some default behavior will be used.
+     * 
+     * @return the String to write to the ini file from the passed value.
+     */
+    protected String getObjectValue( Object value, Boolean quoteValue )
+    {
+        if ( quoteValue == Boolean.TRUE )
+            return ( "\"" + String.valueOf( value ) + "\"" );
+        
+        if ( quoteValue == Boolean.FALSE )
+            return ( String.valueOf( value ) );
+        
+        return ( "\"" + String.valueOf( value ) + "\"" );
+    }
+    
+    /**
      * Writes a new Group to the file.
      * 
      * @param group
@@ -216,31 +259,17 @@ public class IniWriter
         isInGroup = true;
     }
     
-    private static String getStyleString( java.awt.Font font )
-    {
-        if ( font.getStyle() == java.awt.Font.PLAIN )
-            return ( "PLAIN" );
-        
-        String s = "";
-        if ( ( font.getStyle() & java.awt.Font.BOLD ) != 0 )
-            s += "BOLD";
-        
-        if ( ( font.getStyle() & java.awt.Font.ITALIC ) != 0 )
-            s += "ITALIC";
-        
-        return ( s );
-    }
-    
     /**
      * Writes a new setting to the next line.
      * 
      * @param key
      * @param value if this is not a number, it is quoted in double-quotes and then written using the toString() method.
+     * @param quoteValue
      * @param comment null for no comment
      * 
      * @throws IOException
      */
-    public void writeSetting( String key, Object value, String comment ) throws IOException
+    public void writeSetting( String key, Object value, Boolean quoteValue, String comment ) throws IOException
     {
         int pos = 0;
         
@@ -284,7 +313,7 @@ public class IniWriter
         
         if ( value == null )
         {
-            value = "N/A";
+            value = getNullValue();
         }
         else if ( ( value instanceof Number ) || ( value instanceof Boolean ) )
         {
@@ -294,13 +323,9 @@ public class IniWriter
         {
             value = ( (Enum<?>)value ).name();
         }
-        else if ( value instanceof java.awt.Font )
-        {
-            value = ( (java.awt.Font)value ).getName() + "-" + getStyleString( (java.awt.Font)value ) + "-" + ( (java.awt.Font)value ).getSize();
-        }
         else
         {
-            value = "\"" + String.valueOf( value ) + "\"";
+            value = getObjectValue( value, quoteValue );
         }
         
         if ( getMinValuePosition() > pos )
@@ -337,6 +362,20 @@ public class IniWriter
         writer.newLine();
         
         isFirstLine = false;
+    }
+    
+    /**
+     * Writes a new setting to the next line.
+     * 
+     * @param key
+     * @param value if this is not a number, it is quoted in double-quotes and then written using the toString() method.
+     * @param comment null for no comment
+     * 
+     * @throws IOException
+     */
+    public void writeSetting( String key, Object value, String comment ) throws IOException
+    {
+        writeSetting( key, value, null, comment );
     }
     
     /**

@@ -103,6 +103,8 @@ public class Argument
      * @param rawValue the raw String value
      * 
      * @return the parsed value.
+     * 
+     * @throws CommandlineParsingException
      */
     public final Object parseValue( String rawValue ) throws CommandlineParsingException
     {

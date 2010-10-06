@@ -74,11 +74,11 @@ public class CommandlineParser
     private void onArgumentComplete( Argument arg, String rawValue ) throws CommandlineParsingException
     {
         if ( rawValue == null )
-            handler.handleArgument( arg, null );
+            handler._handleArgument( arg, null );
         else if ( arg == null )
-            handler.handleArgument( null, rawValue );
+            handler._handleArgument( null, rawValue );
         else
-            handler.handleArgument( arg, arg.parseValue( rawValue ) );
+            handler._handleArgument( arg, arg.parseValue( rawValue ) );
     }
     
     private Argument parseSingleCharArguments( int chunkNum, String chunk ) throws CommandlineParsingException
@@ -186,7 +186,7 @@ public class CommandlineParser
             onError( chunks.length, "No value provided for argument " + lastValueArg );
         }
         
-        handler.validate();
+        handler._validate();
     }
     
     /**

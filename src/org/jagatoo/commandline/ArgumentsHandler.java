@@ -36,6 +36,8 @@ package org.jagatoo.commandline;
  */
 public abstract class ArgumentsHandler
 {
+    private int numArguments = 0;
+    
     /**
      * This method is called when the parser has identified an argument with or without a value.
      * 
@@ -43,6 +45,13 @@ public abstract class ArgumentsHandler
      * @param value the value (null for no-value-arguments)
      */
     protected abstract void handleArgument( Argument arg, Object value );
+    
+    final void _handleArgument( Argument arg, Object value )
+    {
+        numArguments++;
+        
+        handleArgument( arg, value );
+    }
     
     /**
      * This method is called when a serious error is detected byy the parser.
@@ -60,7 +69,14 @@ public abstract class ArgumentsHandler
     /**
      * This method is called after the whole command line has been parsed.
      * 
+     * @param numArguments the number of handled {@link Argument}s
+     * 
      * @throws CommandlineParsingException
      */
-    protected abstract void validate() throws CommandlineParsingException;
+    protected abstract void validate( int numArguments ) throws CommandlineParsingException;
+    
+    final void _validate() throws CommandlineParsingException
+    {
+        validate( numArguments );
+    }
 }
