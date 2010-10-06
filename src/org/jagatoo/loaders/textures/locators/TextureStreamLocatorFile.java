@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -48,13 +48,21 @@ public class TextureStreamLocatorFile implements TextureStreamLocator
         return ( baseDir.getAbsolutePath() );
     }
     
-    /** Creates a new instance of FileTextureStreamLocator */
+    /**
+     * Creates a new instance of FileTextureStreamLocator
+     * 
+     * @param baseDir
+     */
     public TextureStreamLocatorFile( File baseDir )
     {
         this.baseDir = baseDir;
     }
     
-    /** Creates a new instance of FileTextureStreamLocator */
+    /**
+     * Creates a new instance of FileTextureStreamLocator
+     * 
+     * @param baseDir
+     */
     public TextureStreamLocatorFile( String baseDir )
     {
         this.baseDir = new File( baseDir );

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -70,6 +70,8 @@ public final class ArrayVector
     /**
      * Returns the squared length of the given vector.
      * 
+     * @param vector
+     * 
      * @return the squared length of the given vector
      */
     public static final float lengthSquared( float[] vector )
@@ -86,6 +88,8 @@ public final class ArrayVector
     
     /**
      * Returns the length of the given vector.
+     * 
+     * @param vector
      * 
      * @return the length of the given vector
      */
@@ -147,6 +151,8 @@ public final class ArrayVector
      * 
      * @param v1 the first vector
      * @param v2 the other vector
+     * 
+     * @return the dot product
      */
     public static final float dot( float[] v1, float[] v2 )
     {
@@ -335,6 +341,7 @@ public final class ArrayVector
      * 
      * @param min the lowest value in the vector after clamping
      * @param max the highest value in the vector after clamping
+     * @param v
      */
     public static final void clamp( float min, float max, float[] v )
     {
@@ -399,6 +406,7 @@ public final class ArrayVector
      * @param v1 the first vector
      * @param v2 the second vector
      * @param alpha the alpha interpolation parameter
+     * @param o
      */
     public static final void interpolate( float[] v1, float[] v2, float alpha, float[] o )
     {

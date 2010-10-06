@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -118,6 +118,8 @@ public class PAKListing
     /**
      * Retrieves the offset to a given file name. 
      * 
+     * @param name
+     * 
      * @return The offset to the given file or -1 if file not found
      */
     public int getFileOffset( String name )
@@ -132,6 +134,8 @@ public class PAKListing
     
     /**
      * Retrieves the length of a given file.
+     * 
+     * @param name
      * 
      * @return The length of the file or -1 if file not found
      */
@@ -174,6 +178,8 @@ public class PAKListing
      * 
      * @param header The PAK header of this file
      * @param totalData The file to read the listing from
+     * 
+     * @throws IOException
      */
     public PAKListing( PAKHeader header, byte[] totalData ) throws IOException
     {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -50,6 +50,7 @@ public class CalAnimationAction extends CalAnimation {
      * animation.
      *
      * This function is the default constructor of the animation action instance.
+     * @param coreAnimation 
      *****************************************************************************/
     
     public  CalAnimationAction(CalCoreAnimation coreAnimation) {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -312,7 +312,6 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
      * Reads a String from the InputStream.
      * The string is expected to be 0-terminated.
      * 
-     * @param in
      * @param maxLength
      * @param alwaysReadMaxLength
      * 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,7 +42,7 @@ public class Cube {
     
     /**
      * @param args
-     * @throws JiBXException
+     * @throws Exception
      */
     public static void main(String[] args) throws Exception {
         InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream( "org/jagatoo/loaders/models/collada/stax/models/cube.dae" );

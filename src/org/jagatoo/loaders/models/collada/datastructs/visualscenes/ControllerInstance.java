@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -69,7 +69,6 @@ public class ControllerInstance extends AbstractInstance
      * @param file The COLLADA file this node belongs to
      * @param id The id of this node
      * @param name The name of this node
-     * @param transform The transform of this node
      * @param controllerURL The URL of the geometry this node is an instance of
      * @param materialURL The URL of the material bound to this node
      */

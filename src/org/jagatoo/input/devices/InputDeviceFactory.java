@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -201,6 +201,8 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     
     /**
      * @return an array of all the installed Keyboards in the system.
+     * 
+     * @throws InputSystemException
      */
     protected abstract Keyboard[] initKeyboards() throws InputSystemException;
     
@@ -208,6 +210,8 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      * @return an array of all the installed Keyboards in the system.
      * 
      * @param factory the factory to call {@link #initKeyboards()} on
+     * 
+     * @throws InputSystemException
      */
     protected static final Keyboard[] initKeyboards( InputDeviceFactory factory ) throws InputSystemException
     {
@@ -237,6 +241,8 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     
     /**
      * @return an array of all the installed Mouses in the system.
+     * 
+     * @throws InputSystemException
      */
     protected abstract Mouse[] initMouses() throws InputSystemException;
     
@@ -244,6 +250,8 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      * @return an array of all the installed Mouses in the system.
      * 
      * @param factory the factory to call {@link #initMouses()} on
+     * 
+     * @throws InputSystemException
      */
     protected static final Mouse[] initMouses( InputDeviceFactory factory ) throws InputSystemException
     {
@@ -273,6 +281,8 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
     
     /**
      * @return an array of all the installed Controllers in the system.
+     * 
+     * @throws InputSystemException
      */
     protected abstract Controller[] initControllers() throws InputSystemException;
     
@@ -314,6 +324,8 @@ public abstract class InputDeviceFactory implements KeyboardFactory, MouseFactor
      * @return an array of all the installed Controllers in the system.
      * 
      * @param factory the factory to call {@link #initControllers()} on
+     * 
+     * @throws InputSystemException
      */
     protected static final Controller[] initControllers( InputDeviceFactory factory ) throws InputSystemException
     {

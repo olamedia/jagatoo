@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -53,6 +53,9 @@ public class CalSaver {
     /** Saves a core animation instance.
      *
      * This function saves a core animation instance to a stream.
+     * @param file 
+     * @param coreAnimation 
+     * @throws IOException 
      *****************************************************************************/
     
     public static void saveCoreAnimation (OutputStream file, CalCoreAnimation coreAnimation) throws IOException
@@ -86,6 +89,7 @@ public class CalSaver {
      *
      * @param file The file stream to save the core bone instance to.
      * @param coreBone A pointer to the core bone instance that should be saved.
+     * @throws IOException 
      *****************************************************************************/
     
     protected static void saveCoreBones (DataOutput file, CalCoreBone coreBone) throws IOException
@@ -145,6 +149,7 @@ public class CalSaver {
      * @param file The file stream to save the core keyframe instance to.
      * @param coreKeyframe A pointer to the core keyframe instance that should be
      *                      saved.
+     * @throws IOException 
      *****************************************************************************/
     
     protected static void saveCoreKeyframe (DataOutput file, CalCoreKeyframe coreKeyframe) throws IOException
@@ -176,6 +181,7 @@ public class CalSaver {
      *                    to.
      * @param coreMaterial A pointer to the core material instance that should
      *                      be saved.
+     * @throws IOException 
      *****************************************************************************/
     
     public static void saveCoreMaterial (OutputStream file, CalCoreMaterial coreMaterial) throws IOException
@@ -220,6 +226,7 @@ public class CalSaver {
      *
      * @param file The name of the file to save the core mesh instance to.
      * @param coreMesh A pointer to the core mesh instance that should be saved.
+     * @throws IOException 
      *****************************************************************************/
     
     public static void saveCoreMesh (OutputStream file, CalCoreMesh coreMesh) throws IOException
@@ -253,6 +260,7 @@ public class CalSaver {
      *                    to.
      * @param coreSkeleton A pointer to the core skeleton instance that should be
      *                      saved.
+     * @throws IOException 
      *****************************************************************************/
     
     public static void saveCoreSkeleton (OutputStream file, CalCoreSkeleton coreSkeleton) throws IOException
@@ -283,6 +291,7 @@ public class CalSaver {
      * @param out The file stream to save the core submesh instance to.
      * @param coreSubmesh A pointer to the core submesh instance that should be
      *                     saved.
+     * @throws IOException 
      *****************************************************************************/
     
     protected static void saveCoreSubmesh (DataOutput out, CalCoreSubmesh coreSubmesh) throws IOException
@@ -389,6 +398,7 @@ public class CalSaver {
      *
      * @param file The file stream to save the core track instance to.
      * @param coreTrack A pointer to the core track instance that should be saved.
+     * @throws IOException 
      *****************************************************************************/
     
     protected static void saveCoreTrack (DataOutput file, CalCoreTrack coreTrack) throws IOException

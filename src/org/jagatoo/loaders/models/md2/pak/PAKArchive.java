@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -89,7 +89,11 @@ public class PAKArchive
     /**
      * Retrieve access to a specified file in this pak
      * 
+     * @param filename
+     * 
      * @return The name of the file to retrieve access to
+     * 
+     * @throws IOException
      */
     public InputStream getFile( String filename ) throws IOException
     {
@@ -117,6 +121,8 @@ public class PAKArchive
      * Creates new PAKArchive.
      * 
      * @param in the InputStream to read as a PAK
+     * 
+     * @throws IOException
      */
     public PAKArchive( InputStream in ) throws IOException
     {
@@ -130,6 +136,8 @@ public class PAKArchive
      * Creates new PAKArchive.
      * 
      * @param url the URL to read as a PAK
+     * 
+     * @throws IOException
      */
     public PAKArchive( URL url ) throws IOException
     {
@@ -140,6 +148,8 @@ public class PAKArchive
      * Creates new PAKArchive.
      * 
      * @param filename The file to read as a PAK
+     * 
+     * @throws IOException
      */
     public PAKArchive( String filename ) throws IOException
     {

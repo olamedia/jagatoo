@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -55,6 +55,7 @@ public class CalCoreModel {
      * Constructs the core model instance.
      *
      * This function is the default constructor of the core model instance.
+     * @param name 
      */
     
     public CalCoreModel(String name) {
@@ -64,6 +65,8 @@ public class CalCoreModel {
     }
     
     /** Constructs a core model with the supplied skeleton.
+     * @param name 
+     * @param skeleton 
      */
     public CalCoreModel(String name, CalCoreSkeleton skeleton) {
         this.name = name;
@@ -92,6 +95,7 @@ public class CalCoreModel {
     }
     
     /** Gets all the core meshes in a single map
+     * @return 
      */
     public Map<String,CalCoreMesh> getCoreMeshes() {
         return mapCoreMesh;
@@ -257,6 +261,7 @@ public class CalCoreModel {
      *  This is not the same as getting the count from the material set mapping.
      *  It does not deal with sparse numbering of threads though and simply
      *  reports the highest thread Id encountered (plus one).
+     * @return 
      */
     public int countMaterialThreadsNeeded() {
         int maxThreadId = 0;
@@ -396,6 +401,7 @@ public class CalCoreModel {
     
     /** 
      * Gets the number of core material threads.
+     * @return 
      */
     
     public int getNumCoreMaterialThreads() {
@@ -404,6 +410,7 @@ public class CalCoreModel {
     
     /** 
      * Gets the vector of maps from core material set to core material indexed by thread.
+     * @return 
      */
     
     public Vector<Map<String, CalCoreMaterial>> getCoreMaterialThreadMaps() {
@@ -439,6 +446,7 @@ public class CalCoreModel {
     /** Gets the properties (as key/value pairs) for this model supplied when it was loaded.
      *  These properties may include further details about how the model was generated,
      *  or how it should be used.
+     * @return 
      */
     public java.util.Properties getProperties() {
         return properties;
@@ -453,6 +461,7 @@ public class CalCoreModel {
      *  These properties may include further details about how the model was generated,
      *  or how it should be used. The properties will also usually include the source file names
      *  for the various components which form the model.
+     * @param properties 
      */
     public void setProperties(java.util.Properties properties) {
         this.properties = properties;

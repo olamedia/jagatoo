@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -131,6 +131,8 @@ public class CalSkeleton {
     }
     
     /** Gets the translation needed to go from the skeleton origin to the bone end.
+     * @param coreBone 
+     * @return 
      */
     
     public Vector3f getBoneTranslation(CalCoreBone coreBone) {
@@ -138,6 +140,8 @@ public class CalSkeleton {
     }
     
     /** Gets the rotation needed to go from the skeleton origin to the bone end.
+     * @param coreBone 
+     * @return 
      */
     
     public Quaternion4f getBoneRotation(CalCoreBone coreBone) {
@@ -162,7 +166,7 @@ public class CalSkeleton {
     
     
     /*****************************************************************************/
-    /** @return the bone vector.
+    /** Returns the bone vector.
      * 
      * This function returns the vector that contains all bones of the skeleton
      * instance.

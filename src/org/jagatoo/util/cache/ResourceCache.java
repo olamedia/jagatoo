@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,23 +38,21 @@ import java.lang.ref.SoftReference;
  * load factor (entries / capacity > load factor) is in use.
  * 
  * @author mam
- * @author Marvin Froehlich (aka Qudus)
  * 
  * @see java.lang.ref.SoftReference
  * 
  * @param <K> the cache-key type
  * @param <T> the cached item type
  */
-public final class ResourceCache< K, T >
+public final class ResourceCache<K, T>
 {
-    private class Entry< U > extends SoftReference< U >
+    private class Entry<U> extends SoftReference<U>
     {
         public final K key;
         public final int hash;
-        public Entry< U > next;
+        public Entry<U> next;
         
-        @SuppressWarnings( "unchecked" )
-        public Entry( int hash, K key, U value, ReferenceQueue< U > queue, Entry next )
+        public Entry( int hash, K key, U value, ReferenceQueue<U> queue, Entry<U> next )
         {
             super( value, queue );
             
@@ -68,11 +66,11 @@ public final class ResourceCache< K, T >
     private static final int MAXIMUM_CAPACITY = 1 << 30;
     private static final float DEFAULT_LOAD_FACTOR = 0.75f;
     
-    private final ReferenceQueue< Entry< T >> queue = new ReferenceQueue< Entry< T > >();
+    private final ReferenceQueue<Entry<T>> queue = new ReferenceQueue<Entry<T>>();
     
     private final float loadFactor;
     
-    private Entry< T >[] table;
+    private Entry<T>[] table;
     private int size;
     private int threshold;
     private int hits;
@@ -162,7 +160,7 @@ public final class ResourceCache< K, T >
         checkQueue();
         
         int hash = hash( key );
-        Entry< T > e = table[ hash & ( table.length - 1 ) ];
+        Entry<T> e = table[ hash & ( table.length - 1 ) ];
         for ( ; e != null; e = e.next )
         {
             if ( e.hash == hash && ( key == e.key || key.equals( e.key ) ) )
@@ -186,7 +184,7 @@ public final class ResourceCache< K, T >
      * @param value The object that should be stored.
      * @return value. (For simplyfied calling)
      */
-    @SuppressWarnings( "unchecked" )
+    @SuppressWarnings( { "unchecked", "rawtypes" } )
     public T put( K key, T value )
     {
         checkQueue();
@@ -198,7 +196,7 @@ public final class ResourceCache< K, T >
         
         int hash = hash( key );
         int idx = hash & ( table.length - 1 );
-        Entry< T > e = table[ idx ];
+        Entry<T> e = table[idx];
         for ( Entry< T > prev = null; e != null; e = e.next )
         {
             if ( e.hash == hash && ( key == e.key || key.equals( e.key ) ) )
@@ -206,7 +204,7 @@ public final class ResourceCache< K, T >
                 // TODO: check, if this doesn't crash!!!
                 e = new Entry( hash, key, value, queue, e.next );
                 if ( prev == null )
-                    table[ idx ] = e;
+                    table[idx] = e;
                 else
                     prev.next = e;
                 return ( value );
@@ -215,7 +213,7 @@ public final class ResourceCache< K, T >
         }
         
         // TODO: check, if this doesn't crash!!!
-        table[ idx ] = new Entry( hash, key, value, queue, table[ idx ] );
+        table[idx] = new Entry( hash, key, value, queue, table[ idx ] );
         if ( size++ >= threshold )
             resize( 2 * table.length );
         
@@ -243,7 +241,7 @@ public final class ResourceCache< K, T >
     @SuppressWarnings( "unchecked" )
     private void resize( int newCapacity )
     {
-        Entry< T >[] oldTable = table;
+        Entry<T>[] oldTable = table;
         int oldCapacity = oldTable.length;
         if ( oldCapacity == MAXIMUM_CAPACITY )
         {
@@ -251,20 +249,20 @@ public final class ResourceCache< K, T >
             return;
         }
         
-        Entry< T >[] newTable = new Entry[ newCapacity ];
+        Entry<T>[] newTable = new Entry[ newCapacity ];
         
         for ( int i = 0; i < oldCapacity; ++i )
         {
-            Entry< T > e = oldTable[ i ];
+            Entry<T> e = oldTable[i];
             if ( e != null )
             {
                 oldTable[ i ] = null;
                 do
                 {
-                    Entry< T > next = e.next;
+                    Entry<T> next = e.next;
                     int idx = e.hash & ( newCapacity - 1 );
-                    e.next = newTable[ idx ];
-                    newTable[ idx ] = e;
+                    e.next = newTable[idx];
+                    newTable[idx] = e;
                     e = next;
                 }
                 while ( e != null );
@@ -279,17 +277,17 @@ public final class ResourceCache< K, T >
     {
         int hash = hash( key );
         int idx = hash & ( table.length - 1 );
-        Entry< T > prev = table[ idx ];
-        Entry< T > e = prev;
+        Entry<T> prev = table[idx];
+        Entry<T> e = prev;
         
         while ( e != null )
         {
-            Entry< T > next = e.next;
+            Entry<T> next = e.next;
             if ( e.hash == hash && ( key == e.key || key.equals( e.key ) ) )
             {
                 size--;
                 if ( prev == e )
-                    table[ idx ] = next;
+                    table[idx] = next;
                 else
                     prev.next = next;
                 return;
@@ -309,13 +307,12 @@ public final class ResourceCache< K, T >
             if ( e == null )
                 return;
             
-            removeEntry( ( (Entry< T >)( e ) ).key );
+            removeEntry( ( (Entry<T>)( e ) ).key );
         }
     }
     
     /**
      * Returns the number of cache hits. A cache hit is a call to get() that
-     * @return a non-null reference.
      * 
      * @return The number of cache hits.
      */

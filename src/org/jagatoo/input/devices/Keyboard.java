@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -213,6 +213,8 @@ public abstract class Keyboard extends InputDevice
      * 
      * @param key
      * @param keyState
+     * 
+     * @return state changed?
      */
     protected abstract boolean hasKeyStateChanged( Key key, boolean keyState );
     
@@ -420,6 +422,8 @@ public abstract class Keyboard extends InputDevice
     
     /**
      * Destroys the Keyboard.
+     * 
+     * @throws InputSystemException
      */
     protected abstract void destroyImpl() throws InputSystemException;
     

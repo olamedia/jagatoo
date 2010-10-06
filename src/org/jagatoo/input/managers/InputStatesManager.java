@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -92,6 +92,8 @@ public class InputStatesManager
     }
     
     /**
+     * @return
+     * 
      * @deprecated renamed to {@link #getInputStatesManipulator()}
      */
     @Deprecated
@@ -381,7 +383,6 @@ public class InputStatesManager
      * the requested InputState, into an array.<br>
      * 
      * @param state
-     * @param actions
      * 
      * @return an array of all found actions, or null, if no actions have been found.
      */
@@ -417,7 +418,7 @@ public class InputStatesManager
     /**
      * Creates a new {@link InputStatesManager}.
      * 
-     * @param numActions the number of available (bindeable) actions.
+     * @param bindingsManager
      */
     public InputStatesManager( InputBindingsManager< ? extends InputAction > bindingsManager )
     {

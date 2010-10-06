@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -91,6 +91,8 @@ public abstract class InputEvent
     
     /**
      * The time the last event occured (if a timestamps are being used).
+     * 
+     * @return the time the last event occured (if a timestamps are being used).
      */
     public final long getLastWhen()
     {

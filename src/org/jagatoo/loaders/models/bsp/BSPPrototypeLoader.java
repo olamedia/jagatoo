@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1255,6 +1255,24 @@ public class BSPPrototypeLoader
     
     /**
      * Loads the BSP scene prototype.
+     * 
+     * @param in
+     * @param filename
+     * @param baseURL
+     * @param geomFactory
+     * @param convertZup2Yup
+     * @param worldScale
+     * @param appFactory
+     * @param nodeFactory
+     * @param sceneGroup
+     * @param mainGroupType
+     * @param siHandler
+     * 
+     * @return
+     * 
+     * @throws IOException
+     * @throws IncorrectFormatException
+     * @throws ParsingException
      */
     public static BSPScenePrototype load( InputStream in, String filename, URL baseURL, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {
@@ -1271,6 +1289,22 @@ public class BSPPrototypeLoader
     
     /**
      * Loads the BSP scene prototype.
+     * 
+     * @param url
+     * @param geomFactory
+     * @param convertZup2Yup
+     * @param worldScale
+     * @param appFactory
+     * @param nodeFactory
+     * @param sceneGroup
+     * @param mainGroupType
+     * @param siHandler
+     * 
+     * @return
+     * 
+     * @throws IOException
+     * @throws IncorrectFormatException
+     * @throws ParsingException
      */
     public static BSPScenePrototype load( URL url, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {

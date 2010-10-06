@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -32,7 +32,10 @@ package org.jagatoo.commands;
 import java.util.HashMap;
 import java.util.List;
 
+import org.jagatoo.input.InputSystem;
 import org.jagatoo.input.devices.components.DeviceComponent;
+import org.jagatoo.input.devices.components.Key;
+import org.jagatoo.input.devices.components.MouseButton;
 import org.jagatoo.input.listeners.InputListener;
 import org.jagatoo.input.managers.InputBindingsManager;
 import org.jagatoo.input.managers.InputBindingsSet;
@@ -71,6 +74,8 @@ public class CommandProcessor
     }
     
     /**
+     * @param key
+     * 
      * @return the {@link Command} registered with that key.
      */
     public Command getRegisteredCommand( String key )
@@ -79,7 +84,7 @@ public class CommandProcessor
     }
     
     /**
-     * @return the InputListener, that has to be registered to the {@link InputManager}.
+     * @return the InputListener, that has to be registered to the {@link InputSystem}.
      */
     public final InputListener getInputListener()
     {
@@ -90,6 +95,8 @@ public class CommandProcessor
      * Registers a Command to be handled by the CommandProcessor.
      * 
      * @param command
+     * 
+     * @return the passed {@link Command} back again.
      */
     public final Command registerCommand( Command command )
     {
@@ -147,6 +154,8 @@ public class CommandProcessor
      * Binds all {@link InputActionCommand}s to a keyboard-key or mouse-button action.
      * 
      * @param bindingsManager
+     * 
+     * @param <C> parameter type restriction
      */
     public < C extends InputActionCommand > void bindCommands( InputBindingsManager< C > bindingsManager )
     {
@@ -172,8 +181,8 @@ public class CommandProcessor
      * @param comp
      * @param command
      * 
-     * @see KeyCode#getKeyName(int)
-     * @see MouseCode#getButtonName(int)
+     * @see Key#getName()
+     * @see MouseButton#getName()
      */
     public void unbindCommand( DeviceComponent comp, InputActionCommand command )
     {

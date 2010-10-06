@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -186,12 +186,14 @@ public class CalAnimation {
     }
     
     /** Applies a displacement to the root bone throughout - useful for aligning anims in different reference frames.
+     * @param displacement 
      */
     public void setRootDisplacement(Vector3f displacement) {
         rootDisplacement = displacement;
     }
     
     /** Applies a rotation to the root bone throughout - useful for aligning anims in different reference frames.
+     * @param rotation 
      */
     public void setRootRotation(Quaternion4f rotation) {
         rootRotation = rotation;

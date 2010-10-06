@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -29,7 +29,7 @@
  */
 package org.jagatoo.commands;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An interface for a command to be processed.
@@ -68,8 +68,12 @@ public interface Command
     
     /**
      * Creates a parameters array for the given command line.
+     * 
+     * @param parameters
+     * 
+     * @return an array from the given parameters list
      */
-    public Object[] createParametersArray( ArrayList< String > parameters );
+    public Object[] createParametersArray( List< String > parameters );
     
     /**
      * Executes this command.<br>
@@ -98,7 +102,6 @@ public interface Command
      *         May be null for simple commands.
      * 
      * @throws CommandException
-     * @throws Throwable
      */
     public String execute( Object[] parameters ) throws CommandException;
     
@@ -129,7 +132,6 @@ public interface Command
      *         May be null for simple commands.
      * 
      * @throws CommandException
-     * @throws Throwable
      */
     public String execute( CommandLine commandLine ) throws CommandException;
 }

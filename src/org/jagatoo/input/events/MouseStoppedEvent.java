@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,7 +49,9 @@ public class MouseStoppedEvent extends MouseEvent
     protected int y;
     
     /**
-     * {@inheritDoc}
+     * Gets the x coordinate.
+     * 
+     * @return the x coordinate.
      */
     public final int getX()
     {
@@ -57,7 +59,9 @@ public class MouseStoppedEvent extends MouseEvent
     }
     
     /**
-     * {@inheritDoc}
+     * Gets the y coordinate.
+     * 
+     * @return the y coordinate.
      */
     public final int getY()
     {
@@ -79,6 +83,12 @@ public class MouseStoppedEvent extends MouseEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param mouse
+     * @param x
+     * @param y
+     * @param when
+     * @param lastWhen
      */
     protected void set( Mouse mouse, int x, int y, long when, long lastWhen )
     {
@@ -90,6 +100,12 @@ public class MouseStoppedEvent extends MouseEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param mouse
+     * @param x
+     * @param y
+     * @param when
+     * @param lastWhen
      */
     protected MouseStoppedEvent( Mouse mouse, int x, int y, long when, long lastWhen )
     {

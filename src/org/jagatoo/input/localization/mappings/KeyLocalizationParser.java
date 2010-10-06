@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -247,9 +247,12 @@ public class KeyLocalizationParser
         if ( ( key == null ) || ( phase < 4 ) )
             return ( null );
         
-        if ( ( value == null ) && ( stringBuffer.length() > 0 ) )
+        //if ( value == null )
         {
-            value = stringBuffer.toString();
+            if ( stringBuffer.length() > 0 )
+            {
+                value = stringBuffer.toString();
+            }
         }
         
         if ( value != null )

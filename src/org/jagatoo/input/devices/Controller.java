@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -309,7 +309,8 @@ public abstract class Controller extends InputDevice
      * Prepares a {@link ControllerAxisChangedEvent} for being fired.<br>
      * The event is not fired from this method.<br>
      * 
-     * @param button
+     * @param axis
+     * @param delta
      * @param when
      * 
      * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
@@ -386,6 +387,8 @@ public abstract class Controller extends InputDevice
     
     /**
      * Destroys the Controller.
+     * 
+     * @throws InputSystemException
      */
     protected abstract void destroyImpl() throws InputSystemException;
     

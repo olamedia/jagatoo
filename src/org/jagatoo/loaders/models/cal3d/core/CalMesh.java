@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,6 +49,7 @@ public class CalMesh {
      * Creates a mesh based on a core mesh.
      * 
      * This function is the default constructor of the mesh instance.
+     * @param coreMesh 
      **************************************************************************/
     
     public CalMesh(CalCoreMesh coreMesh) {

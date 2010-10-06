@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -343,6 +343,8 @@ public class CalCoreSubmesh {
      *
      * @param vertexId  The ID of the vertex.
      * @param vertex The vertex that should be set.
+     * @param position 
+     * @param normal 
      *****************************************************************************/
     
     public void setVertex(int vertexId, VertexInfo vertex, Vector3f position, Vector3f normal) {
@@ -401,7 +403,8 @@ public class CalCoreSubmesh {
         return vertexTangentCrossFactors [mapId];
     }
     
-    /** @return true if tangent vectors are enabled for the specified mapId.
+    /** @param mapId 
+     * @return true if tangent vectors are enabled for the specified mapId.
      */
     public boolean isTangentsEnabled(int mapId) {
         if (tangentsEnabled == null || mapId < 0 || mapId >= tangentsEnabled.length)
@@ -490,6 +493,8 @@ public class CalCoreSubmesh {
     }
     
     /** Add a core sub morph target to the submesh.
+     * @param subMorphTarget 
+     * @return 
      */
     public int addCoreSubMorphTarget(CalCoreSubMorphTarget subMorphTarget) {
         if (coreSubMorphTargets == null)
@@ -503,6 +508,8 @@ public class CalCoreSubmesh {
     }
     
     /** Gets a core sub morph target by id.
+     * @param id 
+     * @return 
      */
     public CalCoreSubMorphTarget getCoreSubMorphTarget(int id) {
         return coreSubMorphTargets.get(id);

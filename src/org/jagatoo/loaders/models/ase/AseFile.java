@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -191,6 +191,10 @@ public class AseFile extends AseNode
      * map, but AseGroup nodes that did not exist in the original file may be
      * added to this map for the purpose of being able to find them quickly
      * without searching through the scene graph.
+     * 
+     * @param objects
+     * @param allTopLevelObjects
+     * @param geom
      */
     public static void updateHierarchyFromNodeParent( Map< String, AseNode > objects, Map< String, AseNode > allTopLevelObjects, AseGeom geom )
     {

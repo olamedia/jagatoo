@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -542,7 +542,10 @@ public final class ArrayUtils
      * <b>The ensured array is returned!</b>
      * 
      * @param array the input array
+     * @param elementType
      * @param minCapacity the desired (minimal) capacity
+     * 
+     * @param <E>
      * 
      * @return the array with the ensured length
      */

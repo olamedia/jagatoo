@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -43,9 +43,11 @@ import org.jagatoo.datatypes.DoublyChainable;
  * the {@link java.util.LinkedList} produces a lot of garbage and is therefore
  * unusable for gaming stuff.
  * 
+ * @param <E> the element type
+ * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class ChainedList< E extends DoublyChainable< E > > implements java.util.List< E >, java.util.Queue< E >
+public class ChainedList<E extends DoublyChainable<E>> implements java.util.List<E>, java.util.Queue<E>
 {
     private E head = null;
     private E tail = null;
@@ -64,7 +66,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      * @param  c the collection whose elements are to be placed into this list.
      * @throws NullPointerException if the specified collection is null.
      */
-    public ChainedList( Collection< ? extends E > c )
+    public ChainedList( Collection<? extends E> c )
     {
         this();
         
@@ -196,7 +198,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     /**
      * {@inheritDoc}
      */
-    public boolean addAll( Collection< ? extends E > c )
+    public boolean addAll( Collection<? extends E> c )
     {
         for ( Iterator< ? extends E > it = c.iterator(); it.hasNext(); )
         {
@@ -209,7 +211,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     /**
      * {@inheritDoc}
      */
-    public boolean addAll( int index, Collection< ? extends E > c )
+    public boolean addAll( int index, Collection<? extends E> c )
     {
         if ( c.isEmpty() )
         {
@@ -306,7 +308,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     /**
      * {@inheritDoc}
      */
-    public boolean removeAll( Collection< ? > c )
+    public boolean removeAll( Collection<?> c )
     {
         final Object[] items = new Object[ c.size() ];
         
@@ -328,7 +330,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     /**
      * {@inheritDoc}
      */
-    public boolean retainAll( Collection< ? > c )
+    public boolean retainAll( Collection<?> c )
     {
         final Object[] items = new Object[ this.size() ];
         
@@ -479,7 +481,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     /**
      * {@inheritDoc}
      */
-    public boolean containsAll( Collection< ? > c )
+    public boolean containsAll( Collection<?> c )
     {
         for ( Iterator< ? > it = c.iterator(); it.hasNext(); )
         {
@@ -501,7 +503,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     /**
      * {@inheritDoc}
      */
-    public List< E > subList( int fromIndex, int toIndex )
+    public List<E> subList( int fromIndex, int toIndex )
     {
         throw new UnsupportedOperationException( "subList() is not yet implemented" );
     }
@@ -552,7 +554,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         return ( add( o ) );
     }
     
-    private class ListItr implements ListIterator< E >
+    private class ListItr implements ListIterator<E>
     {
         private E lastReturned = head;
         private E next;
@@ -669,7 +671,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     /**
      * {@inheritDoc}
      */
-    public ListIterator< E > listIterator( int index )
+    public ListIterator<E> listIterator( int index )
     {
         return ( new ListItr( index ) );
     }
@@ -677,7 +679,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     /**
      * {@inheritDoc}
      */
-    public ListIterator< E > listIterator()
+    public ListIterator<E> listIterator()
     {
         return ( listIterator( 0 ) );
     }
@@ -685,7 +687,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
     /**
      * {@inheritDoc}
      */
-    public Iterator< E > iterator()
+    public Iterator<E> iterator()
     {
         return ( listIterator() );
     }
@@ -711,12 +713,12 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      */
     @SuppressWarnings("unchecked")
     @Override
-    public ChainedList< E > clone()
+    public ChainedList<E> clone()
     {
-        ChainedList< E > clone = null;
+        ChainedList<E> clone = null;
         try
         {
-            clone = (ChainedList< E >)super.clone();
+            clone = (ChainedList<E>)super.clone();
         }
         catch ( CloneNotSupportedException e )
         {
@@ -746,7 +748,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         
         while ( elem != null )
         {
-            result[ i ] = elem;
+            result[i] = elem;
             
             elem = elem.getNext();
             i++;
@@ -778,7 +780,7 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
      * @throws NullPointerException if the specified array is null.
      */
     @SuppressWarnings("unchecked")
-    public < T > T[] toArray( T[] a )
+    public <T> T[] toArray( T[] a )
     {
         if ( a.length < size )
             a = (T[])java.lang.reflect.Array.newInstance( a.getClass().getComponentType(), size );
@@ -789,14 +791,14 @@ public class ChainedList< E extends DoublyChainable< E > > implements java.util.
         int i = 0;
         while ( elem != null )
         {
-            result[ i ] = elem;
+            result[i] = elem;
             
             elem = elem.getNext();
             i++;
         }
         
         if ( a.length > size )
-            a[ size ] = null;
+            a[size] = null;
         
         return ( a );
     }

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -61,6 +61,8 @@ public abstract class ControllerEvent extends InputEvent
     
     /**
      * The Controller device, that caused the event.
+     * 
+     * @return the Controller device, that caused the event.
      */
     public final Controller getController()
     {
@@ -75,6 +77,12 @@ public abstract class ControllerEvent extends InputEvent
     
     /**
      * Sets the fields of this ControllerEvent.
+     * 
+     * @param controller
+     * @param subType
+     * @param component
+     * @param when
+     * @param lastWhen
      */
     protected void set( Controller controller, SubType subType, DeviceComponent component, long when, long lastWhen )
     {
@@ -86,6 +94,8 @@ public abstract class ControllerEvent extends InputEvent
     
     /**
      * Sets the fields of this ControllerEvent to match the given ControllerEvent.
+     * 
+     * @param e
      */
     protected void set( ControllerEvent e )
     {
@@ -117,6 +127,8 @@ public abstract class ControllerEvent extends InputEvent
     
     /**
      * Creates a ControllerEvent with default values.
+     * 
+     * @param subType
      */
     protected ControllerEvent( SubType subType )
     {

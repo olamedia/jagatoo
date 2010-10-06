@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,9 +45,11 @@ import org.jagatoo.logging.Log;
  * You must add the instance as an {@link InputStateListener} to the {@link InputSystem}
  * or one of its {@link InputDevice}s.
  * 
+ * @param <A> the action type
+ * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class InputBindingsAdapter< A extends InvokableInputAction > extends InputBindingsManager< A > implements InputStateListener
+public class InputBindingsAdapter<A extends InvokableInputAction> extends InputBindingsManager<A> implements InputStateListener
 {
     private final InvokableInputAction checkMouseWheel( DeviceComponent comp, int delta )
     {

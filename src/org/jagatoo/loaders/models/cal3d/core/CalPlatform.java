@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -75,6 +75,7 @@ public class CalPlatform {
      *
      * @param file The file stream to write the string to.
      * @param strValue A reference to the string that should be written.
+     * @throws IOException 
      *****************************************************************************/
     
     public static void writeString(DataOutput file, String strValue) throws IOException {

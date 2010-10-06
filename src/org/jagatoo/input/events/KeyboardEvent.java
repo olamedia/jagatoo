@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -62,6 +62,8 @@ public abstract class KeyboardEvent extends InputEvent
     
     /**
      * The state of the key (true if it is pressed, false if it isn't).
+     * 
+     * @return the sub type
      */
     public final SubType getSubType()
     {
@@ -70,6 +72,8 @@ public abstract class KeyboardEvent extends InputEvent
     
     /**
      * The Keyboarde, that caused the event.
+     * 
+     * @return the Keyboarde, that caused the event.
      */
     public final Keyboard getKeyboard()
     {
@@ -78,6 +82,8 @@ public abstract class KeyboardEvent extends InputEvent
     
     /**
      * The key related to this event.
+     * 
+     * @return the key related to this event.
      */
     public final Key getKey()
     {
@@ -95,7 +101,9 @@ public abstract class KeyboardEvent extends InputEvent
     /**
      * The key related to this event.
      * 
-     * @see KeyCode
+     * @return the key related to this event.
+     * 
+     * @see Key
      */
     public final int getKeyCode()
     {
@@ -134,6 +142,8 @@ public abstract class KeyboardEvent extends InputEvent
     
     /**
      * Creates a new KeyboardEvent with the default settings
+     * 
+     * @param subType
      */
     protected KeyboardEvent( SubType subType )
     {

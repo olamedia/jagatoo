@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -268,7 +268,15 @@ public class BSPVersionDataLoader46 implements BSPVersionDataLoader
     }
     
     /**
-     * {@inheritDoc}
+     * 
+     * @param faceIndex
+     * @param face
+     * @param vertices
+     * @param meshVertices
+     * @param geomFactory
+     * @param convertZup2Yup
+     * @param worldScale
+     * @return
      */
     public NamedObject convertFaceToGeometry( int faceIndex, BSPFace face, BSPVertex[] vertices, int[] meshVertices, GeometryFactory geomFactory, boolean convertZup2Yup, float worldScale )
     {

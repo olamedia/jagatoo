@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,9 +41,11 @@ import org.jagatoo.input.devices.components.DeviceComponent;
 /**
  * This is a generic input-bindings manager.
  * 
+ * @param <A> the action type
+ * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class InputBindingsManager< A extends InputAction >
+public class InputBindingsManager<A extends InputAction>
 {
     protected static final int NUM_KEY_SETS = InputBindingsSet.values().length;
     
@@ -349,8 +351,11 @@ public class InputBindingsManager< A extends InputAction >
     
     /**
      * Sets the key-bindings Map with the KeyCodes mapped to InputActions.
+     * 
+     * @param inputBindings
+     * @param clearBefore
      */
-    public final void setInputBindings( Map< DeviceComponent, ? extends A > inputBindings, boolean clearBefore )
+    public final void setInputBindings( Map<DeviceComponent, ? extends A> inputBindings, boolean clearBefore )
     {
         if ( clearBefore )
             unbindAll();
@@ -363,8 +368,10 @@ public class InputBindingsManager< A extends InputAction >
     
     /**
      * Sets the key-bindings Map with the KeyCodes mapped to InputActions.
+     * 
+     * @param inputBindings
      */
-    public final void setInputBindings( Map< DeviceComponent, ? extends A > inputBindings )
+    public final void setInputBindings( Map<DeviceComponent, ? extends A> inputBindings )
     {
         setInputBindings( inputBindings, true );
     }
@@ -372,15 +379,18 @@ public class InputBindingsManager< A extends InputAction >
     /**
      * @return a Map with the KeyCodes mapped to InputActions.
      */
-    public Map< DeviceComponent, A > getInputBindingsMap()
+    public Map<DeviceComponent, A> getInputBindingsMap()
     {
         return ( keyBindings );
     }
     
     /**
      * Sets the key-bindings Map with the KeyCodes mapped to InputActions.
+     * 
+     * @param bindings
+     * @param clearBefore
      */
-    public final void set( InputBindingsManager< ? extends A > bindings, boolean clearBefore )
+    public final void set( InputBindingsManager<? extends A> bindings, boolean clearBefore )
     {
         if ( clearBefore )
             unbindAll();
@@ -422,15 +432,21 @@ public class InputBindingsManager< A extends InputAction >
     
     /**
      * Sets the key-bindings Map with the KeyCodes mapped to InputActions.
+     * 
+     * @param bindings
      */
-    public final void set( InputBindingsManager< ? extends A > bindings )
+    public final void set( InputBindingsManager<? extends A> bindings )
     {
         set( bindings, true );
     }
     
+    /**
+     * 
+     * @param numCommands
+     */
     public InputBindingsManager( int numCommands )
     {
-        this.keyBindings = new HashMap< DeviceComponent, A >();
+        this.keyBindings = new HashMap<DeviceComponent, A>();
         this.boundKeys = new DeviceComponent[ numCommands ][];
     }
 }

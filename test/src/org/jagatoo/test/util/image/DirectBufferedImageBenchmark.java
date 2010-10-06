@@ -61,6 +61,7 @@ public class DirectBufferedImageBenchmark
         */
     }
     
+    @SuppressWarnings( "unused" )
     public static void main( String[] args ) throws Exception
     {
         new DirectBufferedImageBenchmark();

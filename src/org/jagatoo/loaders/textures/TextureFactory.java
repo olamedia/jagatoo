@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -234,7 +234,7 @@ public abstract class TextureFactory
     /**
      * Creates a new 2D-{@link AbstractTexture} instance.
      * 
-     * @param format
+     * @param imageFormat
      * 
      * @return the new texture.
      */
@@ -245,7 +245,7 @@ public abstract class TextureFactory
     
     /**
      * Creates a new 2D-{@link AbstractTexture} instance and chooses
-     * {@link AbstractTexture.Format#RGB} or {@link AbstractTexture.Format#RGBA}
+     * {@link TextureImageFormat#RGB} or {@link TextureImageFormat#RGBA}
      * depending on the withAlphachannel parameter.
      * 
      * @param withAlphaChannel

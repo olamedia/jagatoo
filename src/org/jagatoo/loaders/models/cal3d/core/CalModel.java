@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -61,6 +61,7 @@ public class CalModel {
     /** Constructs the model instance.
      *
      * This function is the default constructor of the model instance.
+     * @param coreModel 
      *****************************************************************************/
     
     public CalModel(CalCoreModel coreModel) {
@@ -88,6 +89,7 @@ public class CalModel {
     /** Constructs a near clone of the supplied model.
      *  The active meshes and current materials will be reproduced but
      *  internal state will be back to an initial state.
+     * @param other 
      */
     public CalModel(CalModel other) {
         if (other == null)

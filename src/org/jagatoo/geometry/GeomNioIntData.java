@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -81,6 +81,10 @@ public class GeomNioIntData extends GeomNioData
     /**
      * Special optimized way to set a bulk amount of ints right into
      * the data, starting at the index specified.
+     * 
+     * @param a
+     * @param start
+     * @param length
      */
     public final void set( int[] a, int start, int length )
     {
@@ -89,6 +93,13 @@ public class GeomNioIntData extends GeomNioData
         setDirty( true );
     }
     
+    /**
+     * 
+     * @param index
+     * @param a
+     * @param start
+     * @param length
+     */
     public final void set( int index, int[] a, int start, int length )
     {
         buffer.position( index );
@@ -97,6 +108,11 @@ public class GeomNioIntData extends GeomNioData
         setDirty( true );
     }
     
+    /**
+     * 
+     * @param index
+     * @param a
+     */
     public final void set( int index, int[] a )
     {
         buffer.position( index );
@@ -105,6 +121,11 @@ public class GeomNioIntData extends GeomNioData
         setDirty( true );
     }
     
+    /**
+     * 
+     * @param index
+     * @param i
+     */
     public final void set( int index, int i )
     {
         buffer.position( index );
@@ -118,7 +139,8 @@ public class GeomNioIntData extends GeomNioData
      * at position (3 * index).
      * 
      * @param index
-     * @param value
+     * 
+     * @return the index'th value.
      */
     public final int get( int index )
     {
@@ -130,8 +152,8 @@ public class GeomNioIntData extends GeomNioData
      * Gets 3 values from the underlying buffer starting
      * at position (3 * index).
      * 
+     * @param i0
      * @param index
-     * @param value
      */
     public final void get( int i0, int[] index )
     {
@@ -139,6 +161,14 @@ public class GeomNioIntData extends GeomNioData
         buffer.get( index );
     }
     
+    /**
+     * 
+     * @param maxElems
+     * @param elemSize
+     * @param stride
+     * @param reversed
+     * @return
+     */
     protected GeomNioIntData newInstance( int maxElems, int elemSize, int stride, boolean reversed )
     {
         return ( new GeomNioIntData( maxElems, elemSize, stride, reversed ) );
@@ -165,6 +195,14 @@ public class GeomNioIntData extends GeomNioData
         return ( data );
     }
     
+    /**
+     * Creates a new instance.
+     * 
+     * @param maxElems
+     * @param elemSize
+     * @param stride
+     * @param reversed
+     */
     public GeomNioIntData( int maxElems, int elemSize, int stride, boolean reversed )
     {
         super( maxElems, maxElems * elemSize, elemSize, stride, reversed );
@@ -172,6 +210,13 @@ public class GeomNioIntData extends GeomNioData
         this.buffer = BufferUtils.createIntBuffer( maxElems * elemSize );
     }
     
+    /**
+     * Creates a new instance.
+     * 
+     * @param maxElems
+     * @param elemSize
+     * @param reversed
+     */
     public GeomNioIntData( int maxElems, int elemSize, boolean reversed )
     {
         this( maxElems, elemSize, 0, reversed );

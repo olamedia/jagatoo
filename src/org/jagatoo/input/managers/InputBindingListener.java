@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,9 +35,11 @@ import org.jagatoo.input.devices.components.DeviceComponent;
 /**
  * This listener is notified of set/unset input-bindings.
  * 
+ * @param <A> the action type
+ * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface InputBindingListener< A extends InputAction >
+public interface InputBindingListener<A extends InputAction>
 {
     /**
      * This event is fired, when a key is bound to a command.

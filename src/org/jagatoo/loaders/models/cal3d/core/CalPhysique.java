@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -69,6 +69,7 @@ public class CalPhysique
      * This function sets the normalization flag on or off. If off, the normals
      * calculated by Cal3D will not be normalized. Instead, this transform is
      * left up to the user.
+     * @param normalize 
      */
     public void setNormalization( boolean normalize )
     {

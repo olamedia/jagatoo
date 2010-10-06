@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -166,7 +166,7 @@ public class BSPClusterManager implements BSPVisibilityUpdater
     /**
      * Disables geometry that is invisible according to the PVS
      * 
-     * @param camPos the position of the camera
+     * @param cameraTransform the transform of the camera
      * 
      * @return true, if PVS has changed.
      */
@@ -388,6 +388,8 @@ public class BSPClusterManager implements BSPVisibilityUpdater
      * 
      * @param prototype
      * @param faceBitset
+     * 
+     * @return the cluster manager.
      */
     public static BSPClusterManager create( BSPScenePrototype prototype, BitSet faceBitset )
     {

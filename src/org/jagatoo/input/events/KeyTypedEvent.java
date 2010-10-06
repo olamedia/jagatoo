@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,6 +42,8 @@ public class KeyTypedEvent extends KeyboardEvent
     
     /**
      * The key related to this event.
+     * 
+     * @return key related to this event.
      */
     public final char getKeyChar()
     {
@@ -51,8 +53,11 @@ public class KeyTypedEvent extends KeyboardEvent
     /**
      * Initialises the new KeyboardEvent using the given values.
      * 
+     * @param keyboard
      * @param keyChar the char of the typed key
+     * @param modifierMask
      * @param when the timestamp of the KeyboardEvent 
+     * @param lastWhen
      */
     protected void set( Keyboard keyboard, char keyChar, int modifierMask, long when, long lastWhen )
     {
@@ -72,8 +77,11 @@ public class KeyTypedEvent extends KeyboardEvent
     /**
      * Initialises the new KeyboardEvent using the given values.
      * 
+     * @param keyboard
      * @param keyChar the char of the typed key
+     * @param modifierMask
      * @param when the timestamp of the KeyboardEvent 
+     * @param lastWhen
      */
     protected KeyTypedEvent( Keyboard keyboard, char keyChar, int modifierMask, long when, long lastWhen )
     {

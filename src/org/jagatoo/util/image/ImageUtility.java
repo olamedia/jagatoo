@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -202,6 +202,10 @@ public class ImageUtility
     /**
      * finds the maximum image bounds for the non-alpha masked object.  This
      * assumes that the image has portions of it with an alpha of zero.
+     * 
+     * @param image the image
+     * 
+     * @return the maximum image bounds for the non alpha masked object.
      */
     public static Rectangle alphaBounds( BufferedImage image )
     {
@@ -306,6 +310,13 @@ public class ImageUtility
     /**
      * Takes the buffered image and builds a new one which is centered and scaled.
      * Alpha blended edges are discarded.  A margin is in pixels around the image.
+     * 
+     * @param image
+     * @param width
+     * @param height
+     * @param margin
+     * 
+     * @return the newly generated image.
      */
     public static BufferedImage centerAndScale( BufferedImage image, int width, int height, int margin )
     {
@@ -452,6 +463,10 @@ public class ImageUtility
     /**
      * Converts a BufferedImage to a ByteBuffer.
      * 
+     * @param img
+     * 
+     * @return the byte array from the image.
+     * 
      * @throws IOException 
      */
     public static byte[] toByteArray( BufferedImage img ) throws IOException
@@ -464,6 +479,10 @@ public class ImageUtility
     
     /**
      * Converts a BufferedImage to a ByteBuffer.
+     * 
+     * @param img
+     * 
+     * @return the byte data from the image.
      * 
      * @throws IOException 
      */
@@ -485,6 +504,8 @@ public class ImageUtility
      * 
      * @param srcImage The Image that should be scaled.
      * @param trgImage the target image.
+     * 
+     * @param <BufferedImage_> parameter type restriction
      * 
      * @return The target image.
      */

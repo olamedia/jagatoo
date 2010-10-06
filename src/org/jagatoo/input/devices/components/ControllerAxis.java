@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -96,7 +96,7 @@ public abstract class ControllerAxis extends AnalogDeviceComponent
     /**
      * Sets the maximum value, the normalized value can take.
      * 
-     * @param minValue
+     * @param maxValue
      */
     public void setMaxValue( float maxValue )
     {

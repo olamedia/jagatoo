@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -1094,7 +1094,7 @@ public class InputSystem
      * Processes pending events from the system
      * and places them into the EventQueue.<br>
      * The events are not fired (listeners are not notified).
-     * They are fired when the {@link #update(InputSystem, EventQueue, long)}
+     * They are fired when the {@link #update(long)}
      * method is invoked.
      * 
      * @param nanoTime
@@ -1165,7 +1165,7 @@ public class InputSystem
      * Processes pending events from the system
      * and directly fires them (notifes the listeners).<br>
      * This method also flushes the EventQueue, if the previously
-     * called {@link #collectEvents(InputSystem, EventQueue, long)}
+     * called {@link #collectEvents(long)}
      * method placed events into it.
      * 
      * @param nanoTime

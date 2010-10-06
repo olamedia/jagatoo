@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -741,7 +741,7 @@ public class AseConverter
      * @param siHandler
      * @param modelRootGroup
      * 
-     * @see #getTransformGroupTree(AseFile, int, Tuple3f, LoadedGraph)
+     * @see #getTransformGroupTree(AseFile, AppearanceFactory, URL, GeometryFactory, boolean, float, NodeFactory, SpecialItemsHandler, NamedObject)
      */
     public static void getTransformGroupTree( AseFile aseFile, AppearanceFactory appFactory, URL baseURL, GeometryFactory geomFactory, boolean convertZup2Yup, float scale, NodeFactory nodeFactory, SpecialItemsHandler siHandler, NamedObject modelRootGroup )
     {

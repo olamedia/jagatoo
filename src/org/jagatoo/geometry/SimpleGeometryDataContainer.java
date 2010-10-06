@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -264,6 +264,9 @@ public class SimpleGeometryDataContainer implements VertexContainer
     /**
      * Sets the coordinates of the specified vertex. The coordinates should
      * occupy the first three indices of the given array.
+     * 
+     * @param vertexIndex
+     * @param floatArray
      */
     public void setCoordinate( int vertexIndex, float[] floatArray )
     {
@@ -517,6 +520,8 @@ public class SimpleGeometryDataContainer implements VertexContainer
     
     /**
      * Gets all index values.
+     * 
+     * @param index
      */
     public final void getIndex( int[] index )
     {
@@ -524,6 +529,8 @@ public class SimpleGeometryDataContainer implements VertexContainer
     }
     
     /**
+     * @param i
+     * 
      * @return the i-th index value.
      */
     public final int getIndex( int i )
@@ -559,6 +566,8 @@ public class SimpleGeometryDataContainer implements VertexContainer
     
     /**
      * Gets the counts for each strip.
+     * 
+     * @return the strip counts
      */
     public final int[] getStripCounts()
     {

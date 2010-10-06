@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -78,6 +78,8 @@ public class XMLSkin
     /**
      * Search the "skin-joints" source.
      * Maybe there is a better way get that
+     * 
+     * @return
      */
     public XMLSource getJointsSource()
     {
@@ -94,6 +96,8 @@ public class XMLSkin
     /**
      * Search the "skin-weights" source.
      * Maybe there is a better way get that
+     * 
+     * @return
      */
     public XMLSource getWeightsSource()
     {
@@ -168,6 +172,10 @@ public class XMLSkin
     
     /**
      * Build an array of BoneWeight for easy skinning manipulation
+     * 
+     * @param vertexIndex
+     * 
+     * @return
      */
     public Influence[] getInfluencesForVertex( int vertexIndex )
     {

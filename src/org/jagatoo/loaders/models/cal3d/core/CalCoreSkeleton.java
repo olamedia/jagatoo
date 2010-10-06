@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -143,10 +143,6 @@ public class CalCoreSkeleton {
      * This function returns the ID of a specified core bone.
      *
      * @param strName The name of the core bone that should be returned.
-     *
-     * @return One of the following values:
-     *         \li the \b ID of the core bone
-     *         \li \b -1 if an error happend
      *****************************************************************************/
     
     public int getCoreBoneId(String strName) {
@@ -159,13 +155,15 @@ public class CalCoreSkeleton {
     }
     
     /** Gets the core bone specified by name.
+     * @param name 
+     * @return 
      */
     public CalCoreBone getCoreBone(String name) {
         return coreBonesByName.get(name);
     }
     
     /*****************************************************************************/
-    /** @return the root core bone id list.
+    /** Returns the root core bone id list.
      *
      * This function returns the list that contains all root core bone IDs of the
      * core skeleton instance.
@@ -179,7 +177,7 @@ public class CalCoreSkeleton {
     
     
     /*****************************************************************************/
-    /** @return the core bone vector.
+    /** Returns the core bone vector.
      *
      * This function returns the vector that contains all core bones of the core
      * skeleton instance.

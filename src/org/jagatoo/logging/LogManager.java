@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -261,6 +261,8 @@ public class LogManager
      * This method allows you to register a class that implements the
      * LogInterface. Every log so registered will get a copy of every
      * log message, along with its mask.
+     * 
+     * @param log
      */
     public final void registerLog( LogInterface log )
     {
@@ -273,6 +275,8 @@ public class LogManager
      * This method allows you to deregister a class that implements the
      * LogInterface. Every log so deregistered won't get a copy of every
      * log message anymore.
+     * 
+     * @param log
      */
     public final void deregisterLog( LogInterface log )
     {

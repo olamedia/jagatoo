@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -42,6 +42,8 @@ public interface AbstractTexture extends NamableObject
 {
     /**
      * Sets the key-String, by which this texture has been cached in the TextureLoader.
+     * 
+     * @param key
      */
     public void setCacheKey( String key );
     
@@ -61,7 +63,7 @@ public interface AbstractTexture extends NamableObject
     public String getName();
     
     /**
-     * @return the Texture's {@link Type}.
+     * @return the Texture's {@link TextureType}.
      */
     public TextureType getType();
     
@@ -76,7 +78,7 @@ public interface AbstractTexture extends NamableObject
     public int getHeight();
     
     /**
-     * @return the Texture's {@link Format}.
+     * @return the Texture's {@link TextureFormat}.
      */
     public TextureFormat getFormat();
     

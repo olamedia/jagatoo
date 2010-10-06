@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -151,7 +151,12 @@ public class Vector3fBuffer {
     
    
     
-    /** translate each vector. This is vectorisable!
+    /**
+     * translate each vector. This is vectorisable!
+     * 
+     * @param x
+     * @param y
+     * @param z
      */
     public void translate(float x, float y, float z) {
         for (int n = 0; n < length; n++) {
@@ -161,7 +166,12 @@ public class Vector3fBuffer {
         }
     }
     
-    /** scale takes each vector and scales it in each dimension. This is vectorisable!
+    /**
+     * scale takes each vector and scales it in each dimension. This is vectorisable!
+     * 
+     * @param xs
+     * @param ys
+     * @param zs
      */
     public void scale(float xs, float ys, float zs) {
         for (int n = 0; n < length; n++) {

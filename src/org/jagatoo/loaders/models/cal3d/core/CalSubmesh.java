@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -139,6 +139,9 @@ public class CalSubmesh {
      * based on.
      *****************************************************************************/
     
+    /**
+     * @return
+     */
     public CalCoreSubmesh getCoreSubmesh() {
         return coreSubmesh;
     }
@@ -267,6 +270,7 @@ public class CalSubmesh {
     /** Returns true if tangent vectors are enabled.
      *
      * This function returns true if the submesh contains tangent vectors.
+     * @param mapId 
      *
      * @return True if tangent vectors are enabled.
      *****************************************************************************/
@@ -279,6 +283,8 @@ public class CalSubmesh {
     /** Enables (and calculates) or disables the storage of tangent spaces.
      *
      * This function enables or disables the storage of tangent space bases.
+     * @param mapId 
+     * @param enabled 
      *****************************************************************************/
     
     public void setTangentsEnabled(int mapId, boolean enabled) {

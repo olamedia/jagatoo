@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,6 +51,8 @@ public class GeomNioFloatData extends GeomNioData
     /**
      * Sets the NIO float buffer underlying this.  If the underlying
      * format is not a float buffer then it will be converted.
+     * 
+     * @param buffer
      */
     public final void setBuffer( FloatBuffer buffer )
     {
@@ -95,7 +97,7 @@ public class GeomNioFloatData extends GeomNioData
      * have to.  The data should not be changed once it is retrieved and should
      * be considered read only.
      * 
-     * @param buffer the buffer array to write values to (must be of sufficient size)
+     * @param outBuffer the buffer array to write values to (must be of sufficient size)
      */
     public final void getData( float[] outBuffer )
     {

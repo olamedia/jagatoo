@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -95,6 +95,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     }
     
     /**
+     * @param flag
+     * 
      * @return <code>true</code>, if this Geometry has the queried feature(s).
      */
     public final boolean hasFeature( int flag )
@@ -233,6 +235,11 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     
     /**
      * Super fast method add a bunch of data right into the data elements.
+     * 
+     * @param coordData
+     * @param texCoordData
+     * @param normalData
+     * @param colorData
      */
     public void addData( float[] coordData, float[] texCoordData, float[] normalData, float[] colorData )
     {
@@ -262,6 +269,15 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     /**
      * Super fast method for moving a bunch of data into the data elements. The
      * Positions are all translated according to the tuple passed in.
+     * 
+     * @param translateX
+     * @param translateY
+     * @param translateZ
+     * @param numVertices
+     * @param coordData
+     * @param texCoordData
+     * @param normalData
+     * @param colorData
      */
     public void addData( float translateX, float translateY, float translateZ, int numVertices, float[] coordData, float[] texCoordData, float[] normalData, float[] colorData )
     {
@@ -311,6 +327,15 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      * Super fast method for moving a bunch of data into the data elements. The
      * Positions are all translated according to the tuple passed in. The color
      * for all the vertices are set the specified value
+     * 
+     * @param translateX
+     * @param translateY
+     * @param translateZ
+     * @param numVertices
+     * @param coordData
+     * @param texCoordData
+     * @param normalData
+     * @param alpha
      */
     public void addData( float translateX, float translateY, float translateZ, int numVertices, float[] coordData, float[] texCoordData, float[] normalData, float alpha )
     {
@@ -512,8 +537,9 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     }
     
     /**
+     * @param unit the texture unit (always 1, 2, 3 or 4)
+     * 
      * @return the size of the texture coordinates of texture unit 'unit'.
-     * This is always (1, 2, 3 or 4).
      */
     public final int getTexCoordSize( int unit )
     {
@@ -547,6 +573,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     }
     
     /**
+     * @param unit the texture unit (always 1, 2, 3 or 4)
+     * 
      * @return the offset in the data buffer, if this is interleaved data.
      */
     public final long getTexCoordsOffset( int unit )
@@ -581,6 +609,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     }
     
     /**
+     * @param index
+     * 
      * @return the offset in the data buffer, if this is interleaved data.
      */
     public final long getVertexAttribsOffset( int index )
@@ -982,6 +1012,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      * 
      * @param vertexIndex The index of the vertex to modify
      * @param colorf The new color.
+     * 
+     * @return the passed color instance back again.
      */
     public Colorf getColor( int vertexIndex, Colorf colorf )
     {
@@ -997,7 +1029,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      * Gets the color of the vertex at the specified index.
      * 
      * @param vertexIndex The index of the vertex to modify
-     * @param colorf The new color.
+     * @param floatArray The new color.
      */
     public void getColors( int vertexIndex, float[] floatArray )
     {
@@ -1017,6 +1049,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
     }
     
     /**
+     * @param unit the texture unit (always 1, 2, 3 or 4)
+     * 
      * @return <code>true</code>, if this Geometry contains texture-coordinate data (for the given texture-unit).
      */
     public final boolean hasTextureCoordinates( int unit )
@@ -1281,11 +1315,15 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      * Gets the texture coordinate of the vertex at the specified index for the
      * specified coordinates set.
      * 
-     * @param unit The coordinates set.
+     * @param unit The coordinates set
      * @param vertexIndex The index of the vertex to modify
      * @param texCoord
+     * 
+     * @param <TexCoordf_> parameter type restriction
+     * 
+     * @return the texture coordinate
      */
-    public <T extends TexCoordf<?>> T getTextureCoordinate( int unit, int vertexIndex, T texCoord )
+    public <TexCoordf_ extends TexCoordf<?>> TexCoordf_ getTextureCoordinate( int unit, int vertexIndex, TexCoordf_ texCoord )
     {
         final int size = getTexCoordSize( unit );
         
@@ -1564,6 +1602,8 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
      * 
      * @param attribIndex The attributes set.
      * @param vertexIndex The index of the vertex to modify
+     * 
+     * @return the vertex attribute.
      */
     public float getVertexAttribute( int attribIndex, int vertexIndex )
     {

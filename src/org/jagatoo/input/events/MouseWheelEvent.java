@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -51,6 +51,8 @@ public class MouseWheelEvent extends MouseEvent
     
     /**
      * The Mouse-Wheel delta movement.
+     * 
+     * @return delta
      */
     public final int getWheelDelta()
     {
@@ -59,6 +61,8 @@ public class MouseWheelEvent extends MouseEvent
     
     /**
      * This is true, if the mouse-wheel move was a page-move.
+     * 
+     * @return page move?
      */
     public final boolean isPageMove()
     {
@@ -81,6 +85,13 @@ public class MouseWheelEvent extends MouseEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param mouse
+     * @param wheel
+     * @param wheelDelta
+     * @param isPageMove
+     * @param when
+     * @param lastWhen
      */
     protected void set( Mouse mouse, MouseWheel wheel, int wheelDelta, boolean isPageMove, long when, long lastWhen )
     {
@@ -92,6 +103,13 @@ public class MouseWheelEvent extends MouseEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param mouse
+     * @param wheel
+     * @param wheelDelta
+     * @param isPageMove
+     * @param when
+     * @param lastWhen
      */
     protected MouseWheelEvent( Mouse mouse, MouseWheel wheel, int wheelDelta, boolean isPageMove, long when, long lastWhen )
     {

@@ -50,9 +50,11 @@ import org.jagatoo.input.render.InputSourceWindow;
  * The InputHandler keeps instances of {@link InputBindingsManager} and
  * {@link InputStatesManager} and uses them to manage input-states.
  * 
+ * @param <A> the action type
+ * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public abstract class InputHandler< A extends InputAction >
+public abstract class InputHandler<A extends InputAction>
 {
     public static final int MOUSE_MOVEMENT_SUSPENDED = 1;
     public static final int MOUSE_BUTTONS_SUSPENDED = 2;
@@ -110,6 +112,8 @@ public abstract class InputHandler< A extends InputAction >
      * If an InputHandler is suspended, it will ignore any input.
      * 
      * @param suspendMask
+     * 
+     * @return changed?
      */
     public boolean setSuspendMask( int suspendMask )
     {
@@ -233,12 +237,12 @@ public abstract class InputHandler< A extends InputAction >
     }
     
     /**
-     * @return the attached {@link InputSourceWindow}.
+     * Returns the attached {@link InputSourceWindow}.
      * If this is not null, then the {@link InputHandler} will only receive input
      * events, if the given {@link InputSourceWindow}'s {@link InputSourceWindow#receivesInputEvents()}
      * method returns <code>true</code>.
      * 
-     * @param inputSourceWindow
+     * @return inputSourceWindow
      */
     public final InputSourceWindow getAttachedSourceWindow()
     {
@@ -272,6 +276,8 @@ public abstract class InputHandler< A extends InputAction >
     
     /**
      * Must be invoked each frame (if not keyboard is suspended).
+     * 
+     * @param nanoTime
      */
     protected void updateInputStates( long nanoTime )
     {
@@ -322,7 +328,9 @@ public abstract class InputHandler< A extends InputAction >
     }
     
     /**
-     * {@inheritDoc}
+     * Sets the attached {@link InputSystem}.
+     * 
+     * @param inputSystem
      */
     public void setInputSystem( InputSystem inputSystem )
     {
@@ -343,7 +351,9 @@ public abstract class InputHandler< A extends InputAction >
     }
     
     /**
-     * {@inheritDoc}
+     * Gets the attached {@link InputSystem}.
+     * 
+     * @return the attached {@link InputSystem}.
      */
     public final InputSystem getInputSystem()
     {

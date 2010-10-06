@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -425,6 +425,13 @@ public class BSPConverter
      * Converts the information stored in the loader into a scenegraph objects.
      * 
      * @param prototype
+     * @param appFactory
+     * @param nodeFactory
+     * @param sceneGroup
+     * @param mainGroupType
+     * @param worldScale
+     * @param baseURL
+     * @param siHandler
      */
     public static void convert( BSPScenePrototype prototype, AppearanceFactory appFactory, NodeFactory nodeFactory, NamedObject sceneGroup, GroupType mainGroupType, float worldScale, URL baseURL, SpecialItemsHandler siHandler )
     {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -279,6 +279,8 @@ public final class BufferUtils
     }
     
     /**
+     * @param buf
+     * 
      * @return n, where buffer_element_size=2^n.
      */
     public static int getElementSizeExponent( Buffer buf )
@@ -298,6 +300,9 @@ public final class BufferUtils
     /**
      * A helper function, which is used to get the byte offset in an arbitrary buffer
      * based on its position
+     * 
+     * @param buffer
+     * 
      * @return the position of the buffer, in BYTES
      */
     public static int getOffset( Buffer buffer )

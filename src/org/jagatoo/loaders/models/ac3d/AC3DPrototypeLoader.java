@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -718,6 +718,18 @@ public class AC3DPrototypeLoader
     
     /**
      * The real loading method
+     * 
+     * @param in
+     * @param baseURL
+     * @param appFactory
+     * @param geomFactory
+     * @param nodeFactory
+     * @param keepNestedTransforms
+     * @param rootGroup
+     * @param siHandler
+     * @throws IOException
+     * @throws IncorrectFormatException
+     * @throws ParsingException
      */
     public static void load( InputStream in, URL baseURL, AppearanceFactory appFactory, GeometryFactory geomFactory, NodeFactory nodeFactory, boolean keepNestedTransforms, NamedObject rootGroup, SpecialItemsHandler siHandler ) throws IOException, IncorrectFormatException, ParsingException
     {

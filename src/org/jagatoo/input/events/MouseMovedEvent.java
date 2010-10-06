@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -60,7 +60,9 @@ public class MouseMovedEvent extends MouseEvent
     private int dy;
     
     /**
-     * {@inheritDoc}
+     * Gets the x coordinate.
+     * 
+     * @return the x coordinate.
      */
     public final int getX()
     {
@@ -68,7 +70,9 @@ public class MouseMovedEvent extends MouseEvent
     }
     
     /**
-     * {@inheritDoc}
+     * Gets the y coordinate.
+     * 
+     * @return the y coordinate.
      */
     public final int getY()
     {
@@ -76,7 +80,9 @@ public class MouseMovedEvent extends MouseEvent
     }
     
     /**
-     * {@inheritDoc}
+     * Gets the x delta.
+     * 
+     * @return the x delta.
      */
     public final int getDX()
     {
@@ -84,7 +90,9 @@ public class MouseMovedEvent extends MouseEvent
     }
     
     /**
-     * {@inheritDoc}
+     * Gets the y delta.
+     * 
+     * @return the y delta.
      */
     public final int getDY()
     {
@@ -108,6 +116,14 @@ public class MouseMovedEvent extends MouseEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param mouse
+     * @param x
+     * @param y
+     * @param dx
+     * @param dy
+     * @param when
+     * @param lastWhen
      */
     protected void set( Mouse mouse, int x, int y, int dx, int dy, long when, long lastWhen )
     {
@@ -121,6 +137,14 @@ public class MouseMovedEvent extends MouseEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param mouse
+     * @param x
+     * @param y
+     * @param dx
+     * @param dy
+     * @param when
+     * @param lastWhen
      */
     protected MouseMovedEvent( Mouse mouse, int x, int y, int dx, int dy, long when, long lastWhen )
     {

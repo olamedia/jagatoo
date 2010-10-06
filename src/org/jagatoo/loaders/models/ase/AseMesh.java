@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -101,8 +101,9 @@ public class AseMesh extends AseNode
     public boolean convertMeshCoordinates = true;
     
     /**
-     * Parses a mesh vertex list. There should be numVertices lines to define
-     * this
+     * Parses a mesh vertex list. There should be numVertices lines to define this.
+     * 
+     * @param in
      */
     public void parseVertexList( AseReader in )
     {
@@ -137,7 +138,9 @@ public class AseMesh extends AseNode
     }
     
     /**
-     * Parses a mesh face list. There should be numFaces lines to define this
+     * Parses a mesh face list. There should be numFaces lines to define this.
+     * 
+     * @param in
      */
     public void parseFaceList( AseReader in )
     {
@@ -205,8 +208,9 @@ public class AseMesh extends AseNode
     }
     
     /**
-     * Parses a texture vertex list. There should be numTexVertices lines to
-     * define this
+     * Parses a texture vertex list. There should be numTexVertices lines to define this.
+     * 
+     * @param in
      */
     public void parseTexVertexList( AseReader in )
     {
@@ -240,8 +244,9 @@ public class AseMesh extends AseNode
     }
     
     /**
-     * Parses a mesh tex face list. There should be numFaces lines to define
-     * this
+     * Parses a mesh tex face list. There should be numFaces lines to define this.
+     * 
+     * @param in
      */
     public void parseTexFaceList( AseReader in )
     {
@@ -281,8 +286,10 @@ public class AseMesh extends AseNode
     }
     
     /**
-     * Reads in a single normal and its face and put their into the normals and
-     * normalIndices arrays
+     * Reads in a single normal and its face and put their into the normals and normalIndices arrays.
+     * 
+     * @param in
+     * @param n
      */
     public void parseNormal( AseReader in, int n )
     {
@@ -305,6 +312,8 @@ public class AseMesh extends AseNode
      * This equates to 9 floats per vertex for the normals. Also determines
      * faceNormals and faceNormalsIndices values. There is one faceNormal per
      * face.
+     * 
+     * @param in
      */
     public void parseNormalsList( AseReader in )
     {

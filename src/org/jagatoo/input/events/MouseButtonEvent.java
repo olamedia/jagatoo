@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -41,7 +41,9 @@ import org.jagatoo.input.devices.components.MouseButton;
 public abstract class MouseButtonEvent extends MouseEvent
 {
     /**
-     * {@inheritDoc}
+     * Gets the x coordinate.
+     * 
+     * @return the x coordinate.
      */
     public final int getX()
     {
@@ -49,7 +51,9 @@ public abstract class MouseButtonEvent extends MouseEvent
     }
     
     /**
-     * {@inheritDoc}
+     * Gets the y coordinate.
+     * 
+     * @return the y coordinate.
      */
     public final int getY()
     {
@@ -58,7 +62,9 @@ public abstract class MouseButtonEvent extends MouseEvent
     
     
     /**
-     * {@inheritDoc}
+     * Gets the button, that triggered the event.
+     * 
+     * @return the button, that triggered the event.
      */
     public final MouseButton getButton()
     {
@@ -92,6 +98,12 @@ public abstract class MouseButtonEvent extends MouseEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param mouse
+     * @param subType
+     * @param button
+     * @param when
+     * @param lastWhen
      */
     protected void set( Mouse mouse, SubType subType, MouseButton button, long when, long lastWhen )
     {
@@ -100,6 +112,12 @@ public abstract class MouseButtonEvent extends MouseEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param mouse
+     * @param subType
+     * @param button
+     * @param when
+     * @param lastWhen
      */
     public MouseButtonEvent( Mouse mouse, SubType subType, MouseButton button, long when, long lastWhen )
     {
@@ -108,6 +126,8 @@ public abstract class MouseButtonEvent extends MouseEvent
     
     /**
      * Creates a MouseEvent with default values.
+     * 
+     * @param subType
      */
     protected MouseButtonEvent( SubType subType )
     {

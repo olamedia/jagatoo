@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -56,6 +56,11 @@ public class MouseButtonReleasedEvent extends MouseButtonEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param mouse
+     * @param button
+     * @param when
+     * @param lastWhen
      */
     protected void set( Mouse mouse, MouseButton button, long when, long lastWhen )
     {
@@ -64,6 +69,11 @@ public class MouseButtonReleasedEvent extends MouseButtonEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param mouse
+     * @param button
+     * @param when
+     * @param lastWhen
      */
     public MouseButtonReleasedEvent( Mouse mouse, MouseButton button, long when, long lastWhen )
     {

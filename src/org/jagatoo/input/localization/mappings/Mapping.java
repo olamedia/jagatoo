@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,7 @@ package org.jagatoo.input.localization.mappings;
 
 import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.devices.components.Key;
+import org.jagatoo.input.devices.components.Keys;
 
 /**
  * This is used to map modified chars to unmodified ones.
@@ -59,7 +60,7 @@ public interface Mapping
      * 
      * @param key the queried key
      * @param unmodChar
-     * @param modifier this is one of {@link Keys#MODIFIER_SHIFT}, {@link Keys#MODIFIER_ALT}, {@link Keys#MODIFIER_ALT_GR}
+     * @param modifierMask this is one of {@link Keys#MODIFIER_SHIFT}, {@link Keys#MODIFIER_ALT}, {@link Keys#MODIFIER_ALT_GRAPH}
      * 
      * @return the modified char.
      */

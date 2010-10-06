@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -52,6 +52,8 @@ public abstract class KeyStateEvent extends KeyboardEvent
     
     /**
      * Creates a new KeyboardEvent with the default settings
+     * 
+     * @param subType
      */
     protected KeyStateEvent( SubType subType )
     {
@@ -61,8 +63,12 @@ public abstract class KeyStateEvent extends KeyboardEvent
     /**
      * Initialises the new KeyboardEvent using the given values.
      * 
-     * @param keyCode the key-code whose state changed
+     * @param keyboard
+     * @param subType
+     * @param key the key whose state changed
+     * @param modifierMask
      * @param when the timestamp of the KeyboardEvent 
+     * @param lastWhen
      */
     protected KeyStateEvent( Keyboard keyboard, SubType subType, Key key, int modifierMask, long when, long lastWhen )
     {

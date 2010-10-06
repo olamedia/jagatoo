@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -59,6 +59,8 @@ public abstract class MouseEvent extends InputEvent
     
     /**
      * The MouseDevice, that caused the event.
+     * 
+     * @return the MouseDevice, that caused the event.
      */
     public final Mouse getMouse()
     {
@@ -78,6 +80,12 @@ public abstract class MouseEvent extends InputEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param mouse
+     * @param subType
+     * @param component
+     * @param when
+     * @param lastWhen
      */
     protected void set( Mouse mouse, SubType subType, DeviceComponent component, long when, long lastWhen )
     {
@@ -89,6 +97,8 @@ public abstract class MouseEvent extends InputEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param e
      */
     protected void set( MouseEvent e )
     {
@@ -100,6 +110,12 @@ public abstract class MouseEvent extends InputEvent
     
     /**
      * Sets the fields of this MouseEvent to match the given MouseEvent.
+     * 
+     * @param mouse
+     * @param subType
+     * @param component
+     * @param when
+     * @param lastWhen
      */
     public MouseEvent( Mouse mouse, SubType subType, DeviceComponent component, long when, long lastWhen )
     {
@@ -111,6 +127,8 @@ public abstract class MouseEvent extends InputEvent
     
     /**
      * Creates a MouseEvent with default values.
+     * 
+     * @param subType
      */
     protected MouseEvent( SubType subType )
     {

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -104,6 +104,7 @@ public class CalLoader {
      * @return One of the following values:
      *         \li a pointer to the core animation
      *         \li \b 0 if an error happend
+     * @throws IOException 
      *****************************************************************************/
     
     public static CalCoreAnimation loadCoreAnimation(URL resource, String name) throws IOException {
@@ -205,6 +206,7 @@ public class CalLoader {
      * @return One of the following values:
      *         \li a pointer to the core bone
      *         \li \b 0 if an error happend
+     * @throws IOException 
      *****************************************************************************/
     
     protected static CalCoreBone loadCoreBones(DataInput file) throws IOException {
@@ -283,6 +285,7 @@ public class CalLoader {
      * @return One of the following values:
      *         \li a pointer to the core keyframe
      *         \li \b 0 if an error happend
+     * @throws IOException 
      *****************************************************************************/
     
     protected static CalCoreKeyframe loadCoreKeyframe(DataInput file) throws IOException {
@@ -325,6 +328,7 @@ public class CalLoader {
      * @return One of the following values:
      *         \li a pointer to the core material
      *         \li \b 0 if an error happend
+     * @throws IOException 
      *****************************************************************************/
     
     public static CalCoreMaterial loadCoreMaterial(URL resource) throws IOException {
@@ -439,6 +443,7 @@ public class CalLoader {
      * @return One of the following values:
      *         \li a pointer to the core mesh
      *         \li \b 0 if an error happend
+     * @throws IOException 
      *****************************************************************************/
     
     public static CalCoreMesh loadCoreMesh(URL resource) throws IOException {
@@ -505,6 +510,7 @@ public class CalLoader {
      * @return One of the following values:
      *         \li a pointer to the core skeleton
      *         \li \b 0 if an error happend
+     * @throws IOException 
      *****************************************************************************/
     
     public static CalCoreSkeleton loadCoreSkeleton(URL resource) throws IOException {
@@ -866,6 +872,7 @@ public class CalLoader {
      * @return One of the following values:
      *         \li a pointer to the core submesh
      *         \li \b 0 if an error happend
+     * @throws IOException 
      *****************************************************************************/
     
     protected static CalCoreSubmesh loadCoreSubmesh(DataInput file) throws IOException {
@@ -996,6 +1003,7 @@ public class CalLoader {
      * @return One of the following values:
      *         \li a pointer to the core track
      *         \li \b 0 if an error happend
+     * @throws IOException 
      *****************************************************************************/
     
     protected static CalCoreTrack loadCoreTrack(DataInput file) throws IOException {
@@ -1013,7 +1021,7 @@ public class CalLoader {
         // read the number of keyframes
         int keyframeCount = file.readInt();
         if((keyframeCount <= 0))
-            new IOException("Invalid count in cal3d animation track");
+            throw new IOException("Invalid count in cal3d animation track");
         
         // load all core keyframes
         int keyframeId;

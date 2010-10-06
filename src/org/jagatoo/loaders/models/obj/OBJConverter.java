@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -157,7 +157,8 @@ public class OBJConverter
             currentVert += face.getCount();
         }
         
-        boolean useTex = faceList.texturesUsed() && ( dataTexs != null );
+        //boolean useTex = faceList.texturesUsed() && ( dataTexs != null );
+        boolean useTex = faceList.texturesUsed();
         
         for ( int i = 0 ; i < totalVerts; i++ )
         {

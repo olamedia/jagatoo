@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -179,6 +179,10 @@ public abstract class Mouse extends InputDevice
     }
     
     /**
+     * Gets the number of {@link ControllerButton}s mounted to this {@link Controller}.
+     * 
+     * @param index
+     * 
      * @return the number of {@link ControllerButton}s mounted to this {@link Controller}.
      */
     public final MouseButton getButton( int index )
@@ -551,7 +555,10 @@ public abstract class Mouse extends InputDevice
      * This method also notifies the {@link MouseStopManager}, so
      * that it can track, when the mouse has stopped.
      * 
-     * @param button
+     * @param x
+     * @param y
+     * @param dx
+     * @param dy
      * @param when
      * 
      * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
@@ -615,7 +622,8 @@ public abstract class Mouse extends InputDevice
      * The event is not fired from this method.<br>
      * This method updates the wheel-state.
      * 
-     * @param button
+     * @param wheelDelta
+     * @param isPageMove
      * @param when
      * 
      * @return the new event from the pool or <code>null</code>, if no events are currently accepted.
@@ -719,6 +727,8 @@ public abstract class Mouse extends InputDevice
      * but only if the value has changed.
      * 
      * @param absolute
+     * 
+     * @throws InputSystemException
      */
     protected abstract void setAbsoluteImpl( boolean absolute ) throws InputSystemException;
     
@@ -726,6 +736,8 @@ public abstract class Mouse extends InputDevice
      * Makes this Mouse an absolute mouse (only delta positions become valid) or relative.
      * 
      * @param absolute
+     * 
+     * @throws InputSystemException
      */
     public final void setAbsolute( boolean absolute ) throws InputSystemException
     {
@@ -788,6 +800,8 @@ public abstract class Mouse extends InputDevice
     
     /**
      * Destroys the Mouse.
+     * 
+     * @throws InputSystemException
      */
     protected abstract void destroyImpl() throws InputSystemException;
     

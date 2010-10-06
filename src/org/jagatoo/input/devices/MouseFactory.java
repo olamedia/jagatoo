@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,11 +44,15 @@ public interface MouseFactory
      * @return an array of all the installed Mouses in the system.
      * 
      * @param forceRefresh if true, the list of available devices is refreshed from the system.
+     * 
+     * @throws InputSystemException
      */
     public Mouse[] getMouses( boolean forceRefresh ) throws InputSystemException;
     
     /**
      * @return an array of all the installed Mouses in the system. (This method doesn't force a refresh!)
+     * 
+     * @throws InputSystemException
      */
     public Mouse[] getMouses() throws InputSystemException;
     

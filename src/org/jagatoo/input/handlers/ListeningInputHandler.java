@@ -68,9 +68,11 @@ import org.jagatoo.input.managers.InputBindingsManager;
  * So you don't have to care about that in any way. (Just override
  * the empty method stubs for the event methods.)
  * 
+ * @param <A> the action type
+ * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public abstract class ListeningInputHandler< A extends InputAction > extends InputHandler< A > implements InputListener, InputStateListener
+public abstract class ListeningInputHandler<A extends InputAction> extends InputHandler<A> implements InputListener, InputStateListener
 {
     /**
      * {@inheritDoc}
@@ -184,7 +186,7 @@ public abstract class ListeningInputHandler< A extends InputAction > extends Inp
         }
     }
     
-    public ListeningInputHandler( InputBindingsManager< A > bindingsManager )
+    public ListeningInputHandler( InputBindingsManager<A> bindingsManager )
     {
         super( bindingsManager );
     }

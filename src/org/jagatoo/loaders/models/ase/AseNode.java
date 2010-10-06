@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -99,6 +99,11 @@ public class AseNode
      * An example is Colorf. If a property is of type Colorf then it will
      * assume that there will be 3 floats as parameters to this line, in which
      * case it will parse it.
+     * 
+     * @param in
+     * @param line
+     * 
+     * @return
      */
     public boolean parseProperty( AseReader in, AseFileLine line )
     {

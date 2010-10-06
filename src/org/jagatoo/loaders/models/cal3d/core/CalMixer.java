@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -78,6 +78,7 @@ public class CalMixer {
      * @param id The ID of the animation cycle that should be blended.
      * @param weight The weight to interpolate the animation cycle to.
      * @param delay The time in seconds until the new weight should be reached.
+     * @return 
      *****************************************************************************/
     
     public synchronized CalAnimationCycle blendCycle(String id, float weight, float delay) {
@@ -128,6 +129,9 @@ public class CalMixer {
     
     /** Scrubs an animation cycle to a position (fraction through animation).
      *  This is achieved internally using an animation cycle.
+     * @param id 
+     * @param position 
+     * @return 
      */
     public final CalAnimation scrubToPosition(String id, float position) {
         return scrubToPosition(id, position, 1);
@@ -135,6 +139,10 @@ public class CalMixer {
     
     /** Scrubs an animation cycle to a position (fraction through animation).
      *  This is achieved internally using an animation cycle.
+     * @param id 
+     * @param position 
+     * @param weight 
+     * @return 
      */
     public synchronized CalAnimation scrubToPosition(String id, float position, float weight) {
         CalAnimation animation = mapAnimation.get(id);
@@ -168,6 +176,9 @@ public class CalMixer {
     
     /** Scrubs an animation cycle to a specific time.
      *  This is achieved internally using an animation cycle.
+     * @param id 
+     * @param time 
+     * @return 
      */
     public final CalAnimation scrubToTime(String id, float time) {
         return scrubToTime(id, time, 1);
@@ -175,6 +186,10 @@ public class CalMixer {
     
     /** Scrubs an animation cycle to a specific time.
      *  This is achieved internally using an animation cycle.
+     * @param id 
+     * @param time 
+     * @param weight 
+     * @return 
      */
     public synchronized CalAnimation scrubToTime(String id, float time, float weight) {
         CalAnimation animation = mapAnimation.get(id);
@@ -210,6 +225,9 @@ public class CalMixer {
     /** Applies an additive animation cycle to the skeleton.
      *  Behaves like a scrub so it doesn't need to interact with the CalMixer's update...
      *  This is experimental!
+     * @param id 
+     * @param time 
+     * @return 
      */
     public synchronized CalAnimation applyAdditiveCycle(String id, float time) {
         CalAnimation animation = mapAnimation.get(id);
@@ -244,6 +262,10 @@ public class CalMixer {
     /** Applies an additive animation cycle to the skeleton.
      *  Behaves like a scrub so it doesn't need to interact with the CalMixer's update...
      *  This is experimental!
+     * @param id 
+     * @param baseId 
+     * @param time 
+     * @return 
      */
     public synchronized CalAnimation applyAdditiveCycle(String id, String baseId, float time) {
         CalAnimation animation = mapAnimation.get(id);
@@ -344,6 +366,7 @@ public class CalMixer {
      *                full weight from the beginning of its execution.
      * @param delayOut The time in seconds in which the animation action reaches
      *                 zero weight at the end of its execution.
+     * @return 
      *****************************************************************************/
     
     public synchronized CalAnimationAction executeAction(String id, float delayIn, float delayOut) {
@@ -362,6 +385,7 @@ public class CalMixer {
      *                 zero weight at the end of its execution.
      * @param weightTarget The weight to interpolate the animation action to.
      * @param autoLock     This prevents the Action from being reset and removed
+     * @return 
      *****************************************************************************/
     
     public synchronized CalAnimationAction executeAction(String id, float delayIn, float delayOut, float weightTarget, boolean autoLock) {

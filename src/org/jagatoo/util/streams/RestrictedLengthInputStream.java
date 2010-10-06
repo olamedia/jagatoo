@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -49,6 +49,8 @@ public class RestrictedLengthInputStream extends InputStream
      * 
      * @param in The input stream to read from
      * @param length The number of bytes to allow access to
+     * 
+     * @throws IOException
      */
     public RestrictedLengthInputStream( InputStream in, int length ) throws IOException
     {

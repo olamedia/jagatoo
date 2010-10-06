@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -83,6 +83,14 @@ public abstract class PixelProcessor
     /**
      * Note:
      * This can work inplace, if srcOff == trgOff and srcLineSize >= trgLineSize.
+     * 
+     * @param srcImg
+     * @param trgOffset
+     * @param trgWidth
+     * @param trgHeight
+     * @param trgLineSize
+     * @param texFactory
+     * @return
      */
     public AbstractTextureImage calcMipMap( AbstractTextureImage srcImg, int trgOffset, int trgWidth, int trgHeight, int trgLineSize, TextureFactory texFactory )
     {
@@ -184,7 +192,7 @@ public abstract class PixelProcessor
     }
     
     /**
-     * @return the best fitting PixelProcessor based on the BufferedImage format
+     * Returns the best fitting PixelProcessor based on the BufferedImage format
      *         and the given format.
      * 
      * @param img A BufferedImage on which the decision should be based.
@@ -226,7 +234,7 @@ public abstract class PixelProcessor
     }
     
     /**
-     * @return the best fitting PixelProcessor based on the BufferedImage format
+     * Returns the best fitting PixelProcessor based on the BufferedImage format
      *         and the given format.
      * 
      * @param img A BufferedImage on which the decision should be based.

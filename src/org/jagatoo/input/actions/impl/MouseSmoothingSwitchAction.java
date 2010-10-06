@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,6 +30,7 @@
 package org.jagatoo.input.actions.impl;
 
 import org.jagatoo.input.actions.AbstractLabeledInvokableInputAction;
+import org.jagatoo.input.actions.LabeledInvokableInputAction;
 import org.jagatoo.input.devices.InputDevice;
 import org.jagatoo.input.devices.components.DeviceComponent;
 import org.jagatoo.input.handlers.InputHandler;

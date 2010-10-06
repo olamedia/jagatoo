@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -57,7 +57,9 @@ public class ControllerAxisChangedEvent extends ControllerEvent
     }
     
     /**
-     * {@inheritDoc}
+     * Gets the controll axis delta.
+     * 
+     * @return the controll axis delta.
      */
     public final float getAxisDelta()
     {
@@ -80,7 +82,12 @@ public class ControllerAxisChangedEvent extends ControllerEvent
     }
     
     /**
-     * {@inheritDoc}
+     * 
+     * @param controller
+     * @param axis
+     * @param axisDelta
+     * @param when
+     * @param lastWhen
      */
     public void set( Controller controller, ControllerAxis axis, float axisDelta, long when, long lastWhen )
     {
@@ -92,6 +99,8 @@ public class ControllerAxisChangedEvent extends ControllerEvent
     
     /**
      * Sets the fields of this ControllerAxisChangedEvent to match the given event.
+     * 
+     * @param e
      */
     public void set( ControllerAxisChangedEvent e )
     {
@@ -112,7 +121,6 @@ public class ControllerAxisChangedEvent extends ControllerEvent
     /**
      * Create a new event.
      * 
-     * @param type
      * @param controller
      * @param axis
      * @param axisDelta

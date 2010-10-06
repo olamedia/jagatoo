@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -72,7 +72,7 @@ public abstract class InputActionCommand extends NoParamCommandBase implements L
      * Creates a new key-bound {@link Command}.
      * 
      * @param commandKey this is NOT the Keyboard-key, but the command's key (name).
-     * @param ordinal this {@link KeyCommandInterface}'s ordinal. The next auto-ordinal will be resettet to (ordinal + 1), if this is >= 0.
+     * @param ordinal this {@link Command}'s ordinal. The next auto-ordinal will be resettet to (ordinal + 1), if this is >= 0.
      * @param text the Text, that is displayed in a configuration dialog
      * @param numParams
      */
@@ -95,7 +95,7 @@ public abstract class InputActionCommand extends NoParamCommandBase implements L
      * Creates a new key-bound {@link Command}.
      * 
      * @param commandKey this is NOT the Keyboard-key, but the command's key (name).
-     * @param ordinal this {@link KeyCommandInterface}'s ordinal. The next auto-ordinal will be resettet to (ordinal + 1), if this is >= 0.
+     * @param ordinal this {@link Command}'s ordinal. The next auto-ordinal will be resettet to (ordinal + 1), if this is >= 0.
      * @param text the Text, that is displayed in a configuration dialog
      */
     public InputActionCommand( final String commandKey, int ordinal, String text )

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -75,6 +75,7 @@ public class CalBone
      * Constructs a bone instance from a core bone.
      * 
      * This function is the default constructor of the bone instance.
+     * @param coreBone 
      */
     
     public CalBone( CalCoreBone coreBone )
@@ -338,6 +339,7 @@ public class CalBone
      * This function sets the current relative rotation of the bone instance.
      * Caveat: For this change to appear, calculateState() must be called
      * afterwards.
+     * @param rotation 
      */
     
     public void setRotation( Quaternion4f rotation )
@@ -394,6 +396,7 @@ public class CalBone
      * This function sets the current relative translation of the bone instance.
      * Caveat: For this change to appear, calculateState() must be called
      * afterwards.
+     * @param translation 
      */
     
     public void setTranslation( Vector3f translation )

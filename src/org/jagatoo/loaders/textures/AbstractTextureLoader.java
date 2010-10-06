@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2009, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -410,7 +410,6 @@ public abstract class AbstractTextureLoader
      * @param in the InputStream to load the Texture from
      * @param flipVertically flip the image vertically or not
      * @param acceptAlpha try to load with alpha channel or not
-     * @param loadMipmaps create mipmaps?
      * @param allowStreching If true, the image is streched to power-of-two width and height, if necessary.
      * @param texFactory 
      * 
@@ -442,7 +441,7 @@ public abstract class AbstractTextureLoader
         {
             in.mark( Integer.MAX_VALUE );
             
-            if ( texImg == null )
+            //if ( texImg == null )
             {
                 texImg = tryToLoadFromTextureImageFormatLoaders( in, flipVertically, acceptAlpha, allowStreching, texFactory );
             }
@@ -522,7 +521,7 @@ public abstract class AbstractTextureLoader
         {
             in.mark( Integer.MAX_VALUE );
             
-            if ( tex == null )
+            //if ( tex == null )
             {
                 AbstractTextureImage ti = tryToLoadFromTextureImageFormatLoaders( in, flipVertically, acceptAlpha, allowStreching, texFactory );
                 
