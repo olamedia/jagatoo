@@ -37,7 +37,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.jagatoo.util.errorhandling.IncorrectFormatException;
-import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
+import org.jagatoo.loaders.models.collada.datastructs.animation.Axis;
 import org.jagatoo.logging.JAGTLog;
 
 /**
@@ -74,19 +74,33 @@ public class XMLChannel {
     public String source = null;
     public String target = null;
 
-    private String targetBone = null;
-    private KeyFrame.Axis targetAxis;
+    private String targetJoint = null;
+    private Axis targetAxis;
 
     //target="Root/rotateX.ANGLE"
     //target="Root/translate"
     //target="Root/scale"
 
-    public String getTargetBone() {
+    /*
+    <channel target="here/trans.X" />
+    <channel target="here/trans.Y" />
+    <channel target="here/trans.Z" />
+    <channel target="here/rot.ANGLE" />
+    <channel target="here/rot(3)" />
+    <channel target="here/mat(3)(2)" />
+    <node id="here">
+        <translate sid="trans"> 1.0 2.0 3.0 </translate>
+        <rotate sid="rot"> 1.0 2.0 3.0 4.0 </rotate>
+        <matrix sid="mat">1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0 13.0 14.0 15.0 16.0</matrix>
+    </node>
+     */
+    
+    public String getTargetJoint() {
         checkIsParsed();
-        return this.targetBone;
+        return this.targetJoint;
     }
 
-    public KeyFrame.Axis getRotationAxis() {
+    public Axis getRotationAxis() {
         checkIsParsed();
         if (type != ChannelType.ROTATE) {
             throw new IncorrectFormatException( "It is not a rotation key frame, it's a " + type );
@@ -97,14 +111,14 @@ public class XMLChannel {
 
 
     /**
-     * Parse the target attribute and gets the bone and the type of movement
+     * Parse the target attribute and gets the joint and the type of movement
      */
     private void checkIsParsed() {
 
-        if (targetBone == null) {
+        if (targetJoint == null) {
 
             StringTokenizer tok = new StringTokenizer(target);
-            targetBone = tok.nextToken("/");
+            targetJoint = tok.nextToken("/");
             String trans = tok.nextToken();
 
             //see if it's a translation or a rotation
@@ -124,11 +138,11 @@ public class XMLChannel {
 
                 // Get the axis
                 if (trans.contains("rotateX")) {
-                    targetAxis = KeyFrame.Axis.X;
+                    targetAxis = Axis.X;
                 } else if (trans.contains("rotateY")) {
-                    targetAxis = KeyFrame.Axis.Y;
+                    targetAxis = Axis.Y;
                 } else {
-                    targetAxis = KeyFrame.Axis.Z;
+                    targetAxis = Axis.Z;
                 }
 
             } else if (trans.startsWith(SCALE_TARGET)) {

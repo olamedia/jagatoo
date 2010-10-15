@@ -37,10 +37,11 @@ import org.openmali.vecmath2.Tuple3f;
  * @author Amos Wenger (aka BlueSky)
  * @author Matias Leone (aka Maguila)
  */
+@Deprecated
 public class KeyFrameTuple3f extends KeyFrame
 {
     /**
-     * Key frame transform values: translation or rotation (in radians)
+     * Key frame transform values: translation or scale
      */
     private Tuple3f value = null;
     

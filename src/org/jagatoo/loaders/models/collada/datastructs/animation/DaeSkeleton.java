@@ -27,45 +27,82 @@
  * RISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE
  */
-package org.jagatoo.loaders.models.collada.datastructs.geometries;
+package org.jagatoo.loaders.models.collada.datastructs.animation;
 
-import org.jagatoo.datatypes.NamedObject;
-
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
- * This class is the equivalent of LibraryGeometries in a
- * COLLADA file. It contains every Geometry and relevant information
- * about it.
+ * A Skeleton. It contains a root joint, which can have several children
  * 
  * @author Amos Wenger (aka BlueSky)
+ * @author Matias Leone (aka Maguila)
  */
-public class LibraryGeometries
+public class DaeSkeleton implements Iterable<DaeJoint>
 {
-    /** Map of all geoms : key is id, value is a Geometry object */
-    private final HashMap<String, NamedObject> geometries = new HashMap<String, NamedObject>();
-    private final HashMap<String, Mesh> meshes = new HashMap<String, Mesh>();
+    /** The root joint : there's only one (for simple implementation) */
+    private DaeJoint rootJoint;
+    
+    private final HashMap<String, DaeJoint> jointMap = new HashMap<String, DaeJoint>();
+    /**
+     * Iterator for easy managment of the joints
+     */
+    private SkeletonIterator iterator = new SkeletonIterator(this);
 
     /**
-     * @return the geometries in this LibraryGeometries
+     * @return the rootJoint
      */
-    public final HashMap<String, NamedObject> getGeometries()
+    public final DaeJoint getRootJoint()
     {
-        return ( geometries );
+        return ( rootJoint );
+    }
+    
+    public final DaeJoint getJointBySourceId( String sourceId )
+    {
+        return ( jointMap.get( sourceId ) );
     }
 
     /**
-     * @return the meshes of geometries in this LibraryGeometries
+     * {@inheritDoc}
      */
-    public HashMap<String, Mesh> getMeshes()
+    public Iterator<DaeJoint> iterator()
     {
-        return ( meshes );
+    	if ( this.iterator == null )
+    	{
+    		this.iterator = new SkeletonIterator( this );
+    	}
+    	
+    	if ( !this.iterator.hasNext() )
+    	{
+    		resetIterator();
+    	}
+    	
+        return ( this.iterator );
+    }
+    
+    public void resetIterator()
+    {
+    	this.iterator = new SkeletonIterator( this );
+    	this.iterator.reset();
     }
 
     /**
-     * Create a new LibraryGeometries
+     * Creates a new Skeleton.
+     * 
+     * @param rootJoint
+     *                The root joint
+     * @param jointList
      */
-    public LibraryGeometries()
+    public DaeSkeleton( DaeJoint rootJoint, ArrayList<DaeJoint> jointList )
     {
+        this.rootJoint = rootJoint;
+        
+        for ( int i = 0; i < jointList.size(); i++ )
+        {
+            final DaeJoint joint = jointList.get( i );
+            
+            this.jointMap.put( joint.getSourceId(), joint );
+        }
     }
 }

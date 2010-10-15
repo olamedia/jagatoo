@@ -31,7 +31,7 @@ package org.jagatoo.loaders.models.collada.datastructs.visualscenes;
 
 import java.util.HashMap;
 
-import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
+import org.jagatoo.loaders.models.collada.datastructs.animation.DaeSkeleton;
 
 /**
  * Visual scenes in a COLLADA File
@@ -44,8 +44,11 @@ public class LibraryVisualScenes
     private final HashMap<String, Scene> scenes = new HashMap<String, Scene>();
     
     /** Map of all skeletons */
-    private final HashMap<String, Skeleton> skeletons = new HashMap<String, Skeleton>();
-    
+    private final HashMap<String, DaeSkeleton> skeletons = new HashMap<String, DaeSkeleton>();
+
+    /** Map */
+    private final HashMap<String, String> controllerIdToRootJointId = new HashMap<String, String>();
+
     /**
      * @return the scenes
      */
@@ -57,11 +60,16 @@ public class LibraryVisualScenes
     /**
      * @return the skeletons
      */
-    public final HashMap<String, Skeleton> getSkeletons()
+    public final HashMap<String, DaeSkeleton> getSkeletons()
     {
         return ( skeletons );
     }
-    
+
+    public HashMap<String, String> getControllerIdToRootJointId()
+    {
+        return ( controllerIdToRootJointId );
+    }
+
     /**
      * Creates a new COLLADALibraryVisualScenes
      */

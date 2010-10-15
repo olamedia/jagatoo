@@ -1,20 +1,20 @@
 /**
  * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the 'Xith3D Project Group' nor the names of its
  * contributors may be used to endorse or promote products derived from this
  * software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,20 +29,15 @@
  */
 package org.jagatoo.loaders.models.collada;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import org.jagatoo.loaders.models.collada.datastructs.animation.DaeJoint;
+import org.jagatoo.loaders.models.collada.datastructs.animation.DaeSkeleton;
 
-import org.jagatoo.loaders.models.collada.datastructs.animation.Bone;
-import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrameTuple3f;
-import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrameQuat4f;
-import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
-import org.jagatoo.logging.JAGTLog;
+import java.util.HashMap;
 
 /**
  * A COLLADA "Action", or "Animation" or "Animation clip" or "Animation strip",
  * whatever you call it : it's a "piece of movement" you can play on your model.
- * 
+ *
  * @author Amos Wenger (aka BlueSky)
  * @author Matias Leone (aka Maguila)
  */
@@ -54,81 +49,86 @@ public class COLLADAAction
      * model
      */
     private final String id;
-    
-    /**
-     * Translation key frames : if any, define the movement of the
-     * Skeleton itself (e.g. moves the whole model)
-     */
-    public final ArrayList<KeyFrameTuple3f> transKeyFrames = new ArrayList<KeyFrameTuple3f> ();
-    
-    /**
-     * Rotation key frames, per bone.
-     */
-    public final HashMap<Bone, ArrayList<KeyFrameQuat4f>> rotKeyFrames = new HashMap<Bone, ArrayList<KeyFrameQuat4f>>();
-    
-    /**
-     * Scale key frames, per bone.
-     */
-    public final HashMap<Bone, ArrayList<KeyFrameTuple3f>> scaleKeyFrames = new HashMap<Bone, ArrayList<KeyFrameTuple3f>>();
-    
+
     /**
      * Skeleton for this action
      */
-    private Skeleton skeleton;
-    
-    
+    private DaeSkeleton skeleton;
+
+    /**
+     * Translation key frames, per joint (actually for root)
+     */
+    private HashMap<DaeJoint, AnimationChannel> translations = new HashMap<DaeJoint, AnimationChannel>();
+    /**
+     * Rotation key frames, per joint.
+     */
+    private HashMap<DaeJoint, AnimationChannel> rotations = new HashMap<DaeJoint, AnimationChannel>();
+    /**
+     * Scale key frames, per joint.
+     */
+    private HashMap<DaeJoint, AnimationChannel> scales = new HashMap<DaeJoint, AnimationChannel>();
+
+
     /**
      * Creates a new COLLADAAction.
-     * 
+     *
      * @param id the id of this COLLADA Action
      */
     public COLLADAAction( String id )
     {
         this.id = id;
     }
-    
+
     /**
      * @return the ID String of this COLLADA Action.
      */
-    public String getId()
+    public final String getId()
     {
         return ( id );
     }
-    
+
     /**
-     * @param skeleton
-     *                the skeleton to set
+     * @param skeleton the skeleton to set
      */
-    public void setSkeleton( Skeleton skeleton )
+    public final void setSkeleton( DaeSkeleton skeleton )
     {
         this.skeleton = skeleton;
     }
-    
+
     /**
      * @return the skeleton
      */
-    public Skeleton getSkeleton()
+    public final DaeSkeleton getSkeleton()
     {
         return ( skeleton );
     }
-    
-    
+
     /**
-     * Loops through each bone of the skeleton and completes their temp key frames arrays.
+     * Loops through each joint of the skeleton and completes their temp key frames arrays.
      */
-    public void prepareBones()
+    public void prepareJoints()
     {
         skeleton.resetIterator();
-        for ( Iterator<Bone> iterator = this.skeleton.iterator(); iterator.hasNext(); )
+        for ( DaeJoint joint : skeleton )
         {
-        	Bone bone = iterator.next();
-            
-        	JAGTLog.debug( rotKeyFrames.get( bone ) );
-            
-        	bone.rotKeyFrames = rotKeyFrames.get( bone );
-            bone.scaleKeyFrames = scaleKeyFrames.get( bone );
-            
-            JAGTLog.debug( bone.rotKeyFrames.equals( rotKeyFrames.get( bone ) ) );
+            joint.setTranslations( translations.get( joint ) );
+            joint.setRotations( rotations.get( joint ) );
+            joint.setScales( scales.get( joint ) );
         }
+    }
+
+    public void putTranslations( DaeJoint joint, AnimationChannel translations )
+    {
+        this.translations.put( joint, translations );
+    }
+
+    public void putRotations( DaeJoint joint, AnimationChannel rotations )
+    {
+        this.rotations.put( joint, rotations );
+    }
+
+    public void putScales( DaeJoint joint, AnimationChannel scales )
+    {
+        this.scales.put( joint, scales );
     }
 }

@@ -76,8 +76,6 @@ public class AssetFolder
     /** LibraryAnimations : contains all animations/actions */
     private final LibraryAnimations libraryAnimations;
     
-    private ColladaProtoypeModel protoModel;
-    
     /**
      * The base path, used e.g. when loading textures.
      * Basically it's where this file has been loaded from.
@@ -147,16 +145,6 @@ public class AssetFolder
     {
         return ( basePath );
     }
-    
-    public void setModel( ColladaProtoypeModel model )
-    {
-        this.protoModel = model;
-    }
-    
-	public final ColladaProtoypeModel getModel()
-	{
-		return ( protoModel );
-	}
     
     /**
      * Creates a new COLLADAFile

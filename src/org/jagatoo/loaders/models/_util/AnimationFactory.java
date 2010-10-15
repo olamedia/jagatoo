@@ -1,20 +1,20 @@
 /**
  * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the 'Xith3D Project Group' nor the names of its
  * contributors may be used to endorse or promote products derived from this
  * software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -39,42 +39,61 @@ import org.openmali.vecmath2.Vector3f;
 
 /**
  * Insert type comment here.
- * 
+ *
  * @author Marvin Froehlich (aka Qudus)
  */
 public interface AnimationFactory
 {
+    public Object createSkeleton( NamedObject[] joints );
+
+    public NamedObject createJoint(
+            short index,
+            String name,
+            NamedObject parent,
+            Matrix4f bindMatrix,
+            float[] translationTimeline,
+            Vector3f[] translations,
+            float[] rotationTimeline,
+            Quaternion4f[] rotations,
+            float[] scaleTimeline,
+            Tuple3f[] scales
+    );
+
+    public Object createSkeletalKeyFrameController( Object skeleton, float startTime, float endTime, int influencesPerVertex, float[] weights, short[] jointIndices, NamedObject target );
+
+
+
     public NamedObject createBone( NamedObject parentBone, String name, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
-    
+
     public NamedObject createBone( NamedObject parentBone, String name, Matrix4f transformation );
-    
+
     public Object createBoneAnimationKeyFrame( NamedObject[] bones );
-    
+
     public Object createBoneWeight( int boneIndex, float weight, Vector3f offset );
-    
+
     public Object createBoneAnimationKeyFrameController( Object[] keyFrames, Object[][] boneWeights, NamedObject target );
-    
-    
-    
+
+
+
     public Object createMeshDeformationKeyFrame( float[] coords, float[] normals );
-    
+
     public Object createMeshDeformationKeyFrameController( Object[] keyFrames, NamedObject target );
-    
-    
-    
+
+
+
     public Object createMeshTransformKeyFrame( float time, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
-    
+
     public Object createMeshTransformKeyFrame( float time, Vector3f translation, AxisAngle3f rotation, Tuple3f scale );
-    
+
     public Object createMeshTransformKeyFrame( float time, Vector3f translation, Matrix3f rotation, Tuple3f scale );
-    
+
     public Object createMeshTransformKeyFrame( float time, Matrix4f transform );
-    
+
     public void transformMeshTransformKeyFrame( Matrix4f transform, Object frame );
-    
+
     public void transformMeshTransformKeyFrames( Matrix4f transform, Object[] frames );
-    
+
     public Object createMeshTransformKeyFrameController( Object[] keyFrames, NamedObject target );
-    
+
     public Object createAnimation( String name, int numFrames, float fps, Object[] controllers, Matrix4f[][] mountTransformFrames );
 }

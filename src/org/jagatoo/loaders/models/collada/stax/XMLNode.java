@@ -195,7 +195,8 @@ public class XMLNode {
                     }
                     else if ( localName.equals( "matrix" ) )
                     {
-                        matrix = XMLMatrixUtils.readColumnMajor( StAXHelper.parseText( parser ) );   
+                        matrix = XMLMatrixUtils.readColumnMajor( StAXHelper.parseText( parser ) );
+                       // matrix = XMLMatrixUtils.readRowMajor( StAXHelper.parseText( parser ) );   
                     }
                     else if ( localName.equals( "rotate" ) )
                     {

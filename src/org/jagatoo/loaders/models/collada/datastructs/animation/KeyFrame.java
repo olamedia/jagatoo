@@ -29,40 +29,24 @@
  */
 package org.jagatoo.loaders.models.collada.datastructs.animation;
 
-import java.util.List;
-
 import org.jagatoo.loaders.models.collada.Rotations;
 import org.openmali.FastMath;
 import org.openmali.vecmath2.Tuple3f;
 
 /**
- * A KeyFrame contains information for the animation of a Bone. It can contain
+ * A KeyFrame contains information for the animation of a Joint. It can contain
  * translation, rotation or scale information.
  * 
  * @author Amos Wenger (aka BlueSky)
  * @author Matias Leone (aka Maguila)
  */
+@Deprecated
 public abstract class KeyFrame
 {
     /**
-     * An Axis.
-     * 
-     * @author Amos Wenger (aka BlueSky)
-     */
-    public static enum Axis
-    {
-        /** X Axis : (1, 0, 0) */
-        X,
-        /** Y Axis : (0, 1, 0) */
-        Y,
-        /** Z Axis : (0, 0, 1) */
-        Z
-    }
-    
-    /**
      * Key frame time
      */
-    public long time;
+    public float time;
     
     /**
      * Creates a translation key frame
@@ -75,10 +59,10 @@ public abstract class KeyFrame
      *                first value index
      * @return a new key frame
      */
-    public static KeyFrame buildPoint3fKeyFrame( float time, float[] values, int valueIndex )
+    public static KeyFrame buildTranslationKeyFrame( float time, float[] values, int valueIndex )
     {
         KeyFrameTuple3f frame = new KeyFrameTuple3f();
-        frame.time = (long)( time * 1000f );
+        frame.time = time * 1000f;
         
         frame.setValue( new Tuple3f(
                 values[valueIndex],
@@ -103,7 +87,7 @@ public abstract class KeyFrame
     public static KeyFrame buildQuaternion4fKeyFrame( float time, float angle, Axis axis )
     {
         KeyFrameQuat4f frame = new KeyFrameQuat4f();
-        frame.time = (long)( time * 1000f );
+        frame.time = time * 1000f;
         float radians = FastMath.toRad( angle );
         
         Tuple3f euler = new Tuple3f(0f, 0f, 0f);
@@ -127,7 +111,32 @@ public abstract class KeyFrame
         
         return ( frame );
     }
-    
+
+    /**
+     * Creates a translation key frame
+     *
+     * @param time
+     *                frame time
+     * @param values
+     *                float values of the translation
+     * @param valueIndex
+     *                first value index
+     * @return a new key frame
+     */
+    public static KeyFrame buildScaleKeyFrame( float time, float[] values, int valueIndex )
+    {
+        KeyFrameTuple3f frame = new KeyFrameTuple3f();
+        frame.time = time * 1000f;
+
+        frame.setValue( new Tuple3f(
+                values[valueIndex],
+                values[valueIndex + 1],
+                values[valueIndex + 2]
+        ) );
+
+        return ( frame );
+    }
+
     /**
      * Searches the next key frame according to the current time.
      * 
@@ -136,15 +145,15 @@ public abstract class KeyFrame
      *                in milliseconds
      * @return selected key frame index
      */
-    public static int searchNextFrame( List<? extends KeyFrame> frames, long currentTime )
-    {
-        int frame = 0;
-        
-        while ( frame < frames.size() && frames.get(frame).time < currentTime )
-        {
-            frame++;
-        }
-        
-        return ( frame );
-    }
+//    public static int searchNextFrame( List<? extends KeyFrame> frames, long currentTime )
+//    {
+//        int frame = 0;
+//
+//        while ( frame < frames.size() && frames.get(frame).time < currentTime )
+//        {
+//            frame++;
+//        }
+//
+//        return ( frame );
+//    }
 }

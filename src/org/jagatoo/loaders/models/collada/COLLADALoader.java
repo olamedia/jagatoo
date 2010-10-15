@@ -1,20 +1,20 @@
 /**
  * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
- * 
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *
  * Redistributions of source code must retain the above copyright notice,
  * this list of conditions and the following disclaimer.
- * 
+ *
  * Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *
  * Neither the name of the 'Xith3D Project Group' nor the names of its
  * contributors may be used to endorse or promote products derived from this
  * software without specific prior written permission.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -29,72 +29,79 @@
  */
 package org.jagatoo.loaders.models.collada;
 
-import java.io.InputStream;
-import java.net.URL;
-import java.util.List;
+import org.jagatoo.datatypes.NamedObject;
+import org.jagatoo.loaders.models._util.*;
+import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
+import org.jagatoo.loaders.models.collada.datastructs.controllers.Controller;
+import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalController;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.Node;
+import org.jagatoo.loaders.models.collada.stax.*;
+import org.jagatoo.logging.JAGTLog;
+import org.jagatoo.util.errorhandling.ParsingException;
+import org.openmali.spatial.bounds.BoundsType;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import org.jagatoo.util.errorhandling.ParsingException;
-import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.datastructs.ColladaProtoypeModel;
-import org.jagatoo.loaders.models.collada.stax.XMLCOLLADA;
-import org.jagatoo.loaders.models.collada.stax.XMLLibraryAnimations;
-import org.jagatoo.loaders.models.collada.stax.XMLLibraryControllers;
-import org.jagatoo.loaders.models.collada.stax.XMLLibraryEffects;
-import org.jagatoo.loaders.models.collada.stax.XMLLibraryGeometries;
-import org.jagatoo.loaders.models.collada.stax.XMLLibraryImages;
-import org.jagatoo.loaders.models.collada.stax.XMLLibraryMaterials;
-import org.jagatoo.loaders.models.collada.stax.XMLLibraryVisualScenes;
-import org.jagatoo.logging.JAGTLog;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.List;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.ArrayList;
 
 /**
  * This is a really simple COLLADA file loader. Its features are limited for now
  * but improving every minute :)
- * 
+ *
  * @author Amos Wenger (aka BlueSky)
  */
 public class COLLADALoader
 {
     private static final XMLInputFactory factory;
-    
+
     static
     {
         factory = XMLInputFactory.newInstance();
         //factory.configureForSpeed(); (if using a WstxInputFactory)
         factory.setProperty( XMLInputFactory.IS_COALESCING, true );
     }
-    
-    /**
-     * Create a new COLLADA Loader.
-     * 
-     * @throws ParsingException
-     */
-    public COLLADALoader() throws ParsingException
-    {
-    }
-    
+
     /**
      * Loads a COLLADA file from a stream
-     * @param basePath The base path, used e.g. when there are textures to load
-     * 
-     * @param stream
-     *            The stream to load the scene from
+     *
+     * @param basePath       The base path, used e.g. when there are textures to load
+     * @param stream         The stream to load the scene from
+     * @param appFactory
+     * @param geomFactory
+     * @param convertZup2Yup
+     * @param scale
+     * @param nodeFactory
+     * @param animFactory
+     * @param siHandler
+     * @param rootGroup
      * @return the loaded file
      */
-    public AssetFolder load( URL basePath, InputStream stream )
+    public AssetFolder loadAssetFolder( URL basePath,
+                                        InputStream stream,
+                                        AppearanceFactory appFactory,
+                                        GeometryFactory geomFactory,
+                                        boolean convertZup2Yup,
+                                        float scale,
+                                        NodeFactory nodeFactory,
+                                        AnimationFactory animFactory,
+                                        SpecialItemsHandler siHandler,
+                                        NamedObject rootGroup )
     {
         long t1 = System.nanoTime();
-        
+
         AssetFolder colladaFile = new AssetFolder( basePath );
-        
+
         try
         {
             JAGTLog.debug( "TT] Parsing..." );
             JAGTLog.increaseIndentation();
-            
+
             long l1 = System.nanoTime();
 
             XMLStreamReader reader = factory.createXMLStreamReader( stream );
@@ -117,22 +124,22 @@ public class COLLADALoader
             {
                 reader.close();
             }
-            
+
             long l2 = System.nanoTime();
             JAGTLog.debug( "TT] Took ", ( ( l2 - l1 ) / 1000000 ), " milliseconds to parse" );
-            
+
             JAGTLog.decreaseIndentation();
-            
+
             JAGTLog.debug( "--] This is a COLLADA ", collada.version, " file" );
             JAGTLog.debug( "--] Note that the loader don't care whether it's 1.4.0 or 1.4.1, though",
-                           "\n the COLLADA schema used for parsing is the for 1.4.1, tests for development",
-                           "\n have been done with 1.4.0 files exported by Blender (Illusoft script)"
-                         );
-            
+                    "\n the COLLADA schema used for parsing is the for 1.4.1, tests for development",
+                    "\n have been done with 1.4.0 files exported by Blender (Illusoft script)"
+            );
+
             JAGTLog.debug( "TT] Exploring libraries..." );
-            
+
             JAGTLog.increaseIndentation();
-            
+
             List<XMLLibraryGeometries> libraryGeometriesList = collada.libraryGeometries;
             if ( libraryGeometriesList != null )
             {
@@ -140,11 +147,11 @@ public class COLLADALoader
                 {
                     JAGTLog.debug( "CC] Found LibraryGeometries ! We know that !" );
                     JAGTLog.increaseIndentation();
-                    LibraryGeometriesLoader.loadLibraryGeometries( colladaFile, libraryGeometries );
+                    LibraryGeometriesLoader.loadLibraryGeometries( colladaFile, libraryGeometries, geomFactory );
                     JAGTLog.decreaseIndentation();
                 }
             }
-            
+
             List<XMLLibraryControllers> libraryControllersList = collada.libraryControllers;
             if ( libraryControllersList != null )
             {
@@ -156,7 +163,7 @@ public class COLLADALoader
                     JAGTLog.decreaseIndentation();
                 }
             }
-            
+
             List<XMLLibraryEffects> libraryEffectsList = collada.libraryEffects;
             if ( libraryEffectsList != null )
             {
@@ -168,7 +175,7 @@ public class COLLADALoader
                     JAGTLog.decreaseIndentation();
                 }
             }
-            
+
             List<XMLLibraryImages> libraryImagesList = collada.libraryImages;
             if ( libraryImagesList != null )
             {
@@ -180,7 +187,7 @@ public class COLLADALoader
                     JAGTLog.decreaseIndentation();
                 }
             }
-            
+
             List<XMLLibraryVisualScenes> libraryVisualScenesList = collada.libraryVisualScenes;
             if ( libraryVisualScenesList != null )
             {
@@ -192,7 +199,7 @@ public class COLLADALoader
                     JAGTLog.decreaseIndentation();
                 }
             }
-            
+
             List<XMLLibraryMaterials> libraryMaterialsList = collada.libraryMaterials;
             if ( libraryMaterialsList != null )
             {
@@ -204,35 +211,93 @@ public class COLLADALoader
                     JAGTLog.decreaseIndentation();
                 }
             }
-            
+
             List<XMLLibraryAnimations> libraryAnimationsList = collada.libraryAnimations;
             if ( libraryAnimationsList != null )
             {
-            	for ( XMLLibraryAnimations libraryAnimations : libraryAnimationsList )
-            	{
-            		JAGTLog.debug( "CC] Found LibraryAnimations ! We should know that !" );
+                for ( XMLLibraryAnimations libraryAnimations : libraryAnimationsList )
+                {
+                    JAGTLog.debug( "CC] Found LibraryAnimations ! We should know that !" );
                     JAGTLog.increaseIndentation();
                     LibraryAnimationsLoader.loadLibraryAnimations( colladaFile, libraryAnimations );
                     JAGTLog.decreaseIndentation();
-            	}
+                }
             }
-            
+
             JAGTLog.decreaseIndentation();
-            
-            //creates a simple model to perform the skeleton animation algorithm
-            colladaFile.setModel( new ColladaProtoypeModel( colladaFile ) );
-            
         }
         catch ( Exception e )
         {
             e.printStackTrace();
         }
-        
+
         long t2 = System.nanoTime();
-        
+
         JAGTLog.debug( "TT] Took ", ( ( t2 - t1 ) / 1000L / 1000L ), " milliseconds to load." );
-        
+
         // We still don't know what we will return..
         return ( colladaFile );
+    }
+
+    private COLLADALoader() throws ParsingException
+    {
+    }
+
+    /**
+     * @param baseURL
+     * @param stream
+     * @param appFactory
+     * @param geomFactory
+     * @param convertZup2Yup
+     * @param scale
+     * @param nodeFactory
+     * @param animFactory
+     * @param siHandler
+     * @param rootGroup
+     * @throws ParsingException
+     */
+    public static void load( URL baseURL,
+                             InputStream stream,
+                             AppearanceFactory appFactory,
+                             GeometryFactory geomFactory,
+                             boolean convertZup2Yup,
+                             float scale,
+                             NodeFactory nodeFactory,
+                             AnimationFactory animFactory,
+                             SpecialItemsHandler siHandler,
+                             NamedObject rootGroup )
+    {
+        COLLADALoader loader = new COLLADALoader();
+        AssetFolder file = loader.loadAssetFolder( baseURL, stream, appFactory, geomFactory, convertZup2Yup, scale, nodeFactory, animFactory, siHandler, rootGroup );
+        DaeConverter converter = new DaeConverter( file, siHandler, appFactory, geomFactory, nodeFactory, animFactory );
+
+        Collection<Node> daeNodes = file.getLibraryVisualsScenes().getScenes().values().iterator().next().getNodes().values();
+        NamedObject root = nodeFactory.createSimpleGroup( "main_group", BoundsType.SPHERE );
+        for ( Node daeNode : daeNodes )
+        {
+            nodeFactory.addNodeToGroup( converter.convertNode( daeNode ), root );
+        }
+        siHandler.addSpecialItem( SpecialItemsHandler.SpecialItemType.MAIN_GROUP, root.getName(), root );
+        nodeFactory.addNodeToGroup( root, rootGroup );
+        for ( COLLADAAction action : file.getLibraryAnimations().getAnimations().values() )
+        {
+            for ( Controller c : file.getLibraryControllers().getControllers().values() )
+            {
+                if ( c instanceof SkeletalController )
+                {
+                    SkeletalController sc = ( SkeletalController ) c;
+                    if ( action.getSkeleton().equals( sc.getSkeleton() ) )
+                    {
+                        Object ma = converter.convertToModelAnimation( sc, action );
+                        siHandler.addAnimation( ma );
+                    }
+                }
+            }
+        }
+
+        for ( NamedObject geom : converter.getStaticGeoms() )
+        {
+            geomFactory.setStaticOptimization( geom );
+        }
     }
 }

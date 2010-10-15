@@ -37,6 +37,7 @@ import org.openmali.vecmath2.Quaternion4f;
  * @author Amos Wenger (aka BlueSky)
  * @author Matias Leone (aka Maguila)
  */
+@Deprecated
 public class KeyFrameQuat4f extends KeyFrame {
     
     /** Rotational value */

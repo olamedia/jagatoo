@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.datastructs.animation.Skeleton;
+import org.jagatoo.loaders.models.collada.datastructs.animation.DaeSkeleton;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.Controller;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalController;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.ControllerInstance;
@@ -52,6 +52,7 @@ import org.jagatoo.loaders.models.collada.stax.XMLNode;
 import org.jagatoo.loaders.models.collada.stax.XMLVisualScene;
 import org.jagatoo.logging.JAGTLog;
 import org.openmali.vecmath2.Vector3f;
+import org.openmali.vecmath2.Matrix4f;
 
 /**
  * Class used to load LibraryVisualScenes.
@@ -85,7 +86,7 @@ public class LibraryVisualScenesLoader
             JAGTLog.increaseIndentation();
             for ( XMLNode node : visualScene.nodes.values() )
             {
-                Node colNode = processNode( node, colLibVisualScenes, colladaFile, upVector );
+                Node colNode = processNode( null, node, colLibVisualScenes, colladaFile, upVector );
                 
                 if ( colNode != null && node.type != XMLNode.Type.JOINT )
                 {
@@ -100,18 +101,18 @@ public class LibraryVisualScenesLoader
         JAGTLog.decreaseIndentation();
     }
     
-    static Node processNode( XMLNode node, LibraryVisualScenes colLibVisualScenes, AssetFolder colladaFile, Vector3f upVector )
+    static Node processNode( Node parentNode, XMLNode node, LibraryVisualScenes colLibVisualScenes, AssetFolder colladaFile, Vector3f upVector )
     {
         JAGTLog.debug( "TT] Found node [", node.id, ":", node.name, "]" );
         JAGTLog.increaseIndentation();
         
-        Node colNode = new Node( colladaFile, node.id, node.name, new MatrixTransform( node.matrix.matrix4f ) );
+        Node colNode = new Node( colladaFile, parentNode, node.id, node.name, new MatrixTransform( node.matrix.matrix4f ) );
         
         if ( node.type == XMLNode.Type.NODE )
         {
             for ( XMLNode child: node.childrenList )
             {
-                colNode.addChild( processNode( child, colLibVisualScenes, colladaFile, upVector ) );
+                colNode.addChild( processNode( colNode, child, colLibVisualScenes, colladaFile, upVector ) );
             }
             
             JAGTLog.debug( "TT] Alright, it's a basic node" );
@@ -133,14 +134,16 @@ public class LibraryVisualScenesLoader
                 {
                     colNode.addControllerInstance( newCOLLADAControllerInstanceNode( colladaFile, node, instanceController.url, instanceController.bindMaterial ) );
                     Controller controller = colladaFile.getLibraryControllers().getControllers().get( instanceController.url );
-                    
+                    colLibVisualScenes.getControllerIdToRootJointId().put( instanceController.url, instanceController.skeleton );
+                   // colLibVisualScenes.getControllerIdToNodeId().put( instanceController.url, node.id );
+
                     if ( controller instanceof SkeletalController )
                     {
                         final SkeletalController skelController = (SkeletalController)controller;
                         
                         JAGTLog.debug( "Wow! It's a Skeletal Controller Node!" );
                         skelController.setSkeleton( colLibVisualScenes.getSkeletons().get( instanceController.skeleton ) );
-                        skelController.setDestinationMesh( colladaFile.getLibraryGeometries().getGeometries().get( skelController.getSourceMeshId() ) );
+                        skelController.setDestinationGeometry( colladaFile.getLibraryGeometries().getGeometries().get( skelController.getSourceMeshId() ) );
                     }
                 }
             }
@@ -148,8 +151,11 @@ public class LibraryVisualScenesLoader
         else if ( node.type == XMLNode.Type.JOINT )
         {
             JAGTLog.debug( "TT] Alright, it's a skeleton node" );
-            
-            Skeleton skeleton = SkeletonLoader.loadSkeleton( node, upVector );
+
+            Matrix4f matrix = (parentNode == null) ?
+                    Matrix4f.IDENTITY : 
+                    parentNode.getTransform().getMatrixTransform().getMatrix();
+            DaeSkeleton skeleton = SkeletonLoader.loadSkeleton( node, upVector, matrix );
             colLibVisualScenes.getSkeletons().put( node.id, skeleton );
             Collection< Controller > controllers = colladaFile.getLibraryControllers().getControllers().values();
             for ( Controller controller: controllers )
@@ -157,8 +163,9 @@ public class LibraryVisualScenesLoader
                 if ( controller instanceof SkeletalController )
                 {
                     final SkeletalController skelController = (SkeletalController)controller;
-                    
-                    if ( node.id.equals( skelController.getController().skin.source ) )
+                    String rjId = colLibVisualScenes.getControllerIdToRootJointId().get( skelController.getController().id );
+                    //if ( node.id.equals( skelController.getController().skin.source ) )
+                    if ( node.id.equals( rjId ) )
                     {
                         skelController.setSkeleton( skeleton );
                     }
@@ -169,7 +176,7 @@ public class LibraryVisualScenesLoader
         {
             JAGTLog.debug( "TT] Node is of type : ", node.type, " we don't support specific nodes yet..." );
         }
-        
+
         JAGTLog.decreaseIndentation();
         
         return colNode;
@@ -180,7 +187,6 @@ public class LibraryVisualScenesLoader
      * 
      * @param colladaFile
      * @param node
-     * @param transform
      * @param geometryUrl
      * @param bindMaterial
      * 
@@ -190,17 +196,23 @@ public class LibraryVisualScenesLoader
     {
         GeometryInstance colNode;
         String materialUrl = null;
-        XMLBindMaterial.TechniqueCommon techniqueCommon = bindMaterial.techniqueCommon;
-        List<XMLInstanceMaterial> instanceMaterialList = techniqueCommon.instanceMaterials;
-        for ( XMLInstanceMaterial instanceMaterial : instanceMaterialList )
+
+        JAGTLog.debug( "TT] Bind material is "+ bindMaterial );
+
+        if ( bindMaterial != null )
         {
-            if ( materialUrl == null )
+            XMLBindMaterial.TechniqueCommon techniqueCommon = bindMaterial.techniqueCommon;
+            List<XMLInstanceMaterial> instanceMaterialList = techniqueCommon.instanceMaterials;
+            for ( XMLInstanceMaterial instanceMaterial : instanceMaterialList )
             {
-                materialUrl = instanceMaterial.target;
-            }
-            else
-            {
-                JAGTLog.debug( "TT] Several materials for the same geometry instance ! Skipping...." );
+                if ( materialUrl == null )
+                {
+                    materialUrl = instanceMaterial.target;
+                }
+                else
+                {
+                    JAGTLog.debug( "TT] Several materials for the same geometry instance ! Skipping...." );
+                }
             }
         }
         
@@ -220,8 +232,6 @@ public class LibraryVisualScenesLoader
      * 
      * @param colladaFile
      * @param node
-     * @param transform
-     * @param geometryUrl
      * @param bindMaterial
      * 
      * @return

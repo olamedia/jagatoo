@@ -74,7 +74,9 @@ public interface GeometryFactory
     public void setTexCoords( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, float[] data, int offset, int num );
     
     public void setTexCoords( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, TexCoordf<?>[] data, int offset, int num );
-    
+
+    public void setColor( NamedObject geometry, GeometryType type, int vertexIndex, float r, float g, float b, float a );
+
     public void setColors( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, float[] data, int offset, int num );
     
     public void setColors( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, Colorf[] data, int offset, int num );
@@ -84,4 +86,8 @@ public interface GeometryFactory
     public void setIndex( NamedObject geometry, GeometryType type, int vertexIndex, int[] data, int offset, int num );
     
     public void finalizeGeometry( NamedObject geometry, GeometryType type, int initialVertexIndex, int numValidVertices, int initialIndexIndex, int numValidIndices );
+
+    public int getVertexCount( NamedObject geometry );
+
+    public void setStaticOptimization( NamedObject geometry );
 }

@@ -34,30 +34,30 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Iterator for an easy management of a {@link Skeleton}'s {@link Bone}s.
+ * Iterator for an easy management of a {@link DaeSkeleton}'s {@link DaeJoint}s.
  * 
  * @author Matias Leone
  */
-public class SkeletonIterator implements Iterator<Bone>
+public class SkeletonIterator implements Iterator<DaeJoint>
 {
-	private final Skeleton skeleton;
-	private final ArrayList<Bone> bones = new ArrayList<Bone>();
+	private final DaeSkeleton skeleton;
+	private final ArrayList<DaeJoint> joints = new ArrayList<DaeJoint>();
 	private int currentIndex;
-	
-	/**
+
+    /**
 	 * {@inheritDoc}
 	 */
 	public boolean hasNext()
 	{
-		return ( ( currentIndex + 1 ) < bones.size() );
+		return ( ( currentIndex + 1 ) < joints.size() );
 	}
 	
     /**
      * {@inheritDoc}
      */
-	public Bone next()
+	public DaeJoint next()
 	{
-		return ( bones.get( ++currentIndex ) );
+		return ( joints.get( ++currentIndex ) );
 	}
 	
     /**
@@ -65,22 +65,22 @@ public class SkeletonIterator implements Iterator<Bone>
      */
 	public void remove()
 	{
-		throw new UnsupportedOperationException( "Can not remove a bone" );
+		throw new UnsupportedOperationException( "Can not remove a joint" );
 	}
     
     /**
-     * Fills the bone list with a depth first criteria.
+     * Fills the joint list with a depth first criteria.
      * 
-     * @param bone
-     * @param boneList
+     * @param joint
+     * @param jointList
      */
-    private void fillBoneList( Bone bone, List<Bone> boneList )
+    private void fillJointList( DaeJoint joint, List<DaeJoint> jointList )
     {
-        boneList.add( bone );
+        jointList.add( joint );
         
-        for ( int i = 0; i < bone.numChildren(); i++ )
+        for ( int i = 0; i < joint.numChildren(); i++ )
         {
-            fillBoneList( bone.getChild( i ), boneList );
+            fillJointList( joint.getChild( i ), jointList );
         }
     }
 
@@ -89,17 +89,17 @@ public class SkeletonIterator implements Iterator<Bone>
      */
     public void reset()
     {
-        Bone bone = this.skeleton.getRootBone();
-        bones.clear();
-        fillBoneList( bone, bones );
+        DaeJoint joint = this.skeleton.getRootJoint();
+        joints.clear();
+        fillJointList( joint, joints );
         currentIndex = -1;
     }
 
     /**
-     * Creates an iterator for the bones of the skeleton
+     * Creates an iterator for the joints of the skeleton
      * @param skeleton
      */
-    public SkeletonIterator( Skeleton skeleton )
+    public SkeletonIterator( DaeSkeleton skeleton )
     {
         this.skeleton = skeleton;
     }

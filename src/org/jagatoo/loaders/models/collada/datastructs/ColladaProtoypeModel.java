@@ -35,40 +35,40 @@ import java.util.Map.Entry;
 
 import org.jagatoo.loaders.models.collada.datastructs.controllers.Controller;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalController;
-
+@Deprecated
 public class ColladaProtoypeModel
 {
 	private AssetFolder colladaFile;
 	private final HashMap<String, SkeletalController> skelControllers = new HashMap<String, SkeletalController>();
 	
-	public void initAnimation( String animationName, boolean loop )
-	{
-		for ( Iterator<SkeletalController> iterator = skelControllers.values().iterator(); iterator.hasNext(); )
-		{
-			iterator.next().play( animationName, loop );
-		}
-	}
-	
-	public void animate( long time )
-	{
-		for ( Iterator<SkeletalController> iterator = skelControllers.values().iterator(); iterator.hasNext(); )
-		{
-			SkeletalController curr = iterator.next();
-			colladaFile.getLibraryGeometries().getGeometries().put( curr.getSourceMeshId(), curr.updateDestinationGeometry( time ) );
-		}
-	}
-    
-    public ColladaProtoypeModel( AssetFolder colladaFile )
-    {
-        this.colladaFile = colladaFile;
-        
-        for ( Iterator<Entry<String, Controller>> iterator = colladaFile.getLibraryControllers().getControllers().entrySet().iterator(); iterator.hasNext(); )
-        {
-            Entry<String, Controller> entry = iterator.next();
-            if ( entry.getValue() instanceof SkeletalController )
-            {
-                skelControllers.put( entry.getKey(), (SkeletalController)entry.getValue() );
-            }
-        }
-    }
+//	public void initAnimation( String animationName, boolean loop )
+//	{
+//		for ( Iterator<SkeletalController> iterator = skelControllers.values().iterator(); iterator.hasNext(); )
+//		{
+//			iterator.next().play( animationName, loop );
+//		}
+//	}
+//
+//	public void animate( long time )
+//	{
+//		for ( Iterator<SkeletalController> iterator = skelControllers.values().iterator(); iterator.hasNext(); )
+//		{
+//			SkeletalController curr = iterator.next();
+//			colladaFile.getLibraryGeometries().getGeometries().put( curr.getSourceMeshId(), curr.updateDestinationGeometry( time ) );
+//		}
+//	}
+//
+//    public ColladaProtoypeModel( AssetFolder colladaFile )
+//    {
+//        this.colladaFile = colladaFile;
+//
+//        for ( Iterator<Entry<String, Controller>> iterator = colladaFile.getLibraryControllers().getControllers().entrySet().iterator(); iterator.hasNext(); )
+//        {
+//            Entry<String, Controller> entry = iterator.next();
+//            if ( entry.getValue() instanceof SkeletalController )
+//            {
+//                skelControllers.put( entry.getKey(), (SkeletalController)entry.getValue() );
+//            }
+//        }
+//    }
 }

@@ -37,7 +37,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.jagatoo.util.errorhandling.IncorrectFormatException;
-import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
+import org.jagatoo.loaders.models.collada.datastructs.animation.Axis;
 import org.jagatoo.loaders.models.collada.stax.XMLChannel.ChannelType;
 import org.jagatoo.logging.JAGTLog;
 
@@ -77,10 +77,10 @@ public class XMLAnimation {
     
 
     /**
-     * @return the target bone name for this animation
+     * @return the target joint name for this animation
      */
-    public String getTargetBone() {
-        return channels.get( 0 ).getTargetBone();
+    public String getTargetJoint() {
+        return channels.get( 0 ).getTargetJoint();
     }
 
     /**
@@ -99,8 +99,8 @@ public class XMLAnimation {
 
     /**
      * Tells if the animation contains transformation key frames or rotation key frames.
-     * 
-     * @return
+     *
+     * @return channel type
      */
     public ChannelType getType() {
         return channels.get( 0 ).type;
@@ -111,7 +111,7 @@ public class XMLAnimation {
      * @return the rotation axis of the animation.
      * It only works if the animation if for rotation
      */
-    public KeyFrame.Axis getRotationAxis() {
+    public Axis getRotationAxis() {
         return channels.get( 0 ).getRotationAxis();
     }
     

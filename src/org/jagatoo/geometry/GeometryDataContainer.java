@@ -798,7 +798,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
             throw new IllegalStateException( "No normals defined" );
         
         for ( int i = 0; i < floatArray.length / 3; i++ )
-            normals.get( vertexIndex + ( i * 3 ), 3, normalsOffset / 4L, floatArray, i * 3, 3 );
+            normals.get( vertexIndex + i, 3, normalsOffset / 4L, floatArray, i, 3 );
     }
     
     public void getNormals( int index0, Vector3f[] vector3fArray )
@@ -1037,7 +1037,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
             throw new Error( "No colors set" );
         
         for ( int i = 0; i < floatArray.length / colorSize; i++ )
-            colors.get( vertexIndex + ( i * colorSize ), colorSize, colorsOffset / 4L, floatArray, i * colorSize, colorSize );
+            colors.get( vertexIndex + i, colorSize, colorsOffset / 4L, floatArray, i, colorSize );
     }
     
     /**

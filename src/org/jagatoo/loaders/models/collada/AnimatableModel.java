@@ -41,6 +41,7 @@ import org.jagatoo.loaders.models.collada.datastructs.ColladaProtoypeModel;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
+@Deprecated
 public interface AnimatableModel
 {
     /**

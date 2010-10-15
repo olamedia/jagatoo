@@ -61,7 +61,7 @@ public class LibraryControllersLoader
             String source = controller.skin.source.replaceAll( " ", "_" );
             String id = controller.id;
             JAGTLog.debug( "TT] Found controller with Id : \"", id, "\" and source : \"", source + "\"" );
-            colladaFile.getLibraryControllers().getControllers().put( id, new SkeletalController( colladaFile.getLibraryGeometries(), source, controller, colladaFile.getLibraryAnimations(), colladaFile.getLibraryVisualsScenes().getSkeletons().get( id.replace( "-skin", "" ) ) ) );
+            colladaFile.getLibraryControllers().getControllers().put( id, new SkeletalController( colladaFile, source, controller ));
         }
     }
 }

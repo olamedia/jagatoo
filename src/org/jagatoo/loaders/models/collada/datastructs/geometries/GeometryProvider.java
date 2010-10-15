@@ -29,6 +29,8 @@
  */
 package org.jagatoo.loaders.models.collada.datastructs.geometries;
 
+import org.jagatoo.datatypes.NamedObject;
+
 
 /**
  * A Geometry provider. Basically it can be, what
@@ -43,23 +45,17 @@ public abstract class GeometryProvider
     private final LibraryGeometries libGeoms;
     
     /** The destination geometry : it will contain the result of the computations of this COLLADAController */
-    protected Geometry destinationGeometry;
+    protected NamedObject destinationGeometry;
     
     protected final LibraryGeometries getLibraryGeometries()
     {
         return ( libGeoms );
     }
-    
-    /**
-     * @param currentTime the frame time in miliseconds
-     * @return the destinationGeometry computed from the source mesh
-     */
-    public abstract Geometry updateDestinationGeometry( long currentTime );
-    
+
     /**
      * @return the destinationGeometry
      */
-    public Geometry getDestinationGeometry()
+    public NamedObject getDestinationGeometry()
     {
         return ( destinationGeometry );
     }
@@ -67,7 +63,7 @@ public abstract class GeometryProvider
     /**
      * @param destinationGeometry the destinationGeometry to set
      */
-    public void setDestinationMesh( Geometry destinationGeometry )
+    public void setDestinationGeometry( NamedObject destinationGeometry )
     {
         this.destinationGeometry = destinationGeometry;
     }
