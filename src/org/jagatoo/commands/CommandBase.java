@@ -29,7 +29,7 @@
  */
 package org.jagatoo.commands;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.jagatoo.util.strings.StringUtils;
 
@@ -77,7 +77,7 @@ public abstract class CommandBase implements Command
         return ( paramsArray.length );
     }
     
-    public Object[] createParametersArray( ArrayList< String > parameters )
+    public Object[] createParametersArray( List< String > parameters )
     {
         if ( parameters == null )
             return ( null );
