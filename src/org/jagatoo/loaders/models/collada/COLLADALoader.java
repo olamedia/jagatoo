@@ -47,8 +47,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.ArrayList;
 
 /**
  * This is a really simple COLLADA file loader. Its features are limited for now

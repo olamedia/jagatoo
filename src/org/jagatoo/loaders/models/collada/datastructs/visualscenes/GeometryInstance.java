@@ -31,7 +31,6 @@ package org.jagatoo.loaders.models.collada.datastructs.visualscenes;
 
 import org.jagatoo.datatypes.NamedObject;
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.datastructs.geometries.Geometry;
 import org.jagatoo.loaders.models.collada.datastructs.materials.Material;
 
 /**

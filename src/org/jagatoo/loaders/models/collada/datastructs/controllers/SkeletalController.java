@@ -57,8 +57,6 @@ public class SkeletalController extends Controller //implements AnimatableModel
 
     /**
      * Game engine Geometry
-     * 
-     * @param skel
      */
     private NamedObject sourceGeom;
 

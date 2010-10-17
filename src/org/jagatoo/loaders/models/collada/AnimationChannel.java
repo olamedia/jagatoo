@@ -53,7 +53,7 @@ public class AnimationChannel
     private Quaternion4f[] rotations = null;
     private Tuple3f[] scales = null;
 
-    private final Enum element;
+    private final Enum<?> element;
     private final XMLChannel.ChannelType type;
     private final float[] output;
 
@@ -92,6 +92,7 @@ public class AnimationChannel
         return ( type );
     }
 
+    @SuppressWarnings( "unchecked" )
     private <T> T[] createValues( float[] output, final int stride, Class<T> clazz )
     {
         ArrayList<T> l = new ArrayList<T>();
@@ -106,16 +107,16 @@ public class AnimationChannel
                     pos = 0;
                     if ( clazz == Vector3f.class )
                     {
-                        l.add( ( T ) createVector3f( tuple ) );
+                        l.add( (T) createVector3f( tuple ) );
                     }
                     else if ( clazz == Quaternion4f.class )
                     {
                         Quaternion4f q = createQuaternion4f( tuple );
-                        l.add( ( T ) q );
+                        l.add( (T) q );
                     }
                     else if ( clazz == Tuple3f.class )
                     {
-                        l.add( ( T ) createTuple3f( tuple ) );
+                        l.add( (T) createTuple3f( tuple ) );
                     }
                 }
                 if ( i < output.length )
@@ -132,7 +133,7 @@ public class AnimationChannel
             }
         }
 
-        return ( l.toArray( ( T[] ) Array.newInstance( clazz, l.size() ) ) );
+        return ( l.toArray( (T[]) Array.newInstance( clazz, l.size() ) ) );
     }
 
     private Vector3f createVector3f( float[] tuple )
@@ -197,7 +198,7 @@ public class AnimationChannel
         return ( l.toArray( new Quaternion4f[outputX.length] ) );
     }
 
-    public AnimationChannel( DaeJoint joint, float[] timeline, float[] output, Enum element, XMLChannel.ChannelType type, int stride )
+    public AnimationChannel( DaeJoint joint, float[] timeline, float[] output, Enum<?> element, XMLChannel.ChannelType type, int stride )
     {
         this.joint = joint;
         this.timeline = timeline;

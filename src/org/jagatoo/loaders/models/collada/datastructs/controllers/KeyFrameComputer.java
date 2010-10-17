@@ -29,16 +29,6 @@
  */
 package org.jagatoo.loaders.models.collada.datastructs.controllers;
 
-import java.util.List;
-
-import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrame;
-import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrameTuple3f;
-import org.jagatoo.loaders.models.collada.datastructs.animation.KeyFrameQuat4f;
-import org.jagatoo.logging.JAGTLog;
-import org.openmali.vecmath2.Quaternion4f;
-import org.openmali.vecmath2.Tuple3f;
-import org.openmali.vecmath2.util.Interpolation;
-
 /**
  * This class is used to interpolate Tuple3f from
  * keyframe data.

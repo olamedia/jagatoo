@@ -30,11 +30,9 @@
 package org.jagatoo.loaders.models.collada.datastructs;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
-import org.jagatoo.loaders.models.collada.datastructs.controllers.Controller;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalController;
+
 @Deprecated
 public class ColladaProtoypeModel
 {

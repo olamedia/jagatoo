@@ -29,8 +29,6 @@
  */
 package org.jagatoo.loaders.models.collada.datastructs.controllers;
 
-import org.openmali.vecmath2.Matrix4f;
-
 /**
  * Easy manipulation for weight value of one joint, for a vertex.
  * 

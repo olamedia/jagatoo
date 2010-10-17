@@ -92,7 +92,7 @@ public class LibraryAnimationsLoader
                 // search the animations for each joint, max 9 ( 3 rots 3 trans 3 scales) //max 4 ( 3 rots and 1 trans )
                 animCount = 0;
                 ArrayList<AnimationChannel> translations = new ArrayList<AnimationChannel>();
-                HashMap<Enum, AnimationChannel> rotations = new HashMap<Enum, AnimationChannel>();
+                HashMap<Enum<?>, AnimationChannel> rotations = new HashMap<Enum<?>, AnimationChannel>();
                 ArrayList<AnimationChannel> scales = new ArrayList<AnimationChannel>();
                 for ( XMLAnimation animation : anims )
                 {
@@ -171,7 +171,7 @@ public class LibraryAnimationsLoader
         return ( translations.get( 0 ) );
     }
 
-    private static AnimationChannel mergeRotations( DaeJoint joint, HashMap<Enum, AnimationChannel> rotations )
+    private static AnimationChannel mergeRotations( DaeJoint joint, HashMap<Enum<?>, AnimationChannel> rotations )
     {
         if ( rotations.size() == 0 )
         {
