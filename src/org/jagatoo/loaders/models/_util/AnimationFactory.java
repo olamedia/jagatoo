@@ -45,7 +45,7 @@ import org.openmali.vecmath2.Vector3f;
 public interface AnimationFactory
 {
     public Object createSkeleton( NamedObject[] joints );
-
+    
     public NamedObject createJoint(
             short index,
             String name,
@@ -58,42 +58,42 @@ public interface AnimationFactory
             float[] scaleTimeline,
             Tuple3f[] scales
     );
-
+    
     public Object createSkeletalKeyFrameController( Object skeleton, float startTime, float endTime, int influencesPerVertex, float[] weights, short[] jointIndices, NamedObject target );
-
-
-
+    
+    
+    
     public NamedObject createBone( NamedObject parentBone, String name, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
-
+    
     public NamedObject createBone( NamedObject parentBone, String name, Matrix4f transformation );
-
+    
     public Object createBoneAnimationKeyFrame( NamedObject[] bones );
-
+    
     public Object createBoneWeight( int boneIndex, float weight, Vector3f offset );
-
+    
     public Object createBoneAnimationKeyFrameController( Object[] keyFrames, Object[][] boneWeights, NamedObject target );
-
-
-
+    
+    
+    
     public Object createMeshDeformationKeyFrame( float[] coords, float[] normals );
-
+    
     public Object createMeshDeformationKeyFrameController( Object[] keyFrames, NamedObject target );
-
-
-
+    
+    
+    
     public Object createMeshTransformKeyFrame( float time, Vector3f translation, Quaternion4f rotation, Tuple3f scale );
-
+    
     public Object createMeshTransformKeyFrame( float time, Vector3f translation, AxisAngle3f rotation, Tuple3f scale );
-
+    
     public Object createMeshTransformKeyFrame( float time, Vector3f translation, Matrix3f rotation, Tuple3f scale );
-
+    
     public Object createMeshTransformKeyFrame( float time, Matrix4f transform );
-
+    
     public void transformMeshTransformKeyFrame( Matrix4f transform, Object frame );
-
+    
     public void transformMeshTransformKeyFrames( Matrix4f transform, Object[] frames );
-
+    
     public Object createMeshTransformKeyFrameController( Object[] keyFrames, NamedObject target );
-
+    
     public Object createAnimation( String name, int numFrames, float fps, Object[] controllers, Matrix4f[][] mountTransformFrames );
 }

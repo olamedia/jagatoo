@@ -136,6 +136,8 @@ public interface NodeFactory
     
     
     
+    public NamedObject transformGeometryWithNormals( NamedObject geom, Matrix4f matrix );
+    
     public NamedObject transformShapeOrGeometry( NamedObject shapeOrGeom, Matrix4f transform );
     
     public NamedObject transformShapeOrGeometry( NamedObject shapeOrGeom, Vector3f translation, Matrix3f rotation, Tuple3f scale );
@@ -151,6 +153,4 @@ public interface NodeFactory
     public NamedObject rotateShapeOrGeometry( NamedObject shapeOrGeom, Matrix3f rotation );
     
     public NamedObject scaleShapeOrGeometry( NamedObject shapeOrGeom, Tuple3f scale );
-
-    public NamedObject transformGeometryWithNormals( NamedObject geom, Matrix4f matrix );
 }

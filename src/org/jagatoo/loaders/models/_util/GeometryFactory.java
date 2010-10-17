@@ -74,9 +74,9 @@ public interface GeometryFactory
     public void setTexCoords( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, float[] data, int offset, int num );
     
     public void setTexCoords( NamedObject geometry, GeometryType type, int textureUnit, int texCoordSize, int vertexIndex, TexCoordf<?>[] data, int offset, int num );
-
+    
     public void setColor( NamedObject geometry, GeometryType type, int vertexIndex, float r, float g, float b, float a );
-
+    
     public void setColors( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, float[] data, int offset, int num );
     
     public void setColors( NamedObject geometry, GeometryType type, int colorSize, int vertexIndex, Colorf[] data, int offset, int num );
