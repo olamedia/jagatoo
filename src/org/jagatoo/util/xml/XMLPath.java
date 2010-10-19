@@ -29,6 +29,8 @@
  */
 package org.jagatoo.util.xml;
 
+import java.util.List;
+
 /**
  * Keeps the current XML parsing path.
  * 
@@ -88,7 +90,7 @@ public class XMLPath
      * 
      * @return the path element by level.
      */
-    public final Object getElement( int level )
+    public final String getElement( int level )
     {
         return ( path[level] );
     }
@@ -141,6 +143,22 @@ public class XMLPath
         return ( level );
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString()
+    {
+        String p = "";
+        
+        for ( int i = 0; i < level; i++ )
+        {
+            p += '/' + path[i];
+        }
+        
+        return ( p );
+    }
+    
     XMLPath( int initialSize )
     {
         this.path = new String[ initialSize ];
@@ -150,5 +168,22 @@ public class XMLPath
     XMLPath()
     {
         this( DEFAULT_INITIAL_SIZE );
+    }
+    
+    static XMLPath getFullPath( List<XMLPath> pathStack )
+    {
+        if ( pathStack.size() == 1 )
+            return ( pathStack.get( 0 ) );
+        
+        XMLPath fullPath = new XMLPath();
+        for ( int i = 0; i < pathStack.size(); i++ )
+        {
+            XMLPath p = pathStack.get( i );
+            
+            for ( int j = 0; j < p.level; j++ )
+                fullPath.pushPath( p.getElement( j ), p.getObject( j ) );
+        }
+        
+        return ( fullPath );
     }
 }
