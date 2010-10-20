@@ -182,7 +182,7 @@ public class XMLPath
     }
     
     /**
-     * Checks, whether the current path is composed of the given element objects (see {@link SimpleXMLHandlerFork#getPathObject(int, String)}).
+     * Checks, whether the current path is composed of the given element objects (see {@link SimpleXMLHandlerDelegate#getPathObject(XMLPath, String)}).
      * 
      * @param doEqualsTest
      * @param objects

@@ -38,7 +38,7 @@ import org.xml.sax.SAXParseException;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public abstract class SimpleXMLHandlerFork
+public abstract class SimpleXMLHandlerDelegate
 {
     public static enum ExceptionSeverity
     {
@@ -61,15 +61,15 @@ public abstract class SimpleXMLHandlerFork
     }
     
     /**
-     * Start a fork handler.
+     * Start a delegate handler.
      * 
-     * @param fork
+     * @param delegate
      * 
      * @throws SAXException
      */
-    protected final void fork( SimpleXMLHandlerFork fork ) throws SAXException
+    protected final void delegate( SimpleXMLHandlerDelegate delegate ) throws SAXException
     {
-        adapter.fork( fork );
+        adapter.delegate( delegate );
     }
     
     /**
@@ -86,12 +86,12 @@ public abstract class SimpleXMLHandlerFork
     /**
      * Converts the passed element to a path element. By default the passed element is returned.
      * 
-     * @param level
-     * @param element
+     * @param path then current XML element path
+     * @param element the element's name
      * 
      * @return the converted path element.
      */
-    protected Object getPathObject( int level, String element )
+    protected Object getPathObject( XMLPath path, String element )
     {
         return ( element );
     }
