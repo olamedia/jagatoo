@@ -101,33 +101,36 @@ public abstract class SimpleXMLHandlerFork
      * 
      * @param path then current XML element path
      * @param name the element's name
+     * @param object the path object
      * @param attributes the attributes
      * 
      * @throws SAXException
      */
-    protected abstract void onElementStarted( XMLPath path, String name, Attributes attributes ) throws SAXException;
+    protected abstract void onElementStarted( XMLPath path, String name, Object object, Attributes attributes ) throws SAXException;
     
     /**
      * Invoked when an XML element's character data is available.
      * 
      * @param path then current XML element path
+     * @param attributes the attributes
      * @param data the characters
      * @param start the start position in the character array
      * @param length the number of characters to use from the character array
      * 
      * @throws SAXException
      */
-    protected abstract void onElementData( XMLPath path, char[] data, int start, int length ) throws SAXException;
+    protected abstract void onElementData( XMLPath path, Attributes attributes, char[] data, int start, int length ) throws SAXException;
     
     /**
      * Invoked when an XML element end has been detected.
      * 
      * @param path then current XML element path
      * @param name the element's name
+     * @param object the path object
      * 
      * @throws SAXException
      */
-    protected abstract void onElementEnded( XMLPath path, String name ) throws SAXException;
+    protected abstract void onElementEnded( XMLPath path, String name, Object object ) throws SAXException;
     
     /**
      * Invoked when a parsing exception occurred.

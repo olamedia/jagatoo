@@ -35,6 +35,7 @@ import java.util.Stack;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Insert class comment here.
@@ -53,6 +54,7 @@ public class XMLHandlerAdapter extends org.xml.sax.helpers.DefaultHandler
     private String currElement = null;
     private Object currObject = null;
     private Attributes currAttribs = null;
+    private final AttributesImpl lastAttribs = new AttributesImpl();
     
     final void fork( SimpleXMLHandlerFork fork ) throws SAXException
     {
@@ -127,6 +129,10 @@ public class XMLHandlerAdapter extends org.xml.sax.helpers.DefaultHandler
     @Override
     public void startElement( String uri, String localName, String qName, Attributes attributes ) throws SAXException
     {
+        lastAttribs.clear();
+        for ( int i = 0; i < attributes.getLength(); i++ )
+            lastAttribs.addAttribute( attributes.getURI( i ), attributes.getLocalName( i ), attributes.getQName( i ), attributes.getType( i ), attributes.getType( i ) );
+        
         SimpleXMLHandlerFork handler = this.simpleHandler;
         XMLPath path = this.path;
         
@@ -140,7 +146,7 @@ public class XMLHandlerAdapter extends org.xml.sax.helpers.DefaultHandler
         currAttribs = attributes;
         try
         {
-            handler.onElementStarted( path, qName, attributes );
+            handler.onElementStarted( path, qName, object, attributes );
         }
         finally
         {
@@ -156,7 +162,7 @@ public class XMLHandlerAdapter extends org.xml.sax.helpers.DefaultHandler
     @Override
     public void characters( char[] data, int start, int length ) throws SAXException
     {
-        simpleHandler.onElementData( path, data, start, length );
+        simpleHandler.onElementData( path, lastAttribs, data, start, length );
     }
     
     @Override
@@ -165,9 +171,11 @@ public class XMLHandlerAdapter extends org.xml.sax.helpers.DefaultHandler
         if ( path.getLevel() == 0 )
             unfork();
         
+        Object object = path.getLastPathObject();
+        
         path.popPath();
         
-        simpleHandler.onElementEnded( path, qName );
+        simpleHandler.onElementEnded( path, qName, object );
     }
     
     @Override
