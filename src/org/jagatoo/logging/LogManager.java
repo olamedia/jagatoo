@@ -63,9 +63,6 @@
  */
 package org.jagatoo.logging;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -82,61 +79,6 @@ import java.util.HashSet;
  */
 public class LogManager
 {
-    /**
-     * Special writer for sending strings to the various logs
-     */
-    private class LogWriter extends Writer
-    {
-        private final LogChannel channel;
-        private final int type;
-        private final String callerPackage;
-        private final StringBuilder sb = new StringBuilder();
-        
-        public LogWriter( LogChannel channel, int type, String callerPackage )
-        {
-            super();
-            
-            this.channel = channel;
-            this.type = type;
-            this.callerPackage = callerPackage;
-        }
-        
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void flush() throws IOException
-        {
-        }
-        
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void close() throws IOException
-        {
-            internalPrint( channel, type, new String[] { sb.toString() }, true, callerPackage );
-        }
-        
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void write( int c ) throws IOException
-        {
-            sb.append( (char)c );
-        }
-        
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public void write( char[] cbuf, int off, int len ) throws IOException
-        {
-            sb.append( cbuf, off, len );
-        }
-    }
-    
     private final ArrayList<LogHandler> logs;
     private int maxRegisteredLogLevel = -Integer.MAX_VALUE;
     private int registeredChannels = 0;
@@ -306,7 +248,8 @@ public class LogManager
         String callerClass = null;
         for ( int i = 3; i < stes.length; i++ )
         {
-            if ( !stes[ i ].getClassName().startsWith( LogManager.class.getPackage().getName() ) )
+            //if ( !stes[ i ].getClassName().startsWith( LogManager.class.getPackage().getName() ) )
+            if ( !stes[ i ].getClassName().toLowerCase().contains( "log" ) )
             {
                 callerClass = stes[ i ].getClassName();
                 break;
@@ -326,7 +269,7 @@ public class LogManager
         return ( callerPackage );
     }
     
-    private final synchronized void internalPrint( LogChannel channel, int logLevel, Object[] message, boolean appendNL, String callerPackage )
+    private final synchronized void internalPrint( LogChannel channel, int logLevel, Object[] message, boolean appendNL )
     {
         if ( ( message == null ) || ( message.length == 0 ) )
             return;
@@ -335,10 +278,11 @@ public class LogManager
         //if ( !isAnyLogInterfaceRegistered( channel, logLevel ) )
         //    return;
         
-        if ( !debugPackageFilter.isEmpty() && ( ( logLevel == LogLevel.ERROR.level ) || ( logLevel == LogLevel.EXCEPTION.level ) ) )
+        String callerPackage = null;
+        
+        if ( !debugPackageFilter.isEmpty() && LogLevel.isError( logLevel ) )
         {
-            if ( callerPackage == null )
-                callerPackage = getCallerPackage();
+            callerPackage = getCallerPackage();
             if ( !debugPackageFilter.contains( callerPackage  ) )
                 return;
         }
@@ -351,55 +295,72 @@ public class LogManager
             
             if ( log.acceptsChannelAndLevel( channel, logLevel ) )
             {
-                if ( !( message[0] instanceof Throwable ) )
+                try
                 {
-                    for ( int j = 0; j < indentation; j++ )
+                    if ( !( message[0] instanceof Throwable ) )
                     {
-                        log.print( channel, logLevel, is );
+                        for ( int j = 0; j < indentation; j++ )
+                        {
+                            log.print( channel, logLevel, is );
+                        }
+                        
+                        if ( lastNewLine && areChannelsVisible() )
+                        {
+                            log.print( channel, logLevel, channel.getLogString() );
+                            log.print( channel, logLevel, " " );
+                        }
+                        
+                        if ( lastNewLine && isTimestampingEnabled() )
+                        {
+                            log.print( channel, logLevel, "[" );
+                            log.print( channel, logLevel, getTimeString() );
+                            log.print( channel, logLevel, ", " );
+                            log.print( channel, logLevel, getMemory() );
+                            log.print( channel, logLevel, "] " );
+                        }
                     }
                     
-                    if ( lastNewLine && areChannelsVisible() )
+                    for ( int j = 0; j < message.length; j++ )
                     {
-                        log.print( channel, logLevel, channel.getLogString() );
-                        log.print( channel, logLevel, " " );
-                    }
-                    
-                    if ( lastNewLine && isTimestampingEnabled() )
-                    {
-                        log.print( channel, logLevel, "[" );
-                        log.print( channel, logLevel, getTimeString() );
-                        log.print( channel, logLevel, ", " );
-                        log.print( channel, logLevel, getMemory() );
-                        log.print( channel, logLevel, "] " );
-                    }
-                }
-                
-                for ( int j = 0; j < message.length; j++ )
-                {
-                    if ( message[j] instanceof Throwable )
-                    {
-                        final PrintWriter p;
-                        if ( message[j] instanceof Error )
-                            p = new PrintWriter( new LogWriter( channel, LogLevel.ERROR.level, getCallerPackage() ), false );
+                        if ( message[j] instanceof Throwable )
+                        {
+                            if ( !debugPackageFilter.isEmpty() )
+                            {
+                                if ( callerPackage == null )
+                                    callerPackage = getCallerPackage();
+                                
+                                if ( debugPackageFilter.contains( callerPackage ) )
+                                {
+                                    int logLevel2 = ( message[j] instanceof Error ) ? LogLevel.ERROR.level : LogLevel.EXCEPTION.level;
+                                    if ( logLevel2 <= log.getLogLevelLevel() )
+                                        log.print( channel, logLevel2, (Throwable)message[j] );
+                                    
+                                    lastNewLine = true;
+                                }
+                            }
+                            else
+                            {
+                                int logLevel2 = ( message[j] instanceof Error ) ? LogLevel.ERROR.level : LogLevel.EXCEPTION.level;
+                                if ( logLevel2 <= log.getLogLevelLevel() )
+                                    log.print( channel, logLevel2, (Throwable)message[j] );
+                                
+                                lastNewLine = true;
+                            }
+                        }
+                        else if ( appendNL && ( j == message.length - 1 ) )
+                        {
+                            log.println( channel, logLevel, String.valueOf( message[ j ] ) );
+                        }
                         else
-                            p = new PrintWriter( new LogWriter( channel, LogLevel.EXCEPTION.level, getCallerPackage() ), false );
-                        
-                        lastNewLine = true;
-                        
-                        ( (Throwable)message[j] ).printStackTrace( p );
-                        p.close();
-                    }
-                    else if ( appendNL && ( j == message.length - 1 ) )
-                    {
-                        log.println( channel, logLevel, String.valueOf( message[ j ] ) );
-                    }
-                    else
-                    {
-                        log.print( channel, logLevel, String.valueOf( message[ j ] ) );
+                        {
+                            log.print( channel, logLevel, String.valueOf( message[ j ] ) );
+                        }
                     }
                 }
-                
-                log.endMessage();
+                finally
+                {
+                    log.endMessage();
+                }
             }
         }
         
@@ -416,7 +377,7 @@ public class LogManager
      */
     public final void print( LogChannel channel, int logLevel, Object[] message )
     {
-        internalPrint( channel, logLevel, message, false, null );
+        internalPrint( channel, logLevel, message, false );
     }
     
     /**
@@ -429,7 +390,7 @@ public class LogManager
      */
     public final void println( LogChannel channel, int logLevel, Object[] message )
     {
-        internalPrint( channel, logLevel, message, true, null );
+        internalPrint( channel, logLevel, message, true );
     }
     
     /**

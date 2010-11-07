@@ -87,6 +87,15 @@ public class ConsoleLog extends LogHandler
      * {@inheritDoc}
      */
     @Override
+    public void print( LogChannel channel, int logLevel, Throwable t )
+    {
+        t.printStackTrace( System.err );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void endMessage()
     {
     }

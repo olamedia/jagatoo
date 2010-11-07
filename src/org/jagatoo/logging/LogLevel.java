@@ -101,6 +101,11 @@ public enum LogLevel
         return ( ( this == ERROR ) || ( this == EXCEPTION ) );
     }
     
+    public static final boolean isError( int logLevel )
+    {
+        return ( ( logLevel == ERROR.level ) || ( logLevel == EXCEPTION.level ) );
+    }
+    
     public final int compareLevel( LogLevel logLevel )
     {
         return ( this.level - logLevel.level );

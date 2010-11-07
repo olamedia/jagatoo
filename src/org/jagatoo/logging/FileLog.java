@@ -69,6 +69,18 @@ public class FileLog extends LogHandler
     private PrintStream ps;
     private final boolean autoFlush;
     
+    private void createPrintStream()
+    {
+        try
+        {
+            ps = new PrintStream( new FileOutputStream( file, true ), false );
+        }
+        catch ( FileNotFoundException e )
+        {
+            e.printStackTrace();
+        }
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -77,16 +89,9 @@ public class FileLog extends LogHandler
     {
         boolean accepts = super.acceptsChannelAndLevel( channel, logLevel );
         
-        if ( accepts && ( file != null ) )
+        if ( accepts && ( file != null ) && ( ps == null ) )
         {
-            try
-            {
-                ps = new PrintStream( new FileOutputStream( file, true ), false );
-            }
-            catch ( FileNotFoundException e )
-            {
-                e.printStackTrace();
-            }
+            createPrintStream();
         }
         
         return ( accepts );
@@ -98,6 +103,9 @@ public class FileLog extends LogHandler
     @Override
     public void print( LogChannel channel, int logLevel, String message )
     {
+        if ( ps == null )
+            createPrintStream();
+        
         ps.print( message );
     }
     
@@ -107,7 +115,22 @@ public class FileLog extends LogHandler
     @Override
     public void println( LogChannel channel, int logLevel, String message )
     {
+        if ( ps == null )
+            createPrintStream();
+        
         ps.println( message );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void print( LogChannel channel, int logLevel, Throwable t )
+    {
+        if ( ps == null )
+            createPrintStream();
+        
+        t.printStackTrace( ps );
     }
     
     /**
@@ -116,14 +139,17 @@ public class FileLog extends LogHandler
     @Override
     public void endMessage()
     {
-        if ( file != null )
+        if ( ps != null )
         {
-            ps.close();
-            ps = null;
-        }
-        else if ( autoFlush )
-        {
-            ps.flush();
+            if ( file != null )
+            {
+                ps.close();
+                ps = null;
+            }
+            else if ( autoFlush )
+            {
+                ps.flush();
+            }
         }
     }
     

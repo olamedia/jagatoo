@@ -116,6 +116,8 @@ public abstract class LogHandler
     
     public abstract void println( LogChannel channel, int logLevel, String message );
     
+    public abstract void print( LogChannel channel, int logLevel, Throwable t );
+    
     public abstract void endMessage();
     
     public abstract void flush();
