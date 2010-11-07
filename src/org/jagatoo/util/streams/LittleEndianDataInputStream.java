@@ -265,7 +265,7 @@ public class LittleEndianDataInputStream extends FilterInputStream implements Da
                 ( (long)( i4 & 0xff ) << 24 ) |
                 ( (long)( i5 & 0xff ) << 16 ) |
                 ( (long)( i6 & 0xff ) <<  8 ) |
-                ( (long)( i7 & 0xff ) )
+                ( ( i7 & 0xff ) )
               );
     }
     

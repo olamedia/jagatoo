@@ -57,67 +57,44 @@ package org.jagatoo.logging;
  * @author David Yazel
  * @author Marvin Froehlich (aka Qudus)
  */
-public class ConsoleLog implements LogInterface
+public class ConsoleLog extends LogHandler
 {
-    private int logLevel;
-    private int channelFilter;
-    
-    public final void setLogLevel( int logLevel )
-    {
-        this.logLevel = logLevel;
-    }
-    
-    public final int getLogLevel()
-    {
-        return ( logLevel );
-    }
-    
-    public final void setChannelFilter( int filter )
-    {
-        this.channelFilter = filter;
-    }
-    
-    public final int getChannelFilter()
-    {
-        return ( channelFilter );
-    }
-    
-    public final boolean acceptsChannel( LogChannel channel )
-    {
-        return ( ( channelFilter & channel.getID() ) > 0 );
-    }
-    
     /**
      * {@inheritDoc}
      */
+    @Override
     public void print( LogChannel channel, int logLevel, String message )
     {
-        if ( ( acceptsChannel( channel ) ) && ( logLevel <= this.logLevel ) )
-        {
-            if ( LogLevel.isError( logLevel ) )
-                System.err.print( message );
-            else
-                System.out.print( message );
-        }
+        if ( ( logLevel == LogLevel.ERROR.level ) || ( logLevel == LogLevel.EXCEPTION.level ) )
+            System.err.print( message );
+        else
+            System.out.print( message );
     }
     
     /**
      * {@inheritDoc}
      */
+    @Override
     public void println( LogChannel channel, int logLevel, String message )
     {
-        if ( ( acceptsChannel( channel ) ) && ( logLevel <= this.logLevel ) )
-        {
-            if ( LogLevel.isError( logLevel ) )
-                System.err.println( message );
-            else
-                System.out.println( message );
-        }
+        if ( ( logLevel == LogLevel.ERROR.level ) || ( logLevel == LogLevel.EXCEPTION.level ) )
+            System.err.println( message );
+        else
+            System.out.println( message );
     }
     
     /**
      * {@inheritDoc}
      */
+    @Override
+    public void endMessage()
+    {
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void flush()
     {
     }
@@ -125,17 +102,17 @@ public class ConsoleLog implements LogInterface
     /**
      * {@inheritDoc}
      */
+    @Override
     public void close()
     {
     }
     
-    public ConsoleLog( int channelFilter, int logLevel )
+    public ConsoleLog( int channelFilter, LogLevel logLevel )
     {
-        this.logLevel = logLevel;
-        this.channelFilter = channelFilter;
+        super( channelFilter, logLevel );
     }
     
-    public ConsoleLog( int logLevel )
+    public ConsoleLog( LogLevel logLevel )
     {
         this( LogChannel.MASK_ALL, logLevel );
     }

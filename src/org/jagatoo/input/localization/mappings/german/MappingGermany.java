@@ -337,7 +337,7 @@ public class MappingGermany implements Mapping
     
     public Key getLocalizedKey( char keyChar )
     {
-        switch ( (int)keyChar )
+        switch ( keyChar )
         {
             case 223:
             case 63:

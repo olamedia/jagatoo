@@ -55,17 +55,93 @@ package org.jagatoo.logging;
  * @author David Yazel
  * @author Marvin Froehlich (aka Qudus)
  */
-public interface LogInterface
+public abstract class LogHandler
 {
-    public void print( LogChannel channel, int logLevel, String message );
+    private LogLevel logLevel;
+    private int logLevelLevel;
+    private int channelFilter;
     
-    public void println( LogChannel channel, int logLevel, String message );
+    public void setLogLevel( int logLevel )
+    {
+        this.logLevel = null;
+        
+        for ( LogLevel ll : LogLevel.values() )
+        {
+            if ( ll.level == logLevel )
+            {
+                this.logLevel = ll;
+                break;
+            }
+        }
+        
+        this.logLevelLevel = logLevel;
+    }
     
-    public int getLogLevel();
+    public final void setLogLevel( LogLevel logLevel )
+    {
+        setLogLevel( logLevel.level );
+    }
     
-    public int getChannelFilter();
+    public final LogLevel getLogLevel()
+    {
+        return ( logLevel );
+    }
     
-    public void flush();
+    public final int getLogLevelLevel()
+    {
+        return ( logLevelLevel );
+    }
     
-    public void close();
+    public void setChannelFilter( int filter )
+    {
+        this.channelFilter = filter;
+    }
+    
+    public final int getChannelFilter()
+    {
+        return ( channelFilter );
+    }
+    
+    public final boolean acceptsChannel( LogChannel channel )
+    {
+        return ( channel.isInFilter( channelFilter ) );
+    }
+    
+    public boolean acceptsChannelAndLevel( LogChannel channel, int logLevel )
+    {
+        return ( channel.isInFilter( channelFilter ) && ( logLevel <= this.logLevelLevel ) );
+    }
+    
+    public abstract void print( LogChannel channel, int logLevel, String message );
+    
+    public abstract void println( LogChannel channel, int logLevel, String message );
+    
+    public abstract void endMessage();
+    
+    public abstract void flush();
+    
+    public abstract void close();
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected void finalize()
+    {
+        close();
+    }
+    
+    public LogHandler( int channelFilter, LogLevel logLevel )
+    {
+        this.channelFilter = channelFilter;
+        
+        setLogLevel( logLevel );
+    }
+    
+    public LogHandler( int channelFilter, int logLevel )
+    {
+        this.channelFilter = channelFilter;
+        
+        setLogLevel( logLevel );
+    }
 }

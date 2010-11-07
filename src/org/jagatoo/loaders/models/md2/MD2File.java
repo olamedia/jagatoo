@@ -303,15 +303,15 @@ public class MD2File
                 
                 if ( convertZup2Yup )
                 {
-                    coords[j * 3 + 0] = ( translateX + ( (float)x * scaleX ) ) * scale;
-                    coords[j * 3 + 1] = ( translateZ + ( (float)z * scaleZ ) ) * scale;
-                    coords[j * 3 + 2] = -( translateY + ( (float)y * scaleY ) ) * scale;
+                    coords[j * 3 + 0] = ( translateX + ( x * scaleX ) ) * scale;
+                    coords[j * 3 + 1] = ( translateZ + ( z * scaleZ ) ) * scale;
+                    coords[j * 3 + 2] = -( translateY + ( y * scaleY ) ) * scale;
                 }
                 else
                 {
-                    coords[j * 3 + 0] = ( translateX + ( (float)x * scaleX ) ) * scale;
-                    coords[j * 3 + 1] = ( translateY + ( (float)y * scaleY ) ) * scale;
-                    coords[j * 3 + 2] = ( translateZ + ( (float)z * scaleZ ) ) * scale;
+                    coords[j * 3 + 0] = ( translateX + ( x * scaleX ) ) * scale;
+                    coords[j * 3 + 1] = ( translateY + ( y * scaleY ) ) * scale;
+                    coords[j * 3 + 2] = ( translateZ + ( z * scaleZ ) ) * scale;
                 }
                 
                 normalIndices[j] = (short)in.readUnsignedByte();

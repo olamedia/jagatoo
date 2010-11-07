@@ -222,7 +222,7 @@ public class JInputInputDeviceFactory extends InputDeviceFactory
                         {
                             try
                             {
-                                tmpControllers[ numControllers++ ] = new JInputController( findSourceFactory(), getSourceWindow(), getEveneQueue(), (net.java.games.input.Controller)controllers[ i ] );
+                                tmpControllers[ numControllers++ ] = new JInputController( findSourceFactory(), getSourceWindow(), getEveneQueue(), controllers[ i ] );
                             }
                             catch ( InputSystemException ise )
                             {

@@ -428,7 +428,7 @@ public class AWTMouse extends Mouse
         if ( !isEnabled() )
             return;
         
-        java.awt.event.MouseWheelEvent __e = (java.awt.event.MouseWheelEvent)_e;
+        java.awt.event.MouseWheelEvent __e = _e;
         final boolean isPageMove = __e.getScrollType() == java.awt.event.MouseWheelEvent.WHEEL_BLOCK_SCROLL;
         
         MouseWheelEvent e = MouseEventPool.allocWheel( this, getWheel(), -__e.getWheelRotation(), isPageMove, lastKnownNanoTime, 0L );

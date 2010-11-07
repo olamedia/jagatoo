@@ -82,7 +82,7 @@ public class ProfileTimer
         public void printLog( int level )
         {
             // convert total time to nanoseconds
-            totalTime = (long) (((double) totalTime * (double) 1000000000) / (double) ProfileTimer.getResolution());
+            totalTime = (long) (((double) totalTime * (double) 1000000000) / ProfileTimer.getResolution());
             
             StringBuffer sb = new StringBuffer( 200 );
             
@@ -97,7 +97,7 @@ public class ProfileTimer
             {
                 long percentTime = (1000L * totalTime) / parent.totalTime;
                 sb.append( ", percent=" );
-                sb.append( (float) percentTime / 10f );
+                sb.append( percentTime / 10f );
                 sb.append( "%, " );
             }
             
@@ -361,7 +361,7 @@ public class ProfileTimer
         ProfileContainer c = containers;
         
         Log.profile( c.currentNode.channel, "Timer resolution = " + ProfileTimer.getResolution() + " ticks/second" );
-        Log.profile( c.currentNode.channel, "Timer resolution = " + ((double) ProfileTimer.getResolution() / 1000000000.0) + " ns" );
+        Log.profile( c.currentNode.channel, "Timer resolution = " + ( ProfileTimer.getResolution() / 1000000000.0 ) + " ns" );
         
         while ( c != null )
         {

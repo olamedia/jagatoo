@@ -224,7 +224,7 @@ public class MappingFrance implements Mapping
     public Key getLocalizedKey( char keyChar )
     {
         System.out.println( "key char =" + (int)keyChar ); // TODO: Don't fotget me ;)
-        switch ( (int)keyChar )
+        switch ( keyChar )
         {
             case 178:
                 return FrenchKeys.SUPERSCRIPT_TWO;

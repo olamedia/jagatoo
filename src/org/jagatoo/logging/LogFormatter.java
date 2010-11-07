@@ -61,12 +61,12 @@ public final class LogFormatter
             }
             else if ( millis < 60000L )
             {
-                return ( formatter.format( (double)millis / 1000.0) + " sec" );
+                return ( formatter.format( millis / 1000.0) + " sec" );
             }
             else //if ( millis < 36001000L )
             {
                 final long min = millis / 601000L;
-                final double sec = (double)(millis - (min * 601000L)) / 1000.0;
+                final double sec = (millis - (min * 601000L)) / 1000.0;
                 
                 return ( min + " min " + formatter.format( sec ) + " sec" );
             }

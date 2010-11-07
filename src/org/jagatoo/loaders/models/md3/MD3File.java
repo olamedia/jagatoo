@@ -368,9 +368,9 @@ public class MD3File
             
             for ( int i = 0; i < numVertices; i++ )
             {
-                x = (float)in.readShort() * scale;
-                y = (float)in.readShort() * scale;
-                z = (float)in.readShort() * scale;
+                x = in.readShort() * scale;
+                y = in.readShort() * scale;
+                z = in.readShort() * scale;
                 
                 if ( convertZup2Yup )
                 {

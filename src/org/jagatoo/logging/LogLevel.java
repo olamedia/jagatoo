@@ -59,29 +59,60 @@ package org.jagatoo.logging;
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public final class LogLevel
+public enum LogLevel
 {
-    public static final int ERROR       = -2;  // a serious error has been detected
-    public static final int EXCEPTION   = -1;  // an unexcepted exception occured
-    public static final int REGULAR     =  0;  // regular logging output
-    public static final int EXHAUSTIVE  =  1;  // everything goes here, this is expensive
-    public static final int DEBUG       =  2;  // debugging information, usually turned off
-    public static final int PROFILE     =  3;  // debugging information, usually turned off
+    /**
+     * a serious error has been detected
+     */
+    ERROR( -2 ),
     
-    public static boolean isError( int level )
+    /**
+     * an unexcepted exception occured
+     */
+    EXCEPTION( -1 ),
+    
+    /**
+     * regular logging output
+     */
+    REGULAR( 0 ),
+    
+    /**
+     * everything goes here, this is expensive
+     */
+    EXHAUSTIVE( 1 ),
+    
+    /**
+     * debugging information, usually turned off
+     */
+    DEBUG( 2 ),
+    
+    /**
+     * debugging information, usually turned off
+     */
+    PROFILE( 3 ),
+    ;
+    
+    public final byte level;
+    
+    public static final LogLevel MINIMUM = ERROR;
+    
+    public final boolean isError()
     {
-        switch ( level )
-        {
-            case ERROR:
-                return ( true );
-            case EXCEPTION:
-                return ( true );
-        }
-        
-        return ( false );
+        return ( ( this == ERROR ) || ( this == EXCEPTION ) );
     }
     
-    private LogLevel()
+    public final int compareLevel( LogLevel logLevel )
     {
+        return ( this.level - logLevel.level );
+    }
+    
+    public final boolean isSmallerOrEqual( LogLevel logLevel )
+    {
+        return ( this.level <= logLevel.level );
+    }
+    
+    private LogLevel( int level )
+    {
+        this.level = (byte)level;
     }
 }

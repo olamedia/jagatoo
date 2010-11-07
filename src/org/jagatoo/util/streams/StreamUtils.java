@@ -192,8 +192,8 @@ public class StreamUtils
      */
     public static final int readUnsignedShort( InputStream in ) throws IOException
     {
-        int high = (int)in.read();
-        int low = (int)in.read();
+        int high = in.read();
+        int low = in.read();
         
         return ( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
     }
@@ -210,8 +210,8 @@ public class StreamUtils
      */
     public static final int readUnsignedShort( BufferedInputStream in ) throws IOException
     {
-        int high = (int)in.read();
-        int low = (int)in.read();
+        int high = in.read();
+        int low = in.read();
         
         return ( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
     }
@@ -262,8 +262,8 @@ public class StreamUtils
      */
     public static final int readSwappedUnsignedShort( InputStream in ) throws IOException
     {
-        int low = (int)in.read();
-        int high = (int)in.read();
+        int low = in.read();
+        int high = in.read();
         
         return ( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
     }
@@ -280,8 +280,8 @@ public class StreamUtils
      */
     public static final int readSwappedUnsignedShort( BufferedInputStream in ) throws IOException
     {
-        int low = (int)in.read();
-        int high = (int)in.read();
+        int low = in.read();
+        int high = in.read();
         
         return ( ( ( high & 0xFF ) << 8 ) | ( low & 0xFF ) );
     }

@@ -324,7 +324,7 @@ public abstract class InputHandler<A extends InputAction>
         
         updateInputStates( nanoTime );
         
-        update( nanoTime, (float)nanoTime / 1000000000f, nanoFrame, (float)nanoFrame / 1000000000f );
+        update( nanoTime, nanoTime / 1000000000f, nanoFrame, nanoFrame / 1000000000f );
     }
     
     /**

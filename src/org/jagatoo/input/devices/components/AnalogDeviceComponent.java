@@ -48,7 +48,7 @@ public class AnalogDeviceComponent extends DeviceComponent
     
     public final void setValue( int value )
     {
-        setValue( value, (float)intValue / scale );
+        setValue( value, intValue / scale );
     }
     
     public final void setValue( float value )

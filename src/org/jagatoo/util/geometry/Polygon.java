@@ -113,7 +113,7 @@ public class Polygon
         
         for ( int i = 0; i < vertices.size(); i++ )
         {
-            System.out.println( "  P" + i + ": " + (float[])vertices.get( i ) );
+            System.out.println( "  P" + i + ": " + vertices.get( i ) );
         }
     }
     

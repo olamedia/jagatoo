@@ -118,10 +118,10 @@ public class TextureImageFormatLoaderPCX implements TextureImageFormatLoader
         
         private int readUnsignedShort( byte[] data, int i ) throws IOException
         {
-            int low = (int)data[ i + 0 ];
-            int high = (int)data[ i + 1 ];
+            int low = data[ i + 0 ] & 0xFF;
+            int high = data[ i + 1 ] & 0xFF;
             
-            return ( ( ( high & 0xff ) << 8 ) | ( low & 0xff ) );
+            return ( ( high << 8 ) | low );
         }
         
         public PCXHeader( byte[] data ) throws IOException

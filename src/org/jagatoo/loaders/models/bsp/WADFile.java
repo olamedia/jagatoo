@@ -569,7 +569,7 @@ public class WADFile
             {
                 for ( int j = 0; j < 3; j++ )
                 {
-                    f = (float)FastMath.pow( ( ( palette[i][j] & 0xFF ) + 1 ) / 256f, gamma );
+                    f = FastMath.pow( ( ( palette[i][j] & 0xFF ) + 1 ) / 256f, gamma );
                     inf = f * 255.0f + 0.5f;
                     if ( inf < 0 )
                         inf = 0f;

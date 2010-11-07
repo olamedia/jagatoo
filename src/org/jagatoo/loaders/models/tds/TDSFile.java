@@ -157,7 +157,7 @@ public class TDSFile
         {
             readInt();
             
-            return ( (float)readUnsignedShort() / 100f );
+            return ( readUnsignedShort() / 100f );
         }
         else if ( tag == TDSChunkType.FLOAT_PERCENTAGE.getID() )
         {
@@ -225,7 +225,7 @@ public class TDSFile
         {
             readInt();
             
-            return ( new float[] { (float)din.readUnsignedByte() / 255f, (float)din.readUnsignedByte() / 255f, (float)din.readUnsignedByte() / 255f } );
+            return ( new float[] { din.readUnsignedByte() / 255f, din.readUnsignedByte() / 255f, din.readUnsignedByte() / 255f } );
         }
         else
         {

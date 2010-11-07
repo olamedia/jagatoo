@@ -154,7 +154,7 @@ public class Argument
     public int hashCode()
     {
         if ( shortName != '\0' )
-            return ( (int)shortName );
+            return ( shortName );
         
         return ( longName.hashCode() );
     }

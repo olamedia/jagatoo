@@ -63,7 +63,7 @@ package org.jagatoo.logging;
 /**
  * The Log class is the interface to the logging system.
  * Use the {@link LogManager} returned by {@link #getLogManager()}
- * to register/deregister {@link LogInterface}s.
+ * to register/deregister {@link LogHandler}s.
  * 
  * @author David Yazel
  * @author Marvin Froehlich (aka Qudus)
@@ -73,7 +73,7 @@ public final class Log
     private static final LogManager logMgr = LogManager.getInstance();
     
     /**
-     * @return the LogManager to register/deregister {@link LogInterface}s.
+     * @return the LogManager to register/deregister {@link LogHandler}s.
      */
     public static final LogManager getLogManager()
     {
@@ -139,10 +139,22 @@ public final class Log
      * @param logLevel
      * @param message
      */
-    public static final void print( LogChannel channel, int logLevel, Object... message )
+    public static final void print( LogChannel channel, LogLevel logLevel, Object... message )
     {
-        if ( logMgr.isAnyLogInterfaceRegistered( channel, logLevel ) )
-            logMgr.print( channel, logLevel, message );
+        if ( logMgr.isAnyLogInterfaceRegistered( channel, logLevel.level ) )
+            logMgr.print( channel, logLevel.level, message );
+    }
+    
+    /**
+     * This is an alias for print( channel, REGULAR, message ).
+     * 
+     * @param channel
+     * @param message
+     */
+    public static final void print( LogChannel channel, Object... message )
+    {
+        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.REGULAR.level ) )
+            logMgr.print( channel, LogLevel.REGULAR.level, message );
     }
     
     /**
@@ -152,22 +164,10 @@ public final class Log
      * @param logLevel
      * @param message
      */
-    public static final void println( LogChannel channel, int logLevel, Object... message )
+    public static final void println( LogChannel channel, LogLevel logLevel, Object... message )
     {
-        if ( logMgr.isAnyLogInterfaceRegistered( channel, logLevel ) )
-            logMgr.println( channel, logLevel, message );
-    }
-    
-    /**
-     * Dumps an exception to the logging system.
-     * 
-     * @param channel
-     * @param exception
-     */
-    public static final void print( LogChannel channel, Throwable exception )
-    {
-        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.EXCEPTION ) )
-            logMgr.print( channel, exception );
+        if ( logMgr.isAnyLogInterfaceRegistered( channel, logLevel.level ) )
+            logMgr.println( channel, logLevel.level, message );
     }
     
     /**
@@ -178,8 +178,8 @@ public final class Log
      */
     public static final void println( LogChannel channel, Object... message )
     {
-        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.REGULAR ) )
-            logMgr.println( channel, LogLevel.REGULAR, message );
+        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.REGULAR.level ) )
+            logMgr.println( channel, LogLevel.REGULAR.level, message );
     }
     
     /**
@@ -190,8 +190,8 @@ public final class Log
      */
     public static final void printlnEx( LogChannel channel, Object... message )
     {
-        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.EXHAUSTIVE ) )
-            logMgr.println( channel, LogLevel.EXHAUSTIVE, message );
+        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.EXHAUSTIVE.level ) )
+            logMgr.println( channel, LogLevel.EXHAUSTIVE.level, message );
     }
     
     /**
@@ -202,8 +202,8 @@ public final class Log
      */
     public static final void error( LogChannel channel, Object... message )
     {
-        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.ERROR ) )
-            logMgr.println( channel, LogLevel.ERROR, message );
+        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.ERROR.level ) )
+            logMgr.println( channel, LogLevel.ERROR.level, message );
     }
     
     /**
@@ -214,8 +214,8 @@ public final class Log
      */
     public static final void exception( LogChannel channel, Object... message )
     {
-        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.EXCEPTION ) )
-            logMgr.println( channel, LogLevel.EXCEPTION, message );
+        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.EXCEPTION.level ) )
+            logMgr.println( channel, LogLevel.EXCEPTION.level, message );
     }
     
     /**
@@ -226,8 +226,8 @@ public final class Log
      */
     public static final void debug( LogChannel channel, Object... message )
     {
-        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.DEBUG ) )
-            logMgr.println( channel, LogLevel.DEBUG, message );
+        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.DEBUG.level ) )
+            logMgr.println( channel, LogLevel.DEBUG.level, message );
     }
     
     /**
@@ -238,8 +238,8 @@ public final class Log
      */
     public static final void profile( LogChannel channel, Object... message )
     {
-        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.PROFILE ) )
-            logMgr.println( channel, LogLevel.PROFILE, message );
+        if ( logMgr.isAnyLogInterfaceRegistered( channel, LogLevel.PROFILE.level ) )
+            logMgr.println( channel, LogLevel.PROFILE.level, message );
     }
     
     public static final void flush()

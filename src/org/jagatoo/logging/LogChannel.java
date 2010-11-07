@@ -71,6 +71,18 @@ public class LogChannel
     }
     
     /**
+     * Gets whether this channel's id bit is set in the given filter mask.
+     * 
+     * @param channelFilter
+     * 
+     * @return whether this channel's id bit is set in the given filter mask.
+     */
+    public final boolean isInFilter( int channelFilter )
+    {
+        return ( ( channelFilter & id ) > 0 );
+    }
+    
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -85,7 +97,7 @@ public class LogChannel
     @Override
     public boolean equals( Object o )
     {
-        return ( ( o instanceof LogChannel ) && ( ((LogChannel)o).getID() == this.getID() ) );
+        return ( ( o instanceof LogChannel ) && ( ( (LogChannel)o ).getID() == this.getID() ) );
     }
     
     

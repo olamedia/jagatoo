@@ -75,7 +75,7 @@ public final class JAGTLog
     public static final LogChannel LOG_CHANNEL = new LogChannel( "JAGaToo" );
     
     /**
-     * @return the LogManager to register/deregister {@link LogInterface}s.
+     * @return the LogManager to register/deregister {@link LogHandler}s.
      */
     public static final LogManager getLogManager()
     {

@@ -51,110 +51,176 @@
  */
 package org.jagatoo.logging;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 
 /**
  * This class implements the LogInterface and adds support for
- * writing logs to files.  The filename is specified in the constructor.
+ * writing logs to files. The filename is specified in the constructor.
  * 
  * @author David Yazel
  * @author Marvin Froehlich (aka Qudus)
  */
-public class FileLog implements LogInterface
+public class FileLog extends LogHandler
 {
-    private int logLevel;
-    private int channelFilter;
-    private final FileOutputStream out;
-    private final PrintStream prn;
+    private final File file;
+    private PrintStream ps;
+    private final boolean autoFlush;
     
-    public final void setLogLevel( int logLevel )
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean acceptsChannelAndLevel( LogChannel channel, int logLevel )
     {
-        this.logLevel = logLevel;
-    }
-    
-    public final int getLogLevel()
-    {
-        return ( logLevel );
-    }
-    
-    public final void setChannelFilter( int filter )
-    {
-        this.channelFilter = filter;
-    }
-    
-    public final int getChannelFilter()
-    {
-        return ( channelFilter );
-    }
-    
-    public final boolean acceptsChannel( LogChannel channel )
-    {
-        return ( ( channelFilter & channel.getID() ) > 0 );
+        boolean accepts = super.acceptsChannelAndLevel( channel, logLevel );
+        
+        if ( accepts && ( file != null ) )
+        {
+            try
+            {
+                ps = new PrintStream( new FileOutputStream( file, true ), false );
+            }
+            catch ( FileNotFoundException e )
+            {
+                e.printStackTrace();
+            }
+        }
+        
+        return ( accepts );
     }
     
     /**
      * {@inheritDoc}
      */
+    @Override
     public void print( LogChannel channel, int logLevel, String message )
     {
-        if ( ( acceptsChannel( channel ) ) && ( logLevel <= this.logLevel ) )
-        {
-            prn.print( message );
-        }
+        ps.print( message );
     }
     
     /**
      * {@inheritDoc}
      */
+    @Override
     public void println( LogChannel channel, int logLevel, String message )
     {
-        if ( ( acceptsChannel( channel ) ) && ( logLevel <= this.logLevel ) )
+        ps.println( message );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void endMessage()
+    {
+        if ( file != null )
         {
-            prn.println( message );
+            ps.close();
+            ps = null;
+        }
+        else if ( autoFlush )
+        {
+            ps.flush();
         }
     }
     
     /**
      * {@inheritDoc}
      */
+    @Override
     public void flush()
     {
-        prn.flush();
+        ps.flush();
     }
     
     /**
      * {@inheritDoc}
      */
+    @Override
     public void close()
     {
         try
         {
-            out.close();
-            prn.close();
+            ps.close();
         }
-        catch (Exception e)
+        catch ( Throwable t )
         {
         }
     }
     
-    public FileLog( int channelFilter, int logLevel, String filename ) throws FileNotFoundException
+    public FileLog( int channelFilter, LogLevel logLevel, File file, boolean append, boolean autoFlush, boolean instantClose ) throws FileNotFoundException
     {
-        this.logLevel = logLevel;
-        this.channelFilter = channelFilter;
+        super( channelFilter, logLevel );
         
-        this.out = new FileOutputStream( filename );
-        this.prn = new PrintStream( out, true );
+        if ( instantClose )
+        {
+            this.file = file;
+            this.ps = null;
+        }
+        else
+        {
+            this.file = null;
+            this.ps = new PrintStream( new FileOutputStream( file, append ), false );
+        }
+        
+        this.autoFlush = autoFlush;
     }
     
-    public FileLog( int logLevel, String filename ) throws FileNotFoundException
+    public FileLog( LogLevel logLevel, File file, boolean append, boolean autoFlush, boolean instantClose ) throws FileNotFoundException
     {
-        this( 0xFFFFFFFF, logLevel, filename );
+        this( LogChannel.MASK_ALL, logLevel, file, append, autoFlush, instantClose );
+    }
+    
+    public FileLog( File file, boolean append, boolean autoFlush, boolean instantClose ) throws FileNotFoundException
+    {
+        this( LogChannel.MASK_ALL, LogLevel.REGULAR, file, append, autoFlush, instantClose );
+    }
+    
+    public FileLog( int channelFilter, LogLevel logLevel, File file ) throws FileNotFoundException
+    {
+        this( channelFilter, logLevel, file, false, true, false );
+    }
+    
+    public FileLog( LogLevel logLevel, File file ) throws FileNotFoundException
+    {
+        this( LogChannel.MASK_ALL, logLevel, file, false, true, false );
+    }
+    
+    public FileLog( File file ) throws FileNotFoundException
+    {
+        this( LogChannel.MASK_ALL, LogLevel.REGULAR, file, false, true, false );
+    }
+    
+    public FileLog( int channelFilter, LogLevel logLevel, String filename, boolean append, boolean autoFlush, boolean instantClose ) throws FileNotFoundException
+    {
+        this( channelFilter, logLevel, new File( filename ), append, autoFlush, instantClose );
+    }
+    
+    public FileLog( LogLevel logLevel, String filename, boolean append, boolean autoFlush, boolean instantClose ) throws FileNotFoundException
+    {
+        this( LogChannel.MASK_ALL, logLevel, new File( filename ), append, autoFlush, instantClose );
+    }
+    
+    public FileLog( String filename, boolean append, boolean autoFlush, boolean instantClose ) throws FileNotFoundException
+    {
+        this( LogChannel.MASK_ALL, LogLevel.REGULAR, new File( filename ), append, autoFlush, instantClose );
+    }
+    
+    public FileLog( int channelFilter, LogLevel logLevel, String filename ) throws FileNotFoundException
+    {
+        this( channelFilter, logLevel, new File( filename ), false, true, false );
+    }
+    
+    public FileLog( LogLevel logLevel, String filename ) throws FileNotFoundException
+    {
+        this( LogChannel.MASK_ALL, logLevel, new File( filename ), false, true, false );
     }
     
     public FileLog( String filename ) throws FileNotFoundException
     {
-        this( 0xFFFFFFFF, LogLevel.REGULAR, filename );
+        this( LogChannel.MASK_ALL, LogLevel.REGULAR, new File( filename ), false, true, false );
     }
 }

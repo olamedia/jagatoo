@@ -100,7 +100,7 @@ public class OBJFace
             for ( int v = 0; v < 3; v++ )
             {
                 int ptIndex = index + ( i * 3 ) + v;
-                int vIndex = findIndex( (float[])tri.getVertices().get( v ) );
+                int vIndex = findIndex( tri.getVertices().get( v ) );
                 
                 //array.setCoordinate( index + i, verts.get( vData[ i ] ) );
                 dataVerts[ ptIndex ] = faceList.getVertexList().get( vData[ vIndex ] );

@@ -625,10 +625,10 @@ public class BSPPrototypeLoader
                 if ( a < 0 )
                     a = -a + 127;
                 
-                vertex.color.setRed( (float)r / 255f );
-                vertex.color.setGreen( (float)g / 255f );
-                vertex.color.setBlue( (float)b / 255f );
-                vertex.color.setAlpha( (float)a / 255f );
+                vertex.color.setRed( r / 255f );
+                vertex.color.setGreen( g / 255f );
+                vertex.color.setBlue( b / 255f );
+                vertex.color.setAlpha( a / 255f );
             }
         }
         
