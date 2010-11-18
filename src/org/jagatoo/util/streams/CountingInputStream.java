@@ -29,15 +29,18 @@
  */
 package org.jagatoo.util.streams;
 
-import java.io.OutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * Writes all data to &quot;dev/null&quot; (nirvana) and counts written bytes.
+ * Counts all read/skipped bytes.
  * 
  * @author Marvin Froehlich (aka Qudus)
  */
-public class DevNullOutputStream extends OutputStream
+public class CountingInputStream extends InputStream
 {
+    private final InputStream in;
+    
     private long count = 0L;
     
     /**
@@ -54,45 +57,72 @@ public class DevNullOutputStream extends OutputStream
      * {@inheritDoc}
      */
     @Override
-    public void write( int b )
+    public int available() throws IOException
     {
-        count++;
+        return ( in.available() );
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public void write( byte[] b, int off, int len )
+    public long skip( long n ) throws IOException
     {
-        if ( b == null )
-            throw new NullPointerException( "b must not be null" );
+        long result = super.skip( n );
         
-        if ( off < 0 )
-            throw new ArrayIndexOutOfBoundsException( "off must be >= 0." );
+        if ( result >= 0 )
+            count += result;
         
-        if ( len < 0 )
-            throw new ArrayIndexOutOfBoundsException( "len must be >= 0." );
-        
-        if ( b.length < off + len )
-            throw new ArrayIndexOutOfBoundsException( "off+len must be <= b.length." );
-        
-        count += len;
+        return ( result );
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public void write( byte[] b )
+    public int read() throws IOException
     {
-        if ( b == null )
-            throw new NullPointerException( "b must not be null" );
+        int result = in.read();
         
-        count += b.length;
+        if ( result >= 0 )
+            count++;
+        
+        return ( result );
     }
     
-    public DevNullOutputStream()
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int read( byte[] b, int off, int len ) throws IOException
     {
+        int result = in.read( b, off, len );
+        
+        if ( result >= 0 )
+            count++;
+        
+        return ( result );
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int read( byte[] b ) throws IOException
+    {
+        int result = in.read( b );
+        
+        if ( result >= 0 )
+            count++;
+        
+        return ( result );
+    }
+    
+    public CountingInputStream( InputStream in )
+    {
+        if ( in == null )
+            throw new IllegalArgumentException( "The passed InputStream must not be null." );
+        
+        this.in = in;
     }
 }

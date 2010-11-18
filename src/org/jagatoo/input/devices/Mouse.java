@@ -340,7 +340,7 @@ public abstract class Mouse extends InputDevice
      */
     public final boolean hasMouseListener()
     {
-        return ( stopManager.hasMouseListener() );
+        return ( ( listeners.size() > 0 ) || stopManager.hasMouseListener() );
     }
     
     /**
