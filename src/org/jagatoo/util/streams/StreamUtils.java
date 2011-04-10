@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2007-2010, JAGaToo Project Group all rights reserved.
+ * Copyright (c) 2007-2011, JAGaToo Project Group all rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -30,8 +30,12 @@
 package org.jagatoo.util.streams;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
 
 import org.jagatoo.util.arrays.ArrayUtils;
 
@@ -42,6 +46,8 @@ import org.jagatoo.util.arrays.ArrayUtils;
  */
 public class StreamUtils
 {
+    public static final int TRANSFER_BUFFER_SIZE = 1024;
+    
     /**
      * Skips and discards the given number of bytes from the given stream.
      * 
@@ -515,5 +521,322 @@ public class StreamUtils
     public static final byte[] buildByteArray( InputStream in ) throws IOException
     {
         return ( buildByteArray( in, in.available() ) );
+    }
+    
+    /**
+     * Closes the passed stream if non <code>null</code> ignoring theoretically irrelevant IOException.
+     * 
+     * @param s the stream to be closed. If <code>null</code>, this is noop
+     * 
+     * @return <code>null</code>, if the stream is <code>null</code>, <code>true</code>, if the closing was successful, false otherwise.
+     */
+    public static Boolean closeStream( InputStream s )
+    {
+        if ( s == null )
+            return ( null );
+        
+        try
+        {
+            s.close();
+            
+            return ( true );
+        }
+        catch ( IOException e )
+        {
+            // irrelevant! => ignore
+            
+            return ( false );
+        }
+    }
+    
+    /**
+     * Closes the passed stream if non <code>null</code> ignoring theoretically irrelevant IOException.
+     * Make sure, the stream is flushed before.
+     * 
+     * @param s the stream to be closed. If <code>null</code>, this is noop
+     * 
+     * @return <code>null</code>, if the stream is <code>null</code>, <code>true</code>, if the closing was successful, false otherwise.
+     */
+    public static Boolean closeStream( OutputStream s )
+    {
+        if ( s == null )
+            return ( null );
+        
+        try
+        {
+            s.close();
+            
+            return ( true );
+        }
+        catch ( IOException e )
+        {
+            // irrelevant (if flushed before)! => ignore
+            
+            return ( false );
+        }
+    }
+    
+    /**
+     * Flushes the given stream, if it is non <code>null</code> and ignores a rarely possible {@link IOException}.
+     * 
+     * @param s the strema to flush
+     * 
+     * @return <code>null</code>, if the stream is <code>null</code>, <code>true</code>, if the closing was successful, false otherwise.
+     */
+    public static Boolean flushStream( OutputStream s )
+    {
+        if ( s == null )
+            return ( null );
+        
+        try
+        {
+            s.flush();
+            
+            return ( true );
+        }
+        catch ( IOException e )
+        {
+            // irrelevant (if flushed before)! => ignore
+            
+            return ( false );
+        }
+    }
+    
+    /**
+     * Closes the passed reader if non <code>null</code> ignoring theoretically irrelevant IOException.
+     * 
+     * @param r the reader to be closed. If <code>null</code>, this is noop
+     * 
+     * @return <code>null</code>, if the reader is <code>null</code>, <code>true</code>, if the closing was successful, false otherwise.
+     */
+    public static Boolean closeReader( Reader r )
+    {
+        if ( r == null )
+            return ( null );
+        
+        try
+        {
+            r.close();
+            
+            return ( true );
+        }
+        catch ( IOException e )
+        {
+            // irrelevant! => ignore
+            
+            return ( false );
+        }
+    }
+    
+    /**
+     * Closes the passed writer if non <code>null</code> ignoring theoretically irrelevant IOException.
+     * Make sure, the stream is flushed before.
+     * 
+     * @param w the writer to be closed. If <code>null</code>, this is noop
+     * 
+     * @return <code>null</code>, if the writer is <code>null</code>, <code>true</code>, if the closing was successful, false otherwise.
+     */
+    public static Boolean closeWriter( Writer w )
+    {
+        if ( w == null )
+            return ( null );
+        
+        try
+        {
+            w.close();
+            
+            return ( true );
+        }
+        catch ( IOException e )
+        {
+            // irrelevant (if flushed before)! => ignore
+            
+            return ( false );
+        }
+    }
+    
+    /**
+     * Flushes the given writer, if it is non <code>null</code> and ignores a rarely possible {@link IOException}.
+     * 
+     * @param w the writer to flush
+     * 
+     * @return <code>null</code>, if the writer is <code>null</code>, <code>true</code>, if the closing was successful, false otherwise.
+     */
+    public static Boolean flushWriter( Writer w )
+    {
+        if ( w == null )
+            return ( null );
+        
+        try
+        {
+            w.flush();
+            
+            return ( true );
+        }
+        catch ( IOException e )
+        {
+            // irrelevant (if flushed before)! => ignore
+            
+            return ( false );
+        }
+    }
+    
+    /**
+     * Reads all bytes from the provided {@link InputStream} and writes them to the provided {@link OutputStream}.
+     * 
+     * @param in
+     * @param buffer
+     * @param out
+     * @param closeIn if <code>true</code> the provided {@link InputStream} is closed after all.
+     * @param closeOut if <code>true</code> the provided {@link OutputStream} is closed after all.
+     * 
+     * @return the number of bytes transfered.
+     * 
+     * @throws IOException
+     */
+    public static long transferBytes( InputStream in, byte[] buffer, OutputStream out, boolean closeIn, boolean closeOut ) throws IOException
+    {
+        if ( in == null )
+            throw new IllegalArgumentException( "in must not be null." );
+        
+        if ( out == null )
+            throw new IllegalArgumentException( "out must not be null." );
+        
+        try
+        {
+            long nn = 0L;
+            
+            int n;
+            
+            while ( ( n = in.read( buffer, 0, Math.min( buffer.length, in.available() + 1 ) ) ) >= 0 )
+            {
+                if ( n > 0 )
+                {
+                    nn += n;
+                    out.write( buffer, 0, n );
+                }
+            }
+            
+            return ( nn );
+        }
+        finally
+        {
+            if ( closeIn )
+                closeStream( in );
+            
+            if ( closeOut )
+                closeStream( out );
+        }
+    }
+    
+    /**
+     * Reads all bytes from the provided {@link InputStream} and writes them to the provided {@link OutputStream}.
+     * 
+     * @param in
+     * @param out
+     * @param closeIn if <code>true</code> the provided {@link InputStream} is closed after all.
+     * @param closeOut if <code>true</code> the provided {@link OutputStream} is closed after all.
+     * 
+     * @return the number of bytes transfered.
+     * 
+     * @throws IOException
+     */
+    public static long transferBytes( InputStream in, OutputStream out, boolean closeIn, boolean closeOut ) throws IOException
+    {
+        if ( in == null )
+            throw new IllegalArgumentException( "in must not be null." );
+        
+        if ( out == null )
+            throw new IllegalArgumentException( "out must not be null." );
+        
+        return ( transferBytes( in, new byte[ TRANSFER_BUFFER_SIZE ], out, closeIn, closeOut ) );
+    }
+    
+    /**
+     * Reads all bytes from the provided {@link InputStream} and writes them to the provided {@link OutputStream}.
+     * The provided streams are closed after all.
+     * 
+     * @param in
+     * @param out
+     * 
+     * @return the number of bytes transfered.
+     * 
+     * @throws IOException
+     */
+    public static long transferBytes( InputStream in, OutputStream out ) throws IOException
+    {
+        return ( transferBytes( in, out, true, true ) );
+    }
+    
+    /**
+     * Copies all bytes from the given {@link InputStream} into a new byte array.
+     * 
+     * @param in
+     * @param closeIn if <code>true</code> the provided {@link InputStream} is closed after all.
+     * 
+     * @return a byte array containing all the bytes from the given {@link InputStream}.
+     * 
+     * @throws IOException
+     */
+    public static byte[] getBytesFromStream( InputStream in, boolean closeIn ) throws IOException
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream( in.available() );
+        
+        transferBytes( in, baos, closeIn, true );
+        
+        return ( baos.toByteArray() );
+    }
+    
+    /**
+     * Copies all bytes from the given {@link InputStream} into a new byte array.
+     * The provided stream is closed after all.
+     * 
+     * @param in
+     * 
+     * @return a byte array containing all the bytes from the given {@link InputStream}.
+     * 
+     * @throws IOException
+     */
+    public static byte[] getBytesFromStream( InputStream in ) throws IOException
+    {
+        return ( getBytesFromStream( in, true ) );
+    }
+    
+    /**
+     * Copies all bytes from the given {@link InputStream} into a new String.
+     * 
+     * @param in
+     * @param closeIn if <code>true</code> the provided {@link InputStream} is closed after all.
+     * 
+     * @return a String containing all the bytes from the given {@link InputStream}.
+     * 
+     * @throws IOException
+     */
+    public static String getStringFromStream( InputStream in, boolean closeIn ) throws IOException
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream( in.available() );
+        
+        transferBytes( in, baos, closeIn, true );
+        
+        return ( baos.toString() );
+    }
+    
+    /**
+     * Copies all bytes from the given {@link InputStream} into a new String.
+     * The provided stream is closed after all.
+     * 
+     * @param in
+     * 
+     * @return a String containing all the bytes from the given {@link InputStream}.
+     * 
+     * @throws IOException
+     */
+    public static String getStringFromStream( InputStream in ) throws IOException
+    {
+        return ( getStringFromStream( in, true ) );
+    }
+    
+    private StreamUtils()
+    {
     }
 }
