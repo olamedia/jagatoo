@@ -360,46 +360,49 @@ public class MD2File
          * Count the number of vertexs for each type of primitive.
          */
         
-        //for ( int i = 0; i < numCommands; i++ )
-        while ( true )
+        if ( header.numGlCommandBytes > 0 )
         {
-            int indicator = in.readInt();
-            
-            if ( indicator == 0 )
-                break;
-            
-            int num = Math.abs( indicator );
-            
-            if ( indicator < 0 )
+            //for ( int i = 0; i < numCommands; i++ )
+            while ( true )
             {
-                geomTypes.add( GeometryFactory.GeometryType.TRIANGLE_FAN_ARRAY );
+                int indicator = in.readInt();
                 
-                fanVertexCount += num;
-                fanCount++;
-            }
-            else
-            {
-                geomTypes.add( GeometryFactory.GeometryType.TRIANGLE_STRIP_ARRAY );
+                if ( indicator == 0 )
+                    break;
                 
-                stripVertexCount += num;
-                stripCount++;
-            }
-            
-            float[] st = new float[num * 2];
-            int[] idxs = new int[num];
-            
-            for ( int j = 0; j < num; j++ )
-            {
-                st[j * 2 + 0] = in.readFloat();        // s
-                st[j * 2 + 1] = 1.0f - in.readFloat(); // t
+                int num = Math.abs( indicator );
                 
-                idxs[j] = in.readInt();
+                if ( indicator < 0 )
+                {
+                    geomTypes.add( GeometryFactory.GeometryType.TRIANGLE_FAN_ARRAY );
+                    
+                    fanVertexCount += num;
+                    fanCount++;
+                }
+                else
+                {
+                    geomTypes.add( GeometryFactory.GeometryType.TRIANGLE_STRIP_ARRAY );
+                    
+                    stripVertexCount += num;
+                    stripCount++;
+                }
+                
+                float[] st = new float[num * 2];
+                int[] idxs = new int[num];
+                
+                for ( int j = 0; j < num; j++ )
+                {
+                    st[j * 2 + 0] = in.readFloat();        // s
+                    st[j * 2 + 1] = 1.0f - in.readFloat(); // t
+                    
+                    idxs[j] = in.readInt();
+                }
+                
+                texCoords.add( st );
+                vertexIndices.add( idxs );
+                
+                numSets++;
             }
-            
-            texCoords.add( st );
-            vertexIndices.add( idxs );
-            
-            numSets++;
         }
         
         

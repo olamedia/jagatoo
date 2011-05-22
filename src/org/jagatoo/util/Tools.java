@@ -126,4 +126,32 @@ public class Tools
         
         return ( s );
     }
+    
+    public static final boolean sleep( long milliseconds )
+    {
+        try
+        {
+            Thread.sleep( milliseconds );
+            
+            return ( true );
+        }
+        catch ( InterruptedException e )
+        {
+            return ( false );
+        }
+    }
+    
+    public static final boolean sleep( long milliseconds, int nanos )
+    {
+        try
+        {
+            Thread.sleep( milliseconds, nanos );
+            
+            return ( true );
+        }
+        catch ( InterruptedException e )
+        {
+            return ( false );
+        }
+    }
 }
