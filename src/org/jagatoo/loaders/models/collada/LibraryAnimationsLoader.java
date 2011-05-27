@@ -30,21 +30,18 @@
 package org.jagatoo.loaders.models.collada;
 
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
-import org.jagatoo.loaders.models.collada.datastructs.animation.Axis;
 import org.jagatoo.loaders.models.collada.datastructs.animation.DaeJoint;
 import org.jagatoo.loaders.models.collada.datastructs.animation.DaeSkeleton;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.Controller;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalController;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.DaeNode;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.Scene;
 import org.jagatoo.loaders.models.collada.stax.XMLAnimation;
-import org.jagatoo.loaders.models.collada.stax.XMLChannel.ChannelType;
+import org.jagatoo.loaders.models.collada.stax.XMLChannel;
 import org.jagatoo.loaders.models.collada.stax.XMLLibraryAnimations;
-import org.jagatoo.logging.JAGTLog;
-import org.openmali.vecmath2.Quaternion4f;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * Library animations loader.
@@ -54,8 +51,6 @@ import java.util.HashMap;
  */
 public class LibraryAnimationsLoader
 {
-    private static final int MAX_ANIMATIONS_PER_JOINT = 9; //( 3 rots 3 trans 3 scales)
-
     /**
      * Loads the library of animations.
      *
@@ -64,93 +59,90 @@ public class LibraryAnimationsLoader
      */
     public static void loadLibraryAnimations( AssetFolder colladaFile, XMLLibraryAnimations libAnim )
     {
-        Collection<XMLAnimation> anims = libAnim.animations.values();
-        JAGTLog.debug( "There ", ( anims.size() > 1 ? "are" : "is" ), " ", anims.size(), " animation", ( anims.size() > 1 ? "s" : "" ), " in this file." );
-
         HashMap<String, COLLADAAction> colAnims = colladaFile.getLibraryAnimations().getAnimations();
-
-        /*
-        * for( all Skeletons ) {
-        *
-        * But we must know what skeleton belongs each joint
-        *
-        */
-
+        Scene scene = colladaFile.getLibraryVisualsScenes().getScenes().values().iterator().next();
+        HashSet<DaeSkeleton> animatedSkels = new HashSet<DaeSkeleton>();
+        HashMap<DaeJoint, DaeSkeleton> rootToSkeleton = new HashMap<DaeJoint, DaeSkeleton>();
         for ( DaeSkeleton skeleton : colladaFile.getLibraryVisualsScenes().getSkeletons().values() )
         {
-            //create new Action
-            skeleton.resetIterator();
-            JAGTLog.debug( "Creating new COLLADAAction with ID of ", skeleton.getRootJoint().getName(), "-action." );
-            COLLADAAction currAction = new COLLADAAction( skeleton.getRootJoint().getName() + "-action" );
-            currAction.setSkeleton( skeleton );
-            // loop through each joint
-            int animCount;
-            for ( DaeJoint joint : currAction.getSkeleton() )
+            rootToSkeleton.put( skeleton.getRootJoint(), skeleton );
+        }
+        COLLADAAction action = null;
+        for ( XMLAnimation anim : libAnim.animations.values() )
+        {
+            AnimationChannel ac = null;
+            DaeJoint root = null;
+            DaeSkeleton skeleton = null;
+            DaeNode target = null;
+            for ( int c = 0; c < anim.channels.size(); c++ )
             {
-                JAGTLog.debug( "Loading animations for joint ", joint.getName() );
-                JAGTLog.increaseIndentation();
-                // search the animations for each joint, max 9 ( 3 rots 3 trans 3 scales) //max 4 ( 3 rots and 1 trans )
-                animCount = 0;
-                ArrayList<AnimationChannel> translations = new ArrayList<AnimationChannel>();
-                HashMap<Enum<?>, AnimationChannel> rotations = new HashMap<Enum<?>, AnimationChannel>();
-                ArrayList<AnimationChannel> scales = new ArrayList<AnimationChannel>();
-                for ( XMLAnimation animation : anims )
+                XMLChannel channel = anim.channels.get( c );
+                if ( target == null )
                 {
-                    if ( animCount < MAX_ANIMATIONS_PER_JOINT && animation.getTargetJoint().equals( joint.getName() ) )
+                    target = scene.findNode( channel.getTargetNodeId() );
+                }
+                if ( target instanceof DaeJoint )
+                {
+                    if ( root == null )
                     {
-                        JAGTLog.debug( "Loading animation ", animation.name, " of type ", animation.getType(),
-                                ( animation.getType() == ChannelType.ROTATE ? ( " and of axis " + animation.getRotationAxis() ) : "" ) );
-                        if ( animation.getType() == null )
+                        root = DaeJoint.findRoot( ( DaeJoint ) target );
+                        skeleton = rootToSkeleton.get( root );
+                        if ( animatedSkels.add( skeleton ) ) //currently 1 anim. group (action) per skeleton
                         {
-                            animation.channels.get( 0 ).type = ChannelType.SCALE;
+                            skeleton.resetIterator();
+                            if ( action == null )
+                            {
+                                String id = skeleton.getRootJoint().getId();
+                                action = new COLLADAAction( id + "-action" );
+                                action.setSkeleton( skeleton );
+                                colAnims.put( action.getId(), action );
+                            }
                         }
+                    }
+                    float[] timeline = anim.getInput( c );
+                    float[] output = anim.getOutput( c );
+                    int stride = anim.getSource( anim.samplers.get( c ).getInput( "OUTPUT" ).source ).techniqueCommon.accessor.stride;
+                    int i = channel.getTransElemIndexI();
+                    int j = channel.getTransElemIndexJ();
+                    Object targetValue = target.getCOLLADATransform().get( channel.getTransElemSid() );
+                    int ord = target.getCOLLADATransform().getElementOrder( targetValue );
+                    if ( ac == null )
+                    {
+                        ac = AnimationChannel.create( ( DaeJoint ) target, timeline, output, stride, i, j, targetValue, ord );
+                    }
+                    else
+                    {
+                        ac.update( output, stride, i, j, targetValue );
+                    }
+                }
+                else
+                {
+                    //todo
+                }
+            } //channels loop
+            switch ( ac.getType() )
+            {
+                case TRANSLATE:
+                    action.putTranslations( target, ac );
+                    break;
+                case ROTATE:
+                    action.putRotations( target, ac );
+                    break;
+                case SCALE:
+                    action.putScales( target, ac );
+                    break;
+                case MATRIX:
+                    action.putMatrices( target, ac );
+                    break;
+                default:
+                    throw new Error( "Unknown channel type: " + ac.getType() );
+            }
+        }//animations loop
 
-                        int stride = animation.getSource( animation.samplers.get( 0 ).getInput( "OUTPUT" ).source ).techniqueCommon.accessor.stride;
-                        switch ( animation.getType() )
-                        {
-                            case TRANSLATE:
-                                // it's a translation key frame
-                                JAGTLog.debug( "Translation key frame..." );
-                                translations.add( new AnimationChannel( joint,
-                                        animation.getInput(),
-                                        animation.getOutput(),
-                                        null, //todo
-                                        ChannelType.TRANSLATE,
-                                        stride ) );
-                                break;
-                            case ROTATE:
-                                // it's a rotation key frame
-                                rotations.put( animation.getRotationAxis(),
-                                        new AnimationChannel( joint,
-                                                animation.getInput(),
-                                                animation.getOutput(),
-                                                animation.getRotationAxis(),
-                                                ChannelType.ROTATE,
-                                                stride ) );
-                                break;
-                            case SCALE:
-                                // it's a scale key frame
-                                scales.add( new AnimationChannel( joint,
-                                        animation.getInput(),
-                                        animation.getOutput(),
-                                        null, //todo
-                                        ChannelType.SCALE,
-                                        stride ) );
-                                break;
-                        } // end of animation type switch
-                        // update total anims for the joint
-                        animCount++;
-                    } //end of joint validation if loop
-                } // end of animation iterator
-                currAction.putTranslations( joint, mergeTranslations( joint, translations ) );
-                currAction.putRotations( joint, mergeRotations( joint, rotations ) );
-                currAction.putScales( joint, mergeScales( joint, scales ) );
-            } // end of joint iterator
-
-            // add current Action
-            colAnims.put( currAction.getId(), currAction );
-            JAGTLog.decreaseIndentation();
-        } // end of skeleton iterator
+        for ( COLLADAAction ca : colAnims.values() )
+        {
+            ca.prepareJoints();
+        }
 
         for ( Controller c : colladaFile.getLibraryControllers().getControllers().values() )
         {
@@ -159,80 +151,5 @@ public class LibraryAnimationsLoader
                 ( ( SkeletalController ) c ).libAnims = colladaFile.getLibraryAnimations();
             }
         }
-    }
-
-    private static AnimationChannel mergeTranslations( DaeJoint joint, ArrayList<AnimationChannel> translations )
-    {
-        //todo channel target full handling
-        if ( translations.size() == 0 )
-        {
-            return new AnimationChannel( joint, new float[0], new float[0], null, ChannelType.TRANSLATE, 1 );
-        }
-        return ( translations.get( 0 ) );
-    }
-
-    private static AnimationChannel mergeRotations( DaeJoint joint, HashMap<Enum<?>, AnimationChannel> rotations )
-    {
-        if ( rotations.size() == 0 )
-        {
-            return new AnimationChannel( joint, new float[0], new float[0], null, ChannelType.ROTATE, 1 );
-        }
-        // ArrayList<AnimationData> merged = new ArrayList<AnimationData>( 1 );
-        AnimationChannel result = null;
-        if ( rotations.size() == 3 )  //todo
-        {
-            AnimationChannel rX = rotations.get( Axis.X );
-            AnimationChannel rY = rotations.get( Axis.Y );
-            AnimationChannel rZ = rotations.get( Axis.Z );
-
-            if ( Arrays.equals( rX.getTimeline(), rY.getTimeline() ) &&
-                    Arrays.equals( rY.getTimeline(), rZ.getTimeline() ) )
-            {
-//                Quaternion4f[] ql = new Quaternion4f[rX.getRotations().length];
-//                for ( int i = 0; i < rX.getRotations().length; i++ )
-//                {
-//                    Quaternion4f q = mergeQuaternions( rX.getRotations()[ i ], rY.getRotations()[ i ], rZ.getRotations()[ i ] );
-//                    ql[ i ] = q;
-//                }
-
-                result = new AnimationChannel( rX, rY.getOutput(), rZ.getOutput() );
-            }
-            else
-            {
-                return ( rotations.values().iterator().next() );
-            }
-        }
-        else
-        {
-            return ( rotations.values().iterator().next() );
-        }
-
-        return ( result );
-    }
-
-    private static Quaternion4f mergeQuaternions( Quaternion4f q1, Quaternion4f q2, Quaternion4f q3 )
-    {
-//        Tuple3f t1 = Rotations.toEuler( q1 );
-//        Tuple3f t2 = Rotations.toEuler( q2 );
-//        Tuple3f t3 = Rotations.toEuler( q3 );
-
-//        return Rotations.toQuaternion( t1.getX(), t2.getY(), t3.getZ() );
-        Quaternion4f result = new Quaternion4f();
-        result.mul( q1, q2 );
-
-        result.mul( q3, result );
-        result.normalize();
-
-        return ( result );
-    }
-
-    private static AnimationChannel mergeScales( DaeJoint joint, ArrayList<AnimationChannel> scales )
-    {
-        //todo channel target full handling
-        if ( scales.size() == 0 )
-        {
-            return new AnimationChannel( joint, new float[0], new float[0], null, ChannelType.SCALE, 1 );
-        }
-        return ( scales.get( 0 ) );
     }
 }

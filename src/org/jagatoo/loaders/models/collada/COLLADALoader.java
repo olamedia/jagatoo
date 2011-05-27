@@ -34,7 +34,7 @@ import org.jagatoo.loaders.models._util.*;
 import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.Controller;
 import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalController;
-import org.jagatoo.loaders.models.collada.datastructs.visualscenes.Node;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.DaeNode;
 import org.jagatoo.loaders.models.collada.stax.*;
 import org.jagatoo.logging.JAGTLog;
 import org.jagatoo.util.errorhandling.ParsingException;
@@ -269,9 +269,9 @@ public class COLLADALoader
         AssetFolder file = loader.loadAssetFolder( baseURL, stream, appFactory, geomFactory, convertZup2Yup, scale, nodeFactory, animFactory, siHandler, rootGroup );
         DaeConverter converter = new DaeConverter( file, siHandler, appFactory, geomFactory, nodeFactory, animFactory );
 
-        Collection<Node> daeNodes = file.getLibraryVisualsScenes().getScenes().values().iterator().next().getNodes().values();
+        Collection<DaeNode> daeNodes = file.getLibraryVisualsScenes().getScenes().values().iterator().next().getNodes().values();
         NamedObject root = nodeFactory.createSimpleGroup( "main_group", BoundsType.SPHERE );
-        for ( Node daeNode : daeNodes )
+        for ( DaeNode daeNode : daeNodes )
         {
             nodeFactory.addNodeToGroup( converter.convertNode( daeNode ), root );
         }
@@ -284,7 +284,7 @@ public class COLLADALoader
                 if ( c instanceof SkeletalController )
                 {
                     SkeletalController sc = ( SkeletalController ) c;
-                    if ( action.getSkeleton().equals( sc.getSkeleton() ) )
+                    if ( action.getSkeleton()!= null && action.getSkeleton().equals( sc.getSkeleton() ) )
                     {
                         Object ma = converter.convertToModelAnimation( sc, action );
                         siHandler.addAnimation( ma );

@@ -60,6 +60,7 @@ public class XMLParam
         _int,
         /** Name (String) */
         _Name,
+        _name,  //the same as previous
         /** IDREF (String) */
         _IDREF,
         /** 4x4 float matrix */
@@ -99,7 +100,11 @@ public class XMLParam
         /** Weight */
         WEIGHT,
         /** Joint */
-        JOINT
+        JOINT,
+        /** */
+        INTERPOLATION,
+        /** */
+        TRANSFORM
     }
     
     public Name name = null;

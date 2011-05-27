@@ -31,8 +31,15 @@ package org.jagatoo.loaders.models.collada;
 
 import org.jagatoo.loaders.models.collada.datastructs.animation.DaeJoint;
 import org.jagatoo.loaders.models.collada.datastructs.animation.DaeSkeleton;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.DaeNode;
+import org.openmali.vecmath2.Matrix4f;
+import org.openmali.vecmath2.Quaternion4f;
+import org.openmali.vecmath2.Tuple3f;
+import org.openmali.vecmath2.Vector3f;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * A COLLADA "Action", or "Animation" or "Animation clip" or "Animation strip",
@@ -58,15 +65,20 @@ public class COLLADAAction
     /**
      * Translation key frames, per joint (actually for root)
      */
-    private HashMap<DaeJoint, AnimationChannel> translations = new HashMap<DaeJoint, AnimationChannel>();
+    private HashMap<DaeNode, AnimationChannel> translations = new HashMap<DaeNode, AnimationChannel>();
     /**
      * Rotation key frames, per joint.
      */
-    private HashMap<DaeJoint, AnimationChannel> rotations = new HashMap<DaeJoint, AnimationChannel>();
+    private HashMap<DaeNode, ArrayList<AnimationChannel>> rotations = new HashMap<DaeNode, ArrayList<AnimationChannel>>();
     /**
      * Scale key frames, per joint.
      */
-    private HashMap<DaeJoint, AnimationChannel> scales = new HashMap<DaeJoint, AnimationChannel>();
+    private HashMap<DaeNode, AnimationChannel> scales = new HashMap<DaeNode, AnimationChannel>();
+    /**
+     * Scale key frames, per joint.
+     */
+    private HashMap<DaeNode, AnimationChannel> matrices = new HashMap<DaeNode, AnimationChannel>();
+    private boolean prepared = false;
 
 
     /**
@@ -92,6 +104,10 @@ public class COLLADAAction
      */
     public final void setSkeleton( DaeSkeleton skeleton )
     {
+        if ( this.skeleton != null )
+        {
+            throw new Error( "skeleton is already set" );
+        }
         this.skeleton = skeleton;
     }
 
@@ -108,27 +124,88 @@ public class COLLADAAction
      */
     public void prepareJoints()
     {
+        if ( prepared )
+        {
+            return;
+        }
+        if ( skeleton == null )
+        {
+            return;
+        }
+        prepared = true;
         skeleton.resetIterator();
         for ( DaeJoint joint : skeleton )
         {
-            joint.setTranslations( translations.get( joint ) );
-            joint.setRotations( rotations.get( joint ) );
-            joint.setScales( scales.get( joint ) );
+            if ( joint.getCOLLADATransform().isMatrixTransform() )
+            {
+                AnimationChannel m = matrices.get( joint );
+                if ( m == null )
+                {
+                    m = AnimationChannel.createEmpty( joint, Matrix4f.class );
+                }
+                joint.setMatrices( m );
+
+                matrices.remove( joint ); //cleanup
+            }
+            else
+            {
+                AnimationChannel t = translations.get( joint );
+                if ( t == null )
+                {
+                    t = AnimationChannel.createEmpty( joint, Vector3f.class );
+                }
+                joint.setTranslations( t );
+
+                List<AnimationChannel> l = rotations.get( joint );
+                t = l == null ? AnimationChannel.createEmpty( joint, Quaternion4f.class ) :
+                        AnimationChannel.mergeRotations( joint, l );
+                joint.setRotations( t );
+
+                t = scales.get( joint );
+                if ( t == null )
+                {
+                    t = AnimationChannel.createEmpty( joint, Tuple3f.class );
+                }
+                joint.setScales( t );
+
+                translations.remove( joint ); //cleanup
+                rotations.remove( joint );
+                scales.remove( joint );
+            }
         }
     }
 
-    public void putTranslations( DaeJoint joint, AnimationChannel translations )
+    public void putTranslations( DaeNode joint, AnimationChannel translations )
     {
         this.translations.put( joint, translations );
     }
 
-    public void putRotations( DaeJoint joint, AnimationChannel rotations )
+    public void putRotations( DaeNode joint, AnimationChannel rotations )
     {
-        this.rotations.put( joint, rotations );
+        ArrayList<AnimationChannel> l = this.rotations.get( joint );
+        if ( l == null )
+        {
+            l = new ArrayList<AnimationChannel>( 3 );
+            this.rotations.put( joint, l );
+        }
+        if ( rotations.getOrd() >= l.size() )
+        {
+            int delta = rotations.getOrd() + 1 - l.size();
+            for ( int i = 0; i < delta; i++ ) //ensure size
+            {
+                l.add( null );
+            }
+        }
+        l.set( rotations.getOrd(), rotations );
     }
 
-    public void putScales( DaeJoint joint, AnimationChannel scales )
+    public void putScales( DaeNode joint, AnimationChannel scales )
     {
         this.scales.put( joint, scales );
+    }
+
+    public void putMatrices( DaeNode joint, AnimationChannel matrices )
+    {
+        this.matrices.put( joint, matrices );
     }
 }

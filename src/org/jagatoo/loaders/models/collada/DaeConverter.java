@@ -44,7 +44,7 @@ import org.jagatoo.loaders.models.collada.datastructs.materials.Material;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.AbstractInstance;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.ControllerInstance;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.GeometryInstance;
-import org.jagatoo.loaders.models.collada.datastructs.visualscenes.Node;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.DaeNode;
 import org.jagatoo.loaders.textures.AbstractTexture;
 import org.jagatoo.opengl.enums.BlendMode;
 import org.jagatoo.opengl.enums.ColorTarget;
@@ -168,23 +168,23 @@ class DaeConverter
         return ( app );
     }
 
-    public NamedObject convertNode( Node node )
+    public NamedObject convertNode( DaeNode node )
     {
         NamedObject grp = null;
 
-        if ( node.getTransform().getMatrixTransform().getMatrix().equals( Matrix4f.IDENTITY ) )
+        if ( node.getCOLLADATransform().toTransform().getMatrix4f(null).equals( Matrix4f.IDENTITY ) )
         {
             grp = nodeFactory.createSimpleGroup( node.getId(), BoundsType.SPHERE );
         }
         else
         {
             grp = nodeFactory.createTransformGroup( node.getId(),
-                    node.getTransform().getMatrixTransform().getMatrix(),
+                    node.getCOLLADATransform().toTransform().getMatrix4f(null),
                     BoundsType.SPHERE );
             siHandler.addSpecialItem( SpecialItemsHandler.SpecialItemType.NESTED_TRANSFORM, grp.getName(), grp );
         }
 
-        for ( Node n : node.getChildren() )
+        for ( DaeNode n : node.getChildren() )
         {
             nodeFactory.addNodeToGroup( convertNode( n ), grp );
         }
@@ -328,17 +328,21 @@ class DaeConverter
     private int traverseSkeleton( int parentIndex, NamedObject parent, int index, DaeJoint daeJoint, ArrayList<NamedObject> joints )
     {
         daeJoint.setIndex( ( short ) index );
-        NamedObject joint = animFactory.createJoint(
+        NamedObject joint = daeJoint.getCOLLADATransform().isMatrixTransform() ?
+             animFactory.createJoint(
                 ( short ) index,
-                daeJoint.getName(),
+                daeJoint.getId(),
                 parent,
-                daeJoint.bindMatrix,
-                daeJoint.getTranslations().getTimeline(),
-                daeJoint.getTranslations().getTranslations(),
-                daeJoint.getRotations().getTimeline(),
-                daeJoint.getRotations().getRotations(),
-                daeJoint.getScales().getTimeline(),
-                daeJoint.getScales().getScales()
+                calcBindTransform( daeJoint ),
+                daeJoint.getMatrices()
+        ) : animFactory.createJoint(
+                ( short ) index,
+                daeJoint.getId(),
+                parent,
+                calcBindTransform( daeJoint ),
+                daeJoint.getTranslations(),
+                daeJoint.getRotations(),
+                daeJoint.getScales()
         );
         joints.add( joint );
         parentIndex = index++;
@@ -351,6 +355,22 @@ class DaeConverter
         }
 
         return index;
+    }
+
+    private Transform calcBindTransform( DaeJoint joint )
+    {
+        if ( !DaeJoint.isRoot( joint ) )
+        {
+            return ( joint.getCOLLADATransform().toTransform() );
+        }
+        DaeNode parent = joint.getParentNode();
+        Transform t = joint.getCOLLADATransform().toTransform();
+        for (; parent != null; parent = parent.getParentNode() )
+        {
+            t.mul( parent.getCOLLADATransform().toTransform(), t );
+        }
+
+        return ( t );
     }
 
 
@@ -404,7 +424,3 @@ class DaeConverter
         this.animFactory = animFactory;
     }
 }
-
-
-
-

@@ -34,8 +34,6 @@ import java.util.ArrayList;
 import org.jagatoo.loaders.models.collada.datastructs.animation.DaeJoint;
 import org.jagatoo.loaders.models.collada.datastructs.animation.DaeSkeleton;
 import org.jagatoo.loaders.models.collada.stax.XMLNode;
-import org.jagatoo.logging.JAGTLog;
-import org.openmali.vecmath2.Matrix4f;
 import org.openmali.vecmath2.Vector3f;
 
 /**
@@ -56,19 +54,15 @@ public class SkeletonLoader
     private static void loadJoint( XMLNode node, Vector3f upVector, DaeJoint joint, ArrayList<DaeJoint> jointList )
     {
         jointList.add( joint );
-
-        JAGTLog.debug( "=====================================" );
-        JAGTLog.debug( "[[Joint]] " + joint.getName() );
-        JAGTLog.debug( "bind matrix = ", node.matrix.matrix4f );
-        if ( node.childrenList == null || node.childrenList.isEmpty() )
+                                                                        //todo ignore??
+        if ( node.childrenList == null || node.childrenList.isEmpty() || node.type == XMLNode.Type.NODE)
         {
             return;
         }
 
         for ( XMLNode child : node.childrenList )
         {
-            //todo here can be base node
-            DaeJoint newJoint = new DaeJoint( child.sid, child.name, child.matrix.matrix4f );
+            DaeJoint newJoint = new DaeJoint( joint.getFile(), joint, child.id, child.sid, child.name, child.transform );
             joint.addChild( newJoint );
             loadJoint( child, upVector, newJoint, jointList );
         }
@@ -79,17 +73,11 @@ public class SkeletonLoader
      *
      * @param rootNode
      * @param upVector
-     * @param matrix
+     * @param rootJoint
      * @return the skeleton
      */
-    public static DaeSkeleton loadSkeleton( XMLNode rootNode, Vector3f upVector, Matrix4f matrix )
+    public static DaeSkeleton loadSkeleton( XMLNode rootNode, Vector3f upVector, DaeJoint rootJoint )
     {
-        final Matrix4f localToWorld = new Matrix4f( );
-        // Get the localToWorld matrix
-        localToWorld.mul(matrix, rootNode.matrix.matrix4f );
-        // Create the root joint
-        DaeJoint rootJoint = new DaeJoint( rootNode.sid, rootNode.name, localToWorld );
-
         ArrayList<DaeJoint> jointList = new ArrayList<DaeJoint>();
 
         loadJoint( rootNode, upVector, rootJoint, jointList );

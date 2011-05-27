@@ -38,14 +38,14 @@ import java.util.ArrayList;
  *
  * @author Amos Wenger (aka BlueSky)
  */
-public class Node
+public class DaeNode
 {
     /**
      * The COLLADA file this node belongs to
      */
     private final AssetFolder file;
 
-    private final Node parentNode;
+    private final DaeNode parentNode;
     /**
      * The id of this node
      */
@@ -64,7 +64,7 @@ public class Node
     /**
      * Children nodes
      */
-    private final ArrayList<Node> children = new ArrayList<Node>();
+    protected final ArrayList<DaeNode> children = new ArrayList<DaeNode>();
 
     /**
      * geometry instance nodes
@@ -103,7 +103,7 @@ public class Node
     /**
      * @return the transform.
      */
-    public final COLLADATransform getTransform()
+    public final COLLADATransform getCOLLADATransform()
     {
         return ( transform );
     }
@@ -118,12 +118,12 @@ public class Node
         controllerInstances.add( instance );
     }
 
-    public void addChild( Node child )
+    public void addChild( DaeNode child )
     {
         children.add( child );
     }
 
-    public ArrayList<Node> getChildren()
+    public ArrayList<DaeNode> getChildren()
     {
         return ( children );
     }
@@ -138,14 +138,19 @@ public class Node
         return ( controllerInstances );
     }
 
-
-    public final Node getParentNode()
+    public final DaeNode getParentNode()
     {
         return ( parentNode );
     }
 
+    @Override
+    public String toString()
+    {
+        return ( id );
+    }
+
     /**
-     * Creates a new COLLADANode.
+     * Creates a new DaeNode.
      *
      * @param file       the COLLADA file this node belongs to
      * @param parentNode
@@ -153,7 +158,7 @@ public class Node
      * @param name       The name of this Node
      * @param transform  The transform of this Node
      */
-    public Node( AssetFolder file, Node parentNode, String id, String name, COLLADATransform transform )
+    public DaeNode( AssetFolder file, DaeNode parentNode, String id, String name, COLLADATransform transform )
     {
         this.file = file;
         this.parentNode = parentNode;

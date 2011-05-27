@@ -49,8 +49,8 @@ import org.jagatoo.logging.JAGTLog;
  * @author Matias Leone (aka Maguila)
  * @author Joe LaFata (aka qbproger)
  */
-public class XMLChannel {
-
+public class XMLChannel
+{
     /**
      * The type of a channel
      *
@@ -62,20 +62,20 @@ public class XMLChannel {
         /** A rotate channel */
         ROTATE,
         /** A scale channel */
-        SCALE
+        SCALE,
+        /** A matrix channel */
+        MATRIX
     }
 
     public ChannelType type;
 
-    public final static String TRANSLATE_TARGET = "translate";
-    public final static String ROTATE_TARGET = "rotate";
-    public final static String SCALE_TARGET = "scale";
-
     public String source = null;
     public String target = null;
 
-    private String targetJoint = null;
-    private Axis targetAxis;
+    private String targetNodeId;
+    private String transElemSid;
+    private int transElemIndexI = -1;
+    private int transElemIndexJ = -1;
 
     //target="Root/rotateX.ANGLE"
     //target="Root/translate"
@@ -94,63 +94,97 @@ public class XMLChannel {
         <matrix sid="mat">1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0 13.0 14.0 15.0 16.0</matrix>
     </node>
      */
-    
-    public String getTargetJoint() {
+
+    public String getTargetNodeId()
+    {
         checkIsParsed();
-        return this.targetJoint;
+        return ( targetNodeId );
     }
 
-    public Axis getRotationAxis() {
+    public String getTransElemSid()
+    {
         checkIsParsed();
-        if (type != ChannelType.ROTATE) {
-            throw new IncorrectFormatException( "It is not a rotation key frame, it's a " + type );
-        }
-        
-        return this.targetAxis;
+        return ( transElemSid );
     }
 
+    public int getTransElemIndexI()
+    {
+        checkIsParsed();
+        return ( transElemIndexI );
+    }
+
+    public int getTransElemIndexJ()
+    {
+        checkIsParsed();
+        return ( transElemIndexJ );
+    }
 
     /**
      * Parse the target attribute and gets the joint and the type of movement
      */
-    private void checkIsParsed() {
-
-        if (targetJoint == null) {
-
-            StringTokenizer tok = new StringTokenizer(target);
-            targetJoint = tok.nextToken("/");
-            String trans = tok.nextToken();
-
-            //see if it's a translation or a rotation
-            if (trans.startsWith(TRANSLATE_TARGET)) {
-
-                /*
-                 * It's a translate channel
-                 */
-                type = ChannelType.TRANSLATE;
-
-            } else if (trans.startsWith(ROTATE_TARGET)) {
-
-                /*
-                 * It's a rotate channel
-                 */
-                type = ChannelType.ROTATE;
-
-                // Get the axis
-                if (trans.contains("rotateX")) {
-                    targetAxis = Axis.X;
-                } else if (trans.contains("rotateY")) {
-                    targetAxis = Axis.Y;
-                } else {
-                    targetAxis = Axis.Z;
+    private void checkIsParsed()
+    {
+        if ( targetNodeId == null )
+        {
+            StringTokenizer tok = new StringTokenizer( target, "/.()", true );
+            targetNodeId = tok.nextToken();
+            tok.nextToken(); //skip "/"
+            transElemSid = tok.nextToken();
+            if ( !tok.hasMoreTokens() ) //full transform. element
+            {
+                return;
+            }
+            String token = tok.nextToken();
+            if ( ".".equals( token ) )//member access
+            {
+                token = tok.nextToken();
+                if ( "X".equals( token ) )
+                {
+                    transElemIndexI = 0;
+                    return;
                 }
-
-            } else if (trans.startsWith(SCALE_TARGET)) {
-
-                /*
-                 * It's a scale channel
-                 */
-
+                if ( "Y".equals( token ) )
+                {
+                    transElemIndexI = 1;
+                    return;
+                }
+                if ( "Z".equals( token ) )
+                {
+                    transElemIndexI = 2;
+                    return;
+                }
+                if ( "ANGLE".equals( token ) || "W".equals( token ) )
+                {
+                    transElemIndexI = 3;
+                    return;
+                }
+                throw new Error( "Bad member name of transformation element." );
+            }
+            else if ( "(".equals( token ) )//array access
+            {
+                int i = Integer.parseInt( tok.nextToken() );
+                token = tok.nextToken(); //skip ")"
+                if ( !tok.hasMoreTokens() )
+                {
+                    transElemIndexI = i;
+                    return;
+                }
+                //token = tok.nextToken(); //skip empty token
+                if ( "(".equals( tok.nextToken() ) )//2 dim. array access (to matrix)
+                {
+                    int j = Integer.parseInt( tok.nextToken() );
+                    if ( ")".equals( tok.nextToken() ) )
+                    {
+                        transElemIndexI = i;
+                        transElemIndexJ = j;
+                        return;
+                    }
+                    throw new Error( "\')\' expected." );
+                }
+                else
+                {
+                    throw new Error( "\'(\' expected." );
+                }
             }
         }
     }

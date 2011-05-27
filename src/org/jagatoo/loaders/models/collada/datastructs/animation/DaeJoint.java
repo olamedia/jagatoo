@@ -33,6 +33,9 @@ import java.util.ArrayList;
 
 import org.openmali.vecmath2.Matrix4f;
 import org.jagatoo.loaders.models.collada.AnimationChannel;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.DaeNode;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADATransform;
+import org.jagatoo.loaders.models.collada.datastructs.AssetFolder;
 
 /**
  * A Joint (of a Skeleton)
@@ -40,29 +43,22 @@ import org.jagatoo.loaders.models.collada.AnimationChannel;
  * @author Amos Wenger (aka BlueSky)
  * @author Matias Leone (aka Maguila)
  */
-public class DaeJoint
+public class DaeJoint extends DaeNode
 {
     /** The sub-id of this joint */
     private final String sid;
-    
-    /** The name of this joint */
-    private final String name;
-
-    /** The bind matrix */
-    public final Matrix4f bindMatrix;
-
-    /** Children (optional) */
-    private ArrayList<DaeJoint> children;
 
     private AnimationChannel translations;
     private AnimationChannel rotations;
     private AnimationChannel scales;
 
+    private AnimationChannel matrices;
+
     private short index;
 
     public short getIndex()
     {
-        return index;
+        return ( index );
     }
 
     public void setIndex( short index )
@@ -74,30 +70,7 @@ public class DaeJoint
     {
         return ( sid );
     }
-    
-    /**
-     * @return the name of this joint.
-     */
-    public final String getName() 
-    {
-        return ( name );
-    }
 
-    /**
-     * Adds a child joint.
-     * 
-     * @param joint
-     */
-    public void addChild( DaeJoint joint )
-    {
-        if ( children == null )
-        {
-            children = new ArrayList<DaeJoint>();
-        }
-        
-        children.add( joint );
-    }
-    
     /**
      * Removes a child joint.
      * 
@@ -105,10 +78,7 @@ public class DaeJoint
      */
     public void removeChild( DaeJoint joint )
     {
-        if ( children != null )
-        {
-            children.remove( joint );
-        }
+        children.remove( joint );
     }
     
     /**
@@ -116,7 +86,7 @@ public class DaeJoint
      */
     public final int numChildren()
     {
-        return ( ( children == null ) ? 0 : children.size() );
+        return ( children.size() );
     }
     
     /**
@@ -128,7 +98,7 @@ public class DaeJoint
      */
     public final DaeJoint getChild( int i )
     {
-        return ( ( children == null ) ? null : children.get( i ) );
+        return ( ( DaeJoint ) children.get( i ) );
     }
 
     public void setTranslations( AnimationChannel translations )
@@ -138,7 +108,7 @@ public class DaeJoint
 
     public AnimationChannel getTranslations()
     {
-        return translations;
+        return ( translations );
     }
 
     public void setRotations( AnimationChannel rotations )
@@ -148,7 +118,7 @@ public class DaeJoint
 
     public AnimationChannel getRotations()
     {
-        return rotations;
+        return ( rotations );
     }
 
     public void setScales( AnimationChannel scales )
@@ -158,28 +128,47 @@ public class DaeJoint
 
     public AnimationChannel getScales()
     {
-        return scales;
+        return ( scales );
     }
 
-    @Override
-    public String toString()
+    public static DaeJoint findRoot( DaeJoint joint )
     {
-        return ( name );
+        if ( isRoot( joint ) )
+        {
+            return ( joint );
+        }
+        return ( findRoot( ( DaeJoint ) joint.getParentNode() ) );
     }
-    
-    /**
-     * Create a new Joint
-     * 
-     * @param sid
-     * @param name
-     *                The name of this joint
-     * @param matrix joint bind pose matrix
-     */
-    public DaeJoint( String sid, String name, Matrix4f matrix )
+
+    public static boolean isRoot( DaeJoint joint )
     {
+        DaeNode parent = joint.getParentNode();
+        return ( parent == null || parent.getClass() == DaeNode.class );
+    }
+
+    public void setMatrices( AnimationChannel m )
+    {
+        this.matrices = m;
+    }
+
+    public AnimationChannel getMatrices()
+    {
+        return ( matrices );
+    }
+
+    /**
+     * Creates a new DaeJoint.
+     *
+     * @param file       the COLLADA file this node belongs to
+     * @param parentNode
+     * @param id         The id of this Node
+     * @param sid
+     * @param name       The name of this Node
+     * @param transform  The transform of this Node
+     */
+    public DaeJoint( AssetFolder file, DaeNode parentNode, String id, String sid, String name, COLLADATransform transform )
+    {
+        super( file, parentNode, id, name, transform );
         this.sid = sid;
-        this.name = name;
-        
-        this.bindMatrix = matrix;
     }
 }

@@ -30,6 +30,7 @@
 package org.jagatoo.loaders.models.collada.datastructs.visualscenes;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * A COLLADA Scene
@@ -44,8 +45,8 @@ public class Scene
     /** The name of the scene */
     private String name;
     
-    /** A map of all nodes */
-    private final HashMap<String, Node> nodes = new HashMap<String, Node>();
+    /** A map of all top-level nodes */
+    private final HashMap<String, DaeNode> nodes = new HashMap<String, DaeNode>();
     
     /**
      * @return the id.
@@ -66,11 +67,43 @@ public class Scene
     /**
      * @return the nodes.
      */
-    public HashMap<String, Node> getNodes()
+    public HashMap<String, DaeNode> getNodes()
     {
         return ( nodes );
     }
-    
+
+    public DaeNode findNode( String id )
+    {
+        for ( DaeNode node : nodes.values() )
+        {
+            DaeNode n = findNode( id, node );
+            if ( n != null )
+            {
+                return ( n );
+            }
+
+        }
+
+        return ( null );
+    }
+
+    private static DaeNode findNode( String id, DaeNode node )
+    {
+        if ( id.equals( node.getId() ) )
+        {
+            return ( node );
+        }
+        for ( DaeNode child : node.getChildren() )
+        {
+            DaeNode n = findNode( id, child );
+            if ( n != null )
+            {
+                return ( n );
+            }
+        }
+        return ( null );
+    }
+
     /**
      * Creates a new COLLADAScene.
      * 

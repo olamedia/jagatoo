@@ -34,6 +34,7 @@ package org.jagatoo.loaders.models.collada.datastructs.animation;
  *
  * @author Amos Wenger (aka BlueSky)
  */
+@Deprecated
 public enum Axis
 {
     /**

@@ -30,6 +30,8 @@
 package org.jagatoo.loaders.models._util;
 
 import org.jagatoo.datatypes.NamedObject;
+import org.jagatoo.loaders.models.collada.Transform;
+import org.jagatoo.loaders.models.collada.AnimationChannel;
 import org.openmali.vecmath2.AxisAngle3f;
 import org.openmali.vecmath2.Matrix3f;
 import org.openmali.vecmath2.Matrix4f;
@@ -50,15 +52,19 @@ public interface AnimationFactory
             short index,
             String name,
             NamedObject parent,
-            Matrix4f bindMatrix,
-            float[] translationTimeline,
-            Vector3f[] translations,
-            float[] rotationTimeline,
-            Quaternion4f[] rotations,
-            float[] scaleTimeline,
-            Tuple3f[] scales
+            Transform bindTransform,
+            AnimationChannel act,
+            AnimationChannel acr,
+            AnimationChannel acs
     );
-    
+    public NamedObject createJoint(
+            short index,
+            String name,
+            NamedObject parent,
+            Transform bindTransform,
+            AnimationChannel acm
+    );
+
     public Object createSkeletalKeyFrameController( Object skeleton, float startTime, float endTime, int influencesPerVertex, float[] weights, short[] jointIndices, NamedObject target );
     
     

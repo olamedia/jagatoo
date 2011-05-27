@@ -31,15 +31,16 @@
 package org.jagatoo.loaders.models.collada;
 
 import org.jagatoo.loaders.models.collada.datastructs.animation.DaeJoint;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADATransform;
 import org.jagatoo.loaders.models.collada.stax.XMLChannel;
 import org.openmali.FastMath;
-import org.openmali.vecmath2.AxisAngle3f;
-import org.openmali.vecmath2.Quaternion4f;
-import org.openmali.vecmath2.Tuple3f;
-import org.openmali.vecmath2.Vector3f;
+import org.openmali.vecmath2.*;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
@@ -49,13 +50,12 @@ public class AnimationChannel
     private final DaeJoint joint;
     private final float[] timeline;
 
-    private Vector3f[] translations = null;
-    private Quaternion4f[] rotations = null;
-    private Tuple3f[] scales = null;
+    private Object values;
 
-    private final Enum<?> element;
     private final XMLChannel.ChannelType type;
-    private final float[] output;
+
+    private Class<?> elemClass;
+    private final int ord;
 
     public DaeJoint getJoint()
     {
@@ -67,192 +67,238 @@ public class AnimationChannel
         return ( timeline );
     }
 
-    public Vector3f[] getTranslations()
-    {
-        return ( translations );
-    }
-
-    public Quaternion4f[] getRotations()
-    {
-        return ( rotations );
-    }
-
-    public Tuple3f[] getScales()
-    {
-        return ( scales );
-    }
-
-    public Object getElement()
-    {
-        return ( element );
-    }
-
     public XMLChannel.ChannelType getType()
     {
         return ( type );
     }
 
-    @SuppressWarnings( "unchecked" )
-    private <T> T[] createValues( float[] output, final int stride, Class<T> clazz )
+    public Object getValues()
     {
-        ArrayList<T> l = new ArrayList<T>();
-        float[] tuple = new float[stride];
-        int pos = 0;
-        if ( output.length > 0 )
+        return ( values );
+    }
+
+    public Class<?> getElemClass()
+    {
+        return ( elemClass );
+    }
+
+    public int getOrd()
+    {
+        return ( ord );
+    }
+
+    public static AnimationChannel create( DaeJoint joint, float[] timeline, float[] output, int stride, int i, int j, Object targetValue, int ord )
+    {
+        Object values = initValues( timeline.length, targetValue );
+        setValues( values, output, stride, i, j, targetValue.getClass() );
+
+        return ( new AnimationChannel( joint, timeline, values, targetValue.getClass(), ord ) );
+    }
+
+    public final void update( float[] output, int stride, int i, int j, Object targetValue )
+    {
+        setValues( values, output, stride, i, j, targetValue.getClass() );
+    }
+
+    private static void setValues( Object values, float[] output, int stride, int i, int j, Class<?> clazz )
+    {
+        for ( int k = 0; k < Array.getLength( values ); k++ )
         {
-            for ( int i = 0; ; i++ )
+            Object value = Array.get( values, k );
+            if ( clazz == Tuple3f.class || clazz == Vector3f.class || clazz == Quaternion4f.class )
             {
-                if ( pos == stride )
+                setTupleNf( value, output, stride, i, k );
+            }
+            else if ( clazz == AxisAngle3f.class )
+            {
+                setAxisAngle3f( value, output, stride, i, k );
+            }
+            else if ( clazz == Matrix4f.class )
+            {
+                setMatrix4f( value, output, i, j, k );
+            }
+            else
+            {
+                throw new Error( "Unknown class of animation channel value: " + clazz );
+            }
+        }
+    }
+
+    private static void setMatrix4f( Object value, float[] output, int i, int j, int k )
+    {
+        if ( i < 0 && j < 0 ) //set whole matrix value ( stride == 16 )
+        {
+            for ( int x = 0; x < 4; x++ )
+            {
+                for ( int y = 0; y < 4; y++ )
                 {
-                    pos = 0;
-                    if ( clazz == Vector3f.class )
-                    {
-                        l.add( (T) createVector3f( tuple ) );
-                    }
-                    else if ( clazz == Quaternion4f.class )
-                    {
-                        Quaternion4f q = createQuaternion4f( tuple );
-                        l.add( (T) q );
-                    }
-                    else if ( clazz == Tuple3f.class )
-                    {
-                        l.add( (T) createTuple3f( tuple ) );
-                    }
-                }
-                if ( i < output.length )
-                {
-                    if ( pos < stride )
-                    {
-                        tuple[ pos++ ] = output[ i ];
-                    }
-                }
-                else
-                {
-                    break;
+                    ( ( Matrix4f ) value ).set( x, y, output[ x * 4 + y ] );
                 }
             }
         }
-
-        return ( l.toArray( (T[]) Array.newInstance( clazz, l.size() ) ) );
+        else if ( i >= 0 && j >= 0 ) //set ith,jth component of value ( stride == 1 )
+        {
+            ( ( Matrix4f ) value ).set( i, j, output[ k ] );
+        }
+        else
+        {
+            throw new Error( "Wrong animation target indices for matrix: i=" + i + ", j=" + j );
+        }
     }
 
-    private Vector3f createVector3f( float[] tuple )
+    private static void setAxisAngle3f( Object value, float[] output, int stride, int i, int k )
     {
-        if ( tuple.length == 3 )  //todo
+        if ( i < 0 ) //set whole value
         {
-            return ( new Vector3f( tuple[ 0 ], tuple[ 1 ], tuple[ 2 ] ) );
+            for ( int ii = 0; ii < stride; ii++ )
+            {
+                if ( ii < 3 )
+                {
+                    ( ( AxisAngle3f ) value ).setValue( ii, output[ k * stride + ii ] );
+                }
+                else
+                {
+                    ( ( AxisAngle3f ) value ).setAngle( FastMath.toRad( output[ k * stride + ii ] ) );
+                }
+            }
+        }
+        else //set ith component of value ( stride == 1 )
+        {
+            if ( i < 3 )
+            {
+                ( ( AxisAngle3f ) value ).setValue( i, output[ k ] );
+            }
+            else
+            {
+                ( ( AxisAngle3f ) value ).setAngle( FastMath.toRad( output[ k ] ) );
+            }
+        }
+    }
+
+    private static void setTupleNf( Object value, float[] output, int stride, int i, int k )
+    {
+        if ( i < 0 ) //set whole value
+        {
+            for ( int ii = 0; ii < stride; ii++ )
+            {
+                ( ( TupleNf ) value ).setValue( ii, output[ k * stride + ii ] );
+            }
+        }
+        else //set ith component of value ( stride == 1 )
+        {
+            ( ( TupleNf ) value ).setValue( i, output[ k ] );
+        }
+    }
+
+    private static Object initValues( int size, Object targetValue )
+    {
+        Class<?> clazz = targetValue.getClass();
+        Object values = Array.newInstance( clazz, size );
+        try
+        {
+            Constructor<?> ctor = clazz.getDeclaredConstructor( clazz == Vector3f.class ? Tuple3f.class : clazz ); //copy constructor
+            ctor.setAccessible( true );
+            for ( int i = 0; i < Array.getLength( values ); i++ )
+            {
+                try
+                {
+                    Array.set( values, i, ctor.newInstance( targetValue ) );
+                }
+                catch ( InstantiationException e )
+                {
+                    throw new Error( e );
+                }
+                catch ( IllegalAccessException e )
+                {
+                    throw new Error( e );
+                }
+                catch ( InvocationTargetException e )
+                {
+                    throw new Error( e );
+                }
+            }
+        }
+        catch ( NoSuchMethodException e )
+        {
+            throw new Error( e );
         }
 
-        return ( null );
+        return ( values );
     }
 
-    private Quaternion4f createQuaternion4f( float[] tuple )
+    public static AnimationChannel createEmpty( DaeJoint joint, Class<?> elemClass )
     {
-        if ( tuple.length == 1 )  //todo
-        {
-            float radians = FastMath.toRad( tuple[ 0 ] );
-            Quaternion4f q = new Quaternion4f();
-            AxisAngle3f aa = new AxisAngle3f( 0f, 0f, 0f, radians );
-            aa.setValue( element.ordinal(), 1f );
-            q.set( aa );
+        return ( new AnimationChannel( joint, new float[0], Array.newInstance( elemClass, 0), elemClass, -1 ) );
+    }
 
-            return ( q );
+    public static AnimationChannel mergeRotations( DaeJoint joint, List<AnimationChannel> l )
+    {
+        AnimationChannel ac;
+        if ( l.isEmpty() )
+        {
+            ac = createEmpty( joint, Quaternion4f.class );
+        }
+        else
+        {
+            ac = l.get( 0 );
+            float[] tl = ac.getTimeline();
+            Object v = ac.getValues();
+            v = adjustValues( ac, v );
+            for ( int i = 0; i < l.size(); i++ )
+            {
+                if ( i + 1 == l.size() )
+                {
+                    break;
+                }
+                AnimationChannel ac2 = l.get( i + 1 );
+                if ( !Arrays.equals( tl, ac2.getTimeline() ) )
+                {
+                    throw new Error( "Can't merge animation channels for joint " + joint + "." );
+                }
+                Object v2 = ac2.getValues();
+                v2 = adjustValues( ac2, v2 );
+                for ( int j = 0; j < Array.getLength( v ); j++ )
+                {
+                    Quaternion4f o = ( Quaternion4f ) Array.get( v, j );
+                    o.mul( ( Quaternion4f ) Array.get( v2, j ) );
+                    o.normalize();
+                }
+            }
+            ac.elemClass = Quaternion4f.class;
+            ac.values = v;
         }
 
-        return ( null );
+        return ( ac );
     }
 
-    private Tuple3f createTuple3f( float[] tuple )
+    private static Object adjustValues( AnimationChannel ac, Object v )
     {
-        if ( tuple.length == 3 )  //todo
+        if ( ac.getElemClass() == AxisAngle3f.class )
         {
-            return ( new Tuple3f( tuple[ 0 ], tuple[ 1 ], tuple[ 2 ] ) );
+            Object v1 = Array.newInstance( Quaternion4f.class, Array.getLength( v ));
+            for ( int i = 0; i < Array.getLength( v ); i++ )
+            {
+                AxisAngle3f o = ( AxisAngle3f ) Array.get( v, i );
+                Quaternion4f q = new Quaternion4f();
+                q.set( o );
+                Array.set( v1, i, q );
+            }
+            return ( v1 );
         }
 
-        return ( null );
+        return ( v );
     }
 
-    private static Quaternion4f createQuaternion( float aX, float aY, float aZ )
-    {
-        float rX = FastMath.toRad( aX );
-        float rY = FastMath.toRad( aY );
-        float rZ = FastMath.toRad( aZ );
-
-        Quaternion4f q = MathUtils.eulerToQuaternion( rX, rY, rZ );
-        return ( q );
-    }
-
-    public float[] getOutput()
-    {
-        return ( output );
-    }
-
-    private static Quaternion4f[] createRotations( float[] outputX, float[] outputY, float[] outputZ )
-    {
-        ArrayList<Quaternion4f> l = new ArrayList<Quaternion4f>( outputX.length );
-        for ( int i = 0; i < outputX.length; i++ )
-        {
-            l.add( createQuaternion( outputX[ i ], outputY[ i ], outputZ[ i ] ) );
-
-        }
-        return ( l.toArray( new Quaternion4f[outputX.length] ) );
-    }
-
-    public AnimationChannel( DaeJoint joint, float[] timeline, float[] output, Enum<?> element, XMLChannel.ChannelType type, int stride )
+    private AnimationChannel( DaeJoint joint, float[] timeline, Object values, Class<?> elemClass, int ord )
     {
         this.joint = joint;
         this.timeline = timeline;
-
-        this.output = output;
-        this.element = element;
-        this.type = type;
-        switch ( type )
+        this.values = values;
+        this.elemClass = elemClass;
+        if ( ( type = COLLADATransform.getTransformType( elemClass ) ) == null )
         {
-            case TRANSLATE:
-                translations = createValues( output, stride, Vector3f.class );
-                break;
-
-            case ROTATE:
-                //   rotations = createValues( output, stride, Quaternion4f.class );
-                break;
-
-            case SCALE:
-                scales = createValues( output, stride, Tuple3f.class );
-                break;
+            throw new Error( "Unknown class:" + elemClass );
         }
-    }
-
-    public AnimationChannel( AnimationChannel r, Quaternion4f[] ql )
-    {
-        joint = r.getJoint();
-        timeline = r.getTimeline();
-        output = null;
-        element = null;
-        type = r.getType();
-        rotations = ql;
-    }
-
-
-    public AnimationChannel( AnimationChannel rX, float[] outputY, float[] outputZ )
-    {
-        joint = rX.getJoint();
-        timeline = rX.getTimeline();
-        output = rX.output;
-        element = null;
-        type = rX.getType();
-        switch ( type )
-        {
-            case TRANSLATE:
-                //translations = createValues( output, stride, Vector3f.class );
-                break;
-
-            case ROTATE:
-                rotations = createRotations( output, outputY, outputZ );
-                break;
-
-            case SCALE:
-                //scales = createValues( output, stride, Tuple3f.class );
-                break;
-        }
+        this.ord = ord;
     }
 }

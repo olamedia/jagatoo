@@ -41,11 +41,14 @@ import org.jagatoo.logging.JAGTLog;
  * 
  * @author Amos Wenger (aka BlueSky)
  */
-public class XMLSampler2D {
+public class XMLSampler2D
+{
     
     public String source;
     
-    public static enum Filter {
+    public static enum Filter
+    {
+        NONE,
         NEAREST,
         LINEAR,
         NEAREST_MIPMAP_NEAREST,

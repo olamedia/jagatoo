@@ -39,10 +39,9 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.jagatoo.util.errorhandling.ParsingException;
 import org.jagatoo.logging.JAGTLog;
+import org.jagatoo.loaders.models.collada.datastructs.visualscenes.COLLADATransform;
 import org.openmali.FastMath;
-import org.openmali.vecmath2.Matrix4f;
-import org.openmali.vecmath2.Point3f;
-import org.openmali.vecmath2.Tuple3f;
+import org.openmali.vecmath2.*;
 import org.openmali.vecmath2.util.MatrixUtils;
 
 /**
@@ -53,92 +52,82 @@ import org.openmali.vecmath2.util.MatrixUtils;
  * @author Amos Wenger (aka BlueSky)
  * @author Joe LaFata (aka qbproger)
  */
-public class XMLNode {
+public class XMLNode
+{
     
     public ArrayList< String > layers = null;
     public String sid = null;
     public XMLAsset asset = null;
     
-    public static enum Type {
+    public static enum Type
+    {
         NODE,
         JOINT
     }
+
     public Type type = Type.NODE;
     public String id = null;
     public String name = null;
-    
-    public XMLMatrix4x4 matrix = new XMLMatrix4x4();
+
+    public final COLLADATransform transform = new COLLADATransform();
     public ArrayList< XMLInstanceGeometry > instanceGeometries = new ArrayList< XMLInstanceGeometry >();
     public ArrayList< XMLInstanceController > instanceControllers = new ArrayList< XMLInstanceController >();
     
     public ArrayList< XMLNode > childrenList = new ArrayList< XMLNode >();
-    
-    public static ArrayList<String> parseLayerList(String str) {
+
+    public static ArrayList<String> parseLayerList( String str )
+    {
         ArrayList<String> layers = new ArrayList<String>();
-        StringTokenizer tknz = new StringTokenizer(str);
-        while(tknz.hasMoreTokens()) {
-            layers.add(tknz.nextToken());
+        StringTokenizer tknz = new StringTokenizer( str );
+        while ( tknz.hasMoreTokens() )
+        {
+            layers.add( tknz.nextToken() );
         }
         return layers;
     }
-    
-    public void applyTranslate(String str) {
-        StringTokenizer tknz = new StringTokenizer(str);
-        Point3f translate = new Point3f(
-                Float.parseFloat(tknz.nextToken()),
-                Float.parseFloat(tknz.nextToken()),
-                Float.parseFloat(tknz.nextToken())
+
+    public void applyTranslate( String sid, String s )
+    {
+        StringTokenizer tknz = new StringTokenizer( s );
+        Vector3f translate = new Vector3f(
+                Float.parseFloat( tknz.nextToken() ),
+                Float.parseFloat( tknz.nextToken() ),
+                Float.parseFloat( tknz.nextToken() )
         );
-        Matrix4f mat = new Matrix4f();
-        mat.setIdentity();
-        mat.setTranslation(translate);
-        //JAGTLog.debug( "Mat before translate : \n", matrix.matrix4f );
-        matrix.matrix4f.mul(mat);
-        //JAGTLog.debug( "Mat after translate of "+translate+" : \n", matrix.matrix4f );
+
+        transform.put( sid, translate );
     }
-    
-    public void applyRotate(String str) {
-        StringTokenizer tknz = new StringTokenizer(str);
-        Tuple3f rotate = new Tuple3f(
-                Float.parseFloat(tknz.nextToken()),
-                Float.parseFloat(tknz.nextToken()),
-                Float.parseFloat(tknz.nextToken())
+
+    public void applyRotate( String sid, String s )
+    {
+        StringTokenizer tknz = new StringTokenizer( s );
+        AxisAngle3f rotate = new AxisAngle3f(
+                Float.parseFloat( tknz.nextToken() ),
+                Float.parseFloat( tknz.nextToken() ),
+                Float.parseFloat( tknz.nextToken() ),
+                FastMath.toRad( Float.parseFloat( tknz.nextToken() ) )
         );
-        float angle = FastMath.toRad( Float.parseFloat(tknz.nextToken()) );
-        rotate.mul( angle );
-        Matrix4f mat = MatrixUtils.eulerToMatrix4f(rotate);
-        //JAGTLog.debug( "Mat before rotate : \n", matrix.matrix4f );
-        matrix.matrix4f.mul(mat);
-        //JAGTLog.debug( "Mat after rotate of "+rotate+" : \n", matrix.matrix4f );
+
+        transform.put( sid, rotate );
     }
-    
-    public void applyScale(String str) {
-        StringTokenizer tknz = new StringTokenizer(str);
-        
-        Point3f scale = new Point3f(
-                Float.parseFloat(tknz.nextToken()),
-                Float.parseFloat(tknz.nextToken()),
-                Float.parseFloat(tknz.nextToken())
+
+    public void applyScale( String sid, String s )
+    {
+        StringTokenizer tknz = new StringTokenizer( s );
+
+        Tuple3f scale = new Tuple3f(
+                Float.parseFloat( tknz.nextToken() ),
+                Float.parseFloat( tknz.nextToken() ),
+                Float.parseFloat( tknz.nextToken() )
         );
-        
-        //JAGTLog.debug( "Mat before scale : \n", matrix.matrix4f );
-        
-        matrix.matrix4f.mul( 0, 0, scale.getX() );
-        matrix.matrix4f.mul( 0, 1, scale.getX() );
-        matrix.matrix4f.mul( 0, 2, scale.getX() );
-        matrix.matrix4f.mul( 0, 3, scale.getX() );
-        
-        matrix.matrix4f.mul( 1, 0, scale.getY() );
-        matrix.matrix4f.mul( 1, 1, scale.getY() );
-        matrix.matrix4f.mul( 1, 2, scale.getY() );
-        matrix.matrix4f.mul( 1, 3, scale.getY() );
-        
-        matrix.matrix4f.mul( 2, 0, scale.getZ() );
-        matrix.matrix4f.mul( 2, 1, scale.getZ() );
-        matrix.matrix4f.mul( 2, 2, scale.getZ() );
-        matrix.matrix4f.mul( 2, 3, scale.getZ() );
-        
-        //JAGTLog.debug( "Mat after scale of ", scale, ": \n", matrix.matrix4f );
+
+        transform.put( sid, scale );
+    }
+
+    private void applyMatrix( String sid, String s )
+    {
+        Matrix4f matrix = XMLMatrixUtils.readColumnMajor( s ).matrix4f;
+        transform.put( sid, matrix );
     }
     
     public void parse( XMLStreamReader parser ) throws XMLStreamException
@@ -195,20 +184,23 @@ public class XMLNode {
                     }
                     else if ( localName.equals( "matrix" ) )
                     {
-                        matrix = XMLMatrixUtils.readColumnMajor( StAXHelper.parseText( parser ) );
-                       // matrix = XMLMatrixUtils.readRowMajor( StAXHelper.parseText( parser ) );   
+                        String sid = readTransformSid( "matrix", parser );
+                        applyMatrix( sid, StAXHelper.parseText( parser ));
                     }
                     else if ( localName.equals( "rotate" ) )
                     {
-                        applyRotate( StAXHelper.parseText( parser ) );
+                        String sid = readTransformSid( "rotate", parser );
+                        applyRotate( sid, StAXHelper.parseText( parser ) );
                     }
                     else if ( localName.equals( "translate" ) )
                     {
-                        applyTranslate( StAXHelper.parseText( parser ) );
+                        String sid = readTransformSid( "translate", parser );
+                        applyTranslate( sid, StAXHelper.parseText( parser ) );
                     }
                     else if ( localName.equals( "scale" ) )
                     {
-                        applyScale( StAXHelper.parseText( parser ) );
+                        String sid = readTransformSid( "scale", parser );
+                        applyScale( sid, StAXHelper.parseText( parser ) );
                     }
                     else if ( localName.equals( "instance_geometry" ) )
                     {
@@ -236,5 +228,28 @@ public class XMLNode {
                 }
             }
         }
+    }
+
+    private String readTransformSid( String name, XMLStreamReader parser )
+    {
+        String sid = null;
+        for ( int i = 0; i < parser.getAttributeCount(); i++ )
+        {
+            QName attr = parser.getAttributeName( i );
+            if ( attr.getLocalPart().equals( "sid" ) )
+            {
+                sid = parser.getAttributeValue( i );
+            }
+            else
+            {
+                JAGTLog.exception( "Unsupported ", this.getClass().getSimpleName(), " Attr tag: ", attr.getLocalPart() );
+            }
+        }
+//        if ( sid == null )
+//        {
+//            throw new Error( "Missing SID of \'" + name + "\' element of node ID=" + id );
+//        }
+
+        return ( sid );
     }
 }

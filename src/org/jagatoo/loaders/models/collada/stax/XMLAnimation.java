@@ -74,45 +74,31 @@ public class XMLAnimation {
         }
         throw new IncorrectFormatException( "Could not find source with id " + id );
     }
-    
-
-    /**
-     * @return the target joint name for this animation
-     */
-    public String getTargetJoint() {
-        return channels.get( 0 ).getTargetJoint();
-    }
 
     /**
      * @return a float array with all the times of the key frames
+     * @param i
      */
-    public float[] getInput() {
-        return getSource( samplers.get( 0 ).getInput( "INPUT" ).source ).floatArray.floats;
+    public float[] getInput( int i ) {
+        return getSource( samplers.get( i ).getInput( "INPUT" ).source ).floatArray.floats;
     }
 
     /**
      * @return a float array with the values of all the key frames
+     * @param i
      */
-    public float[] getOutput() {
-        return getSource( samplers.get( 0 ).getInput( "OUTPUT" ).source ).floatArray.floats;
+    public float[] getOutput( int i ) {
+        return getSource( samplers.get( i ).getInput( "OUTPUT" ).source ).floatArray.floats;
     }
 
     /**
      * Tells if the animation contains transformation key frames or rotation key frames.
      *
      * @return channel type
+     * @param i
      */
-    public ChannelType getType() {
-        return channels.get( 0 ).type;
-    }
-
-
-    /**
-     * @return the rotation axis of the animation.
-     * It only works if the animation if for rotation
-     */
-    public Axis getRotationAxis() {
-        return channels.get( 0 ).getRotationAxis();
+    public ChannelType getType( int i ) {
+        return channels.get( i ).type;
     }
     
     public void parse( XMLStreamReader parser ) throws XMLStreamException
