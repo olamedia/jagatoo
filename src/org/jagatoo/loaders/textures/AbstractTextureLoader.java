@@ -608,6 +608,20 @@ public abstract class AbstractTextureLoader
             }
         }
         
+        /*
+        if ( in == null )
+        {
+            try
+            {
+                return ( new BufferedInputStream( new java.io.FileInputStream( name ) ) );
+            }
+            catch ( java.io.FileNotFoundException e )
+            {
+                return ( null );
+            }
+        }
+        */
+        
         if ( in instanceof BufferedInputStream )
         {
             return ( (BufferedInputStream)in );
@@ -719,7 +733,10 @@ public abstract class AbstractTextureLoader
         
         BufferedInputStream in = getInputStream( name );
         
-        tex = loadTextureFromStream( in, flipVertically, acceptAlpha, loadMipmaps, allowStreching, texFactory );
+        if ( in != null )
+        {
+            tex = loadTextureFromStream( in, flipVertically, acceptAlpha, loadMipmaps, allowStreching, texFactory );
+        }
         
         if ( tex != null )
         {
