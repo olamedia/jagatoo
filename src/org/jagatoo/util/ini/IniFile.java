@@ -32,6 +32,7 @@ package org.jagatoo.util.ini;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,6 +55,7 @@ public class IniFile
     public static final boolean DEFAULT_CASE_SENSITIVITY = true;
     
     private final File file;
+    private final Charset charset;
     private final boolean caseSensitivity;
     
     private long lastModified = -1L;
@@ -111,7 +113,7 @@ public class IniFile
                 
                 return ( true );
             }
-        }.parse( file );
+        }.parse( file, charset );
     }
     
     /**
@@ -301,15 +303,40 @@ public class IniFile
      * Creates a new ini file interface. The constructor doesn't call the {@link #refresh()} method.
      * 
      * @param file
+     * @param charset
      * @param caseSensitivity
      */
-    public IniFile( File file, boolean caseSensitivity )
+    public IniFile( File file, Charset charset, boolean caseSensitivity )
     {
         if ( file == null )
             throw new IllegalArgumentException( "file must not be null." );
         
         this.file = file;
+        this.charset = charset;
         this.caseSensitivity = caseSensitivity;
+    }
+    
+    /**
+     * Creates a new ini file interface. The constructor doesn't call the {@link #refresh()} method.
+     * 
+     * @param file
+     * @param caseSensitivity
+     */
+    public IniFile( File file, boolean caseSensitivity )
+    {
+        this( file, null, caseSensitivity );
+    }
+    
+    /**
+     * Creates a new ini file interface. The constructor doesn't call the {@link #refresh()} method.
+     * 
+     * @param filename
+     * @param charset
+     * @param caseSensitivity
+     */
+    public IniFile( String filename, Charset charset, boolean caseSensitivity )
+    {
+        this( FileUtils.getCanonicalFile( new File( filename ) ), charset, caseSensitivity );
     }
     
     /**
@@ -327,10 +354,32 @@ public class IniFile
      * Creates a new ini file interface. The constructor doesn't call the {@link #refresh()} method.
      * 
      * @param file
+     * @param charset
+     */
+    public IniFile( File file, Charset charset )
+    {
+        this( file, charset, DEFAULT_CASE_SENSITIVITY );
+    }
+    
+    /**
+     * Creates a new ini file interface. The constructor doesn't call the {@link #refresh()} method.
+     * 
+     * @param file
      */
     public IniFile( File file )
     {
         this( file, DEFAULT_CASE_SENSITIVITY );
+    }
+    
+    /**
+     * Creates a new ini file interface. The constructor doesn't call the {@link #refresh()} method.
+     * 
+     * @param filename
+     * @param charset
+     */
+    public IniFile( String filename, Charset charset )
+    {
+        this( filename, charset, DEFAULT_CASE_SENSITIVITY );
     }
     
     /**

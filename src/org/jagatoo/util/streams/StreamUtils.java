@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.io.StringWriter;
 import java.io.Writer;
 
 import org.jagatoo.util.arrays.ArrayUtils;
@@ -769,6 +770,93 @@ public class StreamUtils
     }
     
     /**
+     * Reads all chars from the provided {@link Reader} and writes them to the provided {@link Writer}.
+     * 
+     * @param in
+     * @param buffer
+     * @param out
+     * @param closeIn if <code>true</code> the provided {@link Reader} is closed after all.
+     * @param closeOut if <code>true</code> the provided {@link Writer} is closed after all.
+     * 
+     * @return the number of chars transfered.
+     * 
+     * @throws IOException
+     */
+    public static long transferChars( Reader in, char[] buffer, Writer out, boolean closeIn, boolean closeOut ) throws IOException
+    {
+        if ( in == null )
+            throw new IllegalArgumentException( "in must not be null." );
+        
+        if ( out == null )
+            throw new IllegalArgumentException( "out must not be null." );
+        
+        try
+        {
+            long nn = 0L;
+            
+            int n;
+            
+            while ( ( n = in.read( buffer, 0, buffer.length ) ) >= 0 )
+            {
+                if ( n > 0 )
+                {
+                    nn += n;
+                    out.write( buffer, 0, n );
+                }
+            }
+            
+            return ( nn );
+        }
+        finally
+        {
+            if ( closeIn )
+                closeReader( in );
+            
+            if ( closeOut )
+                closeWriter( out );
+        }
+    }
+    
+    /**
+     * Reads all chars from the provided {@link Reader} and writes them to the provided {@link Writer}.
+     * 
+     * @param in
+     * @param out
+     * @param closeIn if <code>true</code> the provided {@link Reader} is closed after all.
+     * @param closeOut if <code>true</code> the provided {@link Writer} is closed after all.
+     * 
+     * @return the number of chars transfered.
+     * 
+     * @throws IOException
+     */
+    public static long transferChars( Reader in, Writer out, boolean closeIn, boolean closeOut ) throws IOException
+    {
+        if ( in == null )
+            throw new IllegalArgumentException( "in must not be null." );
+        
+        if ( out == null )
+            throw new IllegalArgumentException( "out must not be null." );
+        
+        return ( transferChars( in, new char[ TRANSFER_BUFFER_SIZE ], out, closeIn, closeOut ) );
+    }
+    
+    /**
+     * Reads all chars from the provided {@link Reader} and writes them to the provided {@link Writer}.
+     * The provided streams are closed after all.
+     * 
+     * @param in
+     * @param out
+     * 
+     * @return the number of chars transfered.
+     * 
+     * @throws IOException
+     */
+    public static long transferChars( Reader in, Writer out ) throws IOException
+    {
+        return ( transferChars( in, out, true, true ) );
+    }
+    
+    /**
      * Copies all bytes from the given {@link InputStream} into a new byte array.
      * 
      * @param in
@@ -834,6 +922,40 @@ public class StreamUtils
     public static String getStringFromStream( InputStream in ) throws IOException
     {
         return ( getStringFromStream( in, true ) );
+    }
+    
+    /**
+     * Copies all chars from the given {@link Reader} into a new String.
+     * 
+     * @param in
+     * @param closeIn if <code>true</code> the provided {@link Reader} is closed after all.
+     * 
+     * @return a String containing all the chars from the given {@link Reader}.
+     * 
+     * @throws IOException
+     */
+    public static String getStringFromReader( Reader in, boolean closeIn ) throws IOException
+    {
+        StringWriter w = new StringWriter();
+        
+        transferChars( in, w, closeIn, true );
+        
+        return ( w.toString() );
+    }
+    
+    /**
+     * Copies all chars from the given {@link Reader} into a new String.
+     * The provided {@link Reader} is closed after all.
+     * 
+     * @param in
+     * 
+     * @return a String containing all the chars from the given {@link InputStream}.
+     * 
+     * @throws IOException
+     */
+    public static String getStringFromReader( Reader in ) throws IOException
+    {
+        return ( getStringFromReader( in, true ) );
     }
     
     private StreamUtils()

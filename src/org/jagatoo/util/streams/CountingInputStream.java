@@ -99,7 +99,7 @@ public class CountingInputStream extends InputStream
         int result = in.read( b, off, len );
         
         if ( result >= 0 )
-            count++;
+            count += result;
         
         return ( result );
     }
@@ -113,7 +113,7 @@ public class CountingInputStream extends InputStream
         int result = in.read( b );
         
         if ( result >= 0 )
-            count++;
+            count += result;
         
         return ( result );
     }
