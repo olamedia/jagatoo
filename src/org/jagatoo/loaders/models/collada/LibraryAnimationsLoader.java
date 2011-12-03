@@ -83,6 +83,11 @@ public class LibraryAnimationsLoader
                 }
                 if ( target instanceof DaeJoint )
                 {
+                    Object targetValue = target.getCOLLADATransform().get( channel.getTransElemSid() );
+                    if ( targetValue == null )
+                    {
+                        break; //an error or extra/technique attr.
+                    }
                     if ( root == null )
                     {
                         root = DaeJoint.findRoot( ( DaeJoint ) target );
@@ -104,7 +109,6 @@ public class LibraryAnimationsLoader
                     int stride = anim.getSource( anim.samplers.get( c ).getInput( "OUTPUT" ).source ).techniqueCommon.accessor.stride;
                     int i = channel.getTransElemIndexI();
                     int j = channel.getTransElemIndexJ();
-                    Object targetValue = target.getCOLLADATransform().get( channel.getTransElemSid() );
                     int ord = target.getCOLLADATransform().getElementOrder( targetValue );
                     if ( ac == null )
                     {
@@ -112,7 +116,7 @@ public class LibraryAnimationsLoader
                     }
                     else
                     {
-                        ac.update( output, stride, i, j, targetValue );
+                        ac.update( timeline, output, stride, i, j, targetValue );
                     }
                 }
                 else
@@ -120,22 +124,25 @@ public class LibraryAnimationsLoader
                     //todo
                 }
             } //channels loop
-            switch ( ac.getType() )
+            if ( ac != null )
             {
-                case TRANSLATE:
-                    action.putTranslations( target, ac );
-                    break;
-                case ROTATE:
-                    action.putRotations( target, ac );
-                    break;
-                case SCALE:
-                    action.putScales( target, ac );
-                    break;
-                case MATRIX:
-                    action.putMatrices( target, ac );
-                    break;
-                default:
-                    throw new Error( "Unknown channel type: " + ac.getType() );
+                switch ( ac.getType() )
+                {
+                    case TRANSLATE:
+                        action.putTranslations( target, ac );
+                        break;
+                    case ROTATE:
+                        action.putRotations( target, ac );
+                        break;
+                    case SCALE:
+                        action.putScales( target, ac );
+                        break;
+                    case MATRIX:
+                        action.putMatrices( target, ac );
+                        break;
+                    default:
+                        throw new Error( "Unknown channel type: " + ac.getType() );
+                }
             }
         }//animations loop
 

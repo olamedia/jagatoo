@@ -169,6 +169,6 @@ public class DaeJoint extends DaeNode
     public DaeJoint( AssetFolder file, DaeNode parentNode, String id, String sid, String name, COLLADATransform transform )
     {
         super( file, parentNode, id, name, transform );
-        this.sid = sid;
+        this.sid = ( sid == null ) ? id : sid;
     }
 }

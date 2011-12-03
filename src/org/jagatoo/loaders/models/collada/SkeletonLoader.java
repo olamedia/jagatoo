@@ -47,15 +47,14 @@ public class SkeletonLoader
      * Loads a Joint/Bone, and its children.
      *
      * @param node
-     * @param upVector
      * @param joint
      * @param jointList
      */
-    private static void loadJoint( XMLNode node, Vector3f upVector, DaeJoint joint, ArrayList<DaeJoint> jointList )
+    private static void loadJoint( XMLNode node, DaeJoint joint, ArrayList<DaeJoint> jointList )
     {
         jointList.add( joint );
-                                                                        //todo ignore??
-        if ( node.childrenList == null || node.childrenList.isEmpty() || node.type == XMLNode.Type.NODE)
+                                                                        
+        if ( node.childrenList == null || node.childrenList.isEmpty() || node.type == XMLNode.Type.NODE )
         {
             return;
         }
@@ -64,7 +63,7 @@ public class SkeletonLoader
         {
             DaeJoint newJoint = new DaeJoint( joint.getFile(), joint, child.id, child.sid, child.name, child.transform );
             joint.addChild( newJoint );
-            loadJoint( child, upVector, newJoint, jointList );
+            loadJoint( child, newJoint, jointList );
         }
     }
 
@@ -72,15 +71,14 @@ public class SkeletonLoader
      * Loads a whole Skeleton.
      *
      * @param rootNode
-     * @param upVector
      * @param rootJoint
      * @return the skeleton
      */
-    public static DaeSkeleton loadSkeleton( XMLNode rootNode, Vector3f upVector, DaeJoint rootJoint )
+    public static DaeSkeleton loadSkeleton( XMLNode rootNode, DaeJoint rootJoint )
     {
         ArrayList<DaeJoint> jointList = new ArrayList<DaeJoint>();
 
-        loadJoint( rootNode, upVector, rootJoint, jointList );
+        loadJoint( rootNode, rootJoint, jointList );
 
         return ( new DaeSkeleton( rootJoint, jointList ) );
     }

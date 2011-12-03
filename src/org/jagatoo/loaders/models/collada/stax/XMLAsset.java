@@ -38,7 +38,11 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.jagatoo.logging.JAGTLog;
+import org.jagatoo.loaders.models.collada.MathUtils;
 import org.openmali.vecmath2.Vector3f;
+import org.openmali.vecmath2.Matrix4f;
+import org.openmali.vecmath2.Tuple3f;
+import org.openmali.vecmath2.Quaternion4f;
 
 /**
  * Asset information about a COLLADA file, e.g.
@@ -59,7 +63,7 @@ public class XMLAsset
     public String created = null;
     public String modified = null;
     public XMLUnit unit = null;
-    
+
     public static enum UpAxis
     {
         X_UP, Y_UP, Z_UP
@@ -85,6 +89,38 @@ public class XMLAsset
         }
         
         return null;
+    }
+
+    public final Matrix4f calcAxisUnitsConversionMatrix( float scale )
+    {
+        Quaternion4f rot = Quaternion4f.IDENTITY;
+        float meter = 1.0f;
+        if ( ( upAxis != null && upAxis != UpAxis.Y_UP ) )
+        {
+            switch ( upAxis )
+            {
+                case X_UP:
+                    rot = Quaternion4f.ROT_MINUS_90_DEG_BY_Z_AXIS;
+                    break;
+                case Z_UP:
+                    rot = Quaternion4f.Z_UP_TO_Y_UP;
+                    break;
+            }
+        }
+//        if ( unit != null && unit.meter != 1.0f )
+//        {
+//            meter = unit.meter;
+//        }
+        
+        if ( rot == Quaternion4f.IDENTITY && meter == 1.0f && scale == 1.0f )
+        {
+            return ( null ); //no conversion needed
+        }
+        Matrix4f m = new Matrix4f();
+        scale *= meter;
+        MathUtils.compose( Vector3f.ZERO, rot, new Tuple3f( scale, scale, scale ), m );
+
+        return ( m );
     }
     
     public void parse( XMLStreamReader parser ) throws XMLStreamException

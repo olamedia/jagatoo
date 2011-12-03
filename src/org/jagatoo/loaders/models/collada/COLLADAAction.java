@@ -34,8 +34,8 @@ import org.jagatoo.loaders.models.collada.datastructs.animation.DaeSkeleton;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.DaeNode;
 import org.openmali.vecmath2.Matrix4f;
 import org.openmali.vecmath2.Quaternion4f;
-import org.openmali.vecmath2.Tuple3f;
 import org.openmali.vecmath2.Vector3f;
+import org.openmali.vecmath2.Tuple3f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,7 +65,7 @@ public class COLLADAAction
     /**
      * Translation key frames, per joint (actually for root)
      */
-    private HashMap<DaeNode, AnimationChannel> translations = new HashMap<DaeNode, AnimationChannel>();
+    private HashMap<DaeNode, ArrayList<AnimationChannel>> translations = new HashMap<DaeNode, ArrayList<AnimationChannel>>();
     /**
      * Rotation key frames, per joint.
      */
@@ -73,7 +73,7 @@ public class COLLADAAction
     /**
      * Scale key frames, per joint.
      */
-    private HashMap<DaeNode, AnimationChannel> scales = new HashMap<DaeNode, AnimationChannel>();
+    private HashMap<DaeNode, ArrayList<AnimationChannel>> scales = new HashMap<DaeNode, ArrayList<AnimationChannel>>();
     /**
      * Scale key frames, per joint.
      */
@@ -149,23 +149,20 @@ public class COLLADAAction
             }
             else
             {
-                AnimationChannel t = translations.get( joint );
-                if ( t == null )
-                {
-                    t = AnimationChannel.createEmpty( joint, Vector3f.class );
-                }
+                List<AnimationChannel> l = translations.get( joint );
+                AnimationChannel t = l == null ?
+                        AnimationChannel.createEmpty( joint, Vector3f.class ) :
+                        AnimationChannel.merge( joint, l, Vector3f.class );
                 joint.setTranslations( t );
 
-                List<AnimationChannel> l = rotations.get( joint );
+                l = rotations.get( joint );
                 t = l == null ? AnimationChannel.createEmpty( joint, Quaternion4f.class ) :
-                        AnimationChannel.mergeRotations( joint, l );
+                        AnimationChannel.merge( joint, l, Quaternion4f.class );
                 joint.setRotations( t );
 
-                t = scales.get( joint );
-                if ( t == null )
-                {
-                    t = AnimationChannel.createEmpty( joint, Tuple3f.class );
-                }
+                l = scales.get( joint );
+                t = l == null ? AnimationChannel.createEmpty( joint, Tuple3f.class ) :
+                                AnimationChannel.merge( joint, l, Tuple3f.class );
                 joint.setScales( t );
 
                 translations.remove( joint ); //cleanup
@@ -177,7 +174,21 @@ public class COLLADAAction
 
     public void putTranslations( DaeNode joint, AnimationChannel translations )
     {
-        this.translations.put( joint, translations );
+        ArrayList<AnimationChannel> l = this.translations.get( joint );
+        if ( l == null )
+        {
+            l = new ArrayList<AnimationChannel>( 1 );
+            this.translations.put( joint, l );
+        }
+        if ( translations.getOrd() >= l.size() )
+        {
+            int delta = translations.getOrd() + 1 - l.size();
+            for ( int i = 0; i < delta; i++ ) //ensure size
+            {
+                l.add( AnimationChannel.createEmpty( ( DaeJoint ) joint, Vector3f.class ));
+            }
+        }
+        l.set( translations.getOrd(), translations );
     }
 
     public void putRotations( DaeNode joint, AnimationChannel rotations )
@@ -193,7 +204,7 @@ public class COLLADAAction
             int delta = rotations.getOrd() + 1 - l.size();
             for ( int i = 0; i < delta; i++ ) //ensure size
             {
-                l.add( null );
+                l.add( AnimationChannel.createEmpty( ( DaeJoint ) joint, Quaternion4f.class ));
             }
         }
         l.set( rotations.getOrd(), rotations );
@@ -201,7 +212,21 @@ public class COLLADAAction
 
     public void putScales( DaeNode joint, AnimationChannel scales )
     {
-        this.scales.put( joint, scales );
+        ArrayList<AnimationChannel> l = this.scales.get( joint );
+        if ( l == null )
+        {
+            l = new ArrayList<AnimationChannel>( 1 );
+            this.scales.put( joint, l );
+        }
+        if ( scales.getOrd() >= l.size() )
+        {
+            int delta = scales.getOrd() + 1 - l.size();
+            for ( int i = 0; i < delta; i++ ) //ensure size
+            {
+                l.add( AnimationChannel.createEmpty( ( DaeJoint ) joint, Tuple3f.class ));
+            }
+        }
+        l.set( scales.getOrd(), scales );
     }
 
     public void putMatrices( DaeNode joint, AnimationChannel matrices )

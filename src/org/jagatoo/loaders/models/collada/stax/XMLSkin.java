@@ -177,8 +177,10 @@ public class XMLSkin
                     influences[ i ][ j ] = new Influence( ( short ) 0, 0f/*weight*/ ); //?
                 }
                 else
-                {
-                    final String jointSourceId = jointsSource.idrefArray.idrefs[ jointIndex ];
+                {    //todo apply accessor
+                    final String jointSourceId = ( jointsSource.idrefArray != null ) ?
+                            jointsSource.idrefArray.idrefs[ jointIndex ]:
+                            jointsSource.nameArray.names[ jointIndex ];
                     final DaeJoint joint = skeleton.getJointBySourceId( jointSourceId );
 
                     influences[ i ][ j ] = new Influence( joint.getIndex(), weight );

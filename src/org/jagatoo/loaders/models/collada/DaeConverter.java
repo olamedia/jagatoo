@@ -170,6 +170,11 @@ class DaeConverter
 
     public NamedObject convertNode( DaeNode node )
     {
+        if( node instanceof DaeJoint)
+        {
+            return ( null );
+        }
+        
         NamedObject grp = null;
 
         if ( node.getCOLLADATransform().toTransform().getMatrix4f(null).equals( Matrix4f.IDENTITY ) )
@@ -186,7 +191,11 @@ class DaeConverter
 
         for ( DaeNode n : node.getChildren() )
         {
-            nodeFactory.addNodeToGroup( convertNode( n ), grp );
+            NamedObject no = convertNode( n );
+            if ( no != null )
+            {
+                nodeFactory.addNodeToGroup( no, grp );
+            }
         }
 
         for ( AbstractInstance ai : node.getGeometryInstances() )
@@ -380,25 +389,37 @@ class DaeConverter
         float endTime = Float.MIN_VALUE;
         for ( DaeJoint joint : action.getSkeleton() )
         {
-            float[] tl = joint.getTranslations().getTimeline();
-            if ( tl != null && tl.length > 0 )
+            if ( joint.getTranslations() != null )
             {
-                startTime = Math.min( startTime, tl[ 0 ] );
-                endTime = Math.max( endTime, tl[ tl.length - 1 ] );
-            }
+                float[] tl = joint.getTranslations().getTimeline();
+                if ( tl != null && tl.length > 0 )
+                {
+                    startTime = Math.min( startTime, tl[ 0 ] );
+                    endTime = Math.max( endTime, tl[ tl.length - 1 ] );
+                }
 
-            tl = joint.getRotations().getTimeline();
-            if ( tl != null && tl.length > 0 )
-            {
-                startTime = Math.min( startTime, tl[ 0 ] );
-                endTime = Math.max( endTime, tl[ tl.length - 1 ] );
-            }
+                tl = joint.getRotations().getTimeline();
+                if ( tl != null && tl.length > 0 )
+                {
+                    startTime = Math.min( startTime, tl[ 0 ] );
+                    endTime = Math.max( endTime, tl[ tl.length - 1 ] );
+                }
 
-            tl = joint.getScales().getTimeline();
-            if ( tl != null && tl.length > 0 )
+                tl = joint.getScales().getTimeline();
+                if ( tl != null && tl.length > 0 )
+                {
+                    startTime = Math.min( startTime, tl[ 0 ] );
+                    endTime = Math.max( endTime, tl[ tl.length - 1 ] );
+                }
+            }
+            else
             {
-                startTime = Math.min( startTime, tl[ 0 ] );
-                endTime = Math.max( endTime, tl[ tl.length - 1 ] );
+                float[] tl = joint.getMatrices().getTimeline();
+                if ( tl != null && tl.length > 0 )
+                {
+                    startTime = Math.min( startTime, tl[ 0 ] );
+                    endTime = Math.max( endTime, tl[ tl.length - 1 ] );
+                }
             }
         }
 

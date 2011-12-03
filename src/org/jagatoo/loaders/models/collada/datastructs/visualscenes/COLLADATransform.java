@@ -58,9 +58,9 @@ public class COLLADATransform
 
     private final HashMap<String, Object> transforms = new HashMap<String, Object>( 5 );
 
-    private Vector3f translation = new Vector3f( 0f, 0f, 0f );
+    private ArrayList<Vector3f> translations = new ArrayList<Vector3f>( 1 );//new Vector3f( 0f, 0f, 0f );
     private final ArrayList<AxisAngle3f> rotations = new ArrayList<AxisAngle3f>( 3 );
-    private Tuple3f scale = new Tuple3f( 1f, 1f, 1f );
+    private ArrayList<Tuple3f> scales = new ArrayList<Tuple3f>( 1 );//new Tuple3f( 1f, 1f, 1f );
     private Matrix4f matrix = null;
 
     public static XMLChannel.ChannelType getTransformType( Class<?> clazz )
@@ -78,12 +78,48 @@ public class COLLADATransform
             return ( new Transform( matrix ) );
         }
 
-        Quaternion4f rotation = new Quaternion4f();
-        if ( rotations.isEmpty() )
+        Vector3f translation = concatTranslations();
+        Quaternion4f rotation = concatRotations();
+        Tuple3f scale = concatScales();
+
+        return ( new Transform( translation, rotation, scale ) );
+    }
+
+    private Tuple3f concatScales()
+    {
+        Tuple3f scale = new Tuple3f( 1f, 1f, 1f );
+        if ( !scales.isEmpty() )
         {
-            rotation = new Quaternion4f( Quaternion4f.IDENTITY );
+            scale.set( scales.get( 0 ) );
         }
-        else
+        for ( int i = 1; i < scales.size(); i++ )
+        {
+            Tuple3f s = scales.get( i );
+            scale.mul( s.getX(), s.getY(), s.getZ() );
+        }
+
+        return ( scale );
+    }
+
+    private Vector3f concatTranslations()
+    {
+        Vector3f translation = new Vector3f( 0f, 0f, 0f );
+        if ( !translations.isEmpty() )
+        {
+            translation.set( translations.get( 0 ) );
+        }
+        for ( int i = 1; i < translations.size(); i++ )
+        {
+            translation.add( translations.get( i ) );
+        }
+
+        return ( translation );
+    }
+
+    private Quaternion4f concatRotations()
+    {
+        Quaternion4f rotation = new Quaternion4f( Quaternion4f.IDENTITY );
+        if ( !rotations.isEmpty() )
         {
             rotation.set( rotations.get( 0 ) );
         }
@@ -94,7 +130,7 @@ public class COLLADATransform
             rotation.normalize();
         }
 
-        return ( new Transform( translation, rotation, scale ) );
+        return ( rotation );
     }
 
     public final void put( String sid, Object o )
@@ -107,13 +143,13 @@ public class COLLADATransform
         switch ( type )
         {
             case TRANSLATE:
-                translation = ( Vector3f ) o;
+                translations.add( ( Vector3f ) o );
                 break;
             case ROTATE:
                 rotations.add( ( AxisAngle3f ) o );
                 break;
             case SCALE:
-                scale = ( Tuple3f ) o;
+                scales.add( ( Tuple3f ) o );
                 break;
             case MATRIX:
                 matrix = ( Matrix4f ) o;
@@ -133,9 +169,17 @@ public class COLLADATransform
 
     public final int getElementOrder( Object targetValue )
     {
+        if ( targetValue instanceof Vector3f )
+        {
+            return ( translations.indexOf( targetValue ));
+        }
         if ( targetValue instanceof AxisAngle3f )
         {
-            return ( rotations.indexOf( ( AxisAngle3f ) targetValue ) );
+            return ( rotations.indexOf( targetValue ) );
+        }
+        if ( targetValue instanceof Tuple3f )
+        {
+            return ( scales.indexOf( targetValue ) );
         }
 
         return ( -1 );

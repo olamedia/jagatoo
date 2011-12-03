@@ -38,6 +38,7 @@ import org.jagatoo.loaders.models.collada.datastructs.geometries.LibraryGeometri
 import org.jagatoo.loaders.models.collada.datastructs.images.LibraryImages;
 import org.jagatoo.loaders.models.collada.datastructs.materials.LibraryMaterials;
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.LibraryVisualScenes;
+import org.openmali.vecmath2.Matrix4f;
 
 
 /**
@@ -81,7 +82,9 @@ public class AssetFolder
      * Basically it's where this file has been loaded from.
      */
     private final URL basePath;
-    
+
+    private Matrix4f axisUnitsConversionMatrix;
+
     /**
      * @return the libraryControllers.
      */
@@ -145,7 +148,17 @@ public class AssetFolder
     {
         return ( basePath );
     }
-    
+
+    public void setAxisUnitsConversionMatrix( Matrix4f axisUnitsConversionMatrix )
+    {
+        this.axisUnitsConversionMatrix = axisUnitsConversionMatrix;
+    }
+
+    public Matrix4f getAxisUnitsConversionMatrix()
+    {
+        return ( axisUnitsConversionMatrix );
+    }
+
     /**
      * Creates a new COLLADAFile
      * @param basePath The base path, used e.g. when loading textures

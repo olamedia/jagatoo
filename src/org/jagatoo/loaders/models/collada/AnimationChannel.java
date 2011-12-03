@@ -40,6 +40,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -95,8 +96,28 @@ public class AnimationChannel
         return ( new AnimationChannel( joint, timeline, values, targetValue.getClass(), ord ) );
     }
 
-    public final void update( float[] output, int stride, int i, int j, Object targetValue )
+    public final void update( float[] timeline, float[] output, int stride, int i, int j, Object targetValue )
     {
+        //if this is "packed" channel expand it
+        if ( timeline.length == 2 &&
+                timeline[ 0 ] == this.timeline[ 0 ] &&
+                timeline[ timeline.length - 1 ] == this.timeline[ this.timeline.length - 1 ]
+                )
+        {
+            float f = output[ 0 ];
+            output = new float[this.timeline.length];
+            Arrays.fill( output, f );
+        }
+        else if ( this.timeline.length == 2 &&
+                this.timeline[ 0 ] == timeline[ 0 ] &&
+                this.timeline[ this.timeline.length - 1 ] == timeline[ timeline.length - 1 ]
+                )
+        {
+            Object o = Array.get( values, 0 );
+            values = Array.newInstance( values.getClass().getComponentType(), timeline.length );
+            Arrays.fill( ( Object[] ) values, o );
+        }
+
         setValues( values, output, stride, i, j, targetValue.getClass() );
     }
 
@@ -138,7 +159,14 @@ public class AnimationChannel
         }
         else if ( i >= 0 && j >= 0 ) //set ith,jth component of value ( stride == 1 )
         {
-            ( ( Matrix4f ) value ).set( i, j, output[ k ] );
+            if ( i == 3 && j == 3 )
+            {
+                ( ( Matrix4f ) value ).set( i, j, 1.0f );   // max exporter bug             
+            }
+            else
+            {
+                ( ( Matrix4f ) value ).set( i, j, output[ k ] );
+            }
         }
         else
         {
@@ -226,17 +254,23 @@ public class AnimationChannel
         return ( values );
     }
 
-    public static AnimationChannel createEmpty( DaeJoint joint, Class<?> elemClass )
+    public final boolean isEmpty()
     {
-        return ( new AnimationChannel( joint, new float[0], Array.newInstance( elemClass, 0), elemClass, -1 ) );
+        return ( timeline.length == 0 );
     }
 
-    public static AnimationChannel mergeRotations( DaeJoint joint, List<AnimationChannel> l )
+    public static AnimationChannel createEmpty( DaeJoint joint, Class<?> elemClass )
+    {
+        return ( new AnimationChannel( joint, new float[0], Array.newInstance( elemClass, 0 ), elemClass, -1 ) );
+    }
+
+    public static AnimationChannel merge( DaeJoint joint, List<AnimationChannel> l, Class<?> clazz )
     {
         AnimationChannel ac;
+        l = removeEmptyChannels( l );
         if ( l.isEmpty() )
         {
-            ac = createEmpty( joint, Quaternion4f.class );
+            ac = createEmpty( joint, clazz );
         }
         else
         {
@@ -259,23 +293,61 @@ public class AnimationChannel
                 v2 = adjustValues( ac2, v2 );
                 for ( int j = 0; j < Array.getLength( v ); j++ )
                 {
-                    Quaternion4f o = ( Quaternion4f ) Array.get( v, j );
-                    o.mul( ( Quaternion4f ) Array.get( v2, j ) );
-                    o.normalize();
+                    merge( v, v2, j, clazz );
                 }
             }
-            ac.elemClass = Quaternion4f.class;
+            ac.elemClass = clazz;
             ac.values = v;
         }
 
         return ( ac );
     }
 
+    // modifies elements of v
+    private static void merge( Object v, Object v2, int j, Class<?> clazz )
+    {
+        if ( clazz == Vector3f.class )
+        {
+            Vector3f o = ( Vector3f ) Array.get( v, j );
+            o.add( ( Vector3f ) Array.get( v2, j ) );
+        }
+        else if ( clazz == Quaternion4f.class )
+        {
+            Quaternion4f o = ( Quaternion4f ) Array.get( v, j );
+            o.mul( ( Quaternion4f ) Array.get( v2, j ) );
+            o.normalize();
+        }
+        else if ( clazz == Tuple3f.class )
+        {
+            Tuple3f o = ( Tuple3f ) Array.get( v, j );
+            Tuple3f o2 = ( Tuple3f ) Array.get( v2, j );
+            o.mul( o2.getX(), o2.getY(), o2.getZ() );
+        }
+        else
+        {
+            throw new Error( "Unknown class:" + clazz );
+        }
+    }
+
+    private static List<AnimationChannel> removeEmptyChannels( List<AnimationChannel> l )
+    {
+        for ( Iterator<AnimationChannel> it = l.iterator(); it.hasNext(); )
+        {
+            AnimationChannel ac = it.next();
+            if ( ac.isEmpty() )
+            {
+                it.remove();
+            }
+        }
+
+        return ( l );
+    }
+
     private static Object adjustValues( AnimationChannel ac, Object v )
     {
         if ( ac.getElemClass() == AxisAngle3f.class )
         {
-            Object v1 = Array.newInstance( Quaternion4f.class, Array.getLength( v ));
+            Object v1 = Array.newInstance( Quaternion4f.class, Array.getLength( v ) );
             for ( int i = 0; i < Array.getLength( v ); i++ )
             {
                 AxisAngle3f o = ( AxisAngle3f ) Array.get( v, i );

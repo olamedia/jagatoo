@@ -36,6 +36,8 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.jagatoo.logging.JAGTLog;
 
+import java.util.ArrayList;
+
 /**
  * An instance of a controller.
  * Child of Node.
@@ -48,7 +50,7 @@ public class XMLInstanceController {
     public String name = null;
     public String sid = null;
     public String url = null;
-    public String skeleton = null;
+    public ArrayList<String> skeletons = new ArrayList<String>( );
     public XMLBindMaterial bindMaterial = null;
  
     public void parse( XMLStreamReader parser ) throws XMLStreamException
@@ -83,7 +85,7 @@ public class XMLInstanceController {
                     String localName = parser.getLocalName();
                     if ( localName.equals( "skeleton" ) )
                     {
-                        skeleton = XMLIDREFUtils.parse( StAXHelper.parseText( parser ) );
+                        skeletons.add( XMLIDREFUtils.parse( StAXHelper.parseText( parser ) ));
                     }
                     else if ( localName.equals( "bind_material" ) )
                     {

@@ -37,7 +37,6 @@ import org.jagatoo.loaders.models.collada.datastructs.controllers.SkeletalContro
 import org.jagatoo.loaders.models.collada.datastructs.visualscenes.*;
 import org.jagatoo.loaders.models.collada.stax.*;
 import org.jagatoo.logging.JAGTLog;
-import org.openmali.vecmath2.Vector3f;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -55,9 +54,8 @@ public class LibraryVisualScenesLoader
      *
      * @param colladaFile The collada file to add them to
      * @param libScenes   The JAXB data to load from
-     * @param upVector
      */
-    static void loadLibraryVisualScenes( AssetFolder colladaFile, XMLLibraryVisualScenes libScenes, Vector3f upVector )
+    static void loadLibraryVisualScenes( AssetFolder colladaFile, XMLLibraryVisualScenes libScenes )
     {
         LibraryVisualScenes colLibVisualScenes = colladaFile.getLibraryVisualsScenes();
         HashMap<String, Scene> scenes = colLibVisualScenes.getScenes();
@@ -74,7 +72,7 @@ public class LibraryVisualScenesLoader
             JAGTLog.increaseIndentation();
             for ( XMLNode node : visualScene.nodes.values() )
             {
-                DaeNode colNode = processNode( null, node, colLibVisualScenes, colladaFile, upVector );
+                DaeNode colNode = processNode( null, node, colLibVisualScenes, colladaFile );
 
                 if ( colNode != null /*&& node.type != XMLNode.Type.JOINT */)
                 {
@@ -89,7 +87,7 @@ public class LibraryVisualScenesLoader
         JAGTLog.decreaseIndentation();
     }
 
-    static DaeNode processNode( DaeNode parentNode, XMLNode node, LibraryVisualScenes colLibVisualScenes, AssetFolder colladaFile, Vector3f upVector )
+    static DaeNode processNode( DaeNode parentNode, XMLNode node, LibraryVisualScenes colLibVisualScenes, AssetFolder colladaFile )
     {
         JAGTLog.debug( "TT] Found node [", node.id, ":", node.name, "]" );
         JAGTLog.increaseIndentation();
@@ -102,7 +100,7 @@ public class LibraryVisualScenesLoader
 
             for ( XMLNode child : node.childrenList )
             {
-                colNode.addChild( processNode( colNode, child, colLibVisualScenes, colladaFile, upVector ) );
+                colNode.addChild( processNode( colNode, child, colLibVisualScenes, colladaFile ) );
             }
 
             JAGTLog.debug( "TT] Alright, it's a basic node" );
@@ -124,7 +122,7 @@ public class LibraryVisualScenesLoader
                 {
                     colNode.addControllerInstance( newCOLLADAControllerInstanceNode( colladaFile, node, instanceController.url, instanceController.bindMaterial ) );
                     Controller controller = colladaFile.getLibraryControllers().getControllers().get( instanceController.url );
-                    colLibVisualScenes.getControllerIdToRootJointId().put( instanceController.url, instanceController.skeleton );
+                    colLibVisualScenes.getControllerIdToRootJointId().put( instanceController.url, instanceController.skeletons.get( 0 ));
                     // colLibVisualScenes.getControllerIdToNodeId().put( instanceController.url, node.id );
 
                     if ( controller instanceof SkeletalController )
@@ -132,7 +130,7 @@ public class LibraryVisualScenesLoader
                         final SkeletalController skelController = ( SkeletalController ) controller;
 
                         JAGTLog.debug( "Wow! It's a Skeletal Controller Node!" );
-                        skelController.setSkeleton( colLibVisualScenes.getSkeletons().get( instanceController.skeleton ) );
+                        skelController.setSkeleton( colLibVisualScenes.getSkeletons().get( instanceController.skeletons.get( 0 )) );
                         skelController.setDestinationGeometry( colladaFile.getLibraryGeometries().getGeometries().get( skelController.getSourceMeshId() ) );
                     }
                 }
@@ -142,7 +140,7 @@ public class LibraryVisualScenesLoader
         {
             JAGTLog.debug( "TT] Alright, it's a skeleton node" );
             colNode = new DaeJoint( colladaFile, parentNode, node.id, node.sid, node.name, node.transform );
-            DaeSkeleton skeleton = SkeletonLoader.loadSkeleton( node, upVector, ( DaeJoint ) colNode );
+            DaeSkeleton skeleton = SkeletonLoader.loadSkeleton( node, ( DaeJoint ) colNode );
             colLibVisualScenes.getSkeletons().put( node.id, skeleton );
             Collection<Controller> controllers = colladaFile.getLibraryControllers().getControllers().values();
             for ( Controller controller : controllers )

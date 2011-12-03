@@ -39,6 +39,7 @@ import org.jagatoo.loaders.models.collada.stax.*;
 import org.jagatoo.logging.JAGTLog;
 import org.jagatoo.util.errorhandling.ParsingException;
 import org.openmali.spatial.bounds.BoundsType;
+import org.openmali.vecmath2.Matrix4f;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
@@ -72,7 +73,7 @@ public class COLLADALoader
      * @param stream         The stream to load the scene from
      * @param appFactory
      * @param geomFactory
-     * @param convertZup2Yup
+     * @param convert2Yup
      * @param scale
      * @param nodeFactory
      * @param animFactory
@@ -84,7 +85,7 @@ public class COLLADALoader
                                         InputStream stream,
                                         AppearanceFactory appFactory,
                                         GeometryFactory geomFactory,
-                                        boolean convertZup2Yup,
+                                        boolean convert2Yup,
                                         float scale,
                                         NodeFactory nodeFactory,
                                         AnimationFactory animFactory,
@@ -137,6 +138,8 @@ public class COLLADALoader
             JAGTLog.debug( "TT] Exploring libraries..." );
 
             JAGTLog.increaseIndentation();
+
+            colladaFile.setAxisUnitsConversionMatrix( collada.asset.calcAxisUnitsConversionMatrix( scale ) );
 
             List<XMLLibraryGeometries> libraryGeometriesList = collada.libraryGeometries;
             if ( libraryGeometriesList != null )
@@ -193,7 +196,7 @@ public class COLLADALoader
                 {
                     JAGTLog.debug( "CC] Found LibraryVisualScenes ! Investigating... !" );
                     JAGTLog.increaseIndentation();
-                    LibraryVisualScenesLoader.loadLibraryVisualScenes( colladaFile, libraryVisualScenes, collada.asset.getUpVector() );
+                    LibraryVisualScenesLoader.loadLibraryVisualScenes( colladaFile, libraryVisualScenes );
                     JAGTLog.decreaseIndentation();
                 }
             }
@@ -246,7 +249,7 @@ public class COLLADALoader
      * @param stream
      * @param appFactory
      * @param geomFactory
-     * @param convertZup2Yup
+     * @param convert2Yup
      * @param scale
      * @param nodeFactory
      * @param animFactory
@@ -258,7 +261,7 @@ public class COLLADALoader
                              InputStream stream,
                              AppearanceFactory appFactory,
                              GeometryFactory geomFactory,
-                             boolean convertZup2Yup,
+                             boolean convert2Yup,
                              float scale,
                              NodeFactory nodeFactory,
                              AnimationFactory animFactory,
@@ -266,16 +269,19 @@ public class COLLADALoader
                              NamedObject rootGroup )
     {
         COLLADALoader loader = new COLLADALoader();
-        AssetFolder file = loader.loadAssetFolder( baseURL, stream, appFactory, geomFactory, convertZup2Yup, scale, nodeFactory, animFactory, siHandler, rootGroup );
+        AssetFolder file = loader.loadAssetFolder( baseURL, stream, appFactory, geomFactory, convert2Yup, scale, nodeFactory, animFactory, siHandler, rootGroup );
         DaeConverter converter = new DaeConverter( file, siHandler, appFactory, geomFactory, nodeFactory, animFactory );
 
         Collection<DaeNode> daeNodes = file.getLibraryVisualsScenes().getScenes().values().iterator().next().getNodes().values();
-        NamedObject root = nodeFactory.createSimpleGroup( "main_group", BoundsType.SPHERE );
+        NamedObject root = createMainGroup( nodeFactory, file, siHandler );
         for ( DaeNode daeNode : daeNodes )
         {
-            nodeFactory.addNodeToGroup( converter.convertNode( daeNode ), root );
+            NamedObject node = converter.convertNode( daeNode );
+            if ( node != null )
+            {
+                nodeFactory.addNodeToGroup( node, root );
+            }
         }
-        siHandler.addSpecialItem( SpecialItemsHandler.SpecialItemType.MAIN_GROUP, root.getName(), root );
         nodeFactory.addNodeToGroup( root, rootGroup );
         for ( COLLADAAction action : file.getLibraryAnimations().getAnimations().values() )
         {
@@ -284,7 +290,7 @@ public class COLLADALoader
                 if ( c instanceof SkeletalController )
                 {
                     SkeletalController sc = ( SkeletalController ) c;
-                    if ( action.getSkeleton()!= null && action.getSkeleton().equals( sc.getSkeleton() ) )
+                    if ( action.getSkeleton() != null && action.getSkeleton().equals( sc.getSkeleton() ) )
                     {
                         Object ma = converter.convertToModelAnimation( sc, action );
                         siHandler.addAnimation( ma );
@@ -297,5 +303,24 @@ public class COLLADALoader
         {
             geomFactory.setStaticOptimization( geom );
         }
+    }
+
+    private static NamedObject createMainGroup( NodeFactory nodeFactory, AssetFolder file, SpecialItemsHandler siHandler )
+    {
+        Matrix4f m = file.getAxisUnitsConversionMatrix();
+        NamedObject root;
+        if ( m == null )
+        {
+            root = nodeFactory.createSimpleGroup( "main_group", BoundsType.SPHERE );
+        }
+        else
+        {
+            root = nodeFactory.createTransformGroup( "main_group", m, BoundsType.SPHERE );
+            siHandler.addSpecialItem( SpecialItemsHandler.SpecialItemType.NESTED_TRANSFORM, root.getName(), root );
+
+        }
+        siHandler.addSpecialItem( SpecialItemsHandler.SpecialItemType.MAIN_GROUP, root.getName(), root );
+
+        return ( root );
     }
 }
