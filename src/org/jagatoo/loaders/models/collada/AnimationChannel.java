@@ -153,7 +153,7 @@ public class AnimationChannel
             {
                 for ( int y = 0; y < 4; y++ )
                 {
-                    ( ( Matrix4f ) value ).set( x, y, output[ x * 4 + y ] );
+                    ( ( Matrix4f ) value ).set( x, y, output[ 16 * k + x * 4 + y ] );
                 }
             }
         }

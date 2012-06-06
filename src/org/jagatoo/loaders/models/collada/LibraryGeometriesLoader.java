@@ -192,8 +192,8 @@ public class LibraryGeometriesLoader
         // trianglesGeometry.setMesh( mesh );
 
         int[] indices = tris.p;
-        int trianglesCount = tris.count;
-        int indexCount = trianglesCount * 3;//indices.length / meshDataInfo.maxOffset;
+      //  int trianglesCount = tris.count;
+        int indexCount = indices.length / meshDataInfo.maxOffset;  //todo
         int colorSize = 4;//todo
 
         if ( meshDataInfo.vertexOffset != -1 )

@@ -798,7 +798,7 @@ public class GeometryDataContainer extends SimpleGeometryDataContainer
             throw new IllegalStateException( "No normals defined" );
         
         for ( int i = 0; i < floatArray.length / 3; i++ )
-            normals.get( vertexIndex + i, 3, normalsOffset / 4L, floatArray, i, 3 );
+            normals.get( vertexIndex + i, 3, normalsOffset / 4L, floatArray, i * 3, 3 );
     }
     
     public void getNormals( int index0, Vector3f[] vector3fArray )
